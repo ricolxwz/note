@@ -309,7 +309,7 @@ nav:
       - 集中界限: general/randomised-algorithm/concentration-bounds-tricks.md
       - 冲突问题: general/randomised-algorithm/balls-in-bins.md 
   - 算法:
-    - 机器学习:
+    - 人工智能:
       - algorithm/index.md
       - 线性回归: algorithm/linear-regression.md
       - 预处理: algorithm/preprocessing.md
@@ -407,7 +407,7 @@ nav:
       - 模式奔溃: dicts/mode-collapse.md
       - 重参数化技巧: dicts/reparameterization.md
   - 研究:
-    - CHG:
+    - 对话人脸生成:
       - research/chg/index.md
       - 背景知识:
         - 3DMM: research/chg/background-knowledge/3dmm.md
