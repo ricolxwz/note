@@ -1,0 +1,1 @@
+**Token**是对原始文本进行分词或者分段后得到的基本符号单元, 在Transformer中, 输入序列首先会被分割为一连串的Token, 如使用BPRE或者WordPiece等方法. 模型处理的序列长度往往是拿Token的数量衡量的. **Embedding**是将Token映射到稠密向量空间的一种方式, Transformer将每个Token通过查询其嵌入矩阵来获得其向量表示, 再输入到后续的自注意力机制和FNN. 先有Token后有Embedding. **Encoding**含义更加广泛, 可以指任何将一种表示形式转换为不同表示形式的过程, 如Encoder会多次对输入进行更深层次的编码.

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block extrahead %}
+<link href="example.com" rel="icon" />
+<link
+    href="https://cdn.jsdelivr.net/npm/@fontsource/mononoki@5.1.0/index.min.css"
+    rel="stylesheet"
+/>
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@ayahub/webfont-harmony-sans-sc@1.0.0/css/index.min.css"
+/>
+{% endblock extrahead %}
+{% block content %}
+{% if page.meta.addi %}
+    <a href="{{ page.meta.addi }}" title="下载资源" class="md-content__button md-icon">
+        {% include ".icons/material/file-download-outline.svg" %}
+    </a>
+{% endif %}
+{{ super() }}
+{% endblock content %}
+
+{% block announce %}
+<span class="twemoji twemoji-custom">
+  {% include ".icons/fontawesome/seedling-solid.svg" %}
+</span>
+铁汁们 请关注我的 Github:
+  <a rel="me" href="https://github.com/ricolxwz">
+    <span class="twemoji">
+      {% include ".icons/fontawesome/github-alt-brands-solid.svg" %}
+    </span>
+  <strong>ricolxwz</strong>
+  </a>
+点个免费的关注在走啦 (●'◡'●)
+{% endblock announce %}

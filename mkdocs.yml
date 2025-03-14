@@ -1,0 +1,471 @@
+site_name: 机器蝉
+site_author: ricolxwz
+site_url: https://note.ricolxwz.de
+edit_uri: https://github.com/ricolxwz/note/edit/master/docs
+copyright: <p xmlns:cc="http://creativecommons.org/ns#" >版权所有 &copy 由 <span property="cc:attributionName">麦旋风超好吃</span> 采用 <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0&nbsp</a>许可证发布</p>
+theme:
+  name: material
+  logo_light_mode: https://cdn.ricolxwz.io/favicon-black-mc-be1517f676f6767b821a61dee1fe0de1.svg
+  logo_dark_mode: https://cdn.ricolxwz.io/favicon-white-mc-9874bcbf2890db92e65db16e14c4edb4.svg
+  language: zh
+  custom_dir: overrides
+  font: false
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+    - content.footnote.tooltips
+    - content.tooltips
+    - content.action.edit
+    - content.action.view
+    # - header.autohide
+    # - announce.dismiss
+    # - navigation.footer
+    - navigation.tabs
+    - navitation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - search.share
+    - announce.dismiss
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  # font:
+  #   text: "Roboto"
+  #   code: "Ubuntu Mono"
+  icon:
+    annotation: material/star-four-points-circle
+    repo: fontawesome/brands/github
+    # admonition:
+    #   note: octicons/tag-16
+    #   abstract: octicons/checklist-16
+    #   info: octicons/info-16
+    #   tip: octicons/squirrel-16
+    #   success: octicons/check-16
+    #   question: octicons/question-16
+    #   warning: octicons/alert-16
+    #   failure: octicons/x-circle-16
+    #   danger: octicons/zap-16
+    #   bug: octicons/bug-16
+    #   example: octicons/beaker-16
+    #   quote: octicons/quote-16
+extra:
+  social:
+    - icon: fontawesome/mug-hot-solid
+      link: https://buymeacoffee.com/ricolxwz
+    - icon: fontawesome/compass-solid
+      link: https://ricolxwz.de
+    - icon: fontawesome/brands/github
+      link: https://github.com/ricolxwz
+    - icon: fontawesome/brands/gitlab
+      link: https://gitlab.com/ricolxwz
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/u/ricolxwz
+    - icon: fontawesome/telegram-brands-solid
+      link: https://t.me/ricolxwz
+    - icon: fontawesome/at-solid
+      link: mailto:ricol.xwz@outlook.com
+  generator: false
+  # analytics:
+  #   provider: google
+  #   property: G-65D8M5V1CL
+extra_css:
+  # - https://unpkg.com/katex@0/dist/katex.min.css
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css
+  - stylesheets/extra.css
+extra_javascript:
+  - javascripts/favicon.js
+  - javascripts/katex.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js
+  # - https://unpkg.com/katex@0/dist/katex.min.js
+  # - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+  # - javascripts/analysis.js
+markdown_extensions:
+  - meta
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.magiclink
+  - pymdownx.b64
+  - pymdownx.betterem
+  - pymdownx.blocks.definition
+  - pymdownx.blocks.html
+  - pymdownx.blocks.caption
+  - pymdownx.escapeall
+  - pymdownx.extra
+  - pymdownx.striphtml
+  - pymdownx.fancylists
+  - pymdownx.inlinehilite
+  - pymdownx.progressbar
+  - pymdownx.saneheaders
+  - pymdownx.smartsymbols
+  - admonition
+  - abbr
+  - attr_list
+  - md_in_html
+  - footnotes
+  - def_list
+  - tables
+  - toc:
+      permalink: true
+      title: 目录
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      guess_lang: true
+      default_lang: python
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - overrides/.icons
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+plugins:
+  - search:
+      separator: '[\s\u200b\-]'
+  - open-in-new-tab
+  - glightbox:
+      skip_classes:
+        - skipbox
+  # - mkdocs-jupyter:
+  #     theme: slate
+  #     include_source: True
+  #     ignore_h1_titles: True
+  # - git-revision-date-localized:
+  #     locale: zh
+  #     enable_creation_date: true
+  #     enabled: !ENV [CI, false]
+  # - git-committers:
+  #     repository: ricolxwz/note
+  #     branch: master
+  #     enabled: !ENV [CI, false]
+  - encryptcontent:
+      search_index: "dynamically"
+      summary: "机密档案"
+      title_prefix: ""
+      placeholder: "密码"
+      placeholder_user: "用户名"
+      password_button_text: "发射"
+      encryption_info_message: ""
+      decryption_failure_message: "验证错误, ┗|｀O′|┛"
+      password_button: False
+      webcrypto: true
+      hljs: true
+      reload_scripts:
+        - "javascripts/katex.js"
+      encrypted_something:
+        mkdocs-encrypted-toc: [nav, class]
+      password_inventory:
+        chg:
+          wenzexu: !ENV [RESEARCH_PASSWORD1]
+  - i18n:
+      enabled: !ENV [CI, EN, false]
+      docs_structure: suffix
+      languages:
+        - locale: zh
+          default: true
+          name: 中文
+          build: true
+        - locale: en
+          name: English
+          build: true
+nav:
+  - 数学:
+      - 随机事件和概率: math/random-event-and-probability.md
+      - 一维随机变量及其分布: math/one-dimensional-random-variable-distribution.md
+      - 多维随机变量及其分布: math/multi-dimensional-random-variable-distribution.md
+      - 随机变量的数字特征: math/numerical-characteristics-of-random-variable.md
+      - 大数定律与中心极限定理: math/large-number-central-limit-theorem.md
+      - 贝叶斯方法: math/bayesian.md
+  - 语言:
+      - Python:
+        - 基础:
+          - 容器: language/python/foundation/container.md
+          - 函数: language/python/foundation/function.md
+          - 对象: language/python/foundation/object.md
+          - 文件: language/python/foundation/io.md
+          - 模块/包/库: language/python/foundation/module.md
+          - 网络: language/python/foundation/network.md
+          - 多进程/多线程: language/python/foundation/threading.md
+          - 异步: language/python/foundation/async.md
+          - 数据库: language/python/foundation/general/database.md
+          - 错误/调试/测试: language/python/foundation/debug.md
+          - 编码: language/python/foundation/encoding.md
+          - PVM: language/python/foundation/pvm.md
+          - 其他: language/python/foundation/misc.md
+        - 常用库:
+          - datetime: language/python/basic-package/datetime.md
+          - collections: language/python/basic-package/collections.md
+          - argparse: language/python/basic-package/argparse.md
+          - base64: language/python/basic-package/base64.md
+          - hashlib: language/python/basic-package/hashlib.md
+          - hmac: language/python/basic-package/hmac.md
+          - itertools: language/python/basic-package/itertools.md
+          - contextlib: language/python/basic-package/contextlib.md
+          - requests: language/python/basic-package/requests.md
+        - Numpy:
+          - 数据类型: language/python/numpy/datatype.md
+          - 数组构建: language/python/numpy/array-creation.md
+          - 视图/副本: language/python/numpy/view-copy.md
+          - 数组广播: language/python/numpy/broadcast.md
+          - 结构化数组: language/python/numpy/structured-array.md
+          - 数组索引: language/python/numpy/array-index.md
+          - 文件存取: language/python/numpy/io.md
+        - Pandas:
+          - 预备知识: language/python/pandas/preliminary-knowledge.md
+          - 基础知识: language/python/pandas/foundation.md
+          - 数据索引: language/python/pandas/data-index.md
+          - 数据分组: language/python/pandas/grouping.md
+        - Matplotlib:
+          - language/python/matplotlib/index.md
+          - 基础知识: language/python/matplotlib/foundation.md
+          - 散点图: language/python/matplotlib/scatter-chart.md
+          - 柱形图: language/python/matplotlib/column-chart.md
+          - 饼图: language/python/matplotlib/pie-chart.md
+          - 直方图: language/python/matplotlib/histogram.md
+          - 热力图: language/python/matplotlib/heat-map.md
+        - Seaborn:
+          - 简要介绍: language/python/seaborn/introduction.md
+  - 基石:
+    - 数据库:
+      - 数据模型: general/database/conceptual-model.md
+      - 关系模型: general/database/relational-model.md
+      - 关系代数: general/database/relational-algebra.md
+      - SQL: general/database/sql.md
+      - 完整性约束: general/database/integrity-constraints.md
+      - 高级SQL: general/database/advanced-sql.md
+      - 应用开发: general/database/app-dev.md
+      - 规范化: general/database/normalization.md
+      - 事务: general/database/transaction.md
+      - 存储与索引: general/database/storage-indexing.md
+      - 查询处理: general/database/query-processing.md
+    - 信息论:
+      - 不确定性和熵: general/information-theory/uncertainty-and-entropy.md
+      - 什么是信息: general/information-theory/what-is-information.md
+      - JIDT: general/information-theory/jidt.md
+      - 估计器: general/information-theory/estimator.md
+      - 统计显著性: general/information-theory/statistical-significance.md
+      - 自组织: general/information-theory/self-organisation.md
+      - 信息处理: general/information-theory/information-processing.md
+      - 信息存储: general/information-theory/information-storage.md
+      - 信息传递: general/information-theory/information-transfer.md
+      - 有效网络推断: general/information-theory/effective-network-inference.md
+    - 版本控制:
+      - 区域和状态: general/version-control/area-and-status.md
+      - 添加和提交: general/version-control/add-and-commit.md
+      - 回退: general/version-control/revert.md
+      - 配置: general/version-control/config.md
+      - 账户: general/version-control/account.md
+    - 容器:
+      - dockerfile: general/containerization/dockerfile.md
+    - k8s:
+      - 架构: general/k8s/architecture.md
+      - 命令: general/k8s/command.md
+      - 示例: general/k8s/example.md
+    - 随机算法:
+      - 一些基础: general/randomised-algorithm/basic.md
+      - 随机性, 概率和算法: general/randomised-algorithm/randomness.md
+      - 集中界限: general/randomised-algorithm/concentration-bounds-tricks.md
+      - 冲突问题: general/randomised-algorithm/balls-in-bins.md 
+  - 算法:
+    - 机器学习:
+      - algorithm/index.md
+      - 线性回归: algorithm/linear-regression.md
+      - 预处理: algorithm/preprocessing.md
+      - 最邻近: algorithm/knn.md
+      - 朴素贝叶斯: algorithm/naive-bayes.md
+      - 评估: algorithm/evaluation.md
+      - 决策树: algorithm/decision-tree.md
+      - 集成学习: algorithm/ensemble-learning.md
+      - 支持向量机: algorithm/svm.md
+      - 降维: algorithm/dimensional-reduction.md
+      - 聚类: algorithm/clustering.md
+      - 马尔可夫链: algorithm/markov-chain.md
+      - 强化学习: algorithm/reinforcement-learning.md
+      - 深度学习: algorithm/dl.md
+      - FNN: algorithm/fnn.md
+      - CNN: algorithm/cnn.md
+      - RNN: algorithm/rnn.md
+      - Transformer: algorithm/transformer.md
+      - Adapter: algorithm/adapter.md
+      - LoRA: algorithm/lora.md
+      - 知识蒸馏: algorithm/knowledge-distillation.md
+      - 提示词调优: algorithm/prompt-tuning.md
+      - AlexNet: algorithm/alexnet.md
+      - ResNet: algorithm/resnet.md
+      - NiN: algorithm/nin.md
+      - GoogLeNet: algorithm/googlenet.md
+      - ViT: algorithm/vit.md
+      - Swin: algorithm/swin.md
+      - MoCo: algorithm/moco.md
+      - Embedding: algorithm/word-embedding.md
+      - GPT: algorithm/gpt.md
+      - BERT: algorithm/bert.md
+      - AE: algorithm/ae.md
+      - VAE: algorithm/vae.md
+      - CLIP: algorithm/clip.md
+      - MAE: algorithm/mae.md
+      - YOLO: algorithm/yolo.md
+      - LLaMA: algorithm/llama.md
+      - VQ-VAE: algorithm/vq-vae.md
+      - LLaVA: algorithm/llava.md
+      - BLIP: algorithm/blip.md
+      - Diffusion: algorithm/diffusion.md
+      - InternVL: algorithm/internvl.md
+      - Flamingo: algorithm/flamingo.md
+      - Whisper: algorithm/whisper.md
+      - DeepSeek-R1: algorithm/deepseek-r1.md
+      - 思维链: algorithm/cot.md
+  - 代码:
+      - PyTorch快速入门: code/pytorch.md
+      - Transformer品尝: code/transformer.md
+      - Argparse读取参数: code/argparse.md
+      - WSL2配置容器环境: code/configure-wsl-dev.md
+      - PyTorch尝试进阶: code/pytorch-advanced.md
+  - 词典:
+      - 反向传播: dicts/backpropagation.md
+      - 自动微分: dicts/autograd.md
+      - 判别式模型和生成式模型: dicts/discriminative-and-generative-model.md
+      - 主干网络: dicts/backbone.md
+      - 归纳式/直推式学习: dicts/inductive-transductive-learning.md
+      - 视觉实体在尺度上的差异: dicts/large-variation-in-scale-visual-entities.md
+      - ADE20K: dicts/ade20k.md
+      - COCO: dicts/coco.md
+      - 异质交互: dicts/heterogeneous-interactions.md
+      - 采样: dicts/sampling.md
+      - 提示设计: dicts/discrete-text-prompt.md
+      - Few-Shot学习: dicts/few-shot-learning.md
+      - 端到端学习: dicts/end-to-end-learning.md
+      - 消融: dicts/ablation.md
+      - 条件化: dicts/conditioning.md
+      - 提示集成: dicts/prompt-ensembling.md
+      - Token/嵌入/编码: dicts/token-embedding-encoding.md
+      - 对比学习: dicts/contrastive-learning.md
+      - 前置任务: dicts/pretext-task.md
+      - 流形学习: dicts/manifold-learning.md
+      - 词袋: dicts/bow.md
+      - 监督学习: dicts/supervision.md
+      - 线性探测: dicts/linear-probe.md
+      - 众包数据: dicts/crowd-labeled-datasets.md
+      - 可扩展性: dicts/scalability.md
+      - 动作单元: dicts/action-unit.md
+      - 效价: dicts/valence.md
+      - 唤醒强度: dicts/arousal-intensity.md
+      - 毒性: dicts/toxicity.md
+      - 后验坍缩: dicts/posterior-collapse.md
+      - 用户研究: dicts/user-studies.md
+      - 先验和后验: dicts/prior-posterior.md
+      - 对齐: dicts/alignment.md
+      - 指令跟随数据: dicts/instruction-following-data.md
+      - 指令跟随代理: dicts/instruction-following-agent.md
+      - 自举: dicts/bootstrapping.md
+      - 标签平滑: dicts/label-smoothing.md
+      - 上下文学习: dicts/in-context-learning.md
+      - 数据集: dicts/set.md
+      - 教师强迫: dicts/teacher-forcing.md
+      - 模式奔溃: dicts/mode-collapse.md
+      - 重参数化技巧: dicts/reparameterization.md
+  - 研究:
+    - CHG:
+      - research/chg/index.md
+      - 背景知识:
+        - 3DMM: research/chg/background-knowledge/3dmm.md
+        - 3D重建: research/chg/background-knowledge/3d-reconstruction.md
+        - 光栅化: research/chg/background-knowledge/rasterization.md
+      - 相关工作:
+        - research/chg/related-work/index.md
+        - AgentAvatar: research/chg/related-work/agentavatar.md
+        - AvatarGPT: research/chg/related-work/avatargpt.md
+        - CLMLtL: research/chg/related-work/clmltl.md
+        - CustomListener: research/chg/related-work/customlistener.md
+        - EmoTalkingGaussian: research/chg/related-work/etg.md
+        - ELP: research/chg/related-work/elp.md
+        - FaRL: research/chg/related-work/farl.md
+        - GDN3HMT: research/chg/related-work/gdn3hmt.md
+        - HMVG-Survey: research/chg/related-work/hmvg.md
+        - INFP: research/chg/related-work/infp.md
+        - L2L: research/chg/related-work/l2l.md
+        - ListenFormer: research/chg/related-work/listenformer.md
+        - MDM: research/chg/related-work/mdm.md
+        - MMHead: research/chg/related-work/mmhead.md
+        - MotionCLIP: research/chg/motionclip.md
+        - PCH: research/chg/related-work/pch.md
+        - SaRLHS: research/chg/related-work/sarlhs.md
+        - T2M-GPT: research/chg/related-work/t2m-gpt.md
+        - TEMOS: research/chg/related-work/temos.md
+        - ViCo: research/chg/related-work/vico.md
+        - ViCo-X: research/chg/related-work/vico-x.md
+  - 综述:
+    - 多模态大模型: survey/mllm.md
+  - 系统:
+    - Linux:
+      - Archlinux:
+        - 
+      - Debian:
+      - Ubuntu:
+    - Macos:
+    - Windows:
+  - 软件:
+    - Alist:
+    - Cloudflare:
+    - Cloudfromt:
+    - Filebrowser:
+    - Frp:
+    - Gitea:
+    - Github:
+    - Gitlab:
+    - Jellyfin:
+    - Jetbrains:
+    - KDE:
+    - Minio:
+    - Mkdocs:
+    - Nezha:
+    - Portainer:
+    - SSH:
+    - Sublime:
+    - Torrent:
+    - Vmware:
+    - Vscode:
+    - Xray:
+  - 其他:
+    - 个人使用的prompt: others/prompt.md
+    - 科研神器: others/research-god-tool.md
+    - 配置Latex-Workshop: others/latex-workshop.md
+    - Zotero配置: others/zotero.md

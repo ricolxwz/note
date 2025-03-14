@@ -1,0 +1,1 @@
+crowd-labeled datasets指的是利用众包平台或者大众来参与来进行数据标注得到的数据集. 也就是说,研究人员把所需要标注的数据(比如图片, 文本等)放到类似Amazon Mechanical Turk之类的众包平台上, 由非专业或者是半专业的标注人员来完成标注工作, 因为这些数据被称为crowd-labeled dataset众包数据. 
