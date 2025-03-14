@@ -206,6 +206,18 @@ plugins:
         - locale: en
           name: English
           build: true
+exclude_docs: |
+  # /software/
+  # /os/
+  # /math/
+  # /algorithm/
+  # /language/
+  # /dicts/
+  # /others/
+  # /general/
+  # /code/
+  # /research/
+  # /survey/
 nav:
   - 数学:
       - 随机事件和概率: math/random-event-and-probability.md
@@ -419,6 +431,7 @@ nav:
         - AvatarGPT: research/chg/related-work/avatargpt.md
         - CLMLtL: research/chg/related-work/clmltl.md
         - CustomListener: research/chg/related-work/customlistener.md
+        - DIM: research/chg/related-work/dim.md
         - EmoTalkingGaussian: research/chg/related-work/etg.md
         - ELP: research/chg/related-work/elp.md
         - FaRL: research/chg/related-work/farl.md
@@ -497,6 +510,7 @@ nav:
       - mkdocs-git-committers-plugin-2配置: software/mkdocs/git-committers2.md
       - 内嵌视频: software/mkdocs/video.md
       - 加密内容: software/mkdocs/encryptcontent.md
+      - Git Hooks: software/mkdocs/git-hooks.md
     - Nezha:
       - 美化: software/nezha/beautify.md
       - DDNS: software/nezha/ddns.md

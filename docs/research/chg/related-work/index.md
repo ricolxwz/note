@@ -9,36 +9,44 @@ level: chg
 
 由于我们的方法主要有三个侧重点: 一个是能够建模整个对话, 不同于以往研究基于单方面建模; 二是它是基于LLM的, 拥有推理能力, 和目前的特征映射不一样; 三是它是一个多模态模型, 能够对分层次之后的输入产生一个更加全面的理解. 分类结构可以表示为:
 
-* Single Sided
-    * THG
-        * Non-LLM Based
-            * Audio conditioned: MakeItTalk, VASA-1, EMO, V-Express, Diffusion Heads
-            * Multi-modal conditioned: Wav2Lip, PC-AVS, EchoMimic, AniTalker
-    * LHG
-        * Non-LLM Based
-            * Text conditioned
-            * Audio conditioned: PCH
-            * Video conditioned
-            * Multi-modal conditioned: RLHG, L2L, ELP, MFR-NET
+* Conversational Head Generation
+    * Single Sided Conversation
+        * Talking Head Generation
+            * Non-LLM Based
+                * Audio driven: Wav2Lip
+                * Multi-modal driven: 
+                * Video driven: Face2Face, FOMM
+        * Listening Head Generation
+            * Non-LLM Based
+                * Text driven
+                * Audio driven: PCH
+                * Video driven
+                * Multi-modal driven: RLHG, L2L, ELP, MFR-NET, SaRLHS, ViCo
+            * LLM Based
+                * Retrival-base
+                    * Text driven: RealTalk
+                * Generative-based
+                    * Text driven: CLMLtL
+                    * Audio driven
+                    * Video driven
+                    * Multi-modal driven: CustomListener
+    * Dyadic Conversation
         * LLM Based
-            * Retrival-base
-                * Text conditioned: RealTalk
-            * Generative-based
-                * Text conditioned: CLMLtL
-                * Audio conditioned
-                * Video conditioned
-                * Multi-modal conditioned: CustomListener
-* Dyadic
+            * Text driven
+            * Audio driven
+            * Video driven
+            * Multi-modal driven: AgentAvatar
+        * Non-LLM Based
+            * Text driven
+            * Audio driven: INFP
+            * Video driven
+            * Multi-modal driven: ViCo-X, DIM, DialogueNeRF
+* Wholistic Motion Generation
     * LLM Based
-        * Text conditioned
-        * Audio conditioned
-        * Video conditioned
-        * Multi-modal conditioned
+        * Text driven: 
+        * Multi-modal driven: AvatarGPT
     * Non-LLM Based
-        * Text conditioned
-        * Audio conditioned
-        * Video conditioned
-        * Multi-modal conditioned
+        * Text driven: MotionCLIP, TEMOS, GDN2HMT, MDM
 
 ### 假设
 
