@@ -30,5 +30,4 @@ jobs:
       - run: pip install -r requirements.txt
       - run: mkdocs gh-deploy --force
         env:
-            MKDOCS_GIT_COMMITTERS_APIKEY: ${{ secrets.MKDOCS_GIT_COMMITTERS_APIKEY }}
             RESEARCH_PASSWORD1: ${{ secrets.RESEARCH_PASSWORD1 }}
