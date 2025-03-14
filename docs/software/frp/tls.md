@@ -9,9 +9,10 @@ comments: true
 
 ### 生成服务端证书
 
-::: warning
-请替换frq.ricolxwz.io为你的域名, 因为frpc会根据本地的ca-server.crt检查服务器发过来的证书的签名中是否也是frp.ricolxwz.io. 同样的, frpc的配置文件中的地址应该改成frp.ricolxwz.io, 这样就可以顺利验证. 或者写IP也行, 这样的话frpc配置文件中也要写IP. 下面脚本会自动获取服务器的外部ip并填入.
-:::
+???+ warning "注意"
+
+    请替换frq.ricolxwz.io为你的域名, 因为frpc会根据本地的ca-server.crt检查服务器发过来的证书的签名中是否也是frp.ricolxwz.io. 同样的, frpc的配置文件中的地址应该改成frp.ricolxwz.io, 这样就可以顺利验证. 或者写IP也行, 这样的话frpc配置文件中也要写IP. 下面脚本会自动获取服务器的外部ip并填入.
+
 
 ```bash
 set -x

@@ -17,8 +17,8 @@ DDNS:
       AccessSecret: "<你的Cloudflare密钥>"
 ```
 
-::: warning
-注意, 请删去DDNS中的其他内容(不是上面配置的内容).
-:::
+???+ warning "注意"
+
+    注意, 请删去DDNS中的其他内容(不是上面配置的内容).
 
 然后在添加服务器的时候, 选择启用DDNS, 启用DDNS IPv4, IPv6, DDNS域名填写指向的域名, DDNS配置填写`common`

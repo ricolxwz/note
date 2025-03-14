@@ -9,9 +9,9 @@ comments: true
 
 KDE(X11/Wayland) + libinput + Archlinux.
 
-::: warning
-其他环境未经测试, 不知道是否可以正常启用.
-:::
+???+ warning "注意"
+
+    其他环境未经测试, 不知道是否可以正常启用.
 
 ## 配置
 

@@ -58,10 +58,10 @@ md5p() {
 }
 ```
 
-::: warning
-请确保屏幕截图文件夹已经就位, 并且xclip, wrangler已经安装:
-```bash
-sudo pacman -S --needed --noconfirm xclip
-npm install -g wrangler
-```
-:::
+???+ warning "注意"
+
+    请确保屏幕截图文件夹已经就位, 并且xclip, wrangler已经安装:
+    ```bash
+    sudo pacman -S --needed --noconfirm xclip
+    npm install -g wrangler
+    ```

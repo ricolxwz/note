@@ -19,11 +19,11 @@ comments: true
 2. 首先, 生成一个系统的根证书`mkcert -install`, 它会显示你的根证书的公钥已经放到系统证书库和浏览器证书库里面
 3. 然后, 创建一个具体证书: `mkcert -cert-file /home/wenzexu/cert.crt -key-file /home/wenzexu/private.key example.com`, 会生成一个证书并由刚才安装的根证书进行签名, 验证的时候会沿着信任链追溯到根证书
 
-::: tip
-手动将根证书的公钥导入到浏览器中.
-- Chrome: 一般依赖操作系统的证书库, 只要放到了操作系统证书库里面, Chrome会自动信任
-- Firefox: 进入设置, 选择隐私和安全, 找到证书, 查看证书, 选择导入根证书公钥`rootCA.pem`
-:::
+???+ tip "Tip"
+
+    手动将根证书的公钥导入到浏览器中.
+    - Chrome: 一般依赖操作系统的证书库, 只要放到了操作系统证书库里面, Chrome会自动信任
+    - Firefox: 进入设置, 选择隐私和安全, 找到证书, 查看证书, 选择导入根证书公钥`rootCA.pem`
 
 ## 把rootCA安装到其他机器上
 
