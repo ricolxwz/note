@@ -137,7 +137,7 @@ test_positional_embedding()
 
     在上述代码中, 我们需要对位置进行`unsqueeze`, 这是为后面的广播做准备, 也就是`position * div_term`. 由于`position`经过`unsqueeze`之后, 形状为`(max_len, 1)`, 而`div_term`的形状为`(hidden_size/2, )`. 
     
-    进行相乘操作的同时会进行广播, `div_term`在广播时, 其初始形状被视为`(1, hidden_size/2)`(从右到左匹配, 见[这里](https://note.ricolxwz.de/numpy/broadcast/#%E5%B9%BF%E6%92%AD%E8%A7%84%E5%88%99)), `(max_len, 1)`和`(1, hidden_size/2)`相乘后最后得到的`pe[:, 0::2]`/`pe[:, 1::2]`的大小为`(max_len, hidden_size/2)`.
+    进行相乘操作的同时会进行广播, `div_term`在广播时, 其初始形状被视为`(1, hidden_size/2)`(从右到左匹配, 见[这里](/language/python/numpy/broadcast/#%E5%B9%BF%E6%92%AD%E8%A7%84%E5%88%99)), `(max_len, 1)`和`(1, hidden_size/2)`相乘后最后得到的`pe[:, 0::2]`/`pe[:, 1::2]`的大小为`(max_len, hidden_size/2)`.
 
 ???+ note "`register_buffer()`的作用"
 

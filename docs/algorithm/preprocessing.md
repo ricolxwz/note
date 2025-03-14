@@ -269,4 +269,4 @@ comments: true
 
 ## 分箱
 
-请见[分箱](https://note.ricolxwz.de/information-theory/estimator/#分箱).
+请见[分箱](/general/information-theory/estimator/#分箱).

@@ -4,45 +4,7 @@ title: 开始
 
 # ヾ(≧▽≦*)o Hi!
 
-这里是麦旋风巨好吃(ricolxwz)的机器学习知识库哦!
-
-## 传送
-
-<div class="grid cards" markdown>
-
--   :material-language-python:{ .lg .middle } __派森贰__
-
-    ---
-
-    基础, 常用库, NumPy, Pandas, Matplotlib, Seaborn ...
-
-    [:octicons-arrow-right-24: 快速步入](https://note.ricolxwz.de)
-
--   :material-atom:{ .lg .middle } __基石库__
-
-    ---
-
-    数据库, 信息论, 版本控制, 容器, k8s, 随机算法 ...
-
-    [:octicons-arrow-right-24: 快速站上](https://note.ricolxwz.de)
-
--   :material-texture-box:{ .lg .middle } __后备箱__
-
-    ---
-
-    操作系统, archlinux, ..., 软件, ..., alist, cloudflare, mkdocs, ...
-
-    [:octicons-arrow-right-24: 快速钻入](https://misc.ricolxwz.de)
-
--   :material-ghost-outline:{ .lg .middle } __博客__
-
-    ---
-
-    GPG加密, ... hello world?
-
-    [:octicons-arrow-right-24: 快速跳下](https://blog.ricolxwz.de)
-
-</div>
+这里是麦旋风巨好吃(ricolxwz)的小本本哦!
 
 ## 哲学
 
