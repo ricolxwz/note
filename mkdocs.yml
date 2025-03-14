@@ -437,33 +437,98 @@ nav:
   - 系统:
     - Linux:
       - Archlinux:
-        - 
-      - Debian:
-      - Ubuntu:
+        - X86安装: os/linux/archlinux/x86-install.md
+        - 声音卡顿: os/linux/archlinux/voice-frozen.md
+        - Zed编辑器无法启动问题: os/linux/archlinux/zed-cannot-start.md
+        - Thinkbook下没有声音问题: os/linux/archlinux/no-sound-under-thinkbook.md
+        - 内核安装更换: os/linux/archlinux/kernel-install.md
+        - 雷蛇驱动安装: os/linux/archlinux/razer-driver.md
+        - 快照: os/linux/archlinux/snapshots.md
+        - 配置触控板: os/linux/archlinux/configure-touchpad.md
+        - 自动重命名文件为md5: os/linux/archlinux/auto-md5-generation.md
+        - 申请SSL证书: os/linux/archlinux/apply-cert.md
+        - Nginx反代小服务: os/linux/archlinux/nginx-reverse-service.md
+        - 自签证书: os/linux/archlinux/self-signed-cert.md
     - Macos:
+      - md5图片: os/macos/md5.md
     - Windows:
+      - Powershell教程: os/windows/powershell.md
+      - md5图片: os/windows/md5.md
   - 软件:
     - Alist:
+      - 无法预览PDF: software/alist/cannot-preview-pdf.md
+      - 改变Logo大小: software/alist/change-logo-size.md
     - Cloudflare:
+      - R2对象存储防盗链: software/cloudflare/r2-waf.md
     - Cloudfromt:
+      - 配置: software/cloudfront/config.md
+      - cloudfront配合nginx反向代理: software/cloudfront/nginx-502.md
     - Filebrowser:
+      - 配置: software/filebrowser/config.md
     - Frp:
+      - 安装: software/frp/install.md
+      - 安全: software/frp/tls.md
     - Gitea:
-    - Github:
+      - 常用配置: software/gitea/config.md
     - Gitlab:
+        - 备份: software/gitlab/backup.md
+        - 迁移: software/gitlab/migrate.md
+        - runner: software/gitlab/runner.md
+        - 升级: software/gitlab/upgrade.md
+        - 配置: software/gitlab/config.md
     - Jellyfin:
+      - 自签证书: software/jellyfin/ssl.md
     - Jetbrains:
+      - 配置: software/jetbrains/basic-config.md
+      - 无法调整MD单元格内的文字大小: software/jetbrains/cannot-addjust-font-in-md-cell.md
     - KDE:
+      - 配置: software/kde/config.md
     - Minio:
+      - virtual host 风格: software/minio/virtual-host-style.md
+      - 无法加载桶: software/minio/can-not-load-bucket.md
+      - 无法启动容器: software/minio/can-not-start.md
+      - awscli: software/minio/aws-cli.md
+      - 自定义权限: software/minio/policy-to-one-bucket.md
     - Mkdocs:
+      - mkdocs-git-committers-plugin-2配置: software/mkdocs/git-committers2.md
+      - 内嵌视频: software/mkdocs/video.md
+      - 加密内容: software/mkdocs/encryptcontent.md
     - Nezha:
+      - 美化: software/nezha/beautify.md
+      - DDNS: software/nezha/ddns.md
+      - 安装: software/nezha/install.md
+      - 迁移: software/nezha/migrate.md
+      - 服务: software/nezha/service.md
+      - Telegram机器人通知: software/nezha/telebot.md
+      - 警告: software/nezha/warning.md
     - Portainer:
+      - Https: software/portainer/https.md
+      - 安装: software/portainer/install.md
+      - 栈: software/portainer/stack.md
     - SSH:
+      - SSH使用谷歌验证器2FA: software/ssh/use-google-2fa.md
+      - 限制IP登录: software/ssh/restrict-ip-login.md
+      - 端口转发: software/ssh/port-forwarding.md
     - Sublime:
+      - 配置: software/sublime/config.md
     - Torrent:
+      - qBittorrent管理页面显示unauthorized: software/torrent/qbittorrent-unauthorized.md
     - Vmware:
+      - 选项优化: software/vmware/choice.md
+      - CPU优化: software/vmware/cpu.md
+      - 存储优化: software/vmware/storage.md
+      - 网络优化: software/vmware/network.md
+      - VMWare Tools: software/vmware/vmware-tools.md
+      - 鼠标抓取问题: software/vmware/mouse-grub.md
+      - 鼠标滚动迟缓: software/vmware/mouse-scroll-delay.md
+      - 鼠标侧边按键: software/vmware/mouse-side-tools.md
+      - 无法找到共享文件夹: software/vmware/shared-cannot-find.md
+      - 磁盘格式切换: software/vmware/disk-switch-allocation.md
     - Vscode:
-    - Xray:
+      - 使用CapsLock作为Escape: software/vscode/capslock-as-esc.md
+    - Xray: 
+      - 申请证书: software/xray/apply-cert.md
+      - 无缝切换ip: software/xray/switch-ip.md
   - 其他:
     - 个人使用的prompt: others/prompt.md
     - 科研神器: others/research-god-tool.md
