@@ -263,6 +263,10 @@ nav:
           - 热力图: language/python/matplotlib/heat-map.md
         - Seaborn:
           - 简要介绍: language/python/seaborn/introduction.md
+    - CPP:
+      - 基础:
+        - 构建: language/cpp/foundation/build.md
+        - 类型: language/cpp/foundation/type.md
   - 基石:
     - 数据库:
       - 数据模型: general/database/conceptual-model.md
