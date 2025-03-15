@@ -216,7 +216,7 @@ exclude_docs: |
 #  /others/
 #  /general/
 #  /code/
-  # /research/
+#  /research/
 #  /survey/
 nav:
   - 数学:
