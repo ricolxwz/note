@@ -21,7 +21,7 @@ level: chg
                 * Text driven
                 * Audio driven: PCH
                 * Video driven
-                * Multi-modal driven: RLHG, L2L, ELP, MFR-NET, SaRLHS, ViCo
+                * Multi-modal driven: RLHG, L2L, ELP, MFR-NET, SaRLHS, ViCo, DIM
             * LLM Based
                 * Retrival-base
                     * Text driven: RealTalk
@@ -40,7 +40,7 @@ level: chg
             * Text driven
             * Audio driven: INFP
             * Video driven
-            * Multi-modal driven: ViCo-X, DIM, DialogueNeRF
+            * Multi-modal driven: ViCo-X, DialogueNeRF
 * Wholistic Motion Generation
     * LLM Based
         * Text driven: 
