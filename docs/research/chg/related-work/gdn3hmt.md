@@ -1,6 +1,6 @@
 ---
 title: GDN3HMT
-# level: chg
+level: chg
 ---
 
 ## Motivation

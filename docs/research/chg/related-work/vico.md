@@ -1,6 +1,6 @@
 ---
 title: ViCo
-# level: chg
+level: chg
 ---
 
 # ViCo[^1]

@@ -1,6 +1,6 @@
 ---
 title: MMHead
-# level: chg
+level: chg
 ---
 
 # MMHead[^1]
