@@ -1,6 +1,6 @@
 ---
 title: 光栅化
-# level: chg
+level: chg
 ---
 
 # 光栅化[^1]

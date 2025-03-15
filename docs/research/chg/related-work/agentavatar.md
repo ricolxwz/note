@@ -1,6 +1,6 @@
 ---
 title: AgentAvatar
-# level: chg
+level: chg
 ---
 
 # AgentAvatar

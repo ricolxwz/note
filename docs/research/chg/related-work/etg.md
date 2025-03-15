@@ -1,6 +1,6 @@
 ---
 title: EmoTalkingGaussian
-# level: chg
+level: chg
 ---
 
 # EmoTalkingGaussian[^1]
