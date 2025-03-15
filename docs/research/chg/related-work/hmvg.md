@@ -1,6 +1,6 @@
 ---
 title: 人体动作视频生成
-level: chg
+# level: chg
 ---
 
 # 人体动作视频生成[^1]
