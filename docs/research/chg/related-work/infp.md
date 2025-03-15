@@ -1,6 +1,6 @@
 ---
 title: INFP
-level: chg
+# level: chg
 ---
 
 # INFP[^1]

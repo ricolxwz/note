@@ -1,12 +1,3 @@
-# 处理 research/chg/ 目录下的所有 .md 文件
-Get-ChildItem -Path "C:\Users\wenzexu\note\docs\research\chg" -Recurse -Filter "*.md" | ForEach-Object {
-    $lines = Get-Content $_.FullName
-    if ($lines.Count -ge 3) {
-        $lines[2] = "# level: chg"
-        Set-Content $_.FullName $lines
-    }
-}
-
 # 处理 mkdocs.yml 文件
 $mkdocsFile = "C:\Users\wenzexu\note\mkdocs.yml"
 $mkdocsLines = Get-Content $mkdocsFile
@@ -23,13 +14,13 @@ foreach ($line in $mkdocsLines) {
     }
     
     if ($inExcludeDocs) {
-        # 如果该行没有至少两个空格的缩进，说明已超出 exclude_docs 块
-        if ($line -notmatch "^\s{2,}") {
+        # 如果当前行非空且不匹配以可选 "#" 后跟斜杠开头的模式，则认为已超出 exclude_docs 块
+        if ($line.Trim() -ne "" -and $line -notmatch "^\s*(#\s*)?\/") {
             $inExcludeDocs = $false
         }
     }
     
-    # 如果在 exclude_docs 块内且行以注释的斜杠开头，则取消注释
+    # 如果在 exclude_docs 块内且行以注释的斜杠开头，则取消注释并添加两个空格缩进
     if ($inExcludeDocs -and $line -match "^\s*#\s*(/.*)") {
         $line = "  " + $matches[1]
     }
