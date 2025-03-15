@@ -1,6 +1,6 @@
 ---
 title: MDM
-# level: chg
+level: chg
 ---
 
 ## Motivation

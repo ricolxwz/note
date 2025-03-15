@@ -1,6 +1,6 @@
 ---
 title: AvatarGPT
-# level: chg
+level: chg
 ---
 
 # AvatarGPT[^1]

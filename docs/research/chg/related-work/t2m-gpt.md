@@ -1,6 +1,6 @@
 ---
 title: T2M-GPT
-# level: chg
+level: chg
 ---
 
 ## Task
