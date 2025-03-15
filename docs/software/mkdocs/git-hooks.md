@@ -13,9 +13,9 @@ temp_file=$(mktemp)
 awk '
 BEGIN {exclude_section=0}
 /^exclude_docs:/ {exclude_section=1}
-/^$/ {exclude_section=0}
+/^[[:space:]]*$/ {exclude_section=0}
 {
-  if (exclude_section && /^\s*\/.*\//) {
+  if (exclude_section && /^\s*\/.*\/\s*$/ && !/^\s*#/) {
     print "#" $0
   } else {
     print $0
@@ -24,6 +24,7 @@ BEGIN {exclude_section=0}
 ' "$config_file" > "$temp_file"
 
 mv "$temp_file" "$config_file"
+
 
 # 移除 docs/research/ 目录下所有文件的第三行注释
 find docs/research/ -type f | while read -r file; do
