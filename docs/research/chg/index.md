@@ -76,17 +76,6 @@ addi: https://share.ricolxwz.io/share/IEek176IiA
 
 3D人脸渲染技术$G_v$在许多近期工作中已得到深入研究. 此外, 面部渲染模型通常是身份特定的, 因此可能需要为每个身份分别训练以获得更好的性能. 为了突出对话人头合成任务的特性并解耦关键因素, 所提出的模型主要聚焦于与运动相关且与身份无关的3D面部系数预测任务$G_m$, 同时使用预训练的渲染模型$G_v$来简化可视化过程. 一些视频后期处理方法(例如视频帧插值, 去噪, 超分辨率和图像修复等)也可以用于增强视觉效果.
 
-## Zotero标注
-
-* 红色: 问题
-* 蓝色: 动机
-* 紫色: 贡献
-* 橙色: 结论
-* 洋红: 数据集
-* 灰色: 不足
-* 绿色: 方法
-* 黄色: 相关研究
-
 [^1]: Zhou, M., Bai, Y., Zhang, W., Yao, T., & Zhao, T. (2023). Interactive conversational head generation (No. arXiv:2307.02090). arXiv. https://doi.org/10.48550/arXiv.2307.02090
 [^2]: Wu, S., Li, Y., Yan, Y., Duan, H., Liu, Z., & Zhai, G. (2024). MMHead: Towards fine-grained multi-modal 3D facial animation (No. arXiv:2410.07757). arXiv. https://doi.org/10.48550/arXiv.2410.07757
 [^3]: Zhou, M., Bai, Y., Zhang, W., Yao, T., Zhao, T., & Mei, T. (2022). Responsive listening head generation: A benchmark dataset and baseline (No. arXiv:2112.13548). arXiv. https://doi.org/10.48550/arXiv.2112.13548
