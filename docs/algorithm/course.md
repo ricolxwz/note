@@ -1,6 +1,6 @@
 ---
 title: 课程
-comments: false
+comments: true
 level: chg
 ---
 

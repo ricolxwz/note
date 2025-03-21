@@ -1,6 +1,6 @@
 ---
 title: 绪论
-comments: false
+comments: true
 ---
 
 ## 安装

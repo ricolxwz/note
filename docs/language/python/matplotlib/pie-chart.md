@@ -1,7 +1,7 @@
 ---
 title: 饼图
 icon: material/chart-pie
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

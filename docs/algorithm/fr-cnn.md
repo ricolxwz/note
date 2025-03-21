@@ -1,5 +1,5 @@
 ---
 title: FR-CNN
-comments: false
+comments: true
 ---
 

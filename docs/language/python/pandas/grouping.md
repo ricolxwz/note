@@ -1,7 +1,7 @@
 ---
 title: 数据分组
 icon: material/select-group
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

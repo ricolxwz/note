@@ -1,6 +1,6 @@
 ---
 title: Diffusion
-comments: false
+comments: true
 ---
 
 # Diffusion[^1]

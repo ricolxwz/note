@@ -1,7 +1,7 @@
 ---
 title: PVM
 icon: material/slot-machine
-comments: false
+comments: true
 ---
 
 ## 垃圾回收

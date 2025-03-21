@@ -1,7 +1,7 @@
 ---
 title: 调试
 icon: material/test-tube
-comments: false
+comments: true
 ---
 
 ## 错误

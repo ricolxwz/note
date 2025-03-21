@@ -1,7 +1,7 @@
 ---
 title: 对象
 icon: material/code-braces
-comments: false
+comments: true
 ---
 
 ## 访问限制 {#访问限制}

@@ -1,6 +1,6 @@
 ---
 title: 随机算法:随机性, 概率和算法
-comments: false
+comments: true
 ---
 
 ## 一个问题

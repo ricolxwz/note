@@ -1,7 +1,7 @@
 ---
 title: 预备知识
 icon: material/meteor
-comments: false
+comments: true
 ---
 
 ## Python基础

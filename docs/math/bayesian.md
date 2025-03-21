@@ -1,6 +1,6 @@
 ---
 title: 贝叶斯方法
-comments: false
+comments: true
 ---
 
 # 贝叶斯方法

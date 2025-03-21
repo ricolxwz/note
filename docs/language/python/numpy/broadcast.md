@@ -1,7 +1,7 @@
 ---
 title: 广播
 icon: material/broadcast
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

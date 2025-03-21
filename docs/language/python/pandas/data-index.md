@@ -1,7 +1,7 @@
 ---
 title: 数据索引
 icon: material/dice-multiple-outline
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

@@ -1,6 +1,6 @@
 ---
 title: VQ-VAE
-comments: false
+comments: true
 ---
 
 ## 概要

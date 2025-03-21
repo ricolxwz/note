@@ -1,7 +1,7 @@
 ---
 title: 文件
 icon: material/file-tree
-comments: false
+comments: true
 ---
 
 ## 文件读写

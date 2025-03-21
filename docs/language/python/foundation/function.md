@@ -1,7 +1,7 @@
 ---
 title: 函数
 icon: material/function-variant
-comments: false
+comments: true
 ---
 
 ## 参数

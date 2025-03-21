@@ -1,7 +1,7 @@
 ---
 name: 模块
 icon: material/package-variant-closed
-comments: false
+comments: true
 ---
 
 ## 模块、包和库

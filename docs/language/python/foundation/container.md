@@ -1,7 +1,7 @@
 ---
 title: 容器
 icon: material/inbox-outline
-comments: false
+comments: true
 ---
 
 ## 命令一览

@@ -1,7 +1,7 @@
 ---
 title: 简要介绍
 icon: material/cake
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

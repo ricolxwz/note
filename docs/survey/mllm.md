@@ -1,6 +1,6 @@
 ---
 title: 多模态大模型
-comments: false
+comments: true
 ---
 
 # 多模态大模型[^1]

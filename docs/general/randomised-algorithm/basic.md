@@ -1,6 +1,6 @@
 ---
 title: 随机算法:一些基础
-comments: false
+comments: true
 ---
 
 ## 算法

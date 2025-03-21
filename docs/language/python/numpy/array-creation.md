@@ -1,7 +1,7 @@
 ---
 title: 数组构建
 icon: material/application-array-outline
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

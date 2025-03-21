@@ -1,7 +1,7 @@
 ---
 title: 数据类型
 icon: material/cards-playing-club-outline
-comments: false
+comments: true
 ---
 
 ## 标量和向量

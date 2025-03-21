@@ -1,7 +1,7 @@
 ---
 title: 基础知识
 icon: material/atom-variant
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

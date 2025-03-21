@@ -1,7 +1,7 @@
 ---
 title: 柱形图
 icon: material/poll
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

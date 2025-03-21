@@ -1,7 +1,7 @@
 ---
 title: 线程
 icon: material/spider-thread
-comments: false
+comments: true
 ---
 
 ## 多进程 {#多进程}

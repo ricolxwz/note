@@ -1,7 +1,7 @@
 ---
 title: 其他
 icon: material/baseball-outline
-comments: false
+comments: true
 ---
 
 ## 端序

@@ -1,6 +1,6 @@
 ---
 title: 随机算法:冲突问题
-comments: false
+comments: true
 ---
 
 ## 生日问题

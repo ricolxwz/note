@@ -1,7 +1,7 @@
 ---
 title: 网络
 icon: material/earth
-comments: false
+comments: true
 ---
 
 ## 命令一览

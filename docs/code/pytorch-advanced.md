@@ -1,6 +1,6 @@
 ---
 title: PyTorch尝试进阶
-comments: false
+comments: true
 ---
 
 ## Tensor的创建

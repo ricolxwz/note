@@ -1,7 +1,7 @@
 ---
 title: 视图/副本
 icon: material/database-eye
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

@@ -1,7 +1,7 @@
 ---
 title: 散点图
 icon: material/scatter-plot-outline
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

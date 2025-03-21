@@ -1,6 +1,6 @@
 ---
 title: 随机算法:集中界限
-comments: false
+comments: true
 ---
 
 ## 定义

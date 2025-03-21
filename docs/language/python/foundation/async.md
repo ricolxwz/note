@@ -1,7 +1,7 @@
 ---
 title: 异步
 icon: material/sync
-comments: false
+comments: true
 ---
 
 ## 协程 {#协程}

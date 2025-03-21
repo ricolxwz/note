@@ -1,7 +1,7 @@
 ---
 title: 热力图
 icon: material/heat-wave
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

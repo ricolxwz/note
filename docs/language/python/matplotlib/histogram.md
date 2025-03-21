@@ -1,7 +1,7 @@
 ---
 title: 直方图
 icon: material/chart-histogram
-comments: false
+comments: true
 ---
 
 ???+ info "信息"

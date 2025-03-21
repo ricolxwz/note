@@ -1,6 +1,6 @@
 ---
 title: Flamingo
-comments: false
+comments: true
 ---
 
 ## 摘要

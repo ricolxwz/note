@@ -1,7 +1,7 @@
 ---
 title: 结构化数组
 icon: material/abacus
-comments: false
+comments: true
 ---
 
 ???+ info "信息"
