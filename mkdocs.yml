@@ -544,6 +544,8 @@ nav:
       - 磁盘格式切换: software/vmware/disk-switch-allocation.md
     - Vscode:
       - 使用CapsLock作为Escape: software/vscode/capslock-as-esc.md
+    - XChange:
+      - 配置: software/xchange/config.md
     - Xray: 
       - 申请证书: software/xray/apply-cert.md
       - 无缝切换ip: software/xray/switch-ip.md
