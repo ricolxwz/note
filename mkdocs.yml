@@ -176,36 +176,36 @@ plugins:
   #     repository: ricolxwz/note
   #     branch: master
   #     enabled: !ENV [CI, false]
-  - encryptcontent:
-      search_index: "dynamically"
-      summary: "机密档案"
-      title_prefix: ""
-      placeholder: "密码"
-      placeholder_user: "用户名"
-      password_button_text: "发射"
-      encryption_info_message: ""
-      decryption_failure_message: "验证错误, ┗|｀O′|┛"
-      password_button: False
-      webcrypto: true
-      hljs: true
-      reload_scripts:
-        - "javascripts/katex.js"
-      encrypted_something:
-        mkdocs-encrypted-toc: [nav, class]
-      password_inventory:
-        chg:
-          wenzexu: !ENV [RESEARCH_PASSWORD1]
-  - i18n:
-      enabled: !ENV [CI, EN, false]
-      docs_structure: suffix
-      languages:
-        - locale: zh
-          default: true
-          name: 中文
-          build: true
-        - locale: en
-          name: English
-          build: true
+  # - encryptcontent:
+  #     search_index: "dynamically"
+  #     summary: "机密档案"
+  #     title_prefix: ""
+  #     placeholder: "密码"
+  #     placeholder_user: "用户名"
+  #     password_button_text: "发射"
+  #     encryption_info_message: ""
+  #     decryption_failure_message: "验证错误, ┗|｀O′|┛"
+  #     password_button: False
+  #     webcrypto: true
+  #     hljs: true
+  #     reload_scripts:
+  #       - "javascripts/katex.js"
+  #     encrypted_something:
+  #       mkdocs-encrypted-toc: [nav, class]
+  #     password_inventory:
+  #       chg:
+  #         wenzexu: !ENV [RESEARCH_PASSWORD1]
+  # - i18n:
+  #     enabled: !ENV [CI, EN, false]
+  #     docs_structure: suffix
+  #     languages:
+  #       - locale: zh
+  #         default: true
+  #         name: 中文
+  #         build: true
+  #       - locale: en
+  #         name: English
+  #         build: true
 exclude_docs: |
 #  /software/
 #  /os/
