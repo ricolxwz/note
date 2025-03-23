@@ -451,6 +451,10 @@ nav:
       - cloudfront配合nginx反向代理: software/cloudfront/nginx-502.md
     - Filebrowser:
       - 配置: software/filebrowser/config.md
+    - FontCreater:
+      - 合并字体: software/fontcreator/merge.md
+    - Fontforge:
+      - 合并字体: software/fontforge/merge.md
     - Frp:
       - 安装: software/frp/install.md
       - 安全: software/frp/tls.md
