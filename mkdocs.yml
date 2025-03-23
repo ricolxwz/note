@@ -418,8 +418,6 @@ nav:
       - 教师强迫: dicts/teacher-forcing.md
       - 模式奔溃: dicts/mode-collapse.md
       - 重参数化技巧: dicts/reparameterization.md
-  # - 研究:
-  #   - 对话人脸生成: research/chg.md
   - 综述:
     - 多模态大模型: survey/mllm.md
   - 系统:
