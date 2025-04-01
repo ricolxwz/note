@@ -370,7 +370,6 @@ nav:
       - Flamingo: algorithm/flamingo.md
       - Whisper: algorithm/whisper.md
       - DeepSeek-R1: algorithm/deepseek-r1.md
-      - 思维链: algorithm/cot.md
   - 代码:
       - PyTorch快速入门: code/pytorch.md
       - Transformer品尝: code/transformer.md
@@ -422,6 +421,7 @@ nav:
       - 重参数化技巧: dicts/reparameterization.md
   - 综述:
     - 多模态大模型: survey/mllm.md
+    - 思维链: survey/cot.md
   - 系统:
     - Linux:
       - Archlinux:
