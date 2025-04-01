@@ -320,6 +320,8 @@ nav:
       - 随机性, 概率和算法: general/randomised-algorithm/randomness.md
       - 集中界限: general/randomised-algorithm/concentration-bounds-tricks.md
       - 冲突问题: general/randomised-algorithm/balls-in-bins.md 
+      - 反随机化: general/randomised-algorithm/derandomization.md
+      - 图算法: general/randomised-algorithm/graph.md
   - 算法:
     - 人工智能:
       - algorithm/index.md
