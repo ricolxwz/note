@@ -115,4 +115,95 @@ T = \left\lceil n^2 \ln\bigl(\tfrac{1}{\delta}\bigr) \right\rceil
 
 ### 第三幕
 
-有没有来个能打的算法(o_ _)ﾉ? 来了, Karger-Stein算法. 上述算法最大的问题就是: 开始的时候C被kill的几率很小, 但是越到后面被kill的几率越大, 最后一步C被kill的几率甚至来到了2/3. 一个很浅显的解决方案就是只把上面的算法跑到一半, 半路出家, 现在的问题是, 什么时候停? 停了之后干嘛? 
+有没有来个能打的算法(o_ _)ﾉ? 来了, Karger-Stein算法. 上述算法最大的问题就是: 开始的时候C被kill的几率很小, 但是越到后面被kill的几率越大, 最后一步C被kill的几率甚至来到了2/3. 一个很浅显的解决方案就是只把上面的算法跑到一半, 半路出家, 现在的问题是, 什么时候停? 停了之后干嘛?
+
+我们选择计算停下来的时候, $C$的概率正好是$1/2$. 此时, 已经经过的循环次数为$n-\frac{n}{\sqrt{2}}-1$, 那么剩下的顶点数量为$s=\frac{n}{\sqrt{2}}+1$. 嗯, 我们已经知道了啥时候停, 那么停了之后干嘛呢?
+
+我们已经将顶点的数量以一个常数的倍率减少, 即从$n$降到大概$\frac{n}{\sqrt{2}}$. 由于我们想不到什么好的方法, 所以我们决定进行递归. 但是如果一直一直递归的话, 会出现一个问题, 每次减少到$n/\sqrt{2}$, 那么经过若干次之后, 可能递归之后的vertices不再减少了, 反而变多了, 左边这个公式就是求出减少到什么程度之后再减少, 效果反而会更差, 计算结果表明, $n\leq 6$的时候, 效果会更差, 所以直接使用brute force枚举的方式找到最小割.
+
+目前为止, $1/2$的概率已经远远比$1/n^2$好了, 但是这仍然很小. 这里, 我们又想到了重复大法. 如果每一次递归的时候重复执行算法两次, 那么至少有一个是成功的. 可以写为下列算法:
+
+```pseudo
+procedure ModifiedKarger(G = (V, E), s)
+    while |V| > s do
+        Pick an edge e ∈ E uniformly at random
+        Contract it, and let G ← G / e
+    return G
+
+procedure KargerStein(G = (V, E))
+    if |V| ≤ 6 then
+        return a minimum cut    # Brute-force computation
+    Set s ← ⌈n / √2 + 1⌉      
+    # Contraction
+    G1 ← ModifiedKarger(G, s)
+    G2 ← ModifiedKarger(G, s)  
+    # Recursion
+    C1 ← KargerStein(G1)
+    C2 ← KargerStein(G2)
+    return the smallest cut among C1, C2
+```
+
+`ModifiedKarger`复杂度为$O(n^2)$, 所以整个算法的复杂度可以表示为$T(n)=2T(n/\sqrt{2})+O(n^2)$. 得到的结果为$T(n)=O(n^2\log n)$. 那么它的成功率$p(n)$呢? 从我们对$s$的设置中, 我们已经知道了$G_1$包含最小割的概率至少是$1/2$, 如果这是成立的, 那么$C_1$包含最小割的概率就至少是$p(\frac{n}{\sqrt{2}})$, 所以, $C_1$包含最小割的概率是:
+
+\[
+\Pr\bigl[C_{1}\text{ is a minimum cut}\bigr]
+\;\ge\;
+\tfrac{1}{2}
+\;\cdot\;
+p\!\Bigl(\tfrac{n}{\sqrt{2}}\Bigr)
+\]
+
+同样的, 对于G2, 也有上述公式. 那么在算法的最后一行, 我们返回的是最好的$C_1$或者$C_2$. 算法成功的条件是$C_1$或者$C_2$至少其中有一个是最小割. 那么算法的成功率可以表示为:
+
+\[
+p(n)
+= 1 - \bigl(1 - \Pr\bigl[C_1 \text{ is a minimum cut}\bigr]\bigr)
+     \bigl(1 - \Pr\bigl[C_2 \text{ is a minimum cut}\bigr]\bigr)
+\;\ge\;
+1 - \Bigl(1 - \tfrac{1}{2}\,p\Bigl(\tfrac{n}{\sqrt{2}}\Bigr)\Bigr)^2
+\]
+
+我们的任务就是解出这个不等式. 当然, 我是不会去解的. ヾ(•ω•`)o 最后的结果是:
+
+\[
+p(n)
+\;\ge\;
+\frac{1}{2\log n + 2}
+\;=\;
+\Omega\!\bigl(\tfrac{1}{\log n}\bigr)
+\]
+
+就像第二幕结尾说的那样, 设置允许算法失败的最大概率之后, 我们会得到时间复杂度是$O(n^2\log^2n\log(1/\delta)$, 这比之前的确定性算法快多了!
+
+### 第四幕
+
+现在, 我们已经得到了Karger-Stein算法的时间复杂度和成功率. 然而, 事情变得有些奇怪了起来: 这些节省的时间复杂度到底是从哪里来的? 我们考虑了多少的割呢? 我们有下列的递归关系式:
+
+$$N(n)=2N(n/\sqrt{2})$$
+
+结果是$N(n)=\Theta(n^2)$. 其实和第二幕里面的Best-of-T算法是很像的. 不同点是Best-of-T是完全独立地重复收缩若干次. 而Karger-Stein的思想是初始收缩到一定规模之后分两路继续, 并且会保留前期收缩的效果(不必从头开始重新收缩), 因此同样为了提高成功率, 在大量尝试的同时, 这些尝试并非完全独立, 而是摊销了不少重复工作的成本. 这就解释了为什么Karger-Stein能够在$\Theta(n^2)$的尝试次数里面找到最小割的不错概率, 而且实践中常常概率会更好.
+
+### 第五幕
+
+图中到底存在多少个最小割呢? 一般我们都指导图中至少有一条最小割, 但可能不止一条. 惊喜的是, 从对Karger算法(第二幕)成功概率的分析中就能顺带判断最小割数量的上界. 第二幕算法给出了Karger算法输出特定最小割的下界:
+
+$$\frac{2}{n(n-1)}$$
+
+如果图中有$M$条彼此不同的最小割, 那么输出其中任意一条的概率至少是:
+
+$$\frac{2M}{n(n-1)}$$
+
+由于这个概率肯定小于$1$, 所以就有:
+
+$$M<\binom{n}{2}$$
+
+这个结论其实相当惊人, 因为一个$n$顶点无向图中, 可以有多达$2^{n-1}-1$种不同的切分方式, 但是不是所有的切分都是最小割, 不同的最小割最多只有$\binom{n}{2}$. 这个上界是否能达到呢? 是否是紧的呢? 答案是能, 例如下面这个$n$个顶点构成的环图. 刚好有$\binom{n}{2}$个最小割.
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/56248c7a03a55837f18b9b6f0e411607.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.io/56248c7a03a55837f18b9b6f0e411607_inverted.webp#only-dark){ loading=lazy width='300' }
+</figure>
+
+## MST算法
+
+据我们所知, 没有一个确定性的算法能够在线性时间内解出一个MST(Minimum Spanning Tree). 幸运的是, 有一个随机算法, 期望的复杂度为线性的, 由Karger, Klein和Tarjan等人提出.
