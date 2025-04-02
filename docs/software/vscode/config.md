@@ -52,6 +52,8 @@ comments: true
     "explorer.confirmDelete": false,
     "explorer.decorations.badges": false,
     "git.decorations.enabled": false,
+    "git.autofetch": true,
+    "git.confirmSync": false,
     "window.zoomLevel": 0,
     "breadcrumbs.enabled": false,
     "files.autoSave": "onFocusChange",
@@ -60,7 +62,6 @@ comments: true
     "files.insertFinalNewline": true,
     "material-icon-theme.hidesExplorerArrows": true,
     "scm.diffDecorations": "gutter",
-    "extensions.ignoreRecommendations": true,
-    "git.autofetch": true
+    "extensions.ignoreRecommendations": true
 }
 ```
