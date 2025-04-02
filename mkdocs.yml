@@ -319,7 +319,7 @@ nav:
       - 一些基础: general/randomised-algorithm/basic.md
       - 随机性, 概率和算法: general/randomised-algorithm/randomness.md
       - 集中界限: general/randomised-algorithm/concentration-bounds-tricks.md
-      - 冲突问题: general/randomised-algorithm/balls-in-bins.md 
+      - 冲突问题: general/randomised-algorithm/balls-in-bins.md
       - 反随机化: general/randomised-algorithm/derandomization.md
       - 图算法: general/randomised-algorithm/graph.md
   - 算法:
@@ -518,10 +518,11 @@ nav:
       - 无法找到共享文件夹: software/vmware/shared-cannot-find.md
       - 磁盘格式切换: software/vmware/disk-switch-allocation.md
     - Vscode:
+      - 基础配置: software/vscode/config.md
       - 使用CapsLock作为Escape: software/vscode/capslock-as-esc.md
     - XChange:
       - 配置: software/xchange/config.md
-    - Xray: 
+    - Xray:
       - 申请证书: software/xray/apply-cert.md
       - 无缝切换ip: software/xray/switch-ip.md
   - 其他:

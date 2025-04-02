@@ -1,0 +1,65 @@
+---
+title: 基础配置
+comments: true
+---
+
+# 配置
+
+```json
+{
+    "editor.fontFamily": "Maple Mono Normal NL NF CN",
+    "editor.wrappingStrategy": "advanced",
+    "editor.minimap.enabled": false,
+    "editor.cursorBlinking": "phase",
+    "editor.cursorStyle": "line",
+    "editor.fontLigatures": false,
+    "editor.lineHeight": 1.6,
+    "editor.stickyScroll.enabled": false,
+    "editor.colorDecorators": false,
+    "editor.codeLens": false,
+    "editor.links": false,
+    "editor.matchBrackets": "always",
+    "editor.parameterHints.enabled": true,
+    "editor.lightbulb.enabled": "off",
+    "editor.hover.enabled": false,
+    "editor.lineNumbers": "relative",
+    "editor.showFoldingControls": "never",
+    "editor.detectIndentation": false,
+    "editor.guides.indentation": false,
+    "editor.renderWhitespace": "selection",
+    "editor.renderLineHighlight": "none",
+    "editor.occurrencesHighlight": "off",
+    "editor.selectionHighlight": false,
+    "editor.scrollbar.vertical": "hidden",
+    "editor.scrollbar.horizontal": "hidden",
+    "editor.overviewRulerBorder": false,
+    "editor.hideCursorInOverviewRuler": true,
+    "custom-ui-style.font.monospace": "Maple Mono Normal NL NF CN",
+    "custom-ui-style.font.sansSerif": "Maple Mono Normal NL NF CN",
+    "workbench.colorTheme": "Winter is Coming (Dark Black)",
+    "workbench.activityBar.location": "bottom",
+    "workbench.sideBar.location": "right",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.editor.showTabs": "multiple",
+    "workbench.productIconTheme": "material-product-icons",
+    "workbench.statusBar.visible": false,
+    "workbench.tips.enabled": false,
+    "workbench.tree.enableStickyScroll": false,
+    "workbench.tree.renderIndentGuides": "none",
+    "workbench.tree.indent": 16,
+    "explorer.compactFolders": false,
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
+    "explorer.decorations.badges": false,
+    "git.decorations.enabled": false,
+    "window.zoomLevel": 0,
+    "breadcrumbs.enabled": false,
+    "files.autoSave": "onFocusChange",
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "material-icon-theme.hidesExplorerArrows": true,
+    "scm.diffDecorations": "gutter",
+    "extensions.ignoreRecommendations": true
+}
+```
