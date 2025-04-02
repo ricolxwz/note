@@ -43,7 +43,7 @@ comments: true
     "workbench.iconTheme": "material-icon-theme",
     "workbench.editor.showTabs": "multiple",
     "workbench.productIconTheme": "material-product-icons",
-    "workbench.statusBar.visible": false,
+    "workbench.statusBar.visible": true,
     "workbench.tips.enabled": false,
     "workbench.tree.enableStickyScroll": false,
     "workbench.tree.renderIndentGuides": "none",
