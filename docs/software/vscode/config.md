@@ -60,6 +60,7 @@ comments: true
     "files.insertFinalNewline": true,
     "material-icon-theme.hidesExplorerArrows": true,
     "scm.diffDecorations": "gutter",
-    "extensions.ignoreRecommendations": true
+    "extensions.ignoreRecommendations": true,
+    "git.autofetch": true
 }
 ```
