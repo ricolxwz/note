@@ -100,6 +100,7 @@
 /* 设置katex样式 */
 .katex {
   font-size: 1em;
+  font-family: "KaTeX_Main", "KaTeX_Math", "KaTeX_AMS", "KaTeX_Caligraphic", "KaTeX_Fraktur", "KaTeX_SansSerif", "KaTeX_Script", "KaTeX_Typewriter", "HarmonyOS Sans SC" !important;
 }
 .katex-display {
   margin: -0.5em;

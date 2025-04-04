@@ -25,12 +25,7 @@ comments: false
 
 ## 图的邻接矩阵
 
-计算机是不知道图长啥样的, 一个告诉计算机图的方式就是邻接矩阵. 一般在建模的时候, 会输入点的特征和这个邻接矩阵, 可以表示为GNN(A, X), 其中, A是邻接矩阵, X是点的特征. 其实文本数据也可以表示为图的形式, 邻接矩阵表示的是连接关系, 如下图所示.
-
-<figure markdown='1' id='fig'>
-![](https://img.ricolxwz.io/360ded3faa453082e71388ec3921a364.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.io/360ded3faa453082e71388ec3921a364_inverted.webp#only-dark){ loading=lazy width='500' }
-</figure>
+计算机是不知道图长啥样的, 一个告诉计算机图的方式就是邻接矩阵. 一般在建模的时候, 会输入点的特征和这个邻接矩阵, 可以表示为GNN(A, X), 其中, A是邻接矩阵, X是点的特征. 其实文本数据也可以表示为图的形式, 邻接矩阵表示的是连接关系.
 
 ## 图神经网络的应用
 
@@ -76,3 +71,224 @@ Global
 ## 输出特征的作用
 
 输出特征能干啥呢? 首先, 将各个点的特征组合, 做一个pooling, 然后可以得到这个图的全局分类. 各个节点也可以分类, 边也是如此. 其实只是利用GNN得到图的结构特征, 最终要做什么还是我们自己决定.
+
+## GCN
+
+GCN(Graph Convolutional Network)是一种处理图结构数据的神经网络模型, 它将卷积操作扩展到图上面(实际上看不出什么卷积(o_ _)ﾉ). 通过聚合节点邻居信息来更新节点表示, 你可以理解为它的卷积核的大小是动态的, 是取决于当前节点周围的邻居的数量的.
+
+### 半监督学习
+
+半监督学习是GCN的一个很大的优势. 和传统方法相比, GCN在图结构数据上可以自然地利用节点之间地关系, 即使只有部分节点带有标签信息, 也能通过网络传递和聚合特征来学习到整体的表示. 换句话说, 对于图数据, 我们可以标记一部分节点, 然后通过GCN的传播机制, 让未标注节点也能间接地学习到有用地特征.
+
+### 基本思想
+
+GCN的基本思想就是平均其邻居的特征(包括自身)后传入神经网络. GCN可以做多层, 每一层输入的都是所有点的特征, 将但钱的特征和网络结构图继续传入下层就可以不断算下去了. 一般较小的图网络不用太多的层数, 这印证了一句话: "你只需要6个人, 就能够了解全世界".
+
+### 特征的计算方法
+
+GCN中, 图被表示为$\mathbf{A}$, 邻接矩阵; $\mathbf{X}$, 每个节点的特征. 特征的计算方法如下:
+
+假设我们有一个包含4个节点的简单无向图, 邻接矩阵 \( \mathbf{A} \) 定义如下:
+
+\[
+\mathbf{A} = \begin{bmatrix}
+0 & 1 & 0 & 1 \\
+1 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 \\
+1 & 0 & 0 & 0
+\end{bmatrix}.
+\]
+
+我们也可以给每个节点一个简单的特征向量(这里为了简单, 用一维特征示意, 实际上可以是多维), 比如:
+
+\[
+\mathbf{X} = \begin{bmatrix}
+x_1 \\
+x_2 \\
+x_3 \\
+x_4
+\end{bmatrix}.
+\]
+
+1. 计算 \( \hat{\mathbf{A}} = \mathbf{A} + \mathbf{I} \)
+
+    因为 GCN 常用自环 (self-loop) 的技巧来保留节点自身信息, 我们把单位矩阵 \( \mathbf{I} \) 加到 \( \mathbf{A} \) 上:
+
+    \[
+    \mathbf{I} = \begin{bmatrix}
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    0 & 0 & 1 & 0 \\
+    0 & 0 & 0 & 1
+    \end{bmatrix}.
+    \]
+
+    因此,
+
+    \[
+    \hat{\mathbf{A}}
+    = \mathbf{A} + \mathbf{I}
+    = \begin{bmatrix}
+    0 & 1 & 0 & 1 \\
+    1 & 0 & 1 & 0 \\
+    0 & 1 & 0 & 0 \\
+    1 & 0 & 0 & 0
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    0 & 0 & 1 & 0 \\
+    0 & 0 & 0 & 1
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    1 & 1 & 0 & 1 \\
+    1 & 1 & 1 & 0 \\
+    0 & 1 & 1 & 0 \\
+    1 & 0 & 0 & 1
+    \end{bmatrix}.
+    \]
+
+2. 计算 \( \hat{\mathbf{D}} \)
+
+    \( \hat{\mathbf{D}} \) 是对角矩阵, 其第 \( i \) 个对角元素为第 \( i \) 行在 \( \hat{\mathbf{A}} \) 下的度 (行和). 我们来逐行计算:
+
+    - 第 1 行: \( 1 + 1 + 0 + 1 = 3 \)
+    - 第 2 行: \( 1 + 1 + 1 + 0 = 3 \)
+    - 第 3 行: \( 0 + 1 + 1 + 0 = 2 \)
+    - 第 4 行: \( 1 + 0 + 0 + 1 = 2 \)
+
+    因此度矩阵为:
+
+    \[
+    \hat{\mathbf{D}}
+    = \begin{bmatrix}
+    3 & 0 & 0 & 0 \\
+    0 & 3 & 0 & 0 \\
+    0 & 0 & 2 & 0 \\
+    0 & 0 & 0 & 2
+    \end{bmatrix}.
+    \]
+
+3. 计算 \( \hat{\mathbf{D}}^{-\frac{1}{2}} \)
+
+    我们把对角元素都开平方的倒数:
+
+    - \( 3^{-\frac{1}{2}} = \frac{1}{\sqrt{3}} \)
+    - \( 2^{-\frac{1}{2}} = \frac{1}{\sqrt{2}} \)
+
+    所以,
+
+    \[
+    \hat{\mathbf{D}}^{-\frac{1}{2}}
+    = \begin{bmatrix}
+    \frac{1}{\sqrt{3}} & 0 & 0 & 0 \\
+    0 & \frac{1}{\sqrt{3}} & 0 & 0 \\
+    0 & 0 & \frac{1}{\sqrt{2}} & 0 \\
+    0 & 0 & 0 & \frac{1}{\sqrt{2}}
+    \end{bmatrix}.
+    \]
+
+4. 构造归一化邻接矩阵 \(\tilde{\mathbf{A}} = \hat{\mathbf{D}}^{-\frac{1}{2}} \, \hat{\mathbf{A}} \, \hat{\mathbf{D}}^{-\frac{1}{2}}\)
+
+    这是两次矩阵乘法, 可以拆为:
+
+    1. 先做 \(\hat{\mathbf{D}}^{-\frac{1}{2}} \hat{\mathbf{A}}\)
+    2. 再用结果乘 \(\hat{\mathbf{D}}^{-\frac{1}{2}}\) (从右侧)
+
+    为了清晰, 我们一步到位地写最终结果(如果你想亲手算, 按行 × 列逐项相乘即可). 最终得到:
+
+    \[
+    \tilde{\mathbf{A}}
+    =
+    \begin{bmatrix}
+    \frac{1}{3} & \frac{1}{3} & 0 & \frac{1}{\sqrt{6}} \\
+    \frac{1}{3} & \frac{1}{3} & \frac{1}{\sqrt{6}} & 0 \\
+    0 & \frac{1}{\sqrt{6}} & \tfrac{1}{2} & 0 \\
+    \frac{1}{\sqrt{6}} & 0 & 0 & \tfrac{1}{2}
+    \end{bmatrix}.
+    \]
+
+    > 其中的数值像 \(\frac{1}{\sqrt{6}}\) 就来自 \(\frac{1}{\sqrt{3}} \times \frac{1}{\sqrt{2}}\) 之类的连乘. 你也可以保留在"\(\frac{1}{\sqrt{3} \cdot \sqrt{2}}\)"的形式.
+
+5. 与特征矩阵 \(\mathbf{X}\) 相乘, 得到聚合后的特征
+
+    现在我们来做 \(\tilde{\mathbf{A}} \mathbf{X}\). 由于 \(\mathbf{X}\) 是 \(4 \times 1\) 的列向量:
+
+    \[
+    \tilde{\mathbf{A}}
+    =
+    \begin{bmatrix}
+    \frac{1}{3} & \frac{1}{3} & 0 & \frac{1}{\sqrt{6}} \\
+    \frac{1}{3} & \frac{1}{3} & \frac{1}{\sqrt{6}} & 0 \\
+    0 & \frac{1}{\sqrt{6}} & \tfrac{1}{2} & 0 \\
+    \frac{1}{\sqrt{6}} & 0 & 0 & \tfrac{1}{2}
+    \end{bmatrix},
+    \quad
+    \mathbf{X}
+    = \begin{bmatrix}
+    x_1 \\
+    x_2 \\
+    x_3 \\
+    x_4
+    \end{bmatrix}.
+    \]
+
+    进行矩阵乘法(4×4 乘以 4×1), 最终得到一个 4×1 的向量:
+
+    \[
+    \tilde{\mathbf{A}} \mathbf{X}
+    =
+    \begin{bmatrix}
+    \dfrac{x_1}{3} + \dfrac{x_2}{3} + 0 \cdot x_3 + \dfrac{x_4}{\sqrt{6}} \\[6pt]
+    \dfrac{x_1}{3} + \dfrac{x_2}{3} + \dfrac{x_3}{\sqrt{6}} + 0 \cdot x_4 \\[6pt]
+    0 \cdot x_1 + \dfrac{x_2}{\sqrt{6}} + \dfrac{x_3}{2} + 0 \cdot x_4 \\[6pt]
+    \dfrac{x_1}{\sqrt{6}} + 0 \cdot x_2 + 0 \cdot x_3 + \dfrac{x_4}{2}
+    \end{bmatrix}.
+    \]
+
+    具体展开为:
+
+    1. 第 1 行 (节点 1): \(\tfrac{x_1}{3} + \tfrac{x_2}{3} + \tfrac{x_4}{\sqrt{6}}\)
+    2. 第 2 行 (节点 2): \(\tfrac{x_1}{3} + \tfrac{x_2}{3} + \tfrac{x_3}{\sqrt{6}}\)
+    3. 第 3 行 (节点 3): \(\tfrac{x_2}{\sqrt{6}} + \tfrac{x_3}{2}\)
+    4. 第 4 行 (节点 4): \(\tfrac{x_1}{\sqrt{6}} + \tfrac{x_4}{2}\)
+
+    这就是一次"邻域特征聚合"(包含自环). 你可以看到, 每个节点的新特征都来自于它周围(含自身)节点特征的加权和.
+
+6. 乘以可学习权重 \(\mathbf{W}\) 并加激活
+
+    通常在 GCN 的一层中, 还会加一个可学习的线性变换 \(\mathbf{W}\). 如果你的输入是 1 维特征, 而想输出 \(d'\) 维特征(比如 2 维), 那 \(\mathbf{W}\) 尺寸是 \((1 \times d')\). 整体公式为:
+
+    \[
+    \mathbf{H}
+    = \sigma \Bigl( \tilde{\mathbf{A}} \, \mathbf{X} \, \mathbf{W} \Bigr),
+    \]
+
+    其中 \(\sigma(\cdot)\) 常见是 ReLU 或其它非线性函数.
+
+    - 首先, \(\tilde{\mathbf{A}} \mathbf{X}\) 得到一个 \(4 \times 1\) 的向量(如上所示).
+    - 将其乘以 \(\mathbf{W}\) (例如 \(1\times d'\)) 后, 结果变为 \(4\times d'\) 的矩阵.
+    - 最后通过 \(\sigma\) 做非线性变换, 得到新的节点特征表征 \(\mathbf{H}\) (尺寸同 \(4\times d'\)).
+
+    > 如果初始特征是多维(比如 \(4\times d\)), 只要把上面的计算思路扩展到 \(\tilde{\mathbf{A}} (4\times4)\) × \(\mathbf{X} (4\times d)\) × \(\mathbf{W} (d\times d')\), 就能得到 \(4\times d'\) 的结果, 原理不变, 只是向量变成矩阵运算.
+
+若将上面的公式展开到单个节点$i$的级别, 就能写成下列形式:
+
+\[
+h_i^{(l+1)}
+= \sigma\Biggl(
+  \underbrace{\frac{1}{\sqrt{\hat{D}_{ii}\,\hat{D}_{ii}}} \,W^{(l)}\,h_i^{(l)}}_{\text{自身特征}}
+  \;+\;
+  \underbrace{\sum_{j \in \mathcal{N}_i} \frac{1}{\sqrt{\hat{D}_{ii}\,\hat{D}_{jj}}} \,W^{(l)}\,h_j^{(l)}}_{\text{邻居特征}}
+\Biggr),
+\]
+
+其中:
+
+- \(h_i^{(l)}\) 是第 \(l\) 层时节点 \(i\) 的特征向量(也可以写成 \(\bigl(H^{(l)}\bigr)_{i,:}\)).
+- \(\frac{1}{\sqrt{\hat{D}_{ii}\,\hat{D}_{jj}}}\) 来自对称归一化 \(\hat{D}^{-\tfrac12}\hat{A}\hat{D}^{-\tfrac12}\) 中的系数;
+- "自身特征"其实就是把节点 \(i\) 自己也当做"邻居", 对应 \(\hat{A}_{ii}=1\).
+
+这样就看得更直观: 第 \(i\) 个节点将自己的特征 \(h_i^{(l)}\) 与所有邻居 \(j\) 的特征 \(h_j^{(l)}\) 按照度数进行归一化加权, 然后过一层线性变换 \(W^{(l)}\), 再经过 \(\sigma\) 激活, 得到新的特征 \(h_i^{(l+1)}\).
