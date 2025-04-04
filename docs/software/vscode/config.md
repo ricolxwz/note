@@ -16,7 +16,7 @@ comments: true
     "editor.lineHeight": 1.6,
     "editor.stickyScroll.enabled": false,
     "editor.colorDecorators": false,
-    "editor.codeLens": false,
+    "editor.codeLens": true,
     "editor.links": false,
     "editor.matchBrackets": "always",
     "editor.parameterHints.enabled": true,
