@@ -444,6 +444,7 @@ nav:
     - Windows:
       - Powershell教程: os/windows/powershell.md
       - md5图片: os/windows/md5.md
+      - 切换系统字体: os/windows/change-font.md
   - 软件:
     - Alist:
       - 无法预览PDF: software/alist/cannot-preview-pdf.md
