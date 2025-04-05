@@ -4,6 +4,7 @@ mkdocs-glightbox
 # jieba
 # mkdocs-git-revision-date-localized-plugin
 # mkdocs-git-committers-plugin-2
-mkdocs-static-i18n
+# mkdocs-static-i18n
 # mkdocs-jupyter
-mkdocs-encryptcontent-plugin
+# mkdocs-encryptcontent-plugin
+mkdocs-rss-plugin

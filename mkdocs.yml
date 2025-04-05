@@ -77,14 +77,12 @@ extra:
       link: https://ricolxwz.de
     - icon: fontawesome/brands/github
       link: https://github.com/ricolxwz
-    - icon: fontawesome/brands/gitlab
-      link: https://gitlab.com/ricolxwz
-    - icon: fontawesome/brands/docker
-      link: https://hub.docker.com/u/ricolxwz
     - icon: fontawesome/telegram-brands-solid
       link: https://t.me/ricolxwz
     - icon: fontawesome/at-solid
       link: mailto:ricol.xwz@outlook.com
+    - icon: fontawesome/rss-solid
+      link: https://note.ricolxwz.de/feed_rss_created.xml
   generator: false
   # analytics:
   #   provider: google
@@ -164,6 +162,7 @@ plugins:
   - glightbox:
       skip_classes:
         - skipbox
+  - rss
   # - mkdocs-jupyter:
   #     theme: slate
   #     include_source: True
