@@ -4,7 +4,7 @@ comments: true
 ---
 
 * Alt Snap: 按住Snap就能拖动窗口
-* Wefount: 修改字体为系统字体
+* Wefont: 修改字体为系统字体
 * Auto Dark Mode: 自动切换浅色/深色主题
 * Snipaste: 截屏助手
 * Powertoyes: 系统工具箱
@@ -22,3 +22,4 @@ comments: true
 * Wiztree: 空间(谁占了我的空间)
 * Sumatra PDF: 快速PDF查看器
 * PDF XChange: PDF编辑器
+* WinSCP: webdav, s3客户端
