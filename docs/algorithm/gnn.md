@@ -1,7 +1,9 @@
 ---
 title: GNN
-comments: false
+comments: true
 ---
+
+# GNN[^1]
 
 ## 图的基本组成
 
@@ -571,3 +573,5 @@ Temporal Graph Networks(TGN)是一种针对动态图的深度学习框架, 它�
 ![](https://img.ricolxwz.io/9bab934f0627f79b644debe9ac5b2c56.webp#only-light){ loading=lazy width='600' }
 ![](https://img.ricolxwz.io/9bab934f0627f79b644debe9ac5b2c56_inverted.webp#only-dark){ loading=lazy width='600' }
 </figure>
+
+[^1]: 唐宇迪带你学AI的个人空间-唐宇迪带你学AI个人主页-哔哩哔哩视频. (n.d.). From https://space.bilibili.com/1876980149
