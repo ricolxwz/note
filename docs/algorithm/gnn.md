@@ -332,4 +332,182 @@ h_i^{(l+1)}
 
 ## PyG使用
 
-PyG是一个GNN的Python库.
+PyG是一个GNN的Python库. 一个示例的代码:
+
+```py
+# %%
+import torch
+import networkx as nx
+import matplotlib.pyplot as plt
+
+# %%
+def visualize_graph(G, color=None):
+    plt.figure(figsize=(7, 7))
+    plt.xticks([])
+    plt.yticks([])
+    nx.draw_networkx(G, pos=nx.spring_layout(G, seed=42), with_labels=False, node_color=color, cmap="Set2")
+    plt.show()
+
+def visualize_embedding(h, color, epoch=None, loss=None):
+    plt.figure(figsize=(7, 7))
+    plt.xticks([])
+    plt.yticks([])
+    h = h.detach().cpu().numpy()
+    plt.scatter(h[:, 0], h[:, 1], c=color, s=140, cmap="Set2")
+    if epoch is not None and loss is not None:
+        plt.xlabel(f"Epoch: {epoch}, Loss: {loss:.4f}", fontsize=16)
+    plt.show()
+
+# %%
+from torch_geometric.datasets import KarateClub  # 使用一个示例的数据集
+dataset = KarateClub()
+print(f"Dataset: {dataset}:")
+print("==========================")
+print(f"Number of graphs: {len(dataset)}")
+print(f"Number of features: {dataset.num_features}")
+print(f"Number of classes: {dataset.num_classes}")
+print(f"Number of nodes: {dataset[0].num_nodes}")
+print(f"Number of edges: {dataset[0].num_edges}")
+
+# %%
+data = dataset[0]
+print(data)
+
+# %%
+print(data["train_mask"])  # 这个是一个布尔掩码, 表示哪些节点用于有监督训练
+
+# %%
+edge_index = data["edge_index"]
+print(edge_index.t())  # 这个是一个边索引, 表示图的连接关系
+
+# %%
+from torch_geometric.utils import to_networkx
+G = to_networkx(data, to_undirected=True)
+visualize_graph(G, color=data.y)
+
+# %%
+from torch.nn import Linear
+from torch_geometric.nn import GCNConv
+class GCN(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        torch.manual_seed(42)
+        self.conv1 = GCNConv(dataset.num_features, 4)
+        self.conv2 = GCNConv(4, 4)
+        self.conv3 = GCNConv(4, 2)
+        self.classifier = Linear(2, dataset.num_classes)
+
+    def forward(self, x, edge_index):
+        h = self.conv1(x, edge_index)
+        h = h.tanh()
+        h = self.conv2(h, edge_index)
+        h = h.tanh()
+        h = self.conv3(h, edge_index)
+        h = h.tanh()
+        out = self.classifier(h)
+        return out, h
+model = GCN()
+print(model)
+
+# %%
+# 可视化一下还没训练模型的时候, 它的输出
+model = GCN()
+_, h = model(data.x, data.edge_index)
+print(f"Embedding shape: {list(h.shape)}")
+visualize_embedding(h, color=data.y)
+
+# %%
+import time
+model = GCN()
+criterion = torch.nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+def train(data):
+    optimizer.zero_grad()
+    out, h = model(data.x, data.edge_index)
+    loss = criterion(out[data.train_mask], data.y[data.train_mask])  # 半监督训练
+    loss.backward()
+    optimizer.step()
+    return loss, h
+for epoch in range(401):
+    loss, h = train(data)
+    if epoch % 10 == 0:
+        print(f"Epoch: {epoch}, Loss: {loss.item():.4f}")
+        visualize_embedding(h, color=data.y, epoch=epoch, loss=loss.item())
+        time.sleep(0.3)
+```
+
+这是一开始随机初始化后, `h`在空间中的分布(还未进行训练):
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/4130ba9c496734f38415c1f0f6a3ec51.webp#only-light){ loading=lazy width='400' }
+![](https://img.ricolxwz.io/4130ba9c496734f38415c1f0f6a3ec51_inverted.webp#only-dark){ loading=lazy width='400' }
+</figure>
+
+这是400个epoch之后, `h`在空间中的分布:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/9f811a555cb71fab0c3e50084f55ced9.webp#only-light){ loading=lazy width='400' }
+![](https://img.ricolxwz.io/9f811a555cb71fab0c3e50084f55ced9_inverted.webp#only-dark){ loading=lazy width='400' }
+</figure>
+
+## GAT
+
+Graph Attention Netowrk(GAT)是一种面向图结构数据的神经网络模型, 其核心思想是通过自注意力机制(Self-Attention)来动态调整节点之间的信息交互权重. 简单来说, 在图结构中的每个节点会从它的邻居节点接受信息, 但是不同的邻居对于该节点的重要性不一定相同. GAT引入注意力机制, 根据节点和邻居之间的相关度自动学习到合适的注意力权重, 从而使得模型更准确地捕捉到不同邻居对节点的影响程度.
+
+### 和GCN的区别
+
+GAT和GCN的主要区别在于邻居节点的信息聚合方式:
+
+1. GCN采用固定的邻居权重
+
+    在GCN中, 节点会从邻居节点接受信息, 但是所有的邻居节点的贡献通常按照预先计算好的权重(如对称归一化拉普拉斯矩阵)统一处理. 这个权重是由源点的度和目标节点的度决定的.
+
+2. GAT采用可学习的注意力机制
+
+    GAT通过自注意力机制来计算节点和邻居之间的相对重要性, 每个邻居的权重是科学系的, 从而能够适应不同图结构和节点的特征分布, 提高模型的灵活性和表达能力. GAT并不依赖源点和目标节点的度, 它的权重是由一个注意力得分决定的. 在原始的GAT论文中还使用了多头注意力机制, 即对同一组邻居节点进行多次注意力计算, 然后将这些结果进行拼接或者求平均, 这样做可以在一定程度上稳定训练并增强模型的表达能力.
+
+### 计算过程
+
+在GAT中, attention的计算过程一般可以分成以下的几个步骤:
+
+1. 线性变换
+
+    首先, 对每个节点的特征向量进行一次线性变换. 假设某个节点的原始特征为$h_i$, 则可以通过一个可学习的参数矩阵$\mathbf{W}$得到新的特征表示:
+
+    $$
+    h_i'=\mathbf{W}h_i
+    $$
+
+2. 计算注意力分数
+
+    对于目标节点$i$及其邻居节点$j$, 原始GAT的做法是将它们的特征拼接或者其他的方式组合, 然后通过一个可学习的向量$a$和激活函数(例如LeakyReLU)来得到两者之间的注意力分数$e_{ij}$:
+
+    $$
+    e_{ij}=\text{LeakyReLU}(a^T[h_i'||h_j'])
+    $$
+
+    其中, $||$表示向量拼接, $a^T[h_i'||h_j']$表示向量$a$和向量$[h_i'||h_j']$的内积, 结果是一个标量.
+
+3. 归一化
+
+    在目标节点$i$的所有的邻居节点中, 使用Softmax函数对注意力分数进行归一化, 得到最终的注意力权重$a_{ij}$:
+
+    $$
+    \mathbf{a}_{ij}=\frac{\exp(e_{ij})}{\sum_{k\in N(i)} \exp(e_{ik})}
+    $$
+
+    其中, $N(i)$表示节点$i$的邻居集合.
+
+4. 消息聚合
+
+    最终, 对邻居节点信息进行加权求和, 即将邻居节点特征按照注意力权重$a_ij$来加权:
+
+    $$
+    h_i''=\sum_{j\in N(i)}\mathbf{a}_{ij}h_j'
+    $$
+
+    其中, $h_i''$是节点$i$在该GAT层的输出表示
+
+5. 多头注意力
+
+    在实际应用中, 通常会使用多头注意力机制来增强表达能力并稳定训练. 即对于同一组节点, 进行多次平行的注意力计算, 然后将所有头的结果进行拼接或者求平均.
