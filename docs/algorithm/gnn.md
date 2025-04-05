@@ -520,4 +520,4 @@ Temporal Graph Networks(TGN)是一种针对动态图的深度学习框架, 它�
 
 ### 基本思路
 
-原始的TGN本质上是对GCN上做一个LSTM的套用. 以一个static
+原始的TGN本质上是对GCN上做一个LSTM的套用. 以一个static的图为例
