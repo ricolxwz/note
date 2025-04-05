@@ -63,6 +63,10 @@ comments: true
     "files.insertFinalNewline": true,
     "material-icon-theme.hidesExplorerArrows": true,
     "scm.diffDecorations": "gutter",
-    "extensions.ignoreRecommendations": true
+    "extensions.ignoreRecommendations": true,
+    "vim.autoSwitchInputMethod.enable": true,
+    "vim.autoSwitchInputMethod.defaultIM": "1033",
+    "vim.autoSwitchInputMethod.obtainIMCmd": "C:\\Users\\wenzexu\\AppData\\Local\\Programs\\im-select.exe",
+    "vim.autoSwitchInputMethod.switchIMCmd": "C:\\Users\\wenzexu\\AppData\\Local\\Programs\\im-select.exe {im}",
 }
 ```
