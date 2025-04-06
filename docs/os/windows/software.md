@@ -23,3 +23,12 @@ comments: true
 * Sumatra PDF: 快速PDF查看器
 * PDF XChange: PDF编辑器
 * WinSCP: webdav, s3客户端
+* Bandzip: 压缩软件
+* AnyTXT Searcher: 搜索文档的内容(包括pdf)
+* Localsend: 局域网传文件
+* Utools: 据说是大杂烩
+* IDM: 下载器
+* Hyper-V: 降速
+* WSL: 孪生系统
+* Pixpin: 据说好用的截屏工具
+* Traffic Monitor: 资源监控
