@@ -84,4 +84,30 @@ $$h_{a,b}(x) = (ax + b \mod p) \mod m', \quad x \in \mathbb{Z}_p$$
 
 ## 处理碰撞
 
+幸运的是, 有很多策略来处理碰撞, 大致上可以分为两类: separate chaning和open addressing.
+
 ### 第一幕
+
+Seperate chaining就是当若干元素哈希到相同的bucket的时候, 就在这个bucket后面挂一条链表, 把所有的碰撞到这个桶的元素都保存在这条链表里面. 插入, 查找, 删除操作就直接在对应桶的链表中进行.
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/84b854cb4f32231ddfca6804c7c34adb.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.io/84b854cb4f32231ddfca6804c7c34adb_inverted.webp#only-dark){ loading=lazy width='300' }
+</figure>
+
+负载因子, 令$\alpha = \frac{n}{m'}$,. 表示每个桶期望存放多少的元素. 空间复杂度计算: 需要存储哈希函数, 大小为$m'$的数据, 所有链表节点, 总空间大概是$O(\log m+m'+n\log m)$. 时间复杂度计算: 所有的操作都是$O(1+\alpha)$, 因为在期望里, 每个桶的链表长度大约是$\alpha$. 但是若考虑最大负载(最坏的那个桶的链表长度), 可能达到$\Omega (\log n/\log\log n)$个元素, 操作成本较高.
+
+### 第二幕
+
+传统哈希表只有一个哈希函数, 而open addressing这个方法会准备一系列的哈希函数$h_1, h_2, ..., h_{m'}$. 插入元素$x$的时候, 先看$h_1(x)$指向的位置是否空闲, 若已经被占用就继续看$h_2(x)$, 依次下去, 直到找到空位. 查找或者删除也同理.
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/d168c8cb0921f26580e5856544943f00.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.io/d168c8cb0921f26580e5856544943f00_inverted.webp#only-dark){ loading=lazy width='300' }
+</figure>
+
+一些插入/查找/删除操作的细节:
+
+* 插入: 从$t=1$开始依次检查数据桶$A[h_t(x)]$, 如果碰到$A[h_t(x)]=x$, 不用管, 如果是空或者tomstone符号(⊥), 就在那里插入并停止
+* 查找: 和插入相同
+* 删除: 依次查找, 若碰到$A[h_t(x)]=x$, 则将其置为⊥, 表示曾经有过数据, 但是被删除. 如果删除后直接把桶变成空, 那么后续查找的时候, 一旦撞见这个空桶就会错误地认为查不到了, 但是实际可能还需要继续往后查.
