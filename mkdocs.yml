@@ -206,17 +206,17 @@ plugins:
   #         name: English
   #         build: true
 exclude_docs: |
-  # /software/
-  # /os/
-  # /math/
+  /software/
+  /os/
+  /math/
   # /algorithm
-  # /language/
-  # /dicts/
-  # /others/
-  # /general/
-  # /code/
-  # /research/
-  # /survey/
+  /language/
+  /dicts/
+  /others/
+  /general/
+  /code/
+  /research/
+  /survey/
 nav:
   - 数学:
       - 随机事件和概率: math/random-event-and-probability.md
