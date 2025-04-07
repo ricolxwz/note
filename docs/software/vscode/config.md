@@ -34,7 +34,7 @@ comments: true
     "editor.scrollbar.horizontal": "hidden",
     "editor.overviewRulerBorder": false,
     "editor.hideCursorInOverviewRuler": true,
-    "editor.experimentalEditContextEnabled": true,
+    "editor.experimentalEditContextEnabled": false,
     "editor.formatOnSave": true,
     "custom-ui-style.font.monospace": "Maple Mono Normal NL NF CN",
     "custom-ui-style.font.sansSerif": "Maple Mono Normal NL NF CN",
