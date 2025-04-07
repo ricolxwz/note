@@ -36,6 +36,7 @@ comments: true
     "editor.hideCursorInOverviewRuler": true,
     "editor.experimentalEditContextEnabled": false,
     "editor.formatOnSave": true,
+    "editor.accessibilitySupport": false,
     "custom-ui-style.font.monospace": "Maple Mono Normal NL NF CN",
     "custom-ui-style.font.sansSerif": "Maple Mono Normal NL NF CN",
     "workbench.colorTheme": "Winter is Coming (Dark Black)",
