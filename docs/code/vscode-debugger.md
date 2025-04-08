@@ -50,6 +50,7 @@ comments: true
 * `program`: 调试时要运行的Python程序入口, 这里的`${file}`表示的是当前在VSCode活动编辑器里打开的Python文件
 * `console`: 指定调试时程序运行输出所在的终端, 这里是VSCode的集成终端. 可以根据需要改成`externalTerminal`在外部终端窗口显示
 * `args`: 这里使用了VS Code内置的`${command:pickArgs}`命令, 会在你开始调试的时候让你选择输入或者要传递给程序的命令行参数. 这样就不用在`launch.json`里面写死固定的参数
+* `cwd`: 运行的起始目录
 
 在举个例子:
 
@@ -62,6 +63,7 @@ comments: true
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/train_vq.py",
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "args": [
                 "--batch-size", "256",
