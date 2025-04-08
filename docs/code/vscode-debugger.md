@@ -51,3 +51,38 @@ comments: true
 * `console`: 指定调试时程序运行输出所在的终端, 这里是VSCode的集成终端. 可以根据需要改成`externalTerminal`在外部终端窗口显示
 * `args`: 这里使用了VS Code内置的`${command:pickArgs}`命令, 会在你开始调试的时候让你选择输入或者要传递给程序的命令行参数. 这样就不用在`launch.json`里面写死固定的参数
 * `interpreterPath`: 指定Python解释器的位置
+
+在举个例子:
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Train VQ",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/train_vq.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--batch-size", "256",
+                "--lr", "2e-4",
+                "--total-iter", "300000",
+                "--lr-scheduler", "200000",
+                "--nb-code", "256",
+                "--down-t", "3",
+                "--depth", "3",
+                "--window-size", "32",
+                "--dilation-growth-rate", "3",
+                "--out-dir", "output",
+                "--dataname", "face_conanglobal",
+                "--vq-act", "relu",
+                "--quantizer", "ema_reset",
+                "--loss-vel", "0.5",
+                "--recons-loss", "l1_smooth",
+                "--exp-name", "VQVAE_conanglobal"
+            ]
+        }
+    ]
+}
+```
