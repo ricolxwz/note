@@ -35,7 +35,7 @@ comments: true
     "editor.overviewRulerBorder": false,
     "editor.hideCursorInOverviewRuler": true,
     "editor.experimentalEditContextEnabled": false,
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": false,
     "editor.accessibilitySupport": false,
     "editor.codeLensFontFamily": "Maple Mono Normal NL NF CN",
     "editor.inlayHints.fontFamily": "Maple Mono Normal NL NF CN",
