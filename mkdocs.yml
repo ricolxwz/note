@@ -377,7 +377,9 @@ nav:
       - WSL2配置容器环境: code/configure-wsl-dev.md
       - PyTorch尝试进阶: code/pytorch-advanced.md
       - 在VSCode中使用调试: code/vscode-debugger.md
-      - 有用的代码小片段: code/useful-code-snippet.md
+      - Argparse: code/argparse.md
+      - Logger: code/logger.md
+      - SummaryWritter: code/summary-writer.md
   - 词典:
       - 反向传播: dicts/backpropagation.md
       - 自动微分: dicts/autograd.md
