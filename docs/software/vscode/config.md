@@ -52,7 +52,7 @@ comments: true
     "custom-ui-style.font.monospace": "Maple Mono Normal NL NF CN",
     "custom-ui-style.font.sansSerif": "Maple Mono Normal NL NF CN",
     "workbench.colorTheme": "Winter is Coming (Dark Black)",
-    "workbench.activityBar.location": "bottom",
+    "workbench.activityBar.location": "top",
     "workbench.sideBar.location": "right",
     "workbench.iconTheme": "material-icon-theme",
     "workbench.editor.showTabs": "multiple",
