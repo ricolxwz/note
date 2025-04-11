@@ -34,4 +34,9 @@ sudo dpkg -i cuda-repo-ubuntu2204-12-4-local_12.4.0-550.54.14-1_amd64.deb
 sudo cp /var/cuda-repo-ubuntu2204-12-4-local/cuda-*-keyring.gpg /usr/share/keyrings/
 sudo apt-get update
 sudo apt-get -y install cuda-toolkit-12-4
+
+curl https://chsrc.run/posix | bash
+chsrc set python
+chsrc set ubuntu
+chsrc set conda
 ```
