@@ -39,4 +39,11 @@ curl https://chsrc.run/posix | bash
 chsrc set python
 chsrc set ubuntu
 chsrc set conda
+
+mkdir ~/.ssh
+touch ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+touch ~/.ssh/id_ed25519
+chmod 600 ~/.ssh/id_ed25519
+chmod 700 ~/.ssh
 ```
