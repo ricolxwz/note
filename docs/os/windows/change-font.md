@@ -6,7 +6,7 @@ comments: true
 ## 准备
 
 1. 首先, 备份整个fonts文件夹
-2. 下载Wefont软件, 在Github上面
+2. 下载Weifont软件, 在Github上面
 3. 准备好要替换的字体
 4. 下载WePE, 装到U盘里面
 
