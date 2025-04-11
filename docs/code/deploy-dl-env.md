@@ -8,6 +8,12 @@ apt install tmux
 
 export PATH="/usr/local/cuda/bin:$PATH" >> ~/.bashrc
 export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH" >> ~/.bashrc
+export CUDA_VISIBLE_DEVICES="0" >> /root/.bashrc
+# export CUDA_VISIBLE_DEVICES="0, 1" >> /root/.bashrc
+
+touch ~/.tmux.conf
+echo "set -g mouse on" >> ~/.tmux.conf
+tmux source-file ~/.tmux.conf
 
 curl -fsSL https://pyenv.run | bash
 echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
