@@ -382,6 +382,7 @@ nav:
       - SummaryWritter: code/summary-writer.md
       - 一键部署深度学习环境: code/deploy-dl-env.md
       - AutoDL使用说明: code/autodl.md
+      - 注意力计算: code/attn.md
   - 词典:
       - 反向传播: dicts/backpropagation.md
       - 自动微分: dicts/autograd.md
