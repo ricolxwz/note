@@ -5,6 +5,10 @@ comments: true
 
 下面的代码节选自`site-packages/transformers/modeling_gpt2.py`的`Attention`类.
 
+* `batch_size`: `B`
+* `seq_len`: `T`
+* `hidden_dim`: `D`
+
 ## 初始化
 
 ```py
@@ -35,9 +39,56 @@ def __init__(self, nx, n_ctx, config, scale=False):
 * `assert n_state % config.n_head`: 确保`n_state`可以被`n_head`整除, 在多头注意力中会把embedding的维度平分到各个头上
 * `self.register_buffer("bias", torch.tril(torch.ones(n_ctx, n_ctx)).view(1, 1, n_ctx, n_ctx))`: 生成一个下三角矩阵, 用于因果掩码. 注册的是一个常量张量, 不会被当作可训练参数
 * `self.n_head = config.n_head`: 多头注意力的头数, 在GPT2中, 这个值是12
-* `self.split_size = n_state`:
+* `self.split_size = n_state`: 就是`nx`, 可读性, 兼容性
 * `self.scale`: 表示后续在`_attn`函数中是否使用`1/sqrt(d_k)`做缩放
+* `self.c_attn = Conv1D(n_state * 3, nx)`: 一个Conv1D层, 将输入映射到Q, K, V三个矩阵, 总特征维度是`n_state*3`
+* `self.c_proj = Conv1D(n_state, nx)`: 一个Conv1D层, 将注意力计算结果(value)矩阵做一个线性变换
+* `self.attn_dropout = nn.Dropout(config.attn_pdrop)`: 用于注意力权重的Dropout
+* `self.resid_dropout = nn.Dropout(config.resid_pdrop)`: 用于残差连接的Dropout
+* `self.pruned_heads = set()`: 记录剪枝被剪掉的注意力头
 
+## 前向传播
+
+```py
+def forward(self, x, layer_past=None, attention_mask=None, head_mask=None):
+    x = self.c_attn(x)
+    query, key, value = x.split(self.split_size, dim=2)
+    query = self.split_heads(query)
+    key = self.split_heads(key, k=True)
+    value = self.split_heads(value)
+    if layer_past is not None:
+        past_key, past_value = layer_past[0].transpose(-2, -1), layer_past[1]  # transpose back cf below
+        key = torch.cat((past_key, key), dim=-1)
+        value = torch.cat((past_value, value), dim=-2)
+    present = torch.stack((key.transpose(-2, -1), value))  # transpose to have same shapes for stacking
+
+    attn_outputs = self._attn(query, key, value, attention_mask, head_mask)
+    a = attn_outputs[0]
+
+    a = self.merge_heads(a)
+    a = self.c_proj(a)
+    a = self.resid_dropout(a)
+
+    outputs = [a, present] + attn_outputs[1:]
+    return outputs  # a, present, (attentions)
+```
+
+## 注意力头生成
+
+```py
+def split_heads(self, x, k=False):
+    new_x_shape = x.size()[:-1] + (self.n_head, x.size(-1) // self.n_head)
+    x = x.view(*new_x_shape)  # in Tensorflow implem: fct split_states
+    if k:
+        return x.permute(0, 2, 3, 1)  # (batch, head, head_features, seq_length)
+    else:
+        return x.permute(0, 2, 1, 3)  # (batch, head, seq_length, head_features)
+```
+
+* `x`: 一个批次的嵌入, 形状为`(B, T, D)`, 如`(2, 200, 768*3)`
+* `k`: 决定如何重新排列维度
+* `new_x_shape = x.size()[:-1] + (self.n_head, x.size(-1) // self.n_head)`: 计算新的形状, 原来的形状是`(B, T, D)`, 新的形状是`(B, T, self.n_head, D//self.n_head)`, 例如, 假设`self.n_head=12`, `(2, 200, 768*3)->(2, 200, 64*3)`
+* `x = x.view(*new_x_shape)`: 执行形状变换
 
 ## 注意力权重矩阵计算
 
