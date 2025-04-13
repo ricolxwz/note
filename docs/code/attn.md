@@ -3,7 +3,43 @@ title: 注意力计算
 comments: true
 ---
 
-下面的代码节选自`site-packages/transformers/modeling_gpt2.py`.
+下面的代码节选自`site-packages/transformers/modeling_gpt2.py`的`Attention`类.
+
+## 初始化
+
+```py
+def __init__(self, nx, n_ctx, config, scale=False):
+    super(Attention, self).__init__()
+    self.output_attentions = config.output_attentions
+
+    n_state = nx  # in Attention: n_state=768 (nx=n_embd)
+    # [switch nx => n_state from Block to Attention to keep identical to TF implem]
+    assert n_state % config.n_head == 0
+    self.register_buffer("bias", torch.tril(torch.ones(n_ctx, n_ctx)).view(1, 1, n_ctx, n_ctx))
+    self.n_head = config.n_head
+    self.split_size = n_state
+    self.scale = scale
+
+    self.c_attn = Conv1D(n_state * 3, nx)
+    self.c_proj = Conv1D(n_state, nx)
+    self.attn_dropout = nn.Dropout(config.attn_pdrop)
+    self.resid_dropout = nn.Dropout(config.resid_pdrop)
+    self.pruned_heads = set()
+```
+
+* `nx`: 输入嵌入的维度, 在GPT2中, 这个值是768
+* `n_ctx`: 上下文最大长度, 在GPT2中, 这个值是1024
+* `config`: 一个配置对象, 里面存放了一些超参数, 如`n_head`, `attn_pdrop`, `redis_pdrop`, `output_attn`等
+* `scale`: 决定在注意力计算的时候是否执行`1/sqrt(d_k)`的步骤
+* `n_state`: 就是`nx`
+* `assert n_state % config.n_head`: 确保`n_state`可以被`n_head`整除, 在多头注意力中会把embedding的维度平分到各个头上
+* `self.register_buffer("bias", torch.tril(torch.ones(n_ctx, n_ctx)).view(1, 1, n_ctx, n_ctx))`: 生成一个下三角矩阵, 用于因果掩码. 注册的是一个常量张量, 不会被当作可训练参数
+* `self.n_head = config.n_head`: 多头注意力的头数, 在GPT2中, 这个值是12
+* `self.split_size = n_state`:
+* `self.scale`: 表示后续在`_attn`函数中是否使用`1/sqrt(d_k)`做缩放
+
+
+## 注意力权重矩阵计算
 
 ```py
 def _attn(self, q, k, v, attention_mask=None, head_mask=None):
