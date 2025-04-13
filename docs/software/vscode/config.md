@@ -21,7 +21,7 @@ comments: true
     "editor.matchBrackets": "always",
     "editor.parameterHints.enabled": true,
     "editor.lightbulb.enabled": "off",
-    "editor.hover.enabled": false,
+    "editor.hover.enabled": true,
     "editor.lineNumbers": "relative",
     "editor.showFoldingControls": "never",
     "editor.detectIndentation": false,
