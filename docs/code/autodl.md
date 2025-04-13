@@ -18,3 +18,17 @@ ln -s /root/autodl-tmp/miniconda3 /root/miniconda3
 apt install ncdu
 ncdu
 ```
+
+## Git服务使用代理
+
+```bash
+git config --global http.proxy http://172.26.1.26:12798
+git config --global https.proxy http://172.26.1.26:12798
+```
+
+取消设置:
+
+```bash
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+```
