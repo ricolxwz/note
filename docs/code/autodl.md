@@ -22,8 +22,9 @@ ncdu
 ## Git服务使用代理
 
 ```bash
-git config --global http.proxy http://172.26.1.26:12798
-git config --global https.proxy http://172.26.1.26:12798
+# 西北设置
+git config --global http.proxy http://10.37.1.23:12798
+git config --global https.proxy http://10.37.1.23:12798
 ```
 
 取消设置:
