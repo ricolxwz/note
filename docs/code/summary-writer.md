@@ -1,5 +1,5 @@
 ---
-title: SummaryWritter
+title: SummaryWriter
 comments: true
 ---
 

@@ -379,7 +379,7 @@ nav:
       - 在VSCode中使用调试: code/vscode-debugger.md
       - Argparse: code/argparse.md
       - Logger: code/logger.md
-      - SummaryWritter: code/summary-writer.md
+      - SummaryWriter: code/summary-writer.md
       - 一键部署深度学习环境: code/deploy-dl-env.md
       - AutoDL使用说明: code/autodl.md
       - 注意力计算: code/attn.md
