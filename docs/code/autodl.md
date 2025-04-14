@@ -14,8 +14,8 @@ TMP=/root/autodl-tmp
 echo "export PATH="/usr/local/cuda/bin:\$PATH"" >> ${HOME}/.bashrc
 echo "export LD_LIBRARY_PATH="/usr/local/cuda/lib64:\$LD_LIBRARY_PATH"" >> ${HOME}/.bashrc
 echo "export CUDA_VISIBLE_DEVICES='0'" >> ${HOME}/.bashrc
-echo "export MODEL_RESOURCE_DIR=${TMP}/resource/model" >> ${HOME}/.bashrc
-echo "export DATASET_RESOURCE_DIR=${TMP}/resource/dataset" >> ${HOME}/.bashrc
+# echo "export MODEL_RESOURCE_DIR=${TMP}/resource/model" >> ${HOME}/.bashrc
+# echo "export DATASET_RESOURCE_DIR=${TMP}/resource/dataset" >> ${HOME}/.bashrc
 source ${HOME}/.bashrc
 ```
 
