@@ -7,6 +7,18 @@ comments: true
 
 机器的"最高CUDA"尽量要大, 但是镜像的CUDA尽量要小. 目前选择Miniconda Ubuntu22.04就可以.
 
+## 环境变量配置
+
+```bash
+TMP=/root/autodl-tmp
+echo "export PATH="/usr/local/cuda/bin:\$PATH"" >> ${HOME}/.bashrc
+echo "export LD_LIBRARY_PATH="/usr/local/cuda/lib64:\$LD_LIBRARY_PATH"" >> ${HOME}/.bashrc
+echo "export CUDA_VISIBLE_DEVICES='0'" >> ${HOME}/.bashrc
+echo "export MODEL_RESOURCE_DIR=${TMP}/resource/model" >> ${HOME}/.bashrc
+echo "export DATASET_RESOURCE_DIR=${TMP}/resource/dataset" >> ${HOME}/.bashrc
+source ${HOME}/.bashrc
+```
+
 ## 系统盘不太够
 
 ```bash
