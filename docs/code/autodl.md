@@ -20,6 +20,8 @@ echo "alias hfd='huggingface-cli download --repo-type model --local-dir .'" >> $
 echo "alias hfu*='huggingface-cli upload --repo-type dataset'" >> ${HOME}/.bashrc
 echo "alias hfd*='huggingface-cli download --repo-type dataset --local-dir .'" >> ${HOME}/.bashrc
 
+echo "source /etc/network_turbo" >> ${HOME}/.bashrc
+
 # echo "export MODEL_RESOURCE_DIR=${TMP}/resource/model" >> ${HOME}/.bashrc
 # echo "export DATASET_RESOURCE_DIR=${TMP}/resource/dataset" >> ${HOME}/.bashrc
 source ${HOME}/.bashrc
