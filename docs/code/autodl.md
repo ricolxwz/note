@@ -28,6 +28,7 @@ mkdir /root/autodl-tmp/.cache
 ln -s  /root/autodl-tmp/.cache  ~/.cache
 mv /root/miniconda3 /root/autodl-tmp/miniconda3
 ln -s /root/autodl-tmp/miniconda3 /root/miniconda3
+ln -s /root/autodl-tmp /root/tmp
 ```
 
 查看空间:
