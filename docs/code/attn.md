@@ -8,6 +8,7 @@ comments: true
 * `batch_size`: `B`
 * `seq_len`: `T`
 * `hidden_dim`: `D`
+* `self.num_head`: `H`
 
 ## 初始化
 
@@ -32,7 +33,7 @@ def __init__(self, nx, n_ctx, config, scale=False):
 ```
 
 * `nx`: 输入嵌入的维度, 在GPT2中, 这个值是768
-* `n_ctx`: 上下文最大长度, 在GPT2中, 这个值是1024
+* `n_ctx`: 上下文最大长度, 在GPT2中, 这个值是1024, 它表示的是一次前向传播中模型的输入+输出的最大token数量
 * `config`: 一个配置对象, 里面存放了一些超参数, 如`n_head`, `attn_pdrop`, `redis_pdrop`, `output_attn`等
 * `scale`: 决定在注意力计算的时候是否执行`1/sqrt(d_k)`的步骤
 * `n_state`: 就是`nx`
@@ -73,6 +74,30 @@ def forward(self, x, layer_past=None, attention_mask=None, head_mask=None):
     return outputs  # a, present, (attentions)
 ```
 
+* `layer_past`: 过去时间步的K, V矩阵的缓存, 可以加速推理
+* `head_mask`: 用来对注意力头进行选择性地屏蔽
+* `x = self.c_attn(x)`: 将输入映射到3个矩阵, 形状从(B, T, D)变成(B, T, D*3)
+* `query, key, value = x.split(self.split_size, dim=2)`: 将上一步的拼接结果拆分成Q, K, V三个部分, 每个部分的形状都是(B, T, D), 会在维度2就是最后一个维度上均分三份.
+* `query = self.split_heads(query)`: 把Q拆分成多个注意力头, 形状从(B, T, D)变为(B, H, T, D//H)
+* `key = self.split_heads(key, k=True)`: 将K拆分为多个注意力头, 形状从(B, T, D)变为(B, H, D//H, T), 注意, 这里`k=True`, 这是因为要对矩阵进行转置, 使其能执行torch.matmul(q, k)
+* `value = self.split_heads(value)`: 把V拆分成多个注意力头, 形状从(B, T, D)变为(B, H, T, D//H)
+* `if layer_past is not None:`: 确实是否开启KV Cache
+
+    ???+ note "KV Cache"
+
+        非常好的解释: https://www.bilibili.com/video/BV17CPkeEEzk/?spm_id_from=333.337.search-card.all.click&vd_source=f86bed5e9ae170543d583b3f354fcaa9
+
+        我们在进行自回归输出的时候, 这个T的值是在不断的变大的, 一开始的时候是提示词的token长度, 随着自回归, 这个值会变得非常大, 例如, 目前输入+输出的长度已经达到了100万token. 那么我们的Q, K, V矩阵会变得非常长, 宽还是嵌入维度(如768). `torch.matmul(q, k)`产生的方阵会非常非常大, 100万*100万. 这就是为啥你在比较弱一点的硬件上跑的时候, 随着输出长度越来越大或者对话轮数越来越大, 蹦字的速度越来越慢的原因, GPT-3.5的`n_ctx`是4096, 所以随着你和它聊天轮数的增加, 超出了窗口, 它会对前面的内容进行截取, 导致前面的上下文丢失. 举个例子, 你在叫GPT翻译, 你把"请翻译文本"放在prompt的最前面, 然后粘贴了一个1000字的论文, 然后你聊天聊了几轮之后, 你会发现GPT-3.5似乎在和你对话了, 而不是翻译文本, 这是因为超出了它的窗口, 它看不到一开始的指令tokens了. 这可以通过KV Cache解决, 简单的来说, 我们可以搞一个超级超级大的窗口, 然后用KV Cache实现高效推理.
+
+        * 如果没有KV Cache, 那么这个方阵的下三角区域全部都要重新计算, 非常消耗计算资源
+        * 如果有KV Cache, 那么这个方阵的下三角区域只有最后一行要重新计算, 即只有当前的新token的Q, K, V是变的, 而之前所有tokens的K, V都是缓存的. 为什么Q不缓存呢? 我们想要得到这一行, 需要知道前面所有tokens的K, torch.matmul(Q, K)得到权重向量, 这个权重向量代表了前面所有tokens的权重, 和它们的V相乘把信息汇总到当前的这个token的V里面.
+
+        KV Cache的Trade OFF是内存的消耗增加了, 但是QK矩阵乘法的效率增加了.
+
+    * `key = torch.cat((past_key, key), dim=-1)`: 将之前的key和新key在最后一维(dim = -1)进行拼接, 注意了之前Key的维度是(B, H, D//H, T), 拼接之后的维度是(B, H, D//H, T+1)
+    * `value = torch.cat((past_value, value), dim=-2)`: 将之前的value和新value在倒数第二维(dim = -2)进行拼接, 注意了之前Value的维度是(B, H, T, D//H), 拼接之后的维度是(B, H, T+1, D//H)
+    * `present = torch.stack((key.transpose(-2, -1), value))`: 每个transformer block都会执行一个`forward`函数, 所以在一次前向传播中`past_key`和`past_value`这两个量都是不会变的, 但是新token的`key`, `value`, `query`在不停改变, 所以`present`表示的是当前block的KV Cache+新token的KV
+
 ## 注意力头生成
 
 ```py
@@ -85,9 +110,9 @@ def split_heads(self, x, k=False):
         return x.permute(0, 2, 1, 3)  # (batch, head, seq_length, head_features)
 ```
 
-* `x`: 一个批次的嵌入, 形状为`(B, T, D)`, 如`(2, 200, 768*3)`
-* `k`: 决定如何重新排列维度
-* `new_x_shape = x.size()[:-1] + (self.n_head, x.size(-1) // self.n_head)`: 计算新的形状, 原来的形状是`(B, T, D)`, 新的形状是`(B, T, self.n_head, D//self.n_head)`, 例如, 假设`self.n_head=12`, `(2, 200, 768*3)->(2, 200, 64*3)`
+* `x`: 一个批次的嵌入, 形状为`(B, T, D)`, 如`(2, 200, 768)`
+* `k`: 决定如何重新排列维度, 对K矩阵要执行转置(见`forward`函数)
+* `new_x_shape = x.size()[:-1] + (self.n_head, x.size(-1) // self.n_head)`: 计算新的形状, 原来的形状是`(B, T, D)`, 新的形状是`(B, H, T, D//H)`, 例如, 假设`self.n_head=12`, `(2, 200, 768)->(2, 12, 200, 64)`
 * `x = x.view(*new_x_shape)`: 执行形状变换
 
 ## 注意力权重矩阵计算
