@@ -15,10 +15,10 @@ echo "export PATH="/usr/local/cuda/bin:\$PATH"" >> ${HOME}/.bashrc
 echo "export LD_LIBRARY_PATH="/usr/local/cuda/lib64:\$LD_LIBRARY_PATH"" >> ${HOME}/.bashrc
 echo "export CUDA_VISIBLE_DEVICES='0'" >> ${HOME}/.bashrc
 
-echo "alias hfu='huggingface-cli upload --repo-type model'"
-echo "alias hfd='huggingface-cli download --repo-type model'"
-echo "alias hfu*='huggingface-cli upload --repo-type dataset'"
-echo "alias hfd*='huggingface-cli download --repo-type dataset'"
+echo "alias hfu='huggingface-cli upload --repo-type model'" >> ${HOME}/.bashrc
+echo "alias hfd='huggingface-cli download --repo-type model'" >> ${HOME}/.bashrc
+echo "alias hfu*='huggingface-cli upload --repo-type dataset'" >> ${HOME}/.bashrc
+echo "alias hfd*='huggingface-cli download --repo-type dataset'" >> ${HOME}/.bashrc
 
 # echo "export MODEL_RESOURCE_DIR=${TMP}/resource/model" >> ${HOME}/.bashrc
 # echo "export DATASET_RESOURCE_DIR=${TMP}/resource/dataset" >> ${HOME}/.bashrc
