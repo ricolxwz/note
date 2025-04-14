@@ -78,5 +78,6 @@ comments: true
     "material-icon-theme.hidesExplorerArrows": true,
     "scm.diffDecorations": "gutter",
     "extensions.ignoreRecommendations": true,
+    "window.commandCenter": true,
 }
 ```
