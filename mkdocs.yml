@@ -534,6 +534,8 @@ nav:
     - Xray:
       - 申请证书: software/xray/apply-cert.md
       - 无缝切换ip: software/xray/switch-ip.md
+  - 研究:
+    - 感悟: research/feeling.md
   - 其他:
     - 个人使用的prompt: others/prompt.md
     - 科研神器: others/research-god-tool.md
