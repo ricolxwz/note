@@ -3,7 +3,7 @@ title: 注意力计算
 comments: true
 ---
 
-下面的代码节选自`site-packages/transformers/modeling_gpt2.py`的`Attention`类.
+下面的代码节选自`site-packages/transformers/modeling_gpt2.py`的`Attention`类, 版本: transformers==2.1.1
 
 * `batch_size`: `B`
 * `seq_len`: `T`
@@ -83,7 +83,7 @@ def forward(self, x, layer_past=None, attention_mask=None, head_mask=None):
 * `value = self.split_heads(value)`: 把V拆分成多个注意力头, 形状从(B, T, D)变为(B, H, T, D//H)
 * `if layer_past is not None:`: 确实是否开启KV Cache
 
-    ???+ note "KV Cache"
+    ??? note "KV Cache"
 
         非常好的解释: https://www.bilibili.com/video/BV17CPkeEEzk/?spm_id_from=333.337.search-card.all.click&vd_source=f86bed5e9ae170543d583b3f354fcaa9
 
@@ -94,9 +94,15 @@ def forward(self, x, layer_past=None, attention_mask=None, head_mask=None):
 
         KV Cache的Trade OFF是内存的消耗增加了, 但是QK矩阵乘法的效率增加了.
 
-    * `key = torch.cat((past_key, key), dim=-1)`: 将之前的key和新key在最后一维(dim = -1)进行拼接, 注意了之前Key的维度是(B, H, D//H, T), 拼接之后的维度是(B, H, D//H, T+1)
-    * `value = torch.cat((past_value, value), dim=-2)`: 将之前的value和新value在倒数第二维(dim = -2)进行拼接, 注意了之前Value的维度是(B, H, T, D//H), 拼接之后的维度是(B, H, T+1, D//H)
-    * `present = torch.stack((key.transpose(-2, -1), value))`: 每个transformer block都会执行一个`forward`函数, 所以在一次前向传播中`past_key`和`past_value`这两个量都是不会变的, 但是新token的`key`, `value`, `query`在不停改变, 所以`present`表示的是当前block的KV Cache+新token的KV
+* `key = torch.cat((past_key, key), dim=-1)`: 将之前的key和新key在最后一维(dim = -1)进行拼接, 注意了之前Key的维度是(B, H, D//H, T), 拼接之后的维度是(B, H, D//H, T+1)
+* `value = torch.cat((past_value, value), dim=-2)`: 将之前的value和新value在倒数第二维(dim = -2)进行拼接, 注意了之前Value的维度是(B, H, T, D//H), 拼接之后的维度是(B, H, T+1, D//H)
+* `present = torch.stack((key.transpose(-2, -1), value))`: 每个transformer block都会执行一个`forward`函数, 所以在一次前向传播中`past_key`和`past_value`这两个量都是不会变的, 但是新token的`key`, `value`, `query`在不停改变, 所以`present`表示的是当前block的KV Cache+新token的KV
+* `attn_outputs = self._attn(query, key, value, attention_mask, head_mask)`: 执行注意力机制的核心计算过程, 返回的是经过更新后的V, 形状为(B, H, T+1, D//H)
+* `a = attn_outputs[0]`: 取第一个元素, attn_outputs的输出第一个元素是更新后的V, 第二个元素是注意力权重, 用于可视化
+* `a = self.merge_heads(a)`: 将注意力头合并, 形状从(B, H, T+1, D//H)变为(B, T+1, D), 这里的`merge_heads`函数是`split_heads`函数的逆操作
+* `a = self.c_proj(a)`: 将注意力计算结果做线性变换, 形状保持不变, 还是(B, T+1, D), 这里的`c_proj`是一个Conv1D层
+* `a = self.resid_dropout(a)`: 对注意力计算结果施加dropout, 减少模型过拟合, 让注意力分布更具有随机性
+* `outputs = [a, present] + attn_outputs[1:]`: 返回的结果是一个列表, 包括更新后的Value矩阵, present矩阵和注意力权重(如有)
 
 ## 注意力头生成
 
@@ -114,6 +120,20 @@ def split_heads(self, x, k=False):
 * `k`: 决定如何重新排列维度, 对K矩阵要执行转置(见`forward`函数)
 * `new_x_shape = x.size()[:-1] + (self.n_head, x.size(-1) // self.n_head)`: 计算新的形状, 原来的形状是`(B, T, D)`, 新的形状是`(B, H, T, D//H)`, 例如, 假设`self.n_head=12`, `(2, 200, 768)->(2, 12, 200, 64)`
 * `x = x.view(*new_x_shape)`: 执行形状变换
+
+## 注意力头合并
+
+```py
+def merge_heads(self, x):
+        x = x.permute(0, 2, 1, 3).contiguous()
+        new_x_shape = x.size()[:-2] + (x.size(-2) * x.size(-1),)
+        return x.view(*new_x_shape)  # in Tensorflow implem: fct merge_states
+```
+
+* `x`: 更新之后的V, 形状为(B, H, T+1, D//H)
+* `x = x.permute(0, 2, 1, 3).contiguous()`: 将维度重新排列, 变为(B, T+1, H, D//H), 注意这里的`contiguous()`是为了保证内存连续性, 这样可以避免后续的view操作出错
+* `new_x_shape = x.size()[:-2] + (x.size(-2) * x.size(-1),)`: 计算新的形状, 原来的形状是(B, T+1, H, D//H), 新的形状是(B, T+1, D), 例如, 假设`self.n_head=12`, `(2, 201, 12, 64)->(2, 201, 768)`
+* `return x.view(*new_x_shape)`: 执行形状变换, 这里的`view`操作会把最后两个维度合并成一个维度, 这样就得到了更新后的V矩阵, 形状为(B, T+1, D)
 
 ## 注意力权重矩阵计算
 
@@ -152,3 +172,199 @@ def _attn(self, q, k, v, attention_mask=None, head_mask=None):
 * `if head_mask is not None: w = w * head_mask`: 如果有`head_mask`, 说明在训练或者推理的时候要屏蔽掉某些注意力头, 会在对应注意力权重上乘以`0`(或其他权重)
 * `outputs = [torch.matmul(w, v)]`: 最后用`w`和`v`做矩阵乘法, 得到加权后的value输出
 * `if self.output_attentions: outputs.append(w)`: 如果`self.output_attentions`为真, 那么会在`outputs`中把注意力权重`w`一并返回, 方便后续做可视化或其他分析
+
+## 注意力头剪枝
+
+下面的这个函数用于从模型中移除指定的注意力头, 这是一种常见的模型压缩技术, 可以减小模型的大小, 加快推理速度, 同时尽量保持模型的性能.
+
+```py
+def prune_heads(self, heads):
+    if len(heads) == 0:
+        return
+    mask = torch.ones(self.n_head, self.split_size // self.n_head)
+    heads = set(heads) - self.pruned_heads  # Convert to set and emove already pruned heads
+    for head in heads:
+        # Compute how many pruned heads are before the head and move the index accordingly
+        head = head - sum(1 if h < head else 0 for h in self.pruned_heads)
+        mask[head] = 0
+    mask = mask.view(-1).contiguous().eq(1)
+    index = torch.arange(len(mask))[mask].long()
+    index_attn = torch.cat([index, index + self.split_size, index + (2*self.split_size)])
+
+    # Prune conv1d layers
+    self.c_attn = prune_conv1d_layer(self.c_attn, index_attn, dim=1)
+    self.c_proj = prune_conv1d_layer(self.c_proj, index, dim=0)
+
+    # Update hyper params
+    self.split_size = (self.split_size // self.n_head) * (self.n_head - len(heads))
+    self.n_head = self.n_head - len(heads)
+    self.pruned_heads = self.pruned_heads.union(heads)
+```
+
+* `heads`: 需要剪枝的注意力头的列表, 例如`[0, 1, 2]`, 表示要剪掉第0, 1, 2个注意力头
+* `if len(heads) == 0: return`: 如果没有要剪枝的头, 直接返回
+* `mask = torch.ones(self.n_head, self.split_size // self.n_head)`: 创建一个掩码矩阵, 形状为`(H, D//H)`, 用于标记哪些注意力头是保留的, 哪些是剪掉的, 初始为全1, 表示所有头都保留.
+* `heads = set(heads) - self.pruned_heads`: 将要剪掉的头转换为集合, 并去除已经剪掉的头, 以避免重复剪枝
+* `head = head - sum(1 if h < head else 0 for h in self.pruned_heads)`: 计算在当前头索引之前有多少头已经被剪枝, 并调整索引值(因为之前的剪枝操作会影响后面的索引)
+* `mask[head]=0`: 将当前剪掉的头在掩码矩阵中标记为0, 表示该头被剪掉
+
+    ??? example "调整索引"
+
+        假设我们的Transformer模型最初有8个注意力头, 编号为0-7.
+
+        1. 初始状态
+
+            - 所有头都存在: [0, 1, 2, 3, 4, 5, 6, 7]
+            - 已剪枝头集合: `self.pruned_heads = {}`
+
+        2. 第一次剪枝操作
+
+            假设我们要剪掉头 [2, 5]:
+
+            ```python
+            heads = [2, 5]
+            ```
+
+            处理头2:
+
+            - 计算2之前有多少个已被剪枝的头: `sum(1 if h < 2 else 0 for h in self.pruned_heads) = 0`
+            - 调整后的索引: `head = 2 - 0 = 2`
+            - 设置`mask[2] = 0`(标记为需要剪枝)
+
+            处理头5:
+
+            - 计算5之前有多少个已被剪枝的头: `sum(1 if h < 5 else 0 for h in self.pruned_heads) = 0`
+            - 调整后的索引: `head = 5 - 0 = 5`
+            - 设置`mask[5] = 0`
+
+            剪枝后:
+
+            - 剩余头: [0, 1, 3, 4, 6, 7]
+            - 已剪枝头集合更新为: `self.pruned_heads = {2, 5}`
+
+        3. 第二次剪枝操作
+
+            现在, 假设我们要剪掉原始编号为 [3, 6] 的头:
+
+            ```python
+            heads = [3, 6]
+            ```
+
+            处理头3:
+
+            - 关键点: 计算3之前有多少个已被剪枝的头: `sum(1 if h < 3 else 0 for h in self.pruned_heads) = 1`(只有头2小于3)
+            - 调整后的索引: `head = 3 - 1 = 2`
+            - 设置`mask[2] = 0`(注意: 这里的索引2对应的是当前数组中的第三个元素, 也就是原始头3)
+
+            处理头6:
+
+            - 关键点: 计算6之前有多少个已被剪枝的头: `sum(1 if h < 6 else 0 for h in self.pruned_heads) = 2`(头2和头5都小于6)
+            - 调整后的索引: `head = 6 - 2 = 4`
+            - 设置`mask[4] = 0`(注意: 这里的索引4对应的是当前数组中的第五个元素, 也就是原始头6)
+
+            剪枝后:
+
+            - 剩余头: [0, 1, 4, 7]
+            - 已剪枝头集合更新为: `self.pruned_heads = {2, 3, 5, 6}`
+
+* 后续代码
+
+    ??? example "剪枝"
+
+        假设我们有一个Transformer模型, 其配置如下:
+
+        - 4个注意力头(`n_head = 4`)
+        - 每个头的维度为16(`split_size // n_head = 16`)
+        - 总特征维度为64(`split_size = 64`)
+        - 我们要剪枝的头是 [1, 3]
+
+        1. 创建并应用掩码
+
+            经过前面的代码处理后, 我们得到了一个掩码矩阵:
+            ```
+            [[1,1,...,1],  # 头0: 保留(16个1)
+            [0,0,...,0],  # 头1: 剪枝(16个0)
+            [1,1,...,1],  # 头2: 保留(16个1)
+            [0,0,...,0]]  # 头3: 剪枝(16个0)
+            ```
+
+        2. 处理掩码和创建索引
+
+            ```python
+            mask = mask.view(-1).contiguous().eq(1)
+            ```
+
+            这一行将二维掩码展平成一维并转换为布尔值:
+
+            - 展平后: [1,1,...,1, 0,0,...,0, 1,1,...,1, 0,0,...,0]
+            - 转换为布尔值后: [True,True,...,True, False,False,...,False, True,True,...,True, False,False,...,False]
+
+            ```python
+            index = torch.arange(len(mask))[mask].long()
+            ```
+
+            这一行创建保留位置的索引:
+
+            - 首先生成 [0,1,2,...,63]
+            - 然后只保留掩码为True的位置
+            - 结果是: [0,1,...,15, 32,33,...,47]
+
+        3. 创建注意力矩阵的索引
+
+            ```python
+            index_attn = torch.cat([index, index + self.split_size, index + (2*self.split_size)])
+            ```
+
+            在Transformer中, QKV(查询, 键, 值)通常合并在一个矩阵中:
+
+            - 前64个位置对应Q
+            - 中间64个位置对应K
+            - 后64个位置对应V
+
+            因此这行代码构建了完整的索引:
+
+            - index: [0,1,...,15, 32,33,...,47] (Q部分)
+            - index + 64: [64,65,...,79, 96,97,...,111] (K部分)
+            - index + 128: [128,129,...,143, 160,161,...,175] (V部分)
+            - 合并后: [0,1,...,15, 32,33,...,47, 64,65,...,79, 96,97,...,111, 128,129,...,143, 160,161,...,175]
+
+        4. 实际执行剪枝操作
+
+            ```python
+            self.c_attn = prune_conv1d_layer(self.c_attn, index_attn, dim=1)  # 列方向索引
+            self.c_proj = prune_conv1d_layer(self.c_proj, index, dim=0)  # 行方向索引
+            ```
+
+            若没有剪枝:
+
+            - c_attn输入形状: [B, T, 64]
+            - c_proj输入形状: [B, T+1, 64]
+            - 经过c_attn的输出形状: [B, T, 3×64] (计算QKV的层)
+            - 经过c_proj的输出形状: [B, T+1, 64] (注意力输出投影层)
+
+            若有剪枝(原本是4个头, 现在只要2个头, 但是每个头的维度还是16):
+
+            - c_attn输入形状: [B, T, 64]
+            - c_proj输入形状: [B, T+1, 32]
+            - 经过c_attn的输出形状: [B, T, 3×32] (只保留头0和头2的列)
+            - 经过c_proj的输出形状: [B, T+1, 32] (只保留头0和头2的行)
+
+        5. 更新模型参数
+
+            ```python
+            self.split_size = (self.split_size // self.n_head) * (self.n_head - len(heads))
+            ```
+
+            新的特征维度 = (64 ÷ 4) × (4 - 2) = 16 × 2 = 32
+
+            ```python
+            self.n_head = self.n_head - len(heads)
+            ```
+
+            新的头数量 = 4 - 2 = 2
+
+            ```python
+            self.pruned_heads = self.pruned_heads.union(heads)
+            ```
+
+            更新已剪枝头的集合: self.pruned_heads = self.pruned_heads ∪ {1, 3}
