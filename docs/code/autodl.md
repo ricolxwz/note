@@ -15,10 +15,10 @@ echo "export PATH="/usr/local/cuda/bin:\$PATH"" >> ${HOME}/.bashrc
 echo "export LD_LIBRARY_PATH="/usr/local/cuda/lib64:\$LD_LIBRARY_PATH"" >> ${HOME}/.bashrc
 echo "export CUDA_VISIBLE_DEVICES='0'" >> ${HOME}/.bashrc
 
-echo "alias hfu='huggingface-cli upload --repo-type model'" >> ${HOME}/.bashrc
-echo "alias hfd='huggingface-cli download --repo-type model --local-dir .'" >> ${HOME}/.bashrc
-echo "alias hfu*='huggingface-cli upload --repo-type dataset'" >> ${HOME}/.bashrc
-echo "alias hfd*='huggingface-cli download --repo-type dataset --local-dir .'" >> ${HOME}/.bashrc
+echo "alias hfu='huggingface-cli upload --repo-type model --include'" >> ${HOME}/.bashrc
+echo "alias hfd='huggingface-cli download --repo-type model --local-dir . --include'" >> ${HOME}/.bashrc
+echo "alias hfu*='huggingface-cli upload --repo-type dataset --include'" >> ${HOME}/.bashrc
+echo "alias hfd*='huggingface-cli download --repo-type dataset --local-dir . --include'" >> ${HOME}/.bashrc
 
 echo "source /etc/network_turbo" >> ${HOME}/.bashrc
 
