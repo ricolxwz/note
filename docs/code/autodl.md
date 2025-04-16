@@ -7,6 +7,14 @@ comments: true
 
 机器的"最高CUDA"尽量要大, 但是镜像的CUDA尽量要小. 目前选择Miniconda Ubuntu22.04就可以.
 
+## Tmux设置
+
+```bash
+echo "set -g mouse on" >> ${HOME}/.tmux.conf
+echo "set -g default-command 'bash -c \"source ~/.bashrc; exec bash\"'" >> ${HOME}/.tmux.conf
+tmux source-file ${HOME}/.tmux.conf
+```
+
 ## 环境变量配置
 
 ```bash
