@@ -19,7 +19,8 @@ tmux source-file ${HOME}/.tmux.conf
 
 ```bash
 TMP=/root/autodl-tmp
-echo "export PATH="/usr/local/cuda/bin:\$PATH"" >> ${HOME}/.bashrc
+
+echo "export PATH="/usr/local/cuda/bin:${TMP}/.local/bin:\$PATH"" >> ${HOME}/.bashrc
 echo "export LD_LIBRARY_PATH="/usr/local/cuda/lib64:\$LD_LIBRARY_PATH"" >> ${HOME}/.bashrc
 echo "export CUDA_VISIBLE_DEVICES='0'" >> ${HOME}/.bashrc
 
@@ -30,9 +31,22 @@ echo "alias hfd*='huggingface-cli download --repo-type dataset --local-dir . --i
 
 echo "source /etc/network_turbo" >> ${HOME}/.bashrc
 
-# echo "export MODEL_RESOURCE_DIR=${TMP}/resource/model" >> ${HOME}/.bashrc
-# echo "export DATASET_RESOURCE_DIR=${TMP}/resource/dataset" >> ${HOME}/.bashrc
+echo "export MODEL_RESOURCE_DIR=${TMP}/resource/model" >> ${HOME}/.bashrc
+echo "export DATASET_RESOURCE_DIR=${TMP}/resource/dataset" >> ${HOME}/.bashrc
+
+echo "alias mm='micromamba'" >> ${HOME}/.bashrc
+
 source ${HOME}/.bashrc
+```
+
+## 配置micromamba
+
+```bash
+TMP=/root/autodl-tmp
+mm shell init -s bash -r ${TMP}/micromamba
+source ${HOME}/.bashrc
+mm config append channels conda-forge
+mm config set channel_priority strict
 ```
 
 ## 系统盘不太够
