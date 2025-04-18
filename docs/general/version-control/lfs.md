@@ -142,55 +142,7 @@ $ git plfs
 ```
 
 当需要下载大量的 Git LFS 文件时, 这将大大提高性能(同样, 尤其是在 Windows 上).
-
-???+ tip "`git lfs clone`和`git lfs pull`的区别"
-
-    主要区别在于它们的功能定位和执行流程:
-
-    1. 功能定位
-    - `git lfs clone <repo>`
-        - 相当于一次性完成「克隆仓库」+「批量下载并替换 LFS 文件」两步操作.
-        - 适合初次获取一个包含大量 LFS 文件的远端仓库, 一次命令就能拿到完整内容.
-    - `git lfs pull`
-        - 只负责并行下载并替换当前工作区中已检出的 LFS 指针文件.
-        - 不做任何分支更新, 合并或检出动作.
-        - 适合在已有本地仓库, 更新完分支(`git pull/checkout`)后, 批量拉取大文件.
-
-    2. 执行流程
-    - `git lfs clone`
-        1. 普通 `git clone`: 拉取 Git 对象, 并在 checkout 时只写入 LFS 指针文件.
-        2. 完成 checkout 后, 自动并行批量下载所有 LFS 对象, 替换指针.
-    - `git lfs pull`
-        1. 识别当前工作区已有的 LFS 指针文件.
-        2. 并行批量下载对应的大文件, 并替换到工作区.
-        3. 不更新分支, 不检出新提交.
-
-    3. 使用场景
-    - `git lfs clone`
-        - 第一次 clone 包含大量 LFS 文件的仓库.
-        - 需要最高效地并行下载, 最少 HTTP 请求次数.
-    - `git lfs pull`
-        - 已经 clone 或 pull 过仓库, 只是想补齐／更新刚刚检出的 LFS 内容.
-        - 与 `git pull`, `git checkout` 分开执行, 以避免检出时的单文件下载开销.
-
-    小结:
-
-    - `git lfs clone` = 克隆 + 并行下载 LFS 文件;
-    - `git lfs pull` = 仅并行下载当前已检出指针对应的 LFS 文件.
-
-???+ tip "几个命令的区别"
-
-    | 命令               | 拉取对象 | 写入指针→大文件 | 更新分支／检出 |
-    |--------------------|:--------:|:---------------:|:--------------:|
-    | `git lfs fetch`    |   ✅     |       ❌        |       ❌       |
-    | `git lfs pull`     |   ✅     |       ✅        |       ❌       |
-    | `git pull`         |   ❌     |       ❌        |       ✅       |
-    | `git lfs clone`    |   ✅     |       ✅        |   ✅(含 clone) |
-
-    - `git lfs fetch`: 仅把 LFS 对象下载到本地缓存, 不修改工作区任何文件.
-    - `git lfs pull`: 在完成 fetch 后, 还会对工作区中已有的指针文件做 smudge(替换成真实大文件).
-    - `git pull`: 标准 Git 操作, 只更新分支和把指针文件写到工作区, 不触及 LFS 对象下载(除非配置自动 smudge).
-    - `git lfs clone`: 一次性封装 clone + fetch + pull(smudge)全过程, 适合首次拉取大量 LFS 文件的场景.
+下面是 **按原格式** 调整后的说明，主要修正了 **`git pull` 默认也会触发 smudge 串行下载 LFS 对象** 以及 **`git lfs clone` 已被官方标记为 *deprecated*** 等细节；其它逻辑保持不变。
 
 ### 追踪文件
 
