@@ -79,6 +79,7 @@ comments: true
     "scm.diffDecorations": "gutter",
     "extensions.ignoreRecommendations": true,
     "window.commandCenter": true,
-    "inlineChat.lineNaturalLanguageHint": false
+    "inlineChat.lineNaturalLanguageHint": false,
+    "files.eol": "\n",
 }
 ```
