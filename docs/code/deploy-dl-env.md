@@ -16,6 +16,8 @@ export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH" >> ~/.bashrc
 export CUDA_VISIBLE_DEVICES="0" >> ~/.bashrc
 export MODEL_RESOURCE_DIR=${TMP}/resource/model
 export DATASET_RESOURCE_DIR=${TMP}/resource/dataset
+export HF_HUB_DOWNLOAD_TIMEOUT=60
+export HF_HUB_ETAG_TIMEOUT=60
 
 # soft links
 ln -s  ${TMP}/.cache  ~/.cache
