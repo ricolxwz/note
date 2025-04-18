@@ -46,6 +46,22 @@ Git LFS是无缝的, 在你的工作副本中, 你只会看到实际的文件内
 
 ## 使用
 
+| 命令             | 拉取 LFS 对象         | 写入指针→大文件      | 更新分支／检出    |
+|------------------|----------------------|----------------------|------------------|
+| `git lfs fetch`  | ✅                   | ❌                   | ❌               |
+| `git lfs pull`   | ✅                   | ✅                   | ❌               |
+| `git fetch`      | ❌（仅指针）          | ❌                   | ❌               |
+| `git pull`       | ✅（串行 smudge）     | ✅（同上）           | ✅               |
+| `git clone`      | ✅（串行 smudge）     | ✅（同上）           | ✅（含 clone）    |
+| `git lfs clone`  | ✅                   | ✅                   | ✅（含 clone）    |
+
+- `git lfs fetch`：仅把 LFS 对象下载到本地缓存，不修改工作区任何文件。
+- `git lfs pull`：`git lfs fetch` 之后自动 `git lfs checkout`，将指针替换为真实大文件。
+- `git fetch`：只更新远程跟踪分支，不触及工作区，也不会自动下载 LFS 对象（只拉指针）。
+- `git pull`：`git fetch` + 合并或快进，再 checkout；默认在 checkout 阶段用 smudge 过滤器*串行*下载所需 LFS 对象，可用 `filter.lfs.smudge=0` 关闭。
+- `git clone`：相当于 `git init` + `git fetch` + 首次 checkout；若启用 smudge，会像 `git pull` 一样*串行*下载当前分支所需的 LFS 对象
+- `git lfs clone`：封装 clone + 并行下载全过程，已被官方标记为 *deprecated*，未来可能移除。
+
 ### 初始化
 
 怎么安装就不说了, 一旦安装好了, 运行`git lfs install`来初始化. 只需要运行`git lfs install`一次. 为你的系统初始化之后, 当你克隆包含LFS内容的仓库的时候, Git LFS将自动进行自我引导启动. 但是如果你要新建一个支持Git LFS的仓库, 需要在创建仓库之后运行`git lfs install`.
