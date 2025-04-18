@@ -206,17 +206,17 @@ plugins:
   #         name: English
   #         build: true
 exclude_docs: |
-  # /software/
-  # /os/
-  # /math/
-  # /algorithm
-  # /language/
-  # /dicts/
-  # /others/
+  /software/
+  /os/
+  /math/
+  /algorithm
+  /language/
+  /dicts/
+  /others/
   # /general/
-  # /code/
-  # /research/
-  # /survey/
+  /code/
+  /research/
+  /survey/
 nav:
   - 数学:
       - 随机事件和概率: math/random-event-and-probability.md
@@ -308,6 +308,7 @@ nav:
       - 回退: general/version-control/revert.md
       - 配置: general/version-control/config.md
       - 账户: general/version-control/account.md
+      - LFS: general/version-control/lfs.md
     - 容器:
       - dockerfile: general/containerization/dockerfile.md
     - k8s:
