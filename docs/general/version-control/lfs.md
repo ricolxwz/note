@@ -9,16 +9,16 @@ Git LFS会将仓库中的大文件替换为微小的指针文件. 在正常使�
 
 1. 当你添加一个LFS文件到暂存区的时候(`git add xxx`), Git LFS用一个指针替换其内容, 并将文件内容存储在本地Git LFS的缓存中(本地Git LFS缓存位于仓库的`.git/lfs/objects`目录中).
 
+    <figure markdown='1' id='$figid'>
+    ![](https://img.ricolxwz.io/a45ca0cb2280cf91e367a707c2144fbf.webp#only-light){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.io/a45ca0cb2280cf91e367a707c2144fbf_inverted.webp#only-dark){ loading=lazy width='400' }
+    </figure>
 
 2. 当你推送新的提交到服务器的时候, 新推送的提交引用的所有Git LFS文件都会从本地Git LFS缓存传输到绑定到Git仓库的远程Git LFS存储.
 
     <figure markdown='1' id='fig'>
-    ![](https://img.ricolxwz.io/0f922d9b8285033cc5cbab2fa9488268.webp#only-light){ loading=lazy width='800' }
-    ![](https://img.ricolxwz.io/0f922d9b8285033cc5cbab2fa9488268_inverted.webp#only-dark){ loading=lazy width='800' }
-    <figcaption>鍥?id: </figcaption>
+    ![](https://img.ricolxwz.io/0f922d9b8285033cc5cbab2fa9488268.webp#only-light){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.io/0f922d9b8285033cc5cbab2fa9488268_inverted.webp#only-dark){ loading=lazy width='400' }
     </figure>
 
 3. 当你checkout一个包含Git LFS指针的提交的时候, 指针文件将替换为本地Git LFS缓存中的文件, 或者从远端Git LFS存储中下载.
-
-<figure markdown='1' id='$figid'>
-</figure>
