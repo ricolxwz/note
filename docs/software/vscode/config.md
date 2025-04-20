@@ -22,7 +22,7 @@ comments: true
     "editor.parameterHints.enabled": true,
     "editor.lightbulb.enabled": "off",
     "editor.hover.enabled": true,
-    "editor.lineNumbers": "relative",
+    "editor.lineNumbers": "on",
     "editor.showFoldingControls": "never",
     "editor.detectIndentation": false,
     "editor.guides.indentation": false,
