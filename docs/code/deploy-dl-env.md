@@ -18,6 +18,7 @@ echo 'export MODEL_RESOURCE_DIR=${TMP}/resource/model' >> ~/.bashrc
 echo 'export DATASET_RESOURCE_DIR=${TMP}/resource/dataset' >> ~/.bashrc
 echo 'export HF_HUB_DOWNLOAD_TIMEOUT=60' >> ~/.bashrc
 echo 'export HF_HUB_ETAG_TIMEOUT=60' >> ~/.bashrc
+echo 'export PYTHONBREAKPOINT=pdb.set_trace' >> ~/.bashrc
 
 # alis
 echo 'alias ll="ls -al"' >> ~/.bashrc
