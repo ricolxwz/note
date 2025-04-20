@@ -11,13 +11,16 @@ export TMP=${TMP} >> ~/.bashrc
 export TMP=/drive/wexu0327 >> ~/.bashrc
 
 # env
-export PATH="/usr/local/cuda/bin:$TMP/.local/bin:$PATH" >> ~/.bashrc
-export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH" >> ~/.bashrc
-export CUDA_VISIBLE_DEVICES="0" >> ~/.bashrc
-export MODEL_RESOURCE_DIR=${TMP}/resource/model
-export DATASET_RESOURCE_DIR=${TMP}/resource/dataset
-export HF_HUB_DOWNLOAD_TIMEOUT=60
-export HF_HUB_ETAG_TIMEOUT=60
+echo 'export PATH="/usr/local/cuda/bin:$TMP/.local/bin:$PATH"' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"' >> ~/.bashrc
+echo 'export CUDA_VISIBLE_DEVICES="0"' >> ~/.bashrc
+echo 'export MODEL_RESOURCE_DIR=${TMP}/resource/model' >> ~/.bashrc
+echo 'export DATASET_RESOURCE_DIR=${TMP}/resource/dataset' >> ~/.bashrc
+echo 'export HF_HUB_DOWNLOAD_TIMEOUT=60' >> ~/.bashrc
+echo 'export HF_HUB_ETAG_TIMEOUT=60' >> ~/.bashrc
+
+# alis
+echo 'alias ll="ls -al"' >> ~/.bashrc
 
 # soft links
 ln -s  ${TMP}/.cache  ~/.cache
