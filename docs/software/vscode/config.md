@@ -81,5 +81,6 @@ comments: true
     "window.commandCenter": true,
     "inlineChat.lineNaturalLanguageHint": false,
     "files.eol": "\n",
+    "terminal.integrated.copyOnSelection": true,
 }
 ```
