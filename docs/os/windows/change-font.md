@@ -45,6 +45,11 @@ comments: true
 
 sego类的字体可以通过wefount-给定字体切换, msyh类和其他的一堆字体可以通过wefount-Windows 中文字体切换(选择以上所有字体).
 
+其他备选的要替换的字体有:
+
+- consolas
+- ariel
+
 ## 替换
 
 转换好想要的字体后, 重启进入Bios, 启动WePE, 然后将准备好的字体拷贝到Fonts文件夹里. 重启, 就可以了.
