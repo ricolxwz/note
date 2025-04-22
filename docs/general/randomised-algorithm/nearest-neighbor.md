@@ -43,8 +43,8 @@ comments: true
 就像之前一样, 我们会用$n=|\mathcal{S}|$表示子集当前的大小, 然而, 我们不再用$m$表示$\mathcal{X}$的大小, 而是用$\mathbb{R}^d$表示高纬度的空间, $d$是维度.
 
 <figure markdown='1' id='fig'>
-    ![](https://img.ricolxwz.io/2946708885d86aa3869765a15f6332d3.webp#only-light){ loading=lazy width='800' }
-    ![](https://img.ricolxwz.io/2946708885d86aa3869765a15f6332d3_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/2946708885d86aa3869765a15f6332d3.webp#only-light){ loading=lazy width='200' }
+![](https://img.ricolxwz.io/2946708885d86aa3869765a15f6332d3_inverted.webp#only-dark){ loading=lazy width='200' }
 </figure>
 
 简易起见, 我们设定离线模式, 即假设一次性拿到$\mathcal{S}$的全部$n$个元素, 而这个子集$\mathcal{S}$是不会随着时间改变的, 即不会有新增也不会有和删除. 接着, 需要支持$Query(x)$, 给定查询点$x$, 返回使得$dist(x, y)$最小的$y\in \mathcal{S}$.
@@ -70,3 +70,63 @@ $$1\ll d\ll n\ll 2^d$$
 * 存储一个$d$维向量需要$O(d)$空间
 
 ## 基线方法
+
+这里, 有两个基线方法, 它们可以达到其中的一个要求, 但是不能满足另一个. 没有人能够同时做到多项式级别的空间复杂度和次线性级别的时间复杂度.
+
+## ANN
+
+遇到这类情形,一种本能反应是耸肩放弃; 而往往再过几分钟,另一种自然做法便是改造原问题,看看一个更弱, 但容易得多的"放松版"是否已经够用. 这正是近似最近邻(ApproximateNearestNeighbour)问题的出发点: 我们不再要求找到$S$中与查询点$x\in\mathcal{X}$距离最小的$y^*$,而只需返回某个$y\in S$,使得它离$x$的距离与$y^*$相差不大,也就是"足够好".
+
+给定数据集$S$是一个巨大度量空间$(\mathcal{X},\mathrm{dist})$的子集,当到来新元素$x\in\mathcal{X}$时,希望输出某个$y\in S$,使得$\mathrm{dist}(x,y)$不超过$\min_{y'\in S}\mathrm{dist}(x,y')$的常数倍.
+
+接下来,我们用一个固定常数$C>1$来参数化数据结构,并要求其支持如下查询:
+
+给定$x\in\mathcal{X}$,返回$y\in S$,满足$\mathrm{dist}(x,y)\le C\cdot\min_{y'\in S}\mathrm{dist}(x,y')$. (若取$C=1$,就退化回原始的最近邻问题)
+
+## 降维: Johnson-Lindenstrauss引理
+
+Johnson-LIndenstrauss引理的核心目标就是在保持欧氏距离近似不变的情况下, 将高维空间$\mathbb{R^d}$中的点随机映射到远低于$d$的$\mathbb{R^k}$中. 为了实现这一目标, 只需要随机构造一个线性映射$\Phi:  \mathbb{R^d}\rightarrow \mathbb{R^k}$, 就能几乎等距地把所有点投影到低维空间.
+
+具体地, 若选择参数$\epsilon\in (0, 1/2), \delta\in (0, 1/2)$, 并令$k=O(\log(1/\delta)/\epsilon^2)$, 则对任意在原始高维空间中地两点$x, y\in \mathbb{R}^d$, 有:
+
+$$||\Phi(x)-\Phi(y)||_2=(1\pm \epsilon)||x-y||_2$$
+
+的概率至少为$1-\delta$. 也就是说, 两点间距离在投影后只被相对误差$\epsilon$放大或者缩小. 举例子: $\delta=0.01, \epsilon=0.01$的时候, 原本位于巨大维度$d$中的数据可以被映射到一个常数维度$k$里面, 仍然保持距离误差$\leq 1\%$.
+
+更令人惊喜的是, $\Phi$的构造方式非常简单, 随机生成一张$k\times d$的矩阵$M$就完事了. 然后$\Phi(x)=Mx$, 无需复杂的优化或者数据依赖预处理, 却在理论上保证了距离近似不变.
+
+???+ note "JK Lemma总结"
+
+    === "Distributional JK Lemma"
+
+        固定任意$\,\varepsilon,\delta\in(0,1/2)\,$, 设
+
+        $$
+        k=\Theta\!\Bigl(\frac{\log(1/\delta)}{\varepsilon^{2}}\Bigr).
+        $$
+
+        构造随机矩阵$M\in\mathbb{R}^{k\times d}$, 其中每个元素$M_{ij}$独立服从高斯分布$\mathcal{N}(0,1/k)$. 对任意固定向量$u\in\mathbb{R}^{d}$, 有
+
+        $$
+        \Pr_{M}\bigl[(1-\varepsilon)\lVert u\rVert_{2}\le\lVert Mu\rVert_{2}\le(1+\varepsilon)\lVert u\rVert_{2}\bigr]\ge1-\delta.
+        $$
+
+        1. 生成矩阵$M$的时间复杂度为$\mathcal{O}(kd)$(假设采样$\mathcal{N}(0,1)$的开销为常数).
+        2. 对任意$x\in\mathbb{R}^{d}$, 计算投影$Mx$同样只需$\mathcal{O}(kd)$时间.
+        3. 这一结果直接推出后面的推论, 亦即通常所称的"JL引理", 我们随后将予以证明.
+
+    === "JL Lemma"
+
+        固定任意$ε∈(0,1/2)$且$n≥2$, 设
+
+        $$
+        k=Θ\!\left(\frac{\log n}{ε^{2}}\right).
+        $$
+
+        取定理36中定义的随机矩阵$M∈\mathbb{R}^{k×d}$. 则对任意包含$n$个元素的固定集合$T⊆\mathbb{R}^{d}$, 有
+
+        $$
+        \Pr_{M}\bigl[∀x,y∈T,(1-ε)\lVert x-y\rVert_{2}≤\lVert Mx-My\rVert_{2}≤(1+ε)\lVert x-y\rVert_{2}\bigr]≥\frac{9}{10}.
+        $$
+
+Johnson-Lindenstrauss引理告诉我们仅需容忍元素之间$\binom{n}{2}$个配对欧氏距离的微小失真,就能把原本的$d$维欧氏空间替换为维度仅为$O(\log n)$且更易处理的欧氏空间,而几乎不损失任何信息.
