@@ -83,7 +83,7 @@ $$1\ll d\ll n\ll 2^d$$
 
 给定$x\in\mathcal{X}$,返回$y\in S$,满足$\mathrm{dist}(x,y)\le C\cdot\min_{y'\in S}\mathrm{dist}(x,y')$. (若取$C=1$,就退化回原始的最近邻问题)
 
-## 降维: Johnson-Lindenstrauss引理
+## 方案一: Johnson-Lindenstrauss引理
 
 Johnson-LIndenstrauss引理的核心目标就是在保持欧氏距离近似不变的情况下, 将高维空间$\mathbb{R^d}$中的点随机映射到远低于$d$的$\mathbb{R^k}$中. 为了实现这一目标, 只需要随机构造一个线性映射$\Phi:  \mathbb{R^d}\rightarrow \mathbb{R^k}$, 就能几乎等距地把所有点投影到低维空间.
 
@@ -130,3 +130,26 @@ $$||\Phi(x)-\Phi(y)||_2=(1\pm \epsilon)||x-y||_2$$
         $$
 
 Johnson-Lindenstrauss引理告诉我们仅需容忍元素之间$\binom{n}{2}$个配对欧氏距离的微小失真,就能把原本的$d$维欧氏空间替换为维度仅为$O(\log n)$且更易处理的欧氏空间,而几乎不损失任何信息.
+
+### 在ANN中的应用
+
+- 目标是解决Euclidean空间中的ApproximateNearestNeighbour(ANN)查询.
+- "基线算法"在$d$维空间工作, 复杂度对$d$呈指数或至少强依赖.
+- 利用Johnson–Lindenstrauss(JL)引理把$S∪\{x\}$随机映射到$k=O(\log n/ε^{2})$维, 从而把所有点对距离保持在$(1±ε)$倍内.
+- 接着在低维$\mathbb{R}^{k}$里运行同一基线算法; 由于$k\ll d$, 空间与时间开销显著下降.
+
+#### 运用JL引理
+
+- 空间: 基线算法空间$O(n^{1+α})$中$α$与维度线性相关; 把$d$替换成$k=O(\log n/ε^{2})$得到
+
+    $$α=Θ(\log n/ε^{2}),\quad\text{故空间}=O\!\bigl(n^{1+\,\log n/ε^{2}}\bigr).$$
+
+- 查询时间: 同理得到
+
+    $$O\!\bigl(n^{\log n/ε^{2}}\bigr).$$
+
+- 成功概率: JL投影本身以常数概率成功(可通过重复&放大达到≥$9/10$), 加上基线算法的确定性或高概率正确性, 即得结论.
+
+这还没有完全解决问题(查询时间依然几乎对$n$呈线性依赖), 但已经有所改进.
+
+## 方案二: 局部哈希框架
