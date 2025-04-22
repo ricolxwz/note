@@ -323,6 +323,7 @@ nav:
       - 反随机化: general/randomised-algorithm/derandomization.md
       - 图算法: general/randomised-algorithm/graph.md
       - 哈希: general/randomised-algorithm/hashing.md
+      - 最近邻: general/randomised-algorithm/nearest-neighbor.md
   - 算法:
     - 人工智能:
       - algorithm/index.md

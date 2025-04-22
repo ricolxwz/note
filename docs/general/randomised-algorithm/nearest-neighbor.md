@@ -1,0 +1,50 @@
+---
+title: 随机算法:最近邻问题
+comments: true
+---
+
+## 最近邻问题
+
+上一周, 我们讨论的是字典问题, 即给定全集$\mathcal{X}$, 和其中的一个子集, 快速判断一个查询元素$x\in \mathcal{X}$是否属于$\mathcal{S}$. 我们可以用Bloom Filter和哈希表的方式解决这个问题.
+
+本周, 我们要解决的是一个类似的问题. 同样有一个子集$\mathcal{S}\subset \mathcal{X}$, 我们不再问$x$是否在$\mathcal{S}$中, 而是要返回和$x$距离最近的点$y\in \mathcal{S}$. 这个就是最近邻问题, 常常比字典问题更难.
+
+解决这个问题可以有很多的应用, 如(1)图像去噪, 给一张含有噪声的图片$x$, 找到最相似的原图$y$并修复; (2)高维聚类: 把点$x$归到离它最近的簇中心; (3)作业查重: 找到和新提交作业最相似的旧作业.
+
+那么, 什么是最近呢? 我们需要定义在$\mathcal{X}$中元素之间的距离是啥. 在这里, 我们假设$\mathcal{X}$是一个度量空间.
+
+???+ tip "度量空间"
+
+    度量空间 = 元素集合 + 满足四公理的距离函数. 它把"远近"的概念从具体坐标系抽象出来, 成为最近邻搜索, 聚类, 分析等众多算法与理论的共同基石.
+
+    设$X$是一个非空集合, $d:X\times X\to\mathbb R_{+}$是一个函数, 若满足以下四条公理, 则称$(X,d)$ 为度量空间:
+
+    | 编号 | 公理 | 解释 |
+    |------|------|------|
+    | (1) 非负性 | $d(x,y)+$ | 距离永远不为负数 |
+    | (2) 恒等分离 | $d(x,y)=0 \iff x=y$ | 只有同一个点之间距离为0 |
+    | (3) 对称性 | $d(x,y)=d(y,x)$ | 交换顺序不影响距离 |
+    | (4) 三角不等式 | $d(x,z)\le d(x,y)+d(y,z)$ | 直达最短, 不会比"中转"更长 |
+
+那么, 如何定义这个距离函数$d:X\times X\to\mathbb R_{+}$呢? 在机器学习中, 你可能已经见到过一下三种度量方式:
+
+| 序号 | 距离名称 | 适用空间 $\mathcal{X}$ | 数学定义 | 常见别名 |
+|------|---------|---------------------------|----------|----------|
+| 1 | 曼哈顿距离 $\ell_1$ | $\mathbb R^{d}$ | $\displaystyle \operatorname{dist}(x,y)=\sum_{i=1}^{d}\lvert x_i-y_i\rvert = \lVert x-y\rVert_{1}$ | $\ell_1$ 距离, 出租车(taxicab)距离 |
+| 2 | 欧氏距离 $\ell_2$ | $\mathbb R^{d}$ | $\displaystyle \operatorname{dist}(x,y)=\sqrt{\sum_{i=1}^{d}(x_i-y_i)^{2}} = \lVert x-y\rVert_{2}$ | $\ell_2$ 距离 |
+| 3 | 汉明距离 | $\{0,1\}^{d}$(二值向量) | $\displaystyle \operatorname{dist}(x,y)=\sum_{i=1}^{d}\mathbf 1_{x_i\neq y_i}$ | 位差计数 |
+
+---
+
+结合上述的前置知识, 现在我们有能力能够定义这个问题了:
+
+给定一个数据集\(S\), 它是一个非常大的度量空间\((\mathcal X,\mathrm{dist})\)的子集; 当出现一个新的元素\(x\in\mathcal X\)时, 如何输出集合\(S\)中与\(x\)距离(\(\mathrm{dist}(x,y)\))最小的元素\(y\)?
+
+就像之前一样, 我们会用$n=|\mathcal{S}|$表示子集当前的大小, 然而, 我们不再用$m$表示$\mathcal{X}$的大小, 而是用$\mathbb{R}^d$表示高纬度的空间, $d$是维度.
+
+<figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.io/2946708885d86aa3869765a15f6332d3.webp#only-light){ loading=lazy width='800' }
+    ![](https://img.ricolxwz.io/2946708885d86aa3869765a15f6332d3_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+建议起见, 我们设定离线模式, 即假设一次性拿到$\mathcal{S}$的全部$n$个元素, 而这个子集$\mathcal{S}$是不会随着时间改变的, 即不会有新增也不会有和删除. 接着, 需要支持$Query(x)$, 给定查询点$x$, 返回使得$dist(x, y)$最小的$y\in \mathcal{S}$.
