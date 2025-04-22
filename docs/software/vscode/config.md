@@ -82,5 +82,9 @@ comments: true
     "inlineChat.lineNaturalLanguageHint": false,
     "files.eol": "\n",
     "terminal.integrated.copyOnSelection": true,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.smoothScrolling": true,
+    "workbench.list.smoothScrolling": true,
+    "terminal.integrated.smoothScrolling": true,
 }
 ```
