@@ -129,16 +129,12 @@ $$||\Phi(x)-\Phi(y)||_2=(1\pm \epsilon)||x-y||_2$$
         \Pr_{M}\bigl[∀x,y∈T,(1-ε)\lVert x-y\rVert_{2}≤\lVert Mx-My\rVert_{2}≤(1+ε)\lVert x-y\rVert_{2}\bigr]≥\frac{9}{10}.
         $$
 
-Johnson-Lindenstrauss引理告诉我们仅需容忍元素之间$\binom{n}{2}$个配对欧氏距离的微小失真,就能把原本的$d$维欧氏空间替换为维度仅为$O(\log n)$且更易处理的欧氏空间,而几乎不损失任何信息.
 
 ### 在ANN中的应用
 
-- 目标是解决Euclidean空间中的ApproximateNearestNeighbour(ANN)查询.
-- "基线算法"在$d$维空间工作, 复杂度对$d$呈指数或至少强依赖.
-- 利用Johnson–Lindenstrauss(JL)引理把$S∪\{x\}$随机映射到$k=O(\log n/ε^{2})$维, 从而把所有点对距离保持在$(1±ε)$倍内.
-- 接着在低维$\mathbb{R}^{k}$里运行同一基线算法; 由于$k\ll d$, 空间与时间开销显著下降.
+我们的目标是解决Euclidean空间中的ApproximateNearestNeighbour(ANN)查询. 而"基线算法"在$d$维空间工作, 复杂度对$d$呈指数或至少强依赖. 利用Johnson–Lindenstrauss(JL)引理把$S∪\{x\}$随机映射到$k=O(\log n/ε^{2})$维, 从而把所有点对距离保持在$(1±ε)$倍内. 接着在低维$\mathbb{R}^{k}$里运行同一基线算法; 由于$k\ll d$, 空间与时间开销显著下降.
 
-#### 运用JL引理
+复杂度分析:
 
 - 空间: 基线算法空间$O(n^{1+α})$中$α$与维度线性相关; 把$d$替换成$k=O(\log n/ε^{2})$得到$α=Θ(\log n/ε^{2}),\quad\text{故空间}=O\!\bigl(n^{1+\,\log n/ε^{2}}\bigr)$
 - 查询时间: 同理得到$O\!\bigl(n^{\log n/ε^{2}}\bigr)$
@@ -146,38 +142,100 @@ Johnson-Lindenstrauss引理告诉我们仅需容忍元素之间$\binom{n}{2}$个
 
 这还没有完全解决问题(查询时间依然几乎对$n$呈线性依赖), 但已经有所改进.
 
-## 方案二: 局部敏感哈希
+Johnson-Lindenstrauss引理告诉我们仅需容忍元素之间$\binom{n}{2}$个配对欧氏距离的微小失真,就能把原本的$d$维欧氏空间替换为维度仅为$O(\log n)$且更易处理的欧氏空间,而几乎不损失任何信息.
 
-### 啥是LSH
+## 方案二: 局部敏感哈希(Locality-Sensitive Hashing, LSH)
 
-传统的哈希函数只是把数据均匀地映射到桶里, 而LSH希望保留距离: 如果两个点在原空间里很近, 它们被哈希到同一桶的概率更高; 如果这两个点相距很远, 它们被哈希到同一桶的概率要低. 这和Johnson-Lindenstrauss引理使用随机投影"保持距离"有异曲同工之妙, 只是这里把线性映射换成了概率意义上的哈希映射.
+### 速览
 
-我们按照如下的方法定义LSH:
+LSH通过概率意义上的"保距"来区分近点与远点:
 
-给定参数$0\leq q<p\leq 1, r>0, C>1$以及度量空间$(X, dist)$, 若函数族$H=\{h: X\rightarrow Y\}$满足对任意$x, x'\in X$有如下保证:
+- 近点(距离≤ r)落到同一桶的概率应高;
+- 远点(距离≥ Cr)落到同一桶的概率应低.
 
-* 近距离保证: $\text{dist}(x, x') \leq r \implies \Pr_{h \sim \mathcal{H}}[h(x) = h(x')] \geq p$
-* 远距离保证: $\text{dist}(x, x') \geq Cr \implies \Pr_{h \sim \mathcal{H}}[h(x) = h(x')] \leq q$
+这与Johnson-Lindenstrauss引理用随机投影保持距离的思想类似, 只是把线性映射替换成了随机哈希.
 
-则称$H$是$(r, C, p, q)$-LSH族, 进一步定义: $\rho=\frac{\log(1/p)}{\log (1/q)}<1$为该族的敏感度参数.
+### 定义
 
-<figure markdown='1' id='fig'>
-![](https://img.ricolxwz.io/6d5a0a38a92a79292069d6868d1a1e21.webp#only-light){ loading=lazy width='350' }
-![](https://img.ricolxwz.io/6d5a0a38a92a79292069d6868d1a1e21_inverted.webp#only-dark){ loading=lazy width='350' }
-</figure>
+#### LSH族
 
-这个结构的三个关键点:
+给定度量空间$(X,\text{dist})$与参数
 
-* 尺度控制: 在固定尺度$r$下, LSH能区分"近"(碰撞概率高)与"远"(碰撞概率低). 理想情况下, 我们希望对于所有$r>0$, 这两个点都能被hash到同一个bucket, 但是鉴于真实一个近似问题, 所以已经很不错了
-* 希望$p$大, $q$小: 也即希望$\rho$尽量大, 这样近点与远点的碰撞概率差距才明显, 算法才能高概率区分两者
-* LSH哈希族确实存在: 最简单的例子是$\mathcal{Y}=\mathcal{X}$, $h$为恒等映射, 虽然毫无压缩/加速, 但至少说明定义可满足. 真正有价值的是$\lvert\mathcal{Y}\rvert\ll\lvert\mathcal{X}\rvert$且$\rho$依旧可观的哈希族.
+\[
+0\le q<p\le1,\quad r>0,\quad C>1,
+\]
 
-### 应用于ANN
+若哈希族$\mathcal{H}=\{h:X\to Y\}$满足
 
-我们要使用LSH解决一个ANN问题的baby版本.  针对给定$r>0$和$C>1$, 构建一个数据结构, 支持以下的Query:
+| 场景 | 条件 | 碰撞概率要求 |
+|---|---|---|
+| 近距离保证 | $\text{dist}(x,x')\le r$ | $\Pr_{h\sim\mathcal{H}}[h(x)=h(x')]\ge p$ |
+| 远距离保证 | $\text{dist}(x,x')\ge Cr$ | $\Pr_{h\sim\mathcal{H}}[h(x)=h(x')]\le q$ |
 
-$Query_{r}(x)$: 给定一个$x\in \mathcal{X}$, 返回一个$\mathcal{S}$中的元素$y$或者$\perp$, 满足:
+则称$\mathcal{H}$为$(r,C,p,q)$-LSH族.
 
-* 若存在真正最近邻: 如果集合$\mathcal{S}$中存在$y^*$满足$\text{dist}(x, y^*)\le r$, 则$Query_{r}(x)$以至少0.99的概率返回某个$y\in \mathcal{S}$, 使得$\text{dist}(x, y)\le C\cdot r$
-* 若所有点都很远: 若对所有$y\in \mathcal{S}$都有$\text{dist}(x, y)>C\cdot r$, 则算法必定给出$\perp$
-* 模糊区间自由: 当所有$y\in \mathcal{S}$距离位于$(r, C\cdot r]$之间的时候, 算法输出可任意, 都是正确的
+#### 敏感度参数
+
+进一步定义敏感度参数:
+
+\[
+\rho=\frac{\log(1/p)}{\log(1/q)}<1,
+\]
+
+$\rho$越大代表近远点的碰撞概率差异越明显, 后续算法效果越好.
+
+### 设计要点
+
+1. 尺度控制: 在选定的尺度$r$下仅需区分"近/远", 不追求对所有距离都精确判别
+2. 增大$p$, 减小$q$: 本质是让$\rho$尽量接近1
+3. 存在性: 极端例子$h=\text{id}$(恒等映射)显然满足定义但无压缩; 真正有价值的是$\lvert Y\rvert\ll\lvert X\rvert$且$\rho$依旧可观的族
+
+### 在ANN中的应用
+
+#### 问题设置
+
+数据集$\mathcal S\subseteq X$, 固定参数$r>0,C>1$.
+
+#### 查询接口
+
+查询接口$Query_r(x)$:
+
+- 输入: 查询点$x\in X$
+- 输出: $\mathcal S$中的某点$y$或$\perp$
+
+#### 正确性要求
+
+| 情形 | 期望行为 |
+|---|---|
+| 存在真近邻<br>$\exists y^*\in\mathcal{S},\ \text{dist}(x,y^*)\le r$ | 以至少0.99概率返回某个$y\in\mathcal S$, 且$\text{dist}(x,y)\le C r$ |
+| 全部远离<br>$\forall y\in\mathcal S,\ \text{dist}(x,y)>Cr$ | 必须返回$\perp$ |
+| 模糊区间<br>$\text{dist}(x,y)\in(r,Cr]$ | 返回任意皆视为正确 |
+
+#### 思路
+
+给定一个$(r, C, p, q)$LSH族, 从其中任选$\ell\ge 1$个哈希函数, 定义组合函数(类似于重复大法, **and**-amplification)$g(x)=(g_1(x), ..., g_{\ell}(x))\in Y^{\ell}$. 那么新族$H^{(\ell)}$仍然是LSH族, 族大小为$|H|^{\ell}$, 敏感度$p$保持不变, 可以表示为$(r, C, p^{\ell}, q^{\ell})$.
+
+根据设计要点, $p$要尽量大, $q$要尽量小, 有了$\ell$这个参数之后, 我们的直觉是, 可以通过增大$\ell$使得误碰撞率$q^{\ell}$变得很小. 但是于此同时, 真近邻碰撞率$p^{\ell}$也会下降. 并且, 由于我们拼接了$\ell$个哈希函数, 桶的数量暴增, 输出域从$\mathcal{Y}$膨胀到$\mathcal{Y}^{\ell}$. 这个时候, 我们会引入第二个参数$k$来补救这个问题. 具体来说:
+
+固定某个距离阈值\(r\)(以及常数\(C>1\))后, 设\(\mathcal{H}\)为一族\((r,C,p,q)\)-LSH哈希. 从\(\mathcal{H}^{(\ell)}\)中独立抽取\(k\)个哈希函数\(g_1,\dots,g_k:X\to Y^{\ell}\). 接着构建\(k\)张采用"分离链表"策略的哈希表\((A_1,h_1),\dots,(A_k,h_k)\), 其中每个\(h_t:Y\to\mathbb{Z}\)都是取自某个合适普通哈希族的互相独立的"标准"哈希函数.
+
+他的API实现为:
+
+* 预处理
+
+    ```py
+    for x ∈ S do          ▷ n个元素
+        for t = 1..k do
+            A_t[h_t(g_t(x))].insert(x)
+    ```
+
+* 查询$Query_r(x)$
+
+    ```py
+    for t = 1..k do
+        L_t ← A_t[h_t(g_t(x))]   ▷ 候选列表
+        for y ∈ L_t do
+            if dist(x,y) ≤ C·r then
+                return y         ▷ 找到近似近邻
+    return ⟂                     ▷ 未找到
+    ```
