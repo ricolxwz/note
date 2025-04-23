@@ -73,7 +73,7 @@ addi: https://arxiv.org/pdf/2303.06424
 
 由于确定性量化在推断阶段存在不一致性, 而随机量化则面临重建目标受到扰动的问题, 作者引入了随机掩码正则化, 以在两者之间取得平衡. 具体来说, 随机掩码正则化会随机地对一定比例的区域应用随机量化, 而对未被掩码的区域则保持确定性量化. 这样在量化过程中引入了不确定性, 缩小了与生成式建模推断阶段中随机选择token(令牌)的差距. 作者还通过深入且全面的实验, 分析了掩码比率的选择对图像重构和生成性能的影响.
 
-#### 弹性图像重建损失
+#### 概率对比损失
 
 另一方面, 随机采样token会导致随机量化区域的重构目标受到扰动. 这种扰动主要源自"要求利用随机采样token以L1损失完美重构原图"的目标设定. 为避免直接施加严格的L1重构损失, 作者引入了一种对比损失(contrastive loss, 通过在特征空间中"拉近"正样本对并"拉远"负样本对来学习判别表示)实现的弹性图像重建(elastic image reconstruction), 由此显著减轻了重构目标的扰动. 具体而言, 类似PatchNCE, 该对比损失将同一空间位置的patch视为正样本对(positive pairs, 位置一致), 将其他位置的patch视为负样本对(negative pairs). 通过在嵌入空间中拉近正样本对并拉远负样本对, 模型能够在保持内容一致性的同时获得更具弹性的重建效果. 此外, 随机采样token还会在重构目标中引入不同尺度的扰动. 为此, 作者提出了概率对比损失Probabilistic Contrastive Loss(PCL): 该损失根据"随机采样token嵌入"与"最佳匹配token嵌入"之间的差异, 自适应地调整各区域的"拉近力度(即对比损失中的pulling force)", 从而进一步缓解多尺度扰动对重建质量的影响.
 
@@ -133,5 +133,58 @@ $$
 最小化KL散度$\mathcal{L}_{kl}$即可对向量量化进行有效正则化, 进而避免码本坍缩和码本利用率低的问题.
 
 ### 随机掩码正则化
+
+另一方面, 选择最可能token的确定性量化会导致与生成模型推断阶段的不一致, 因为推断阶段通常依据预测分布随机采样token. 相反, 随机量化在量化过程中引入随机性, 有助于缓解这种不一致. 然而, 随机量化往往会扰动重构目标, 因为采样得到的token可能与原始图像不匹配. 结果如[图3](#fig3)所示, 随机量化在生成质量(FID)方面相比确定性量化仅有轻微提升. 为在未受扰动的重构目标与推断阶段一致性之间取得平衡, 作者提出随机掩码正则化: 通过对图像区域施加随机掩码, 协调随机量化与确定性量化的比例, 具体示意见[图2](#fig2)
+
+<figure markdown='1' id='fig3'>
+![](https://img.ricolxwz.io/43763f5c204906d0fb514cb86ed8f1cf.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/43763f5c204906d0fb514cb86ed8f1cf_inverted.webp#only-dark){ loading=lazy width='800' }
+<figcaption>图3: 不同掩码比例对ADE20K数据集上的图像重构与图像生成效果的影响. 采用不同量化方法的VQ-GAN进行图像token化, 并使用自回归模型进行图像合成. DVQ, S-VQ, MaskReg分别表示确定性向量量化, 随机向量量化以及本文提出的随机掩码正则化. 图像重构质量通过PSNR(峰值信噪比)评估, 图像生成质量通过FID(Fréchet Inception Distance)评估. 需要注意, 较高的PSNR并不一定意味着更好的生成质量.</figcaption>
+</figure>
+
+具体而言, 对所有编码向量的预测token概率$P\in\mathbb{R}^{H\times W\times N}$, 作者随机生成掩码$M\in\mathbb{R}^{H\times W}$, 其中"1"表示采用Gumbel-Softmax进行采样的区域,"0"表示采用Argmax选择最佳匹配token的区域. 将Argmax量化得到的向量记为$X_{argmax}$, 将Gumbel采样得到的向量记为$X_{gumbel}\in\mathbb{R}^{H\times W\times N}$, 则重构目标定义为
+
+$$
+L_{rec}= || X-G(X_{argmax}*(1-M)+X_{gumbel}*M)||_{1},
+$$
+
+其中$G$为解码器. 如[图3](#fig3)所示, 作者对不同掩码比例进行了系统实验, 结果表明40%掩码比例可在图像重构与生成质量(FID)上取得最佳性能; 由于Argmax与Gumbel采样均不可微, 作者在反向传播中使用重参数化技巧, 将Argmax替换为Softmax, 将Gumbel替换为Gumbel-Softmax.
+
+### 概率对比损失
+
+随机掩码正则化缓解了训练与推断阶段的不一致. 然而, 对于采用随机量化的图像区域, 随机采样token仍会引入重构目标扰动. 为此, 作者提出概率对比损失(PCL), 以削弱随机量化区域中的扰动目标. 由于传统$L_1$重构目标要求对原始图像进行完美复原, PCL通过对比学习在随机量化区域实现弹性图像重建.
+
+<figure markdown='1' id='fig4'>
+![](https://img.ricolxwz.io/29a4b88b1a7ca111ac324d8437485709.webp#only-light){ loading=lazy width='600' }
+![](https://img.ricolxwz.io/29a4b88b1a7ca111ac324d8437485709_inverted.webp#only-dark){ loading=lazy width='600' }
+<figcaption>图4: 对比L1 loss, vanilla对比损失以及本文提出的概率对比损失(PCL)在图像重建任务中的表现. PCL为正样本对引入自适应权重$\{w_i\}_{i=1}^N$, 以促进更优的表征学习并实现弹性图像重建.</figcaption>
+</figure>
+
+与强制完美重建不同, 对比学习通过拉近正样本对, 推远负样本对来最大化对应图像间的互信息(见[图4](#fig4)). 在PatchNCE框架下, 原图与重建图在相同空间位置的特征视为正样本, 其余特征视为负样本. 由此, 用于图像重建的原始对比损失$L_{cl}$可写为:
+
+???+ tip "PatchNCE框架"
+
+    PatchNCE是一种在无监督图像到图像翻译中引入的patch级对比学习损失, 通过在多层编码器特征空间中将源图像和生成图像的对应patch视为正样本, 同一图像其他位置的patch视为负样本, 最大化正样本间的互信息以保持内容一致性, 无需循环一致性约束即可提升翻译质量, 且训练更快, 内存开销更低.
+
+$$
+L_{cl} = -\frac{1}{L}\sum_{i=1}^{L} \log
+\frac{e^{y_i\cdot z_i/\tau}}{e^{y_i\cdot z_i/\tau}+\sum_{j=1,\,j\neq i}^{L} e^{y_i\cdot z_j/\tau}}\tag{2}
+$$
+
+其中, $Y=[y_1, y_2,\dots,y_L]$与$Z=[z_1, z_2,\dots,z_L]$分别表示从原图与重建图中提取的特征patch, $\tau$为温度参数, $L$为特征数量. 感知损失已被证明能保持良好的感知质量, 因此作者采用预训练VGG-19网络(relu1_2, relu2_2, relu3_3, relu4_3, relu5_3)提取多层特征, 并在训练时同时使用对比损失与感知损失.
+
+???+ note "感知损失"
+
+    感知损失是通过在预训练的卷积神经网络(如VGG19)中选取若干卷积层的特征映射, 计算重建图与原图在特征空间的均方误差来衡量感知相似度. 与像素级MSE不同, 感知损失能够更好地保留图像的高层次纹理和结构细节, 常用于超分辨, 风格迁移等视觉任务.
+
+由于Gumbel采样的随机性, 采样token与Argmax选出的最佳匹配token之间存在不同程度的差异. 差异越大, 重构目标扰动越严重, 因而原图与重建图之间的"拉力"应随扰动幅度自适应调整. 为此, 作者在PCL中引入权重参数$\{w_i\}_{i=1}^{L}$, 其计算方式为随机采样嵌入$z_s$与最佳匹配嵌入$z_q$之间的欧氏距离: $w_i=\lVert z_s - z_q\rVert_2^2$. 将权重归一化得到$\{w_i'\}_{i=1}^{L}$, 满足$\sum_{i=1}^{L}w_i'=1$, 概率对比损失$L_{pcl}$定义为:
+
+$$
+L_{pcl} = -\sum_{i=1}^{L} \log
+\frac{w_i' \cdot e^{y_i\cdot z_i/\tau}}
+{w_i' \cdot e^{y_i\cdot z_i/\tau} + \frac{1}{L} \sum_{j\neq i} e^{y_i\cdot z_j/\tau}}\tag{3}
+$$
+
+值得注意的是, 式(3)中的负样本项使用$1/L$进行平衡, 否则其幅值将远大于原始对比损失.
 
 [^1]: Zhang, J., Zhan, F., Theobalt, C., & Lu, S. (2023). Regularized vector quantization for tokenized image synthesis (No. arXiv:2303.06424). arXiv. https://doi.org/10.48550/arXiv.2303.06424
