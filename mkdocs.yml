@@ -209,7 +209,7 @@ exclude_docs: |
   # /software/
   # /os/
   # /math/
-  # /algorithm
+  # /algorithm/
   # /language/
   # /dicts/
   # /others/
@@ -364,7 +364,9 @@ nav:
       - MAE: algorithm/mae.md
       - YOLO: algorithm/yolo.md
       - LLaMA: algorithm/llama.md
-      - VQ-VAE: algorithm/vq-vae.md
+      - VQ-VAE:
+        - algorithm/vq-vae/index.md
+        - Reg-VQ: algorithm/vq-vae/reg-vq.md
       - LLaVA: algorithm/llava.md
       - BLIP: algorithm/blip.md
       - Diffusion: algorithm/diffusion.md
