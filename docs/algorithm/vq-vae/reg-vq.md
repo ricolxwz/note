@@ -85,4 +85,53 @@ addi: https://arxiv.org/pdf/2303.06424
 2. 提出随机掩码正则化(stochastic mask regularization), 用以缓解生成建模推断阶段的失配问题.
 3. 设计概率对比损失(probabilistic contrastive loss), 达成弹性图像重建, 并在随机量化下针对不同区域自适应地减轻受扰动的重构目标.
 
+## 方法
+
+如[图2](#fig2)所示, 正则化量化框架融合了确定性量化与随机量化, 由编码器$E$, 解码器$G$以及码本$Z=\{z_n\}_{n=1}^{N}\in\mathbb{R}^{N\times d}$组成, 其中$N$表示码本大小,$d$表示嵌入维度. 对于输入图像$X$, 编码器$E$首先生成一组空间token分布$\{x_i\}_{i=1}^{H\times W}$, 其中$x_i\in\mathbb{R}^{N}$,$H\times W$为空间向量大小. 随后, 每个编码向量依据其预测token分布被映射为离散token(即码本嵌入的索引). 与索引对应的码本嵌入随后被输入解码器$G$以重建原图像.
+
+在向量量化框架完成训练后, 图像即可用这些码本索引(离散token)表示. 基于离散token, 生成模型如auto-regressive模型与diffusion模型可用于建模token之间的依赖关系. 在生成推断阶段, 先从模型采样得到一串token用于图像合成; 再将这些token映射回其对应的码本嵌入并输入解码器$G$, 便可直接生成图像.
+
+<figure markdown='1' id='fig2'>
+![](https://img.ricolxwz.io/b45caeadd4f3884a90c2aac839984c3c.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/b45caeadd4f3884a90c2aac839984c3c_inverted.webp#only-dark){ loading=lazy width='800' }
+<figcaption>图2: 所提出的正则化量化框架流程如下: 在预测token分布上施加随机掩码(紫色区域)以指定随机采样区域. 随后, 编码向量依据选中的码本嵌入表示, 产生用于图像重建的量化向量. 为避免码本坍缩及低码本利用率, 通过计算后验token分布与先验token分布之间的KL散度$D_{\mathrm{KL}}(P\,\|\,Q)$实现正则化.</figcaption>
+</figure>
+
+### 正则化先验分布
+
+现有向量量化模型常因码本坍缩或码本利用率低而表现不佳——仅有少量码本嵌入向量有效或被用于量化. 因此, 作者提出在量化过程中引入先验分布正则化. 具体而言, 为量化所用的token设定一个先验分布. 理想情况下, 先验分布应为离散均匀分布
+
+$$
+P_{prior}=[1/N,\,1/N,\,\dots,\,1/N], \qquad P_{prior}\in\mathbb{R}^{N},
+$$
+
+这意味着所有码本嵌入可被均匀使用, 其信息容量依据最大熵原理得到最大化.
+
+在量化过程中, 尺寸为$H\times W$的图像特征被映射到对应token, 每个特征的预测量化结果可表示为独热向量$\mathbf{p}_i\;(i\in[1,H\times W])$. 因而, 后验token分布可用所有独热向量的平均近似:
+
+$$
+P_{post}
+=\frac{\sum_{i=1}^{H\times W}\mathbf{p}_i}{H\times W}
+=[p_1,p_2,\dots,p_N].
+$$
+
+???+ tip "注意$\mathbf{p}_i$和$p_1,...,p_n$的区别"
+
+    $\mathbf{p}_i$表示的是独热向量, $p_1, ..., p_N$表示离散token的概率分布.
+
+???+ example "后验分布"
+
+    $\mathbf{p}_i$是第$i$个空间位置(共$H\times W$个)来说, 编码器会选出码本中的某个离散token. 记码本大小为$N$, 这个选择用一个长度为$N$的one-hot向量$\mathbf{p}_i$表示, 选中的那一个维度为$1$, 其余为$0$. $\sum_{i=1}^{H\times W}\mathbf{p}_i$表示把所有的one-hot向量相加, 相当于把每个token被选中的总次数数出来, 例如若第3个token在全部位置被用了20次, 则求和结果的第3维就是20. $\frac{1}{H\times W}$表示再除以总像素数, 把次数变成频率. 结果就是得到了一个后验token分布$P_{post}$: 每个token在当前图像中出现的比例.
+
+随后, 通过Kullback–Leibler散度衡量先验与后验token分布的差异:
+
+$$
+\mathcal{L}_{kl}=KL(P_{post},P_{prior})
+=-\sum_{n=1}^{N}p_n\log\frac{1/N}{p_n}\tag{1}
+$$
+
+最小化KL散度$\mathcal{L}_{kl}$即可对向量量化进行有效正则化, 进而避免码本坍缩和码本利用率低的问题.
+
+### 随机掩码正则化
+
 [^1]: Zhang, J., Zhan, F., Theobalt, C., & Lu, S. (2023). Regularized vector quantization for tokenized image synthesis (No. arXiv:2303.06424). arXiv. https://doi.org/10.48550/arXiv.2303.06424
