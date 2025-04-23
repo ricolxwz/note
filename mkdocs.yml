@@ -430,6 +430,8 @@ nav:
       - 教师强迫: dicts/teacher-forcing.md
       - 模式奔溃: dicts/mode-collapse.md
       - 重参数化技巧: dicts/reparameterization.md
+      - 码本奔溃: dicts/codebook-collapse.md
+      - Gumbel-Softmax: dicts/gumbel-softmax.md
   - 综述:
     - 多模态大模型: survey/mllm.md
     - 思维链: survey/cot.md
