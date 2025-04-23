@@ -95,9 +95,9 @@ $$||\Phi(x)-\Phi(y)||_2=(1\pm \epsilon)||x-y||_2$$
 
 更令人惊喜的是, $\Phi$的构造方式非常简单, 随机生成一张$k\times d$的矩阵$M$就完事了. 然后$\Phi(x)=Mx$, 无需复杂的优化或者数据依赖预处理, 却在理论上保证了距离近似不变.
 
-???+ note "JK Lemma总结"
+???+ note "JL Lemma总结"
 
-    === "Distributional JK Lemma"
+    === "Distributional JL Lemma"
 
         固定任意$\,\varepsilon,\delta\in(0,1/2)\,$, 设
 
@@ -148,4 +148,36 @@ Johnson-Lindenstrauss引理告诉我们仅需容忍元素之间$\binom{n}{2}$个
 
 ## 方案二: 局部敏感哈希
 
-传统的哈希函数只是把数据均匀地映射到桶里, 而LSH希望保留距离: 如果两个点在原空间里很近, 它们被哈希到同一桶的概率更高; 如果这两个点相距很远, 它们被哈希到同一桶的概率要低. 这和Johnson-Lindenstrauss引理在$$
+### 啥是LSH
+
+传统的哈希函数只是把数据均匀地映射到桶里, 而LSH希望保留距离: 如果两个点在原空间里很近, 它们被哈希到同一桶的概率更高; 如果这两个点相距很远, 它们被哈希到同一桶的概率要低. 这和Johnson-Lindenstrauss引理使用随机投影"保持距离"有异曲同工之妙, 只是这里把线性映射换成了概率意义上的哈希映射.
+
+我们按照如下的方法定义LSH:
+
+给定参数$0\leq q<p\leq 1, r>0, C>1$以及度量空间$(X, dist)$, 若函数族$H=\{h: X\rightarrow Y\}$满足对任意$x, x'\in X$有如下保证:
+
+* 近距离保证: $\text{dist}(x, x') \leq r \implies \Pr_{h \sim \mathcal{H}}[h(x) = h(x')] \geq p$
+* 远距离保证: $\text{dist}(x, x') \geq Cr \implies \Pr_{h \sim \mathcal{H}}[h(x) = h(x')] \leq q$
+
+则称$H$是$(r, C, p, q)$-LSH族, 进一步定义: $\rho=\frac{\log(1/p)}{\log (1/q)}<1$为该族的敏感度参数.
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/6d5a0a38a92a79292069d6868d1a1e21.webp#only-light){ loading=lazy width='350' }
+![](https://img.ricolxwz.io/6d5a0a38a92a79292069d6868d1a1e21_inverted.webp#only-dark){ loading=lazy width='350' }
+</figure>
+
+这个结构的三个关键点:
+
+* 尺度控制: 在固定尺度$r$下, LSH能区分"近"(碰撞概率高)与"远"(碰撞概率低). 理想情况下, 我们希望对于所有$r>0$, 这两个点都能被hash到同一个bucket, 但是鉴于真实一个近似问题, 所以已经很不错了
+* 希望$p$大, $q$小: 也即希望$\rho$尽量大, 这样近点与远点的碰撞概率差距才明显, 算法才能高概率区分两者
+* LSH哈希族确实存在: 最简单的例子是$\mathcal{Y}=\mathcal{X}$, $h$为恒等映射, 虽然毫无压缩/加速, 但至少说明定义可满足. 真正有价值的是$\lvert\mathcal{Y}\rvert\ll\lvert\mathcal{X}\rvert$且$\rho$依旧可观的哈希族.
+
+### 应用于ANN
+
+我们要使用LSH解决一个ANN问题的baby版本.  针对给定$r>0$和$C>1$, 构建一个数据结构, 支持以下的Query:
+
+$Query_{r}(x)$: 给定一个$x\in \mathcal{X}$, 返回一个$\mathcal{S}$中的元素$y$或者$\perp$, 满足:
+
+* 若存在真正最近邻: 如果集合$\mathcal{S}$中存在$y^*$满足$\text{dist}(x, y^*)\le r$, 则$Query_{r}(x)$以至少0.99的概率返回某个$y\in \mathcal{S}$, 使得$\text{dist}(x, y)\le C\cdot r$
+* 若所有点都很远: 若对所有$y\in \mathcal{S}$都有$\text{dist}(x, y)>C\cdot r$, 则算法必定给出$\perp$
+* 模糊区间自由: 当所有$y\in \mathcal{S}$距离位于$(r, C\cdot r]$之间的时候, 算法输出可任意, 都是正确的
