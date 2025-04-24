@@ -324,6 +324,7 @@ nav:
       - 图算法: general/randomised-algorithm/graph.md
       - 哈希: general/randomised-algorithm/hashing.md
       - 最近邻: general/randomised-algorithm/nearest-neighbor.md
+      - 流处理: general/randomised-algorithm/streaming.md
   - 算法:
     - 人工智能:
       - algorithm/index.md
