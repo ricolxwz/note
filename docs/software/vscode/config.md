@@ -86,5 +86,6 @@ comments: true
     "editor.smoothScrolling": true,
     "workbench.list.smoothScrolling": true,
     "terminal.integrated.smoothScrolling": true,
+    "window.autoDetectColorScheme": true,
 }
 ```

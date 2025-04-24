@@ -5,58 +5,28 @@ comments: true
 
 # Diffusion[^1]
 
-## 基本思路
+由于李宏毅教授的资料已经讲得非常好, 所以直接参考它的视频.
 
-### 前向扩散
+## 第一集
 
-给定一张真实图片或者样本数据$x_0$, 按照一定的噪声策略, 逐步向其中添加噪声, 形成一系列的过度状态$x_1, x_2, ..., x_T$. 通过选择合适的噪声分布(通常是高斯噪声)和时间调度(schedule), 当$t$逐渐增大到$T$的时候, 数据会被彻底"扰乱"为近似于各向同性高斯分布的形式.
+讲了DDPM有一点匪夷所思的地方, 一个比较high-level的介绍.
 
-???+ note "各向同性高斯分布"
+<div style="position: relative; padding: 30% 45%;">
+<iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.youtube.com/embed/ifCDXFdeaaM?si=cmtm6KelmnGPuHTZ" frameborder="yes" scrolling="no" allowfullscreen="true"></iframe>
+</div>
 
-    在数学和统计中, 各向同性高斯分布指的是协方差矩阵为单位矩阵(或者单位矩阵的倍数)的多维正态分布, 通常写为$\mathcal{N}(0, \sigma^2\mathbf{I})$. 各向同性意味着该分布在所有方向上的方差都相同, 没有任何方向性偏好, 呈现球形对称. 在二维中, 他看起来像是一个圆形; 在三维中, 则是一个球形分布, 在更高维中, 同理为超球体形状.
+## 第二集
 
-### 反向去噪
+### 回顾一下VAE
 
-和前向扩散过程相反, 反向去噪过程是一个学习到的过程: 模型根据在训练集上学到的概率分布, 从"噪声状态"一步步反向推回到无噪声的真实数据样本. 训练的目标是, 在每个时间步$t$, 预测(或逼近)给定噪声状态$x_t$时的原始数据或者去噪结果.
+最大似然估计其实和最小KL散度是等价的. 也就是说, 假设我们从真实世界采样了一些照片$X=\{x_1, x_2, ..., x_N\}$, $P_{\text{data}(x_i)}$表示第$i$张图片在真实世界中的分布, $P_{\theta}(x_i)$表示第$i$张图片在VAE的解码器输出结果中的分布. 那么根据最大似然估计, $P_{\theta}(x_i)$应该较大, 也就是说, $\theta^*=\argmax_{\theta}\prod_{i=1}^N P_{\theta}(x_i)$. 只要满足了这个等式, 那么真实世界这些照片的分布就和解码器输出结果中这些照片的分布的KL散度很小.
 
----
+那么, 我们如何解出$\theta^*=\argmax_{\theta}\prod_{i=1}^N P_{\theta}(x_i)$呢? 其中的一个最关键的点就是求出$P_{\theta}(x_i)$. emmmmm, 首先, $P_{\theta}(x_i)=\int_z P(z)P_{\theta}(x_i|z)dz$, 在这里面, $P(z)$是没有问题的, 一般是从一个很简单的分布中采样, 但是$P_{\theta}(x_i|z)$, ..., 这我们有点束手无策, 怎么办? 第一种方法: $G(z)$是解码器输出的图片, 我们可以假设$G(z)=x_i$的时候, $P_{\theta}(x_i|z)$为$1$, 其余的时候为$0$, 问题是很多时候, $G(z)\neq x_i$, 我们很难采样到$z$使得$G(z)=x_i$, 这不太现实. 第二种方法, $G(z)$是解码器输出的一个高斯分布的均值, 当这个均值越接近$x_i$的时候, $P_{\theta}(x_i|z)$自然就越高, 可以写为$P_{\theta}(x_i|z)\propto \exp(-||G(z)-x||_2)$.
 
-换言之, 训练时, 先把真实数据"加噪"多次形成一个马尔科夫链, 然后让模型学会一步步去掉噪声; 生成的时候, 我们只需要从高斯噪声开始, 反向执行去噪步骤, 就能生成类似于训练数据分布的新样本.
+现在, 我们已经知道了$P_{\theta}(x_i|z)$和某个东西成正比, $p(Z)$也知道了, 我们是不是可以求$P_{\theta}(x_i)=\int_z P(z)P_{\theta}(x_i|z)dz$了呢? 问题是, 这玩意是个积分, 我们得穷举所有的$z$. 要解决这个问题, 有两种方法: (1) 蒙特卡洛采样法. 简单来说, 就是从$P(z)$中抽出随机样本, 把这个积分转成平均. (2) ELBO. 用这个, 我们不需要采样$z$. 怎么推导? 请见视频19:26
 
-## 数学表述
+<div style="position: relative; padding: 30% 45%;">
+<iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.youtube.com/embed/73qwu77ZsTM?si=qykCPsUxkVCKTl_7" frameborder="yes" scrolling="no" allowfullscreen="true"></iframe>
+</div>
 
-### 前向扩散
-
-在传统的DDPM框架中, 前向传播被定义为:
-
-\[
-q(x_t \mid x_{t-1}) = \mathcal{N}\bigl(x_t ; \sqrt{1 - \beta_t}\,x_{t-1},\,\beta_t I\bigr),
-\]
-
-公式表示在给定\(x_{t-1}\)的条件下, \(x_t\)是依据均值\(\sqrt{1 - \beta_t}\,x_{t-1}\)和协方差\(\beta_t I\)的正态分布中采样产生的. 经过多次迭代之后, $x_T$会接近一个标准高斯分布.
-
-???+ note "DDPM"
-
-    DDPM(Denoising Diffusion Probabilistic Models)是一种基于扩散过程的生成模型. 它其实是原始Diffusion的改进版本, 两者在核心思想有继承性, 但是在具体实现和优化策略上存在显著差异. 主要体现在下面几方面:
-
-    DDPM（Denoising Diffusion Probabilistic Models）是扩散模型（Diffusion Models）的改进版本，两者在核心思想上有继承性，但在具体实现和优化策略上存在显著差异。以下是两者的区别与相同点分析：
-
-    | 维度         | 原始扩散模型                  | DDPM                          |
-    |-------------------|-----------------------------------|-----------------------------------|
-    | 训练复杂度    | 需预测均值和方差                 | 固定方差，仅预测噪声       |
-    | 网络结构      | 简单卷积网络                     | U-Net + 时间嵌入          |
-    | 噪声调度      | 固定或非优化策略                 | 线性/余弦调度，跨时间步采样 |
-    | 生成质量      | 低分辨率，细节模糊               | 高分辨率，与GAN相当       |
-    | 计算效率      | 高计算成本                       | 潜在空间降维，支持消费级硬件 |
-
-### 反向去噪
-
-反向过程也可用高斯分布近似:
-
-$$
-p_\theta(x_{t-1} \mid x_t) = \mathcal{N}\bigl(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t)\bigr)
-$$
-
-
-
-[^1]: Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models (No. arXiv:2006.11239). arXiv. https://doi.org/10.48550/arXiv.2006.11239
+[^1]: Hung-yi Lee (导演). (2023, 四月 16). 【生成式AI】Diffusion Model 原理剖析 [Video recording]. https://www.youtube.com/watch?v=67_M2qP5ssY
