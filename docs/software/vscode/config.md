@@ -34,7 +34,7 @@ comments: true
     "editor.scrollbar.horizontal": "hidden",
     "editor.overviewRulerBorder": false,
     "editor.hideCursorInOverviewRuler": true,
-    "editor.experimentalEditContextEnabled": false,
+    "editor.experimentalEditContextEnabled": true,
     "editor.formatOnSave": false,
     "editor.accessibilitySupport": false,
     "editor.codeLensFontFamily": "Maple Mono Normal NL NF CN",
@@ -51,12 +51,12 @@ comments: true
     "debug.toolBarLocation": "commandCenter",
     "custom-ui-style.font.monospace": "Maple Mono Normal NL NF CN",
     "custom-ui-style.font.sansSerif": "Maple Mono Normal NL NF CN",
-    "workbench.colorTheme": "Winter is Coming (Dark Black)",  // vesper, minimal, poimandres
+    "workbench.colorTheme": "Vesper",  // vesper, minimal, poimandres
     "workbench.activityBar.location": "top",
     "workbench.sideBar.location": "right",
-    "workbench.iconTheme": "material-icon-theme",  // symbols
+    "workbench.iconTheme": "symbols",  // symbols
     "workbench.editor.showTabs": "multiple",
-    "workbench.productIconTheme": "material-product-icons",
+    "workbench.productIconTheme": "fluent-icons",
     "workbench.statusBar.visible": true,
     "workbench.tips.enabled": false,
     "workbench.tree.enableStickyScroll": false,
