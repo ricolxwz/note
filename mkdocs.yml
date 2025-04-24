@@ -367,6 +367,7 @@ nav:
       - VQ-VAE:
         - algorithm/vq-vae/index.md
         - Reg-VQ: algorithm/vq-vae/reg-vq.md
+        - RQ-VAE: algorithm/vq-vae/rq-vae.md
       - LLaVA: algorithm/llava.md
       - BLIP: algorithm/blip.md
       - Diffusion: algorithm/diffusion.md
