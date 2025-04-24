@@ -23,7 +23,11 @@ comments: true
 
 那么, 我们如何解出$\theta^*=\argmax_{\theta}\prod_{i=1}^N P_{\theta}(x_i)$呢? 其中的一个最关键的点就是求出$P_{\theta}(x_i)$. emmmmm, 首先, $P_{\theta}(x_i)=\int_z P(z)P_{\theta}(x_i|z)dz$, 在这里面, $P(z)$是没有问题的, 一般是从一个很简单的分布中采样, 但是$P_{\theta}(x_i|z)$, ..., 这我们有点束手无策, 怎么办? 第一种方法: $G(z)$是解码器输出的图片, 我们可以假设$G(z)=x_i$的时候, $P_{\theta}(x_i|z)$为$1$, 其余的时候为$0$, 问题是很多时候, $G(z)\neq x_i$, 我们很难采样到$z$使得$G(z)=x_i$, 这不太现实. 第二种方法, $G(z)$是解码器输出的一个高斯分布的均值, 当这个均值越接近$x_i$的时候, $P_{\theta}(x_i|z)$自然就越高, 可以写为$P_{\theta}(x_i|z)\propto \exp(-||G(z)-x||_2)$.
 
-现在, 我们已经知道了$P_{\theta}(x_i|z)$和某个东西成正比, $p(Z)$也知道了, 我们是不是可以求$P_{\theta}(x_i)=\int_z P(z)P_{\theta}(x_i|z)dz$了呢? 问题是, 这玩意是个积分, 我们得穷举所有的$z$. 要解决这个问题, 有两种方法: (1) 蒙特卡洛采样法. 简单来说, 就是从$P(z)$中抽出随机样本, 把这个积分转成平均. (2) ELBO. 用这个, 我们不需要采样$z$. 怎么推导? 请见视频19:26
+现在, 我们已经知道了$P_{\theta}(x_i|z)$和某个东西成正比, $p(Z)$也知道了, 我们是不是可以求$P_{\theta}(x_i)=\int_z P(z)P_{\theta}(x_i|z)dz$了呢? 问题是, 这玩意是个积分, 我们得穷举所有的$z$. 要解决这个问题, 有两种方法: (1) 蒙特卡洛采样法. 简单来说, 就是从$P(z)$中抽出随机样本, 把这个积分转成平均. (2) ELBO. 用这个, 我们不需要采样$z$. 怎么推导? 请见视频19:26. 我们要最大化的是一个证据下届(ELBO): $E_{q(z|x_i)}[\log (\frac{P(x_1, z)}{q(z|x_i)})]$.
+
+### 搬到Diffusion上来
+
+**Diffusion去噪的思想和VAE编码器干的事如出一辙, 给我的感觉只不过是在VAE的基础上从一个采样变成了多次迭代采样**, $P_{\theta}(x_{t-1}|x_t)\propto -\exp(||G(x_t)-x_{t-1}||_2)$, $G(x_t)$是去噪预测的$x_{t-1}$的均值, 只不过, 不是从$z$中采样, 而是从上一次的结果中采样. 假设去噪/加噪的过程总共有$T$步, 那么, $P_{\theta}(x_0)=\int_{x_1: x_T}P(x_T)P_{\theta}(x_{T-1}|x_T)...P_{\theta}(x_{t-1}|x_t)...P_{\theta}(x_0|x_1)dx_1:x_T$, 和VAE类似, 我们要最大化是$P_{\theta}(x_0)$, 同样的, 使用ELBO, 要最大化的是$E_{q(x_1: x_T|x_0)}[\log(\frac{P(x_0: x_T)}{q(x_1: x_T|x_0)})]$, 有没有感觉和VAE的思路一模一样...
 
 <div style="position: relative; padding: 30% 45%;">
 <iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.youtube.com/embed/73qwu77ZsTM?si=qykCPsUxkVCKTl_7" frameborder="yes" scrolling="no" allowfullscreen="true"></iframe>
