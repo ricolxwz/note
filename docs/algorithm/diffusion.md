@@ -31,15 +31,65 @@ comments: true
 1. 全局先验蒙特卡洛采样法. 简单来说, 就是从$p(z)$中抽出随机样本$z_1, ..., z_?$, 然后缩小$||G(z)-x_i||_2$, 把这个积分转成平均, 但是这种在全局先验中计算得到的$||G(z)-x_i||_2$往往比较大, 因为很多$G(z_?)$都无法输出和$x_i$相似的均值, 那么, 我们怎么缩小这个采样范围呢? 用后验蒙特卡洛采样法
 2. 后验蒙特卡洛采样法. 请见视频19:26. **后验蒙特卡洛采样法相当于把采样位置从全局先验$p(z)$缩到更符合当前样本$x_i$的近似后验$q_{\phi}(z|x_i)$, 极大的缩小采样范围.** 最大化$p_{\theta}(x_i)$, 等价于最大化的是一个证据下届(ELBO): $E_{q_{\phi}(z|x_i)}[\log (\frac{p_{\theta}(x_i, z)}{q_{\phi}(z|x_i)})]=E_{q_{\phi}(z|x_i)}[\log p_{\theta}(x_i|z)]-KL(q_{\phi}(z|x_i)||p(z))$, $z$的分布是确定的, $q_{\phi}(z|x_i)$的分布也是确定的, 所以第二项有解析解. 对于第一项, 由于我们设定了解码器输出一个高斯分布的均值, 所以有$p_{\theta}(x_i|z)\propto \exp(-||G(z)-x||_2)\Rightarrow \log p_{\theta}(x_i|z)\propto -||G(z)-x_i||_2$, 所以要最大化ELBO, 重构误差$||G(z)-x_i||$要尽量小, 而这个时候是从$q_{\phi}(z|x_i)$中蒙特卡洛采样出来的$z$, 而不是从全局先验$p(z)$中采样, 缩小了采样范围, $||G(z)-x_i||_2$较小的几率大大增加.
 
+???+ tip "为什么不直接算出真实后验$p(z|x_i)$"
+
+    简单的来说, 我们算不出来, 因为根据贝叶斯公式, 有$p(z|x_i)=\frac{p_{\theta}(x_i|z)p(z)}{\int_z p_{\theta}(x_i|z)p(z)dz}$, 也就是说, 如果我们要求出这个真实后验, 我们首先要知道问题的结果$\int_z p_{\theta}(x_i|z)p(z)dz$, 而我们本身就是在解决这个问题$\int_z p_{\theta}(x_i|z)p(z)dz$...
+
 ### 搬到Diffusion上来
 
-**Diffusion去噪的思想和VAE编码器干的事如出一辙, 给我的感觉只不过是在VAE的基础上从一个采样变成了多次迭代采样**, $p_{\theta}(x_{t-1}|x_t)\propto -\exp(||G(x_t)-x_{t-1}||_2)$, $G(x_t)$是去噪预测的$x_{t-1}$的均值, 只不过, 不是从$z$中采样, 而是从上一次的结果中采样. 假设去噪/加噪的过程总共有$T$步, 那么, $p_{\theta}(x_0)=\int_{x_1: x_T}p(x_T)p_{\theta}(x_{T-1}|x_T)...p_{\theta}(x_{t-1}|x_t)...p_{\theta}(x_0|x_1)dx_1:x_T$, 和VAE类似, 我们要最大化是$p_{\theta}(x_0)$, 同样的, 使用ELBO, 要最大化的是$E_{q_{\phi}(x_1: x_T|x_0)}[\log(\frac{p_{\theta}(x_0: x_T)}{q_{\phi}(x_1: x_T|x_0)})]$, 有没有感觉和VAE的思路一模一样...
+**Diffusion去噪的思想和VAE编码器干的事如出一辙, 给我的感觉只不过是在VAE的基础上从一个采样变成了多次迭代采样, 有多层潜变量**, $p_{\theta}(x_{t-1}|x_t)\propto -\exp(||G(x_t)-x_{t-1}||_2)$, $G(x_t)$是去噪预测的$x_{t-1}$的均值, 只不过, 不是从$z$中采样, 而是从上一次的结果中采样. 假设去噪/加噪的过程总共有$T$步, 那么, $p_{\theta}(x_0)=\int_{x_1: x_T}p(x_T)p_{\theta}(x_{T-1}|x_T)...p_{\theta}(x_{t-1}|x_t)...p_{\theta}(x_0|x_1)dx_1:x_T$, 和VAE类似, 我们要最大化是$p_{\theta}(x_0)$, 同样的, 使用ELBO, 要最大化的是$E_{q_(x_1: x_T|x_0)}[\log(\frac{p_{\theta}(x_0: x_T)}{q_(x_1: x_T|x_0)})]$, 有没有感觉和VAE的思路很像...
 
 <div style="position: relative; padding: 30% 45%;">
 <iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.youtube.com/embed/73qwu77ZsTM?si=qykCPsUxkVCKTl_7" frameborder="yes" scrolling="no" allowfullscreen="true"></iframe>
 </div>
 
 ## 第三集
+
+我们知道, 在VAE里面, $q_{\phi}(z|x_i)$其实就是让编码器输出一个近似真实后验的特定均值和方差的高斯分布, 那Diffusion或者说DDPM里面我们怎么得到$q(x_1: x_T|x_0)$呢?
+
+### 如何加噪
+
+和VAE不同的是, Diffusion的后验分布不需要编码器去预测, 它产生的过程是定死的, 所以没有参数$\phi$. 我们定义$x_t=\sqrt{1-\beta_t}x_{t-1}+\sqrt{\beta_t}\epsilon$, $\epsilon\sim \mathcal{N}(0, \mathcal{I})$, $\{\beta\}$是一些已经确定好的超参数, $q(x_1:x_T|x_0)$可以看作是一条马尔科夫链, $q(x_1: x_T|x_0)=q(x_1|x_0)q(x_2|x_1)...q(x_T|x_{T-1})$.
+
+### 多次加噪简化为单次加噪
+
+我们有$x_1=\sqrt{1-\beta_1}x_0+\sqrt{\beta_1}\epsilon_1$, $x_2=\sqrt{1-\beta_2}x_1+\sqrt{\beta_2}\epsilon_2$, $\epsilon_1$, $\epsilon_2$是分别从一个标准正态分布中独立采样的. 我们把$x_1$代入$x_2$的表达式, 得到$x_2=\sqrt{1-\beta_2}\sqrt{1-\beta_1}x_0+\sqrt{1-\beta_2}\sqrt{\beta_1}\epsilon_1+\sqrt{\beta_2}\epsilon_2$, 后面两项可以简化成只采样一次$\epsilon$, 得到$x_2=\sqrt{1-\beta_2}\sqrt{1-\beta_1}x_0+\sqrt{1-(1-\beta_2)(1-\beta_1)}\epsilon$. 所以, 按照这过程, 我们可以写出$x_t=\sqrt{1-\beta_1}...\sqrt{1-\beta_t}x_0+\sqrt{1-(1-\beta_1)...(1-\beta_t)}\epsilon$. 为了简单起见, $\alpha_t=1-\beta_t$, $\bar{\alpha}_t=\alpha_1\alpha_2...\alpha_t$, 上面的式子就可以写为$x_t=\sqrt{\bar{\alpha}_t}x_0+\sqrt{1-\bar{\alpha}_t}\epsilon$. 这就说明, 从$x_t$到$x_0$, 我们其实只要做一次采样就行了, 效果上和多次采样是一样的, 我们可以从原始图片$x_0$一步得到$x_t$
+
+### ELBO
+
+我们要最大化证据下界:
+
+$$
+E_{q(x_1: x_T|x_0)}[\log(\frac{p_{\theta}(x_0: x_T)}{q(x_1: x_T|x_0)})]
+$$
+
+经过一堆推导之后, 我们发现上面这个式子可以拆解为:
+
+$$
+\mathbb{E}_{q(x_1\mid x_0)}\!\left[\log p_{\theta}(x_0\mid x_1)\right]
+-\mathrm{KL}\!\left(q(x_T\mid x_0)\,\|\,p(x_T)\right)
+-\sum_{t=2}^{T}\mathbb{E}_{q(x_t\mid x_0)}\!\left[
+    \mathrm{KL}\!\left(q(x_{t-1}\mid x_t,x_0)\,\|\,p_{\theta}(x_{t-1}\mid x_t)\right)
+\right]
+$$
+
+我们需要找到一个最佳的$\theta$, 最大化这一坨东西, 其中第二项$\mathrm{KL}\!\left(q(x_T\mid x_0)\,\|\,p(x_T)\right)$是和模型的参数无关的, 不用管. 关键就是第一项和第三项, 它们俩的计算过程比较类似, 所以只讲第三项. $q(x_{t-1}|x_t, x_0)=\frac{q(x_t|x_{t-1})q(x_{t-1}|x_0)}{q(x_t|x_0)}$, 分子分母中的三项根据定义都是已知的, 代入, 硬推之后, 得到$q(x_{t-1}|x_t, x_0)$还是一个高斯分布, 均值为$\frac{\sqrt{\bar{\alpha}_{t-1}}\,\beta_t x_0+\sqrt{\alpha_t}\,(1-\bar{\alpha}_{t-1})\,x_t}{1-\bar{\alpha}_t}$, 方差为$\frac{1-\bar{\alpha}_{t-1}}{1-\bar{\alpha}_t}\,\beta_t I$
+
+### 去噪网络的目标
+
+OK, 现在, 我们要最小化$q(x_{t-1}|x_t, x_0)$和$p_{\theta}(x_{t-1}|x_t)$的KL散度. 注意, $p_{\theta}(x_{t-1}|x_t)$的分布是由去噪网络预测出来的, 在DDPM中, 去噪网络预测分布的方差是人为固定的(当然也有工作是变化的). $q(x_{t-1}|x_t, x_0)$的均值是$\frac{\sqrt{\bar{\alpha}_{t-1}}\,\beta_t x_0+\sqrt{\alpha_t}\,(1-\bar{\alpha}_{t-1})\,x_t}{1-\bar{\alpha}_t}$, 自然而然的, 既然方差是没法动的, **那这个去噪网络的目标就是让它预测的均值尽量靠近$\frac{\sqrt{\bar{\alpha}_{t-1}}\,\beta_t x_0+\sqrt{\alpha_t}\,(1-\bar{\alpha}_{t-1})\,x_t}{1-\bar{\alpha}_t}$以减小KL散度**, 现在, 我们的问题就简化为了下面的这张图:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/6963b310027e3d66714988e98c36aab5.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/6963b310027e3d66714988e98c36aab5_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+进一步的, 由于我们知道$x_t$和$x_0$的关系, $\frac{x_t-\sqrt{1-\bar{\alpha}_t}\,\epsilon}{\sqrt{\bar{\alpha}_t}} = x_{0}$, 我们可以把均值里面的$x_0$替换成$x_t$的形式, 推导, 得到$\frac{\sqrt{\bar{\alpha}_{t-1}}\,\beta_t x_0+\sqrt{\alpha_t}\,(1-\bar{\alpha}_{t-1})\,x_t}{1-\bar{\alpha}_t}=\frac{\sqrt{\bar{\alpha}_{t-1}}\,\beta_t \frac{x_t-\sqrt{1-\bar{\alpha}_t}\,\epsilon}{\sqrt{\bar{\alpha}_t}}+\sqrt{\alpha_t}\,(1-\bar{\alpha}_{t-1})\,x_t}{1-\bar{\alpha}_t}= \frac{1}{\sqrt{\alpha_t}}\left(x_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon\right)$, 所以, 我们修改一下上面的图:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/9a617728f8c7014e5a42d2327e029717.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/9a617728f8c7014e5a42d2327e029717_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
 
 <div style="position: relative; padding: 30% 45%;">
 <iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.youtube.com/embed/m6QchXTx6wA?si=iObkaKbQkNiOfgsV" frameborder="yes" scrolling="no" allowfullscreen="true"></iframe>
