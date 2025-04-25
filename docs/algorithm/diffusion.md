@@ -91,8 +91,35 @@ OK, 现在, 我们要最小化$q(x_{t-1}|x_t, x_0)$和$p_{\theta}(x_{t-1}|x_t)$�
 ![](https://img.ricolxwz.io/9a617728f8c7014e5a42d2327e029717_inverted.webp#only-dark){ loading=lazy width='800' }
 </figure>
 
+你会发现, 除了$\epsilon$其余的都是固定的, 所以网络唯一需要预测的部分其实就是$\epsilon$.
+
 <div style="position: relative; padding: 30% 45%;">
-<iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.youtube.com/embed/m6QchXTx6wA?si=iObkaKbQkNiOfgsV" frameborder="yes" scrolling="no" allowfullscreen="true"></iframe>
+<iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.youtube.com/embed/m6QchXTx6wA?si=4q7X_PR1BYOKdKGM" frameborder="yes" scrolling="no" allowfullscreen="true"></iframe>
+</div>
+
+## 第四集
+
+### 为啥要再加一个噪声
+
+DDPM算法:
+
+```
+x_T ~ N(0, I)
+for t = T, …, 1 do
+    if t > 1 then
+        z ~ N(0, I)
+    else
+        z = 0
+    end if
+    x_{t-1} = (1 / √α_t) * [ x_t − (1 − α_t) / √(1 − 𝛼̄_t) * ε_θ(x_t, t) ] + σ_t · z
+end for
+return x_0
+```
+
+根据DDPM, 其实去噪网络预测的只里面没有直接取平均值$\frac{1}{\sqrt{\alpha_t}}\left(x_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon\right)$, 而是在这个平均值的基础上额外加了一个噪声. 这是为啥呢? 其实这个和大模型中的思路比较像, 加入这个噪声相当于做beam search, 相当于在产生的分布中采了一次样.
+
+<div style="position: relative; padding: 30% 45%;">
+<iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.youtube.com/embed/67_M2qP5ssY?si=Zz4NlEx02zSuFMxH" frameborder="yes" scrolling="no" allowfullscreen="true"></iframe>
 </div>
 
 [^1]: Hung-yi Lee (导演). (2023, 四月 16). 【生成式AI】Diffusion Model 原理剖析 [Video recording]. https://www.youtube.com/watch?v=67_M2qP5ssY
