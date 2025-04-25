@@ -163,18 +163,18 @@ plugins:
       skip_classes:
         - skipbox
   - rss
+  - git-revision-date-localized:
+      locale: zh
+      enable_creation_date: false
+      enabled: !ENV [CI, false]
+  - git-committers:
+      repository: ricolxwz/note
+      branch: master
+      enabled: !ENV [CI, false]
   # - mkdocs-jupyter:
   #     theme: slate
   #     include_source: True
   #     ignore_h1_titles: True
-  # - git-revision-date-localized:
-  #     locale: zh
-  #     enable_creation_date: true
-  #     enabled: !ENV [CI, false]
-  # - git-committers:
-  #     repository: ricolxwz/note
-  #     branch: master
-  #     enabled: !ENV [CI, false]
   # - encryptcontent:
   #     search_index: "dynamically"
   #     summary: "机密档案"
@@ -367,8 +367,8 @@ nav:
       - LLaMA: algorithm/llama.md
       - VQ-VAE:
         - algorithm/vq-vae/index.md
+        - VQ-GAN: algorithm/vq-vae/vq-gan.md
         - Reg-VQ: algorithm/vq-vae/reg-vq.md
-        - RQ-VAE: algorithm/vq-vae/rq-vae.md
       - LLaVA: algorithm/llava.md
       - BLIP: algorithm/blip.md
       - GAN: algorithm/gan.md
