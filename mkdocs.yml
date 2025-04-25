@@ -371,6 +371,7 @@ nav:
         - RQ-VAE: algorithm/vq-vae/rq-vae.md
       - LLaVA: algorithm/llava.md
       - BLIP: algorithm/blip.md
+      - GAN: algorithm/gan.md
       - Diffusion: algorithm/diffusion.md
       - InternVL: algorithm/internvl.md
       - Flamingo: algorithm/flamingo.md
