@@ -39,3 +39,64 @@ Transformer模型正迅速崛起——它们已成为语言任务的事实标准
 </figure>
 
 > 感觉和ViT那一套是很像的, 只不过这里是离散的码字, 但是ViT那里是连续的patch向量. 如果说Transformer更喜欢离散token的话, 可能还是这种方式更合transformer的胃口, 和词表中的那些离散文字token差不多.
+
+### 面向Transformer的高效图像成分码本学习
+
+为了将表达能力极强的transformer架构应用于图像合成, 作者需要把一幅图像的组成元素表示成序列形式. 出于复杂度的考虑, 与其直接在像素级别操作, 不如使用一个离散码本(discrete codebook)来存储学习得到的表示. 这样, 任意图像\(x\in\mathbb R^{H\times W\times3}\)都可以用一组空间分布的码本向量\(z_q\in\mathbb R^{h\times w\times n_z}\)表示, 其中\(n_z\)是码字维度. 等价地, 也可以把它写成一串长度为\(h\cdot w\)的索引序列, 每个索引指向学习得到的码本中的一个条目. 为了高效学习这种离散空间码本, 作者直接引入了CNN的归纳偏置, 并结合神经离散表示学习的思想. 具体而言, 先训练一个卷积模型, 由编码器\(E\)和解码器\(G\)组成; 二者共同学习使用来自离散码本\(\mathcal Z=\{z_k\}_{k=1}^K\subset\mathbb R^{n_z}\)的码字来重建图像(见[图2](#fig2)概览).
+
+更精确地说, 给定图像\(x\), 作者用\(\hat x = G(z_q)\)来近似\(x\). 其中\(\hat z = E(x)\in\mathbb R^{h\times w\times n_z}\)是编码结果, 接着对每个空间码\(\hat z_{ij}\in\mathbb R^{n_z}\)执行逐元素量化$q(·)$, 将其映射到与之最接近的码本向量\(z_k\):
+
+\[
+z_q = q(\hat z)
+      := \bigl(\operatorname*{arg\,min}_{z_k\in\mathcal Z}\lVert \hat z_{ij}-z_k\rVert\bigr)
+      \in\mathbb R^{h\times w\times n_z}
+\]
+
+于是重建过程满足
+
+\[
+\hat x = G(z_q)=G\bigl(q(E(x))\bigr)
+\]
+
+因为量化操作不可导, 作者采用直通梯度估计器(straight-through gradient estimator): 在反向传播时直接把解码器的梯度复制给编码器, 从而可以端到端地联合训练模型与码本. 整体损失函数为
+
+\[
+\mathcal L_{\text{VQ}}(E,G,\mathcal Z)=
+\lVert x-\hat x\rVert^2
++\lVert \operatorname{sg}[E(x)]-z_q\rVert_2^2
++\lVert \operatorname{sg}[z_q]-E(x)\rVert_2^2
+\]
+
+其中\(\mathcal L_{\text{rec}}=\lVert x-\hat x\rVert^2\)是重建损失, \(\operatorname{sg}[\cdot]\)表示停止梯度(stop-gradient)操作, 最后一项\(\lVert\operatorname{sg}[z_q]-E(x)\rVert_2^2\)称为承诺损失(commitment loss), 用以鼓励编码器在特征空间中靠近已选中的码字.
+
+> 平平无奇的VQ-VAE操作.
+
+#### 学习一个认知丰富的码本
+
+利用transformer将图像表示为潜在图像成分的分布, 需要在压缩率的极限上探索并学习一个更丰富的码本. 为此, 作者提出了VQ-GAN, 这是原始VQVAE的一个变体, 并结合判别器与感知损失以在较高压缩率下保持良好的感知质量. 与先前仅在浅层量化模型之上叠加像素级或基于transformer的自回归模型的方法形成对比, 该工作更深入地优化了量化过程. 具体而言, 作者将用于\(L_{\text{rec}}\)的\(L_2\)损失替换为感知损失, 并引入基于patch的判别器\(D\)进行对抗训练, 旨在区分真实图像与重建图像:
+
+???+ note "浅层量化模型"
+
+    这里的"浅层"主要体现在: 采样层数少, 压缩倍率低 -> 信息量大, 序列长度长, 给后端Transformer带来很高的计算开销
+
+\[
+\mathcal{L}_{\text{GAN}}(\{E,G,Z\},D)=\bigl[\log D(x)+\log\bigl(1-D(\hat{x})\bigr)\bigr]
+\]
+
+寻找最优压缩模型\(Q^*=\{E^*,G^*,Z^*\}\)的完整目标函数为
+
+\[
+Q^*=\arg\!\min_{E,G,Z}\;\max_D\; \mathbb{E}_{x\sim p(x)}\!\bigl[\mathcal{L}_{\text{VQ}}(E,G,Z)+\lambda\,\mathcal{L}_{\text{GAN}}(\{E,G,Z\},D)\bigr]
+\]
+
+其中自适应权重\(\lambda\)按下式计算:
+
+\[
+\lambda=\frac{\nabla_{G_L}[\,\mathcal{L}_{\text{rec}}\,]}{\nabla_{G_L}[\,\mathcal{L}_{\text{GAN}}\,]+\delta}
+\]
+
+这里, \(L_{\text{rec}}\)为感知重构损失, \(\nabla_{G_L}[\cdot]\)表示其输入关于解码器最后一层\(L\)的梯度, \(\delta=10^{-6}\)用于数值稳定性. 为了在全局范围内聚合上下文信息, 作者在最低分辨率上施加了一个单独的注意力层. 该训练策略在展开潜在码时显著缩短了序列长度, 从而使强大的transformer模型得以应用.
+
+???+ note "对上一段话的理解"
+
+    这里的"自适应权重"是用来平衡$\mathcal{L}_{\text{VQ}}(E,G,Z)$和$\mathcal{L}_{\text{GAN}}(\{E,G,Z\},D)$的, 如果$\nabla _{G_L}[\mathcal{L}_{\text{rec}}]$变大, 那么$\lambda$会变大, 来平衡$\mathcal{L}_{\text{rec}}$对输入的梯度太大产生的影响. 这个所谓的单独的注意力层应该是加在量化器或者编码器后面, 用于在完成下采样之后对全局特征进行一个简单的交互.
