@@ -3,7 +3,9 @@ title: 生成对抗网络
 comments: true
 ---
 
-## 核心思想[^1]
+# GAN[^1]
+
+## 核心思想
 
 GAN的基本思想是, 首先我们有一个"生成器", Generator, 其实就是一个神经网络, 或者是更简单的理解, 他就是一个函数. 输入一组向量, 经由生成器, 产生一组目标矩阵(如果要生成图片, 那么矩阵就是图片的像素集合). 它的目的就是使得自己造样本的能力尽可能强, 强到什么程度呢, 强到判别网络无法判断我是真样本还是假样本. 同时我们还有一个"判别器", 判别器的目的是判别出来一张图片它是来自真实样本集还是假样本集. 假如输入的是真样本, 网络输出就接近1, 输入的是假样本, 网络输出接近0, 那么很完美, 达到了很好判别的目的.
 
@@ -263,5 +265,80 @@ L=-(\tilde{V}=\frac{1}{m}\sum_{i=1}^{m}\log D\!\bigl(x^{(i)}\bigr)
 ![](https://img.ricolxwz.io/6349b54a8fd51a2b2a87dff5e9f80f74.webp#only-light){ loading=lazy width='500' }
 ![](https://img.ricolxwz.io/6349b54a8fd51a2b2a87dff5e9f80f74_inverted.webp#only-dark){ loading=lazy width='500' }
 </figure>
+
+## GAN训练的问题
+
+### 训练不稳定
+
+训练原始GAN是一件非常困难的事情. 难主要体现在训练过程中可能并不收敛, 训练出的生成器根本不能产生有意义的内容等方面. 另一方面, 虽然说我们优化的目标函数是JSD, 它应该能体现出两个分布的距离. 并且这个距离最好一开始比较大, 后来随着训练$G$过程的深入, 这个距离应该慢慢变小才比较好. 但实际上这只是我们理想中的情况.
+
+在实际应用中我们会发现, D的Loss Function非常容易变成$0$, 而且在后面的训练中也已知保持着$0$, 很难发生改变. 这个现象是为什么呢? 其实这个道理很简单. 虽然说JSD能够衡量两个分布之间的距离, 但实际上有两种情况可能会导致JSD永远判定两个分布距离"无穷大" 从而使得Loss Fonction永远是0:
+
+\[
+\max_{D}V(G,D)
+=-2\log 2
++\underbrace{2\,\mathrm{JSD}\bigl(P_{\text{data}}(x)\,\|\,P_G(x)\bigr)}_{2\log 2}
+=0
+\o
+
+产生这种现象的情况主要有两种:
+
+1. 判别器$D$太强, 过拟合
+
+    <figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.io/20094716bda5e41ab69ade05c8241c36.webp#only-light){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.io/20094716bda5e41ab69ade05c8241c36_inverted.webp#only-dark){ loading=lazy width='300' }
+    </figure>
+
+    上图蓝色和橙色分别是两个分布, 我们能发现分布之间确实有一些重叠, 所以按理来说JSD不应该是$\log 2$ . 但由于我们是采样一部分样本(图中的圆点)进行训练, 所以当判别器足够"强"的时候, 就很有可能找到一条分界线强行将两类样本分开, 从而让两类样本之间被认为完全不存在重叠. 我们可以尝试传统的正则化方法(regularization等), 也可以减少模型的参数让它变得弱一些. 但是我们训练的目的就是要找到一个"很强"的判别器, 我们在实际操作中是很难界定到底要将判别器调整到什么水平才能满足我们的需要: 既不会太强, 也不会太弱. 还有一点就是我们之前曾经认为这个判别器应该能够测量JSD, 但它能测量JSD的前提就是它必须非常强, 能够拟合任何数据. 这就跟我们"不想让它太强"的想法有矛盾了, 所以实际操作中用regularization等方法很难做到好的效果.
+
+2. 数据本身的特性
+
+    一般来说, 生成器产生的数据都是一个映射到高维空间的低维流型. 而低维流型之间本身就"不是那么容易"产生重叠的. 如下图所示.
+
+    <figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.io/4f67c7a2945489fb8fa894e748b366f4.webp#only-light){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.io/4f67c7a2945489fb8fa894e748b366f4_inverted.webp#only-dark){ loading=lazy width='300' }
+    </figure>
+
+    解决的方法有两种, 一种是给数据添加噪声, 让生成器和真实分布的低维流形更容易重叠在一起, 如下图所示.
+
+    <figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.io/a77eed271091ba5d3f1fbf006748ad35.webp#only-light){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.io/a77eed271091ba5d3f1fbf006748ad35_inverted.webp#only-dark){ loading=lazy width='300' }
+    </figure>
+
+    这个方法的缺点在于, 我们的目标是训练准确的数据(例如高清图等), 加入噪声会影响我们生成数据的质量, 一个简单的做法是让噪声的幅度随着时间缩小, 不过操作起来比较困难.
+
+    除此之外还有另一种方法. 虽然JSD的效果不好, 那干脆就把它换了呗, 哪怕两个分布一直毫无重叠, 都能够提供一个不同的连续的距离的度量, 这是WGAN的工作.
+
+### 模式崩塌
+
+请见[这里](/dicts/mode-collapse/).
+
+训练中可能遇到的另一个问题: 所有的输出都一样! 这个现象被称为Mode Collapse. 这个现象产生的原因可能是由于真实数据在空间中很多地方都有一个较大的概率值, 但是我们的生成模型没有直接学习到真实分布的特性. 为了保证最小化损失, 它会宁可永远输出一样但是肯定正确的输出, 也不愿意尝试其他不同但可能错误的输出. 也就是说, 我们的生成器有时可能无法兼顾数据分布的所有内部模式, 只会保守地挑选出一个肯定正确的模式.
+
+假设我们要学习的真实分布是这个样子:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/5e013f9a1986d51f076bfb156b66af1d.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.io/5e013f9a1986d51f076bfb156b66af1d_inverted.webp#only-dark){ loading=lazy width='300' }
+</figure>
+
+而我们设想的学习过程应该是这个样子:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/2b98445d236baf686d2c620cf5d901bb.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/2b98445d236baf686d2c620cf5d901bb_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+但是实际上却事与愿违:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/b31e399acd905b22889956cd2460f70c.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/b31e399acd905b22889956cd2460f70c_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+模型在学习到一个真实分布的模式之后, 并不会继续学习其他模式, 而是尝试立刻将这个模式忘掉, 转而去学习其他模式. 并且在迭代过程中不断在各个模式中跳跃. 但是关于这个情况产生的原因, 并没有太好的定论.
 
 [^1]: 生成对抗网络——原理解释和数学推导—黄钢的部落格|Canary Blog. (不详). 从 https://alberthg.github.io/2018/05/05/introduction-gan/
