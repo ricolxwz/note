@@ -1,6 +1,6 @@
 ---
 title: Reg-VQ
-comments: false
+comments: true
 addi: https://arxiv.org/pdf/2303.06424
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 随机算法:最近邻问题
-comments: false
+comments: true
 ---
 
 ## 最近邻问题

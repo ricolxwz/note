@@ -1,6 +1,6 @@
 ---
 title: 随机算法: 流处理
-comments: false
+comments: true
 ---
 
 ## 符号含义

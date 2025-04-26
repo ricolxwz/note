@@ -1,6 +1,6 @@
 ---
 title: 思维链
-comments: false
+comments: true
 ---
 
 # 思维链[^1]

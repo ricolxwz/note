@@ -1,10 +1,10 @@
 ---
 title: VQ-GAN
-comments: false
+comments: true
 addi: https://arxiv.org/pdf/2012.09841
 ---
 
-# VQ-GAN
+# VQ-GAN[^1]
 
 ## 摘要
 
@@ -100,3 +100,52 @@ Q^*=\arg\!\min_{E,G,Z}\;\max_D\; \mathbb{E}_{x\sim p(x)}\!\bigl[\mathcal{L}_{\te
 ???+ note "对上一段话的理解"
 
     这里的"自适应权重"是用来平衡$\mathcal{L}_{\text{VQ}}(E,G,Z)$和$\mathcal{L}_{\text{GAN}}(\{E,G,Z\},D)$的, 如果$\nabla _{G_L}[\mathcal{L}_{\text{rec}}]$变大, 那么$\lambda$会变大, 来平衡$\mathcal{L}_{\text{rec}}$对输入的梯度太大产生的影响. 这个所谓的单独的注意力层应该是加在量化器或者编码器后面, 用于在完成下采样之后对全局特征进行一个简单的交互.
+
+### 使用Transformer学习图像成分的组合
+
+#### Transformer设计
+
+当$E$和$G$已训练完毕后, 本文即可利用编码的码本索引来表示图像. 具体而言, 图像$x$的量化编码为\(z_q = q(E(x)) \in \mathbb{R}^{h\times w \times n_z}\), 这与序列\(s \in \{0,\dots,|Z|-1\}^{h\times w}\)等价; 该序列通过将每个码向量替换为其在码本\(Z\)中的索引得到:
+
+\[
+s_{ij}=k \text{ such that }(z_q)_{ij}=z_k
+\]
+
+将序列$s$的索引映射回相应的码本向量即可恢复\(z_q=(z_{s_{ij}})\), 随后经解码器得到重建图像\(\hat{x}=G(z_q)\).  选定$s$中的某种遍历顺序后, 图像生成问题可表述为自回归的"下一个索引预测": 给定先前索引\(s_{<i}\), Transformer学习预测下一个索引的分布\(p(s_i|s_{<i})\), 从而得到整条序列的似然:
+
+\[
+p(s)=\prod_i p(s_i|s_{<i}).
+\]
+
+于是可直接最大化数据表示的对数似然:
+
+\[
+\mathcal{L}_{\text{Transformer}}
+=\mathbb{E}_{x\sim p(x)}\bigl[-\log p(s)\bigr]
+\]
+
+> 就是一个比较平常的transformer, 只不过它的tokens是经过量化得到的索引.
+
+#### 条件生成
+
+在许多图像合成任务中, 用户希望通过额外信息来控制生成过程. 记该信息为$c$, 它可以是描述整体类别的单个标签, 亦可是一幅图像本身. 任务即学习在条件$c$下序列的似然:
+
+\[
+p(s|c)=\prod_i p(s_i|s_{<i},c)
+\]
+
+若条件$c$具有空间结构, 则首先再训练一个VQGAN得到基于索引的表示\(r\in\{0,\dots,|Z_c|-1\}^{h_c\times w_c}\), 对应新的码本\(Z_c\). 由于Transformer的自回归特性, 可将$r$简单地前置于$s$(相当于当作一串历史tokens), 然后仅对\(p(s_i|s_{<i},r)\)项计算负对数似然. 这种"纯解码器"策略同样已成功应用于文本摘要任务.
+
+#### 生成高分辨率图像
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.io/b4e5eadbaaec484057481f7886a58e4b.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/b4e5eadbaaec484057481f7886a58e4b_inverted.webp#only-dark){ loading=lazy width='800' }
+<figcaption>图3: 滑动注意力窗口</figcaption>
+</figure>
+
+Transformer的注意力机制对输入序列$s$的长度$h·w$施加了限制. 作者可以通过调整VQGAN的下采样块数量$m$, 将图像尺寸$H\times W$压缩到$h=H/2^m, w=W/2^m$. 然而, 当$m$超过数据集所依赖的临界值时, 作者观察到重构质量会明显下降. 为了在百万像素级别生成图像, 作者必须采用按patch划分的方式, 并在训练期间裁剪图像, 以把序列$s$的长度限制在可接受的最大范围内. 在采样阶段, transformer以滑动窗口(sliding-window)方式工作, 如上图所示. VQGAN确保当数据集的统计特性近似空间平移不变, 或提供空间条件信息(spatial conditioning)时, 可用上下文仍足以精确地建模图像. 在实际应用中, 这一假设并不严格: 即使在无条件合成已对齐数据的场景中被打破, 也只需向生成过程附加图像坐标这一条件即可, 做法与相关研究类似.
+
+> 这就很迷, 你这个工作不就是想要通过减少归纳偏置提高表达力吗? 怎么又搞了个窗口先验. 直接整张图的所有tokens都一起用transformer建模不好吗? 反正编码器已经下采样好几次了, 序列长度应该不至于让Transformer崩了把...
+
+[^1]: Esser, P., Rombach, R., & Ommer, B. (2021). Taming transformers for high-resolution image synthesis (No. arXiv:2012.09841). arXiv. https://doi.org/10.48550/arXiv.2012.09841

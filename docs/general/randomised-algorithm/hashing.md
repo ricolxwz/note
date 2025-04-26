@@ -1,6 +1,6 @@
 ---
 title: 随机算法:哈希
-comments: false
+comments: true
 ---
 
 ## 哈希表
