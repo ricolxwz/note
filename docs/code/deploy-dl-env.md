@@ -85,3 +85,11 @@ touch ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
 ```
+
+## 安装tex环境
+
+```bash
+conda install -c conda-forge \
+  texlive-core \
+  latexmk perl
+```
