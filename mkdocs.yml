@@ -98,7 +98,7 @@ extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js
   # - https://unpkg.com/katex@0/dist/katex.min.js
   # - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
-  - javascripts/analysis.js
+  # - javascripts/analysis.js
 markdown_extensions:
   - meta
   - pymdownx.inlinehilite
@@ -372,7 +372,9 @@ nav:
       - LLaVA: algorithm/llava.md
       - BLIP: algorithm/blip.md
       - GAN: algorithm/gan.md
-      - Diffusion: algorithm/diffusion.md
+      - Diffusion:
+        - algorithm/diffusion/index.md
+        - DiT: algorithm/diffusion/dit.md
       - InternVL: algorithm/internvl.md
       - Flamingo: algorithm/flamingo.md
       - Whisper: algorithm/whisper.md
