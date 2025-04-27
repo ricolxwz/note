@@ -6,10 +6,10 @@ comments: true
 ## 键位映射
 
 ```
-If (!A_IsAdmin)  ; IF NOT Admin
+if !A_IsAdmin
 {
-    Run, *RunAs "%A_ScriptFullPath%"  ; Run script as admin
-    ExitApp  ; Exit the current instance running without admin privileges
+    Run('*RunAs "' A_ScriptFullPath '"')
+    ExitApp
 }
 
 ; 左Alt→左Ctrl
