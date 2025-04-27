@@ -28,7 +28,9 @@ RAlt::CapsLock
 RShift:: {
     Send "#h"
 }
+```
 
+```
 ; Ctrl+Space→Win+Space
 ^Space:: {
     Send "#{Space}"
