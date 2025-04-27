@@ -378,6 +378,7 @@ nav:
       - Whisper: algorithm/whisper.md
       - DeepSeek-R1: algorithm/deepseek-r1.md
       - GNN: algorithm/gnn.md
+      - U-Net: algorithm/u-net.md
   - 代码:
       - PyTorch快速入门: code/pytorch.md
       - Transformer品尝: code/transformer.md
