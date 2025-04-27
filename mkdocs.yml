@@ -467,6 +467,8 @@ nav:
     - Alist:
       - 无法预览PDF: software/alist/cannot-preview-pdf.md
       - 改变Logo大小: software/alist/change-logo-size.md
+    - AutoHotkey:
+      - 配置: software/autohotkey/config.md
     - Cloudflare:
       - R2对象存储防盗链: software/cloudflare/r2-waf.md
     - Cloudfromt:
@@ -541,6 +543,7 @@ nav:
     - Vscode:
       - 基础配置: software/vscode/config.md
       - 使用CapsLock作为Escape: software/vscode/capslock-as-esc.md
+      - Vim模式下自动切换输入法: software/vscode/vim-switch-ime.md
     - XChange:
       - 配置: software/xchange/config.md
     - Xray:
