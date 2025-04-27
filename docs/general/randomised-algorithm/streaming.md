@@ -78,4 +78,60 @@ end for
 
 ### Morris Counter算法
 
-算法非常简单, 维护一个非负整数计数器$X$, 初始值为0.
+算法非常简单, 维护一个非负整数计数器$x$, 初始值为0. 每当读到一个事件$a_i=1$的时候, 不是直接把$x$加一, 而是以概率$2^{-x}$把$x$加一, 换句话说, $x$越大, 后续再增长的门槛就很高. 流处理完毕之后, 输出$\hat{d}=2^{x}-1$. 算法的伪代码可以表示为:
+
+```
+1: x ← 0
+2: for all 1 ≤ i ≤ m do
+3:     Get item a_i ∈ {0,1}
+4:     if a_i = 1 then
+5:         r_i ← Bern(1/2^x)      ▷ Independent of previous choices.
+6:         x ← x + r_i
+7: return  d̂ ← 2^x − 1
+```
+
+这个算法的空间复杂度: 理论上, 因为数据流中事件总数$d\leq m$, 所以我们的期望$x$所占用的空间 一定不会超过$\log m$. 然而, 在极端情况下, 如果每一次抛硬币都碰巧成功, 那么$x$甚至可能一路涨到$m$, 那就需要$O(\log m)$位来存储, 与设计初衷相悖. 不过可以证明, 这种极端事件的概率随着$m$呈现指数级衰减, 几乎必然地$x$会被束缚在$O(\log m)$以内, 我们只需要为$x$预留$\log \log m$的空间即可, 实现整体的空间复杂度$s=O(\log \log m)$.
+
+下面, 我们就来证明一下这个空间复杂度的结论. 要证明这个结论, 首先我们需要证明一个关键的引理: 上述算法中随机变量$\hat{d}$满足$E[\hat{d}]=d$和$\text{Var}[\hat{d}]=\frac{d(d-1)}{2}$. 下面是它的证明:
+
+定义$C_i$为上述算法第$i$步结束的时候, $2^x$的值, 则$C_0=2^0=1$并且$\hat{d}=C_m-1$. 对于任何$1\leq i\leq m$, 我们有:
+
+$$
+C_{i+1}=
+\begin{cases}
+  2\cdot C_i, & \text{if } a_{i+1}=1\text{ and } r_{i+1}=1\\[4pt]
+  C_i,       & \text{otherwise}
+\end{cases}
+$$
+
+我们可以重写为$C_{i+1}=(1+a_{i+1}r_{i+1})C_i$, 由于$r_{i+1}\sim \text{Bern}(1/C_i)$, 所以有:
+
+$$
+\mathbb{E}\bigl[C_{i+1}\mid C_i\bigr]
+    =(1+a_{i+1}\,\mathbb{E}[r_{i+1}\mid C_i])\cdot C_i
+    =\left(1+\frac{a_{i+1}}{C_i}\right)\,C_i
+    =C_i+a_{i+1}.
+$$
+
+根据Low of Total Expectation, 有:
+
+$$
+\mathbb{E}[C_{i+1}]
+  =\mathbb{E}\!\bigl[\,\mathbb{E}[C_{i+1}\mid C_i]\,\bigr]
+  =\mathbb{E}[C_i]+a_{i+1}.
+$$
+
+这是一个数列, 有:
+
+$$
+\mathbb{E}[C_m]
+  =\mathbb{E}[C_0]+\sum_{i=0}^{m-1}\bigl(\mathbb{E}[C_{i+1}]-\mathbb{E}[C_i]\bigr)
+  =1+\sum_{i=0}^{m-1}a_{i+1}
+  =1+d
+$$
+
+所以, 我们证明了$E[\hat{d}]=d$. 上面的这条式子其实可以generalize为:
+
+$$
+\mathbb{E}[C_i]=1+\sum_{j=1}^{i}a_j,\qquad 1\le i\le m.
+$$
