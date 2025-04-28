@@ -86,7 +86,7 @@ chmod 600 ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
 ```
 
-## 安装tex环境
+## 无sudo权限安装tex环境
 
 1. 下载安装包: `wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz`
 2. 解压: `tar xvzf install-tl-unx.tar.gz`
@@ -95,3 +95,27 @@ chmod 700 ~/.ssh
 5. 选择`C`: 全选(`+`)
 6. 选择`D`: 输入`1`, 然后输入自定义的目录
 7. 选择`I`: 开始安装
+8. 添加到`PATH`: `export PATH=$PATH:/drive/wexu0327/tex/bin/x86_64-linux`
+9. 安装perl: `conda install perl -c conda-forge -y`
+9. 添加到`settings.json`:
+
+    ```json
+    "latex-workshop.latex.tools": [
+
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ],
+            "env": {
+                "PATH": "/drive/wexu0327/tex/bin/x86_64-linux:/drive/wexu0327/miniconda3/bin/"
+            }
+        }
+    ]
+    ```
