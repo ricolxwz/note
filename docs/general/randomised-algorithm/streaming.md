@@ -235,3 +235,33 @@ Distinct Elements Problem: 给定一条长度可能极大的流, 只用亚线性
 6:         z ← zeros(h(a_i))
 7: return ˆd ← √2 · 2^z
 ```
+
+下面解释为什么使用单个变量$z$就能把去重计数器$d$估计在常数因子范围内.
+
+首先, 先对每个整数$r$定义随机变量$Y_r:=\sum_{j\in [n], f_j>0} 1_{zeros(h(j))\geq r}$. 直观地来说, $Y_r$就是那些哈希值尾零不少于$r$位地不同元素个数; 当$Y_r\geq 1$的时候等价于$z\geq r$. 并且, 有\(\mathbb{E}[Y_r]=\sum_{\substack{j\in[n]\\f_j>0}}\Pr[\mathrm{zeros}(h(j))\ge r]=\sum_{\substack{j\in[n]\\f_j>0}}\frac{1}{2^{r}}=\frac{d}{2^{r}}\), 且有\(\operatorname{Var}[Y_r]=\sum_{\substack{j\in[n]\\f_j>0}}\operatorname{Var}\bigl[\mathbf 1_{\mathrm{zeros}(h(j))\ge r}\bigr]\le\sum_{\substack{j\in[n]\\f_j>0}}\frac{1}{2^{r}}=\frac{d}{2^{r}}\).
+
+有了期望与方差, 就可以用基本的不等式来界定\(z\). 对任意\(r\ge0\)使用Markov不等式得\(\Pr[z\ge r]=\Pr[Y_r\ge1]\le\mathbb E[Y_r]=d/2^{r}\). 再对\(Y_{r+1}\)用Chebyshev不等式得\(\Pr[z\le r]=\Pr[Y_{r+1}=0]\le\mathrm{Var}[Y_{r+1}]/\mathbb E[Y_{r+1}]^{2}\le2^{r+1}/d\). 于是只要取\(C:=3\sqrt2\), 就有
+
+\[
+\Pr\!\Bigl[\hat d\ge C\cdot d\Bigr]=\Pr\!\Bigl[z\ge\bigl\lceil\log_2(Cd/\sqrt2)\bigr\rceil\Bigr]\le\frac{\sqrt2\,d}{C\,d}=\frac13,
+\]
+
+\[
+\Pr\!\Bigl[\hat d\le d/C\Bigr]=\Pr\!\Bigl[z\le\bigl\lfloor\log_2(d/(\sqrt2C))\bigr\rfloor\Bigr]\le\frac{2d}{\sqrt2C\,d}=\frac13.
+\]
+
+#### Median of Means版本
+
+再搞一个Median-of-Means的版本, 我们可以得到:
+
+经过“中位数技巧”加持的Tidemark (AMS)算法是一种随机化单遍扫描算法: 对任意\(\delta\in(0,1]\)，它能够给出流中不同元素个数\(d\)的估计\(\hat d\)，并且存在某个固定常数\(C>0\)，使得:
+
+\[
+\Pr\!\Bigl[\tfrac1C\cdot d\le\hat d\le C\cdot d\Bigr]\ge1-\delta,
+\]
+
+同时所用空间复杂度为
+
+\[
+s=O\!\bigl(\log n\cdot\log\tfrac1\delta\bigr).
+\]
