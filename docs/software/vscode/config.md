@@ -92,3 +92,22 @@ comments: true
     "animations.UseCursorColorForCursorAnimation": true
 }
 ```
+
+## 补全栏平滑过度
+
+
+```css
+.monaco-editor .suggest-widget {
+    opacity: 0;
+    transform: translateY(6px) scale(.96);
+    transition: opacity .5s cubic-bezier(.4, 0, .2, 1),
+        transform .5s cubic-bezier(.4, 0, .2, 1);
+}
+
+.monaco-editor .suggest-widget.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+```
+
+记得, Reload Custom CSS and JS.
