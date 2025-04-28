@@ -88,8 +88,10 @@ chmod 700 ~/.ssh
 
 ## 安装tex环境
 
-```bash
-conda install -c conda-forge \
-  texlive-core \
-  latexmk perl
-```
+1. 下载安装包: `wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz`
+2. 解压: `tar xvzf install-tl-unx.tar.gz`
+3. 安装: `./install-tl`
+4. 选择`S`: 设置为full-scheme (everything)
+5. 选择`C`: 全选(`+`)
+6. 选择`D`: 输入`1`, 然后输入自定义的目录
+7. 选择`I`: 开始安装
