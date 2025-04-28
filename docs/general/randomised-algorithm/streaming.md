@@ -224,4 +224,14 @@ Distinct Elements Problem: 给定一条长度可能极大的流, 只用亚线性
 
 ### AMS算法
 
-研究者针对这个问题提出了Tidemark(又称为AMS)算法, 该算法能够在仅用对数级别空间的前提下给出$d$的常数因子近似. 这里先引入一个符号$zeros(k)$: 对于任意正整数$k$, $zeros(k)$是能够整除$k$的
+研究者针对这个问题提出了Tidemark(又称为AMS)算法, 该算法能够在仅用对数级别空间的前提下给出$d$的常数因子近似. 这里先引入一个符号$zeros(k)$: 对于任意正整数$k$, $zeros(k)$指的是整数$k$的二进制写法末尾连续$0$的个数. 算法步骤为: (1) 随机选取一个强散列函数$h: [n]\rightarrow [n]$; (2) 维护单个整数变量$z$, 初始值为$0$; (3) 对数据流中的每个元素$a_i$, 计算$t=zeros(h(a_i))$, 如果$t\geq z$, 就更新$z\leftarrow t$; (4) 数据流结束后输出估计值$\hat{d}=\sqrt{2}\cdot 2^{z}$. 伪代码可以表示为:
+
+```
+1: Pick h:[n]→[n] from a strongly universal hashing family
+2: z ← 0
+3: for all 1 ≤ i ≤ m do
+4:     Get item a_i ∈ [n]
+5:     if zeros(h(a_i)) ≥ z then
+6:         z ← zeros(h(a_i))
+7: return ˆd ← √2 · 2^z
+```
