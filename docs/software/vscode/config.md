@@ -87,5 +87,8 @@ comments: true
     "workbench.list.smoothScrolling": true,
     "terminal.integrated.smoothScrolling": true,
     "window.autoDetectColorScheme": true,
+    "animations.Enabled": true,
+    "animations.CursorAnimation": true,
+    "animations.UseCursorColorForCursorAnimation": true
 }
 ```
