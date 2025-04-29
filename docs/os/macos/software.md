@@ -24,3 +24,5 @@ comments: true
 * Localsend: 本地发文件
 * Warp: 终端
 * Bartener?: 右上方管理
+* Karabiner: Mac版AutoHotKey
+* Cork: Homebrew GUI
