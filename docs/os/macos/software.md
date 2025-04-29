@@ -26,3 +26,7 @@ comments: true
 * Bartener?: 右上方管理
 * Karabiner: Mac版AutoHotKey
 * Cork: Homebrew GUI
+
+```
+defaults write -g NSWindowShouldDragOnGesture -bool true # 开启cmd+ctrl拖拽
+```
