@@ -112,21 +112,23 @@ comments: true
 
 ```css
 .monaco-editor .suggest-widget{
-    display:block!important;      /* 覆盖默认display:none */
-    pointer-events:none;          /* 避免遮挡点击 */
+    display:block!important;
+    pointer-events:none;
     opacity:0;
     transform:translateY(6px) scale(.96);
     visibility:hidden;
     transition:opacity .3s cubic-bezier(.4,0,.2,1),
                transform .3s cubic-bezier(.4,0,.2,1),
-               visibility 0s linear .3s;   /* 延迟visibility,等透明动画结束 */
+               visibility 0s linear .3s;
 }
 
 .monaco-editor .suggest-widget.visible{
     opacity:1;
     transform:translateY(0) scale(1);
     visibility:visible;
-    transition-delay:0s;
+    transition:opacity .3s cubic-bezier(.4,0,.2,1),
+               transform .3s cubic-bezier(.4,0,.2,1),
+               visibility 0s linear .3s;
 }
 ```
 
