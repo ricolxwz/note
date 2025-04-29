@@ -31,6 +31,11 @@ RShift:: {
 ```
 
 ```
+if !A_IsAdmin
+{
+    Run('*RunAs "' A_ScriptFullPath '"')
+    ExitApp
+}
 #Requires AutoHotkey v2.0+
 
 SetWinDelay(-1)          ; 禁用WinMove自动延时(默认100 ms)
