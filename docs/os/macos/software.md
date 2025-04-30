@@ -19,14 +19,12 @@ comments: true
 * DaisyDisk: 磁盘分析
 * AppCleaner: 卸载器
 * Mos: 鼠标反转
-* MonitorControl: 外界屏幕控制
+* MonitorControl: 外界屏幕控制, 好像不太行
+* BetterDisplay: 外界屏幕控制, 彳亍
 * Skim: pdf查看
 * Localsend: 本地发文件
 * Warp: 终端
 * Bartener?: 右上方管理
 * Karabiner: Mac版AutoHotKey
 * Cork: Homebrew GUI
-
-```
-defaults write -g NSWindowShouldDragOnGesture -bool true # 开启cmd+ctrl拖拽
-```
+* Pap.er: 壁纸切换

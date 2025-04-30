@@ -457,6 +457,7 @@ nav:
         - Nginx反代小服务: os/linux/archlinux/nginx-reverse-service.md
         - 自签证书: os/linux/archlinux/self-signed-cert.md
     - Macos:
+      - 基础配置: os/macos/config.md
       - md5图片: os/macos/md5.md
       - 宝藏软件: os/macos/software.md
     - Windows:
