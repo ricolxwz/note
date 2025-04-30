@@ -3,13 +3,15 @@ title: 宝藏软件
 comments: true
 ---
 
-* Alt Snap: 按住Snap就能拖动窗口
+付费: 🌟
+
+* Alt Snap: 按住Snap就能拖动窗口, 好像不太好用, 改用autohotkey
 * Wefont: 修改字体为系统字体
 * Auto Dark Mode: 自动切换浅色/深色主题
-* Snipaste: 截屏助手
+* Snipaste: 截屏助手, 🌟
 * Powertoyes: 系统工具箱
 * Everything: 搜索
-* TuneBlade: 使用Airplay
+* TuneBlade: 使用Airplay, 🌟
 * Monitorian: 在任务栏就能调节显示器亮度
 * Twinkle Tray: 在任务栏就能调节显示器亮度
 * Nilesoft Shell: 替换右键菜单
@@ -23,7 +25,7 @@ comments: true
 * Sumatra PDF: 快速PDF查看器
 * PDF XChange: PDF编辑器
 * WinSCP: webdav, s3客户端
-* Bandzip: 压缩软件
+* Bandzip: 压缩软件, 🌟
 * AnyTXT Searcher: 搜索文档的内容(包括pdf)
 * Localsend: 局域网传文件
 * Utools: 据说是大杂烩
