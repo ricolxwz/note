@@ -30,3 +30,4 @@ comments: true
 * Karabiner: Mac版AutoHotKey
 * Cork: Homebrew GUI, 🌟
 * Pap.er: 壁纸切换
+* Xsearch for safari: safari搜索
