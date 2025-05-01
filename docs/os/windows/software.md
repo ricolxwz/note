@@ -34,4 +34,4 @@ comments: true
 * WSL: 孪生系统
 * Pixpin: 据说好用的截屏工具
 * Traffic Monitor: 资源监控
-* SmoothScroll: 丝滑滚动
+* SmoothScroll: 丝滑滚动, ⭐
