@@ -31,3 +31,4 @@ comments: true
 * Cork: Homebrew GUI, 🌟
 * Pap.er: 壁纸切换
 * Xsearch for safari: safari搜索
+* Tinker Tool: 被macos隐藏的设置
