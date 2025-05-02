@@ -28,9 +28,9 @@ comments: true
 * Warp: 终端
 * Bartener?: 右上方管理, 🌟
 * Karabiner: Mac版AutoHotKey
-* Cork: Homebrew GUI, 🌟
 * Pap.er: 壁纸切换
 * Xsearch for safari: safari搜索, 🌟
 * Tinker Tool: 被macos隐藏的设置
 * BetterTouchTool: 快捷键, 鼠标, 键盘, 置顶, 🌟
 * iStatistica Pro: 资源监控, 🌟
+* Applite: Homebrew GUI
