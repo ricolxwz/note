@@ -32,3 +32,4 @@ comments: true
 * Pap.er: 壁纸切换
 * Xsearch for safari: safari搜索
 * Tinker Tool: 被macos隐藏的设置
+* BetterTouchTool: 快捷键, 鼠标, 键盘, 置顶, 🌟
