@@ -35,3 +35,4 @@ comments: true
 * Pixpin: 据说好用的截屏工具
 * Traffic Monitor: 资源监控
 * SmoothScroll: 丝滑滚动, ⭐
+* Scoop: 类似于brew的
