@@ -34,3 +34,5 @@ comments: true
 * BetterTouchTool: 快捷键, 鼠标, 键盘, 置顶, 🌟
 * iStatistica Pro: 资源监控, 🌟
 * Applite: Homebrew GUI
+* AltTab: 类似于windows的软件切换
+* Nightfall: 在菜单栏一键切换深色模式
