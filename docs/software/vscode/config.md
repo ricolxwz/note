@@ -54,9 +54,9 @@ comments: true
     "workbench.colorTheme": "Vesper",  // vesper, minimal, poimandres
     "workbench.activityBar.location": "top",
     "workbench.sideBar.location": "right",
-    "workbench.iconTheme": "symbols",  // symbols
+    "workbench.iconTheme": "moxer-icons",  // symbols
     "workbench.editor.showTabs": "multiple",
-    "workbench.productIconTheme": "fluent-icons",
+    "workbench.productIconTheme": "materialiconic-product-icons",
     "workbench.statusBar.visible": true,
     "workbench.tips.enabled": false,
     "workbench.tree.enableStickyScroll": false,
@@ -89,7 +89,10 @@ comments: true
     "window.autoDetectColorScheme": true,
     "animations.Enabled": true,
     "animations.CursorAnimation": true,
-    "animations.UseCursorColorForCursorAnimation": true
+    "animations.UseCursorColorForCursorAnimation": true,
+    "remote.SSH.remotePlatform": {
+        "lab": "linux"
+    },
 }
 ```
 
