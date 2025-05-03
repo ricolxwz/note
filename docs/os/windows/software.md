@@ -36,3 +36,13 @@ comments: true
 * Traffic Monitor: 资源监控
 * SmoothScroll: 丝滑滚动, ⭐
 * Scoop: 类似于brew的
+* rufus: U盘制作器
+* Inkscape: 矢量图制作软件
+* Gimp: 图片编辑软件, 类似于PS
+* SpaceSniffer: 类似于Wiztree
+* RevoUninstaller: 类似于Geek
+* Officetoolplus: 激活Office
+* FileZilla: FTP工具
+* pdf-xchange: windows上最好的pdf
+* v2rayN: 科学上网
+* F.Lux: 自动调节色温
