@@ -476,6 +476,8 @@ nav:
     - Cloudfromt:
       - 配置: software/cloudfront/config.md
       - cloudfront配合nginx反向代理: software/cloudfront/nginx-502.md
+    - DO:
+      - 配置: software/do/config.md
     - Filebrowser:
       - 配置: software/filebrowser/config.md
     - FontCreater:
