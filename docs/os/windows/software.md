@@ -46,3 +46,4 @@ comments: true
 * pdf-xchange: windows上最好的pdf
 * v2rayN: 科学上网
 * F.Lux: 自动调节色温
+* Directory Opus 13: 替代默认文件管理器
