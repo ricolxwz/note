@@ -6,20 +6,22 @@ comments: true
 ```py
 import os
 import logging
+from rich.logging import RichHandler
+from rich.console import Console
 
 def get_logger(out_dir):
-    logger = logging.getLogger('Exp')
-    logger.setLevel(logging.INFO)  # 设置只记录INFO级别以上的日志
-    formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")  # 定义日志的格式, 包含时间戳, 日志级别和日志内容
-
-    file_path = os.path.join(out_dir, "run.log")  # 设置日志文件的路径
-    file_hdlr = logging.FileHandler(file_path)  # 创建一个文件处理器, 用于将日志输出到文件
-    file_hdlr.setFormatter(formatter)  # 设置文件处理器的日志格式
-
-    strm_hdlr = logging.StreamHandler(sys.stdout)  # 创建一个流处理器, 用于将日志输出到控制台
-    strm_hdlr.setFormatter(formatter)  # 设置流处理器的日志格式
-
-    logger.addHandler(file_hdlr)  # 将文件处理器添加到日志器
-    logger.addHandler(strm_hdlr)  # 将流处理器添加到日志器
-    return logger
+    logger = logging.getLogger("Eval-Dataset")
+    logger.setLevel(logging.DEBUG)
+    logger.propagate=False
+    os.makedirs(out_dir, exist_ok=True)
+    log_path = os.path.join(out_dir, "eval-dataset.log")
+    file_console = Console(file=open(log_path, "a", encoding="utf-8"), markup=True, highlight=True)
+    file_rich_hdlr = RichHandler(console=file_console, markup=True, rich_tracebacks=True, omit_repeated_times=False, show_path=False)
+    file_rich_hdlr.setLevel(logging.DEBUG)
+    file_rich_hdlr.setFormatter(logging.Formatter("%(message)s"))
+    logger.addHandler(file_rich_hdlr)
+    console_rich_hdlr = RichHandler(markup=True, rich_tracebacks=True, omit_repeated_times=False, show_path=False)
+    console_rich_hdlr.setLevel(logging.DEBUG)
+    console_rich_hdlr.setFormatter(logging.Formatter("%(message)s"))
+    logger.addHandler(console_rich_hdlr)
 ```
