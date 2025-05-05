@@ -49,3 +49,4 @@ comments: true
 * Directory Opus 13: 替代默认文件管理器, 🌟
 * PotPlayer: 播放器
 * VLC: 播放器
+* Simplewall: 防火墙
