@@ -36,3 +36,5 @@ comments: true
 * Applite: Homebrew GUI
 * AltTab: 类似于windows的软件切换
 * Nightfall: 在菜单栏一键切换深色模式
+* Latest: 保持软件最新
+* Little Snitch: 防火墙, 🌟
