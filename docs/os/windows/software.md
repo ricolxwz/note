@@ -49,4 +49,5 @@ comments: true
 * Directory Opus 13: 替代默认文件管理器, 🌟
 * PotPlayer: 播放器
 * VLC: 播放器
-* Simplewall: 防火墙
+* Simplewall: WFP管理器
+* ShareMouse: 键鼠在不同的电脑之间移动, 🌟, powertoys那个不太好用

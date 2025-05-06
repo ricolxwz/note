@@ -38,3 +38,4 @@ comments: true
 * Nightfall: 在菜单栏一键切换深色模式
 * Latest: 保持软件最新
 * Little Snitch: 防火墙, 🌟
+* ShareMouse: 键鼠多屏互联, 🌟, 但是好像macos有自己的
