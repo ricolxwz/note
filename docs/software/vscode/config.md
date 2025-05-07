@@ -10,7 +10,7 @@ comments: true
     "editor.fontFamily": "Maple Mono Normal NL NF CN",
     "editor.wrappingStrategy": "advanced",
     "editor.minimap.enabled": true,
-    "editor.cursorBlinking": "phase",
+    "editor.cursorBlinking": "solid",
     "editor.cursorStyle": "line",
     "editor.fontLigatures": false,
     "editor.lineHeight": 1.6,

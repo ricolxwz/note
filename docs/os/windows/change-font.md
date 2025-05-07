@@ -34,7 +34,8 @@ comments: true
 - msyhbdIt.ttc: Bold Italic
 - msyhl.ttc: Light
 - msyhbd.ttc: Bold
-
+- consolas: VSCode某些插件如debuggy会使用这个字体
+- WeiFont推荐的其他字体
 
 不需要替换的字体包含:
 
@@ -47,7 +48,6 @@ sego类的字体可以通过wefount-给定字体切换, msyh类和其他的一�
 
 其他备选的要替换的字体有:
 
-- consolas
 - ariel
 
 ## 替换
