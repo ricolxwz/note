@@ -20,7 +20,7 @@ comments: true
     "editor.links": false,
     "editor.matchBrackets": "always",
     "editor.parameterHints.enabled": true,
-    "editor.lightbulb.enabled": "off",
+    "editor.lightbulb.enabled": "off"Maple Mono Normal NL NF CN,
     "editor.hover.enabled": true,
     "editor.lineNumbers": "on",
     "editor.showFoldingControls": "never",
@@ -49,8 +49,6 @@ comments: true
     "debug.enableStatusBarColor": false,
     "debug.inlineValues": "off",
     "debug.toolBarLocation": "commandCenter",
-    "custom-ui-style.font.monospace": "Maple Mono Normal NL NF CN",
-    "custom-ui-style.font.sansSerif": "Maple Mono Normal NL NF CN",
     "workbench.colorTheme": "Vesper",  // vesper, minimal, poimandres
     "workbench.activityBar.location": "top",
     "workbench.sideBar.location": "right",
@@ -93,6 +91,9 @@ comments: true
     "remote.SSH.remotePlatform": {
         "lab": "linux"
     },
+    "[python]": {
+        "editor.formatOnSave": true
+    }
 }
 ```
 
