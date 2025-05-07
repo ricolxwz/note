@@ -39,3 +39,4 @@ comments: true
 * Latest: 保持软件最新
 * Little Snitch: 防火墙, 🌟
 * ShareMouse: 键鼠多屏互联, 🌟, 但是好像macos有自己的
+* Transmit: SFTP客户端, 和Cyberduck类似, 🌟
