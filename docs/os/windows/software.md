@@ -51,3 +51,4 @@ comments: true
 * VLC: 播放器
 * Simplewall: WFP管理器
 * ShareMouse: 键鼠在不同的电脑之间移动, 🌟, powertoys那个不太好用
+* PixPin: 到底是谁在吹这款软件? 必Snipaste差了不知道多少倍, 最基的功能都做不流畅, 做不精细, 🌟

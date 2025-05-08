@@ -40,3 +40,4 @@ comments: true
 * Little Snitch: 防火墙, 🌟
 * ShareMouse: 键鼠多屏互联, 🌟, 但是好像macos有自己的
 * Transmit: SFTP客户端, 和Cyberduck类似, 🌟
+* PixPin: 到底是谁在吹这款软件? 必Snipaste差了不知道多少倍, 最基的功能都做不流畅, 做不精细, 🌟
