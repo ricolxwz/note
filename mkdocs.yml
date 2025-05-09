@@ -468,6 +468,7 @@ nav:
       - 切换系统字体: os/windows/change-font.md
       - 宝藏软件: os/windows/software.md
       - WSL: os/windows/wsl.md
+      - 配置: os/windows/config.md
   - 软件:
     - Alist:
       - 无法预览PDF: software/alist/cannot-preview-pdf.md
