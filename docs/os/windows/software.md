@@ -29,10 +29,9 @@ comments: true
 * AnyTXT Searcher: 搜索文档的内容(包括pdf)
 * Localsend: 局域网传文件
 * Utools: 据说是大杂烩
-* IDM: 下载器
+* IDM: 下载器, 🌟
 * Hyper-V: 降速
 * WSL: 孪生系统
-* Pixpin: 据说好用的截屏工具
 * Traffic Monitor: 资源监控
 * SmoothScroll: 丝滑滚动, ⭐
 * Scoop: 类似于brew的
