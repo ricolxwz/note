@@ -51,8 +51,8 @@ function fig {
             try {
                 # aws s3 cp "$new_path" "s3://ricolxwz-image/" --profile image
                 # aws s3 cp "$inverted_path" "s3://ricolxwz-image/" --profile image
-                wrangler r2 object put "ricolxwz-image/$new_name" --file "$new_path"
-                wrangler r2 object put "ricolxwz-image/$inverted_name" --file "$inverted_path"
+                wrangler r2 object put "ricolxwz-image/$new_name" --file "$new_path" --remote
+                wrangler r2 object put "ricolxwz-image/$inverted_name" --file "$inverted_path" --remote
                 Write-Output "All upload operations completed."
 $figid = "fig$id"
 $capid = "图${id}: "
