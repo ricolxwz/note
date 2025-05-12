@@ -74,6 +74,18 @@ GANs通过极小极大目标函数进行优化, 其中生成器神经网络将�
 
 与原始VQ-VAE不同, 本工作采用**向量量化码的层次结构**来建模大尺寸图像. 其核心动机是将纹理等局部信息与物体形状, 几何等全局信息分离建模, 因而可针对每一层的先验模型专门捕获该层存在的特定相关性. [图2](#fig2)a展示了多尺度分层编码器结构: 顶层潜向量负责建模全局信息, 而在顶层潜向量条件下的底层潜向量用于表示局部细节(见[图3](#fig3)). 需要指出, 若底层潜在码不依赖顶层潜在码, 则顶层潜在码必须编码像素的全部细节. 为避免此问题, 每一层均直接依赖像素, 鼓励各潜在映射编码互补信息, 从而降低解码器的重构误差. 更多细节参见算法1.
 
+```
+Algorithm 1  VQ-VAE training (stage 1)
+Require: Functions E_top, E_bottom, D, x  (batch of training images)
+
+1: h_top ← E_top(x)
+2: e_top ← Quantize(h_top) ▷ quantize with top codebook eq 1
+3: h_bottom ← E_bottom(x, e_top)
+4: e_bottom ← Quantize(h_bottom) ▷ quantize with bottom codebook eq 1
+5: x̂ ← D(e_top, e_bottom)
+6: θ ← Update(L(x, x̂)) ▷ Loss according to eq 2
+```
+
 ???+ note "对最后一句话的解读"
 
     如果底层潜变量$z_{\text{bottom}}$不依赖于顶层潜变量$z_{\text{top}}$, 那么顶层潜变量就需要从像素中包揽所有全局和局部的信息(包括纹理等细节). 为了避免让顶层潜变量承担过多的负担, 作者才因此在设计上让每一层既能从上层潜变量得到条件信息, 又能直接从像素获取额外特征, 从而形成互补.
@@ -85,5 +97,8 @@ GANs通过极小极大目标函数进行优化, 其中生成器神经网络将�
 <figcaption>图3: 三个潜在映射(top, middle, bottom)分层VQ-VAE的重构结果如图所示, 最右侧为原始图像. 每加入一层潜在映射, 重构图像便获得更多细节. 这三个潜在映射的分辨率分别约为原图的1/3072, 1/768, 1/192.
 </figcaption>
 </figure>
+
+对于256×256图像, 作者采用两级潜向量层次结构. 如[图2](#fig2)a所示, 编码器首先将图像下采样4倍, 得到64×64的表示, 并将其量化为底层潜在映射. 接着, 另一组残差块(residual blocks)再将表示缩小2倍, 量化后得到顶层32×32潜在映射. 解码器同样是前馈网络, 以所有量化层次的潜向量为输入, 由若干残差块和多层带步长的反卷积(strided transposed convolutions)组成, 将表示逐步上采样回原始图像尺寸.
+
 
 [^1]: Razavi, A., Oord, A. van den, & Vinyals, O. (2019). Generating diverse high-fidelity images with VQ-VAE-2 (No. arXiv:1906.00446). arXiv. https://doi.org/10.48550/arXiv.1906.00446
