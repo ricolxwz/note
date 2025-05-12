@@ -76,10 +76,8 @@ GANs通过极小极大目标函数进行优化, 其中生成器神经网络将�
 
 ???+ note "对最后一句话的解读"
 
-    这句话想要表达两层信息:
+    如果底层潜变量$z_{\text{bottom}}$不依赖于顶层潜变量$z_{\text{top}}$, 那么顶层潜变量就需要从像素中包揽所有全局和局部的信息(包括纹理等细节). 为了避免让顶层潜变量承担过多的负担, 作者才因此在设计上让每一层既能从上层潜变量得到条件信息, 又能直接从像素获取额外特征, 从而形成互补.
 
-    1. 第一层-为什么要将$z_{\text{bottom}}$条件化在$z_{\text{top}}$之上:
-    2. 第二层-为什么要让每一级$(z_{\text{top}}, z_{\text{bottom}})$各自看到像素$x$:
 
 <figure markdown='1' id='fig3'>
 ![](https://img.ricolxwz.io/80cda014b7813c83e35f8a4fb805d924_inverted.webp#only-light){ loading=lazy width='800' }
