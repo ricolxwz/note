@@ -57,4 +57,35 @@ GANs通过极小极大目标函数进行优化, 其中生成器神经网络将�
 
 本文借鉴有损压缩的思想, 以减轻生成模型对可忽略信息进行建模的负担. 实际上, 像JPEG等传统压缩技术已证明, 在几乎不影响主观图像质量的前提下, 可以去除超过80%的数据. 按照相关工作提出的方法, 作者首先通过对自编码器的中间表示进行向量量化(vector-quantization,VQ,一种将连续向量映射为离散码本索引的过程), 将图像压缩到离散潜在空间. 该潜在表示的大小仅为原始图像的1/30, 但解码器仍能以极小失真重构图像. 对这一离散表示的先验分布, 作者采用集成自注意力机制的最先进PixelCNN, 即PixelSnail进行建模. 从该先验中采样后, 解码得到的图像在视觉质量和结构连贯性上与重构结果相当(参见[图1](#fig1)). 此外, 在离散潜在空间上训练与采样均较像素空间快约30倍, 使得在更高分辨率图像上进行训练成为可能. 最后, 所使用的编码器与解码器沿袭原始VQ-VAE的简洁与高效, 因此该方法在需要对大型图像进行快速, 低开销编解码的场景下具有吸引力.
 
+> 和VQ-GAN有点像, 都是在量化空间操作, 而不是在像素空间中操作. 并且都有一个自回归模型(在VQ-VAE-2中是PixelCNN, 在VQ-GAN中是Transformer). 不同点是: (1) 训练目标和损失函数. VQ-VAE-2用的是原版VQ-VAE的三项损失函数, 而VQ-GAN在这个基础上加入了感知损失和对抗损失. (2) 编码器. VQ-VAE使用的是层次化的codebook, 顶层负责全局o廓, 底层补充局部纹理. VQ-GAN放弃层次化, 改用单层但是感受野更大的编码器. (3) 自回归生成模型. VQ-VAE-2采用的是PixelCNN, VQ-GAN采用的是transformer.
+
+## 方法
+
+该方法采取两阶段策略: 首先训练一个分层VQ-VAE([图2](#fig2)a)将图像编码到离散潜在空间; 然后在由全部数据诱导的离散潜在空间上拟合强大的PixelCNN先验模型.
+
+<figure markdown='1' id='fig2'>
+![](https://img.ricolxwz.io/d95ae047637ae0ab74474af7f0246774.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/d95ae047637ae0ab74474af7f0246774_inverted.webp#only-dark){ loading=lazy width='800' }
+<figcaption>图2: (a) 本文提出的分层VQ-VAE架构概览如下. 编码器与解码器均由深度神经网络构成. 模型输入为一张256 × 256图像, 经压缩后分别在底层和顶层得到尺寸为64 × 64与32 × 32的离散量化潜在映射(quantized latent map). 解码器随后利用这两张潜在映射重建原始图像. (b) 多阶段图像生成. 顶层PixelCNN先验以类别标签作为条件, 底层PixelCNN则同时以类别标签和第一层码作为条件. 由于采用前馈解码器, 潜变量到像素的映射速度很快. (示例中的鹦鹉图像即由该模型生成).
+</figcaption>
+</figure>
+
+### 学习层次潜向量
+
+与原始VQ-VAE不同, 本工作采用**向量量化码的层次结构**来建模大尺寸图像. 其核心动机是将纹理等局部信息与物体形状, 几何等全局信息分离建模, 因而可针对每一层的先验模型专门捕获该层存在的特定相关性. [图2](#fig2)a展示了多尺度分层编码器结构: 顶层潜向量负责建模全局信息, 而在顶层潜向量条件下的底层潜向量用于表示局部细节(见[图3](#fig3)). 需要指出, 若底层潜在码不依赖顶层潜在码, 则顶层潜在码必须编码像素的全部细节. 为避免此问题, 每一层均直接依赖像素, 鼓励各潜在映射编码互补信息, 从而降低解码器的重构误差. 更多细节参见算法1.
+
+???+ note "对最后一句话的解读"
+
+    这句话想要表达两层信息:
+
+    1. 第一层-为什么要将$z_{\text{bottom}}$条件化在$z_{\text{top}}$之上:
+    2. 第二层-为什么要让每一级$(z_{\text{top}}, z_{\text{bottom}})$各自看到像素$x$:
+
+<figure markdown='1' id='fig3'>
+![](https://img.ricolxwz.io/80cda014b7813c83e35f8a4fb805d924_inverted.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/80cda014b7813c83e35f8a4fb805d924.webp#only-dark){ loading=lazy width='800' }
+<figcaption>图3: 三个潜在映射(top, middle, bottom)分层VQ-VAE的重构结果如图所示, 最右侧为原始图像. 每加入一层潜在映射, 重构图像便获得更多细节. 这三个潜在映射的分辨率分别约为原图的1/3072, 1/768, 1/192.
+</figcaption>
+</figure>
+
 [^1]: Razavi, A., Oord, A. van den, & Vinyals, O. (2019). Generating diverse high-fidelity images with VQ-VAE-2 (No. arXiv:1906.00446). arXiv. https://doi.org/10.48550/arXiv.1906.00446
