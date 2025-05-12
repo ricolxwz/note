@@ -4,7 +4,7 @@ comments: true
 addi: https://arxiv.org/pdf/2012.09841
 ---
 
-# VQ-GAN[^1]
+# VQ-GAN (2021)[^1]
 
 ## 摘要
 

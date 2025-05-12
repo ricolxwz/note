@@ -4,7 +4,7 @@ comments: true
 addi: https://arxiv.org/pdf/2303.06424
 ---
 
-# Reg-VQ[^1]
+# Reg-VQ (2023)[^1]
 
 ## 摘要
 
