@@ -139,4 +139,4 @@ Require: Functions E_top, E_bottom, D, x  (batch of training images)
 
 与GAN相比, 在最大似然目标(MLE)下训练的概率模型被迫覆盖整个训练数据分布. 原因在于, MLE目标可写成数据分布与模型分布之间的正向KL散度(forward KL-divergence,Kullback–Leibler散度的一种形式); 若模型对某个训练样本赋予零概率, 该散度将发散至无穷. 虽然后者能够覆盖数据分布的全部模态这一性质颇具吸引力, 但相较于对抗式建模, 基于似然的模型需要拟合数据中的所有模态, 因此任务更加艰巨. 进一步地, 自回归模型的祖先采样(ancestral sampling, 即按序列顺序逐步采样)在实践中会沿长序列累积误差, 最终导致生成样本质量下降. 近期的GAN框架提出了自动化的样本选择流程, 以在多样性与质量之间进行权衡. 本文亦基于如下直觉提出一种自动化的多样性–质量折中方法: 样本越接近真实数据流形(datamanifold), 越可能被预训练分类器判定为正确类别. 具体而言, 作者利用一个在ImageNet上训练的分类网络, 依据其为正确类别输出的概率为模型生成的样本打分.
 
-  [^1]: Razavi, A., Oord, A. van den, & Vinyals, O. (2019). Generating diverse high-fidelity images with VQ-VAE-2 (No. arXiv:1906.00446). arXiv. https://doi.org/10.48550/arXiv.1906.00446
+[^1]: Razavi, A., Oord, A. van den, & Vinyals, O. (2019). Generating diverse high-fidelity images with VQ-VAE-2 (No. arXiv:1906.00446). arXiv. https://doi.org/10.48550/arXiv.1906.00446
