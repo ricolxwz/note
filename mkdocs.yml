@@ -372,6 +372,7 @@ nav:
         - Reg-VQ: algorithm/vq-vae/reg-vq.md
         - VQ-VAE-2: algorithm/vq-vae/vq-vae2.md
         - FSQ: algorithm/vq-vae/fsq.md
+        - RVQ: algorithm/vq-vae/rvq.md
       - LLaVA: algorithm/llava.md
       - BLIP: algorithm/blip.md
       - GAN: algorithm/gan.md
