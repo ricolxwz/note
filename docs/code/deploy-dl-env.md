@@ -119,3 +119,13 @@ chmod 700 ~/.ssh
         }
     ]
     ```
+
+## 无sudo权限安装homebrew
+
+```bash
+mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
+```
+
+然后添加`/homebrew/bin`到`PATH`.
+
+然后你就会发现, 基本上, 能在macos上装的软件都能在无sudo的情况下装,  包括上面那个让人头疼的tex.
