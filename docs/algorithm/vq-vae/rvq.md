@@ -24,7 +24,7 @@ addi: https://arxiv.org/pdf/2203.01941
 
 本文提出残差量化VAE(RQ-VAE), 采用残差量化(RQ)对特征图进行精确逼近并降低其空间分辨率. 不同于扩大码本规模的方法, **RQ在固定码本大小的前提下, 以由粗到细的递归方式量化特征图**. 经过$D$次残差量化后, 特征图被表示为由$D$个离散编码堆叠而成的映射. 由于RQ能够组合出$|C|^D$个向量(其中$|C|$为码本大小), RQ-VAE无需庞大码本即可精确逼近特征图, 同时保留编码图像的信息. 得益于这种高精度逼近, RQ-VAE能够将量化特征图的空间分辨率进一步降低, 优于先前研究. 例如, 在256×256图像的AR建模中, RQ-VAE仅需8×8分辨率的特征图.
 
-> 作者的写作手法...emmm,, 不敢恭维. 他只用了一张特征图, 非要说成是"stacked map", 这谁还能看得懂... 还有图1也是如此, **自始至终, 使用的都是同一张特征图**, 不然的话你的空间复杂度优势是哪里来的...
+> 量化为$D$个特征图, 但是码本用的都是同一个码本$C$.
 
 此外, 作者提出RQ-Transformer用于预测RQ-VAE提取的编码. 在RQ-Transformer的输入端, RQ-VAE量化后的特征图被转换为一序列特征向量, 随后RQ-Transformer预测接下来$D$个编码, 以估计下一位置的特征向量. 得益于RQ-VAE降低的特征图分辨率, RQ-Transformer显著减少了计算开销, 并能够轻松学习输入之间的长程依赖. 作者还针对RQ-Transformer提出两项训练技术: soft labeling(软标签)和stochastic sampling(随机采样), 通过缓解自回归模型训练中的exposure bias(曝光偏置)进一步提升性能. 因此, 如[图1](#fig1)所示, 该模型能够生成高质量图像.
 
@@ -66,6 +66,105 @@ $Z_{hw}\in\mathbb{R}^{n_z}$是位置$(h,w)$处的特征向量, $M_{hw}$为其编
 
 作者指出, 降低$\hat{Z}$的空间分辨率$(H, W)$对于AR模型至关重要, 因为AR模型的计算成本随$HW$增加. 然而, 由于VQ-VAE对图像执行有损压缩, 在减少$(H, W)$并同时保留$X$信息之间存在权衡. 具体而言, 当码本规模为$K$时, VQ-VAE使用$HW\log_2 K$位将图像表示为编码. 根据率-失真理论, 可达到的最优重建误差取决于比特数. 因此, 若要将$(H, W)$进一步减半至$(H/2, W/2)$且仍保持重建质量, VQ-VAE需要大小为$K^4$的码本. 然而, 过大的码本会导致VQ-VAE训练不稳定并出现codebook collapse问题, 因而效率低下.
 
-> 本质上, 他们的工作就是缩小了网格大小, 并间接通过residuald的方式增加了码本的数量.
+#### 残差量化
+
+他们没有增加码本的大小, 而是采用残差量化(RQ)对向量$z$进行离散化. 给定量化深度$D$, RQ将$z$表示为有序的$D$个编码. 令$C$是大小为$|C|=K$的码本(codebook), $k_d$表示深度$d$时$z$的编码(code):
+
+$$
+RQ(z;C,D)=(k_{1},\dots,k_{D})\in [K]^{D}
+$$
+
+ 从$0$阶残差$r_0=z$开始, 残差量化(RQ)递归地计算$k_d$, 并将编码$k_d$映射为码向量$e(k_d)$(code embedding), 随后计算下一阶残差$r_d$:
+
+$$
+k_d = Q(r_{d-1};C), \quad
+r_d = r_{d-1} - e(k_d),
+$$
+
+对于$d=1,\ldots,D$. 此外, 定义$\hat{z}^{(d)}=\sum_{i=1}^d e(k_i)$为前$d$个码向量的部分和, 而$\hat{z}:=\hat{z}^{(D)}$则为$z$的量化向量(quantized vector).
+
+RQ的递归量化以由粗到细的方式逼近向量z. 需要注意的是, $\hat{z}^{(1)}$是码本(codebook)中与$z$距离最近的码嵌入(code embedding) $e(k_1)$. 随后其余码被依次选取, 以在每一层深度上减少量化误差(quantization error). 因此, 截至深度$d$的部分和(partial sum) $\hat{z}^{(d)}$随着$d$的增大提供更精细的近似.
+
+**尽管作者可以为每个深度$d$分别构建码本$C_d$, 但在所有量化深度均使用同一个共享码本$C$.** 共享码本为RQ逼近向量$z$带来两大优势. 首先, 若分别使用码本, 需要进行大量超参数搜索以确定每个深度的码本大小$|C_d|$, 而共享码本只需决定总码本大小$K$. 其次, 共享码本使所有码嵌入在每个量化深度都可用, 因而任一码可以在任意深度被复用以最大化其效用.
+
+> 我认为这句话是整篇文章的核心.
+
+需要指出的是, 在码本大小相同的情况下, RQ比VQ能更精确地逼近向量. VQ将整个向量空间$\mathbb{R}^{n\_z}$划分为$K$个簇(cluster), 而深度为$D$的RQ最多可将该空间划分为$K^D$个簇. 换言之, 深度为$D$的RQ的划分能力(partition capacity)等同于拥有$K^D$个码的VQ. 因此, 通过增大$D$, RQ可取代需指数级扩张码本的VQ.
+
+#### RQ-VAE
+
+在[图2](#fig2)中, 作者提出了RQ-VAE以精确量化图像的特征图(feature map). RQ-VAE同样采用VQ-VAE的encoder-decoder架构, 但将VQ模块替换为前文的RQ模块. 具体而言, 深度为$D$的RQ-VAE将特征图$Z$表示为代码堆叠图$M \in \{1,\ldots,K\}^{H \times W \times D}$, 并提取$\hat{Z}^{(d)} \in \mathbb{R}^{H \times W \times n_z}$, 其中$\hat{Z}^{(d)}$是深度$d$($d \in \{1,\ldots,D\}$)下的量化特征图, 满足
+
+$$
+\begin{aligned}
+&\mathbf{M}_{hw} = \mathcal{RQ}(E(\mathbf{X})_{hw}; \mathcal{C}, D),\\
+&\hat{\mathbf{Z}}^{(d)}_{hw} = \sum_{d'=1}^{d} \mathbf{e}(\mathbf{M}_{hw d'}). \tag{5}
+\end{aligned}
+$$
+
+为简洁起见, 深度为$D$的量化特征图$\hat{Z}^{(D)}$亦记作$\hat{Z}$. 最终, 解码器$G$根据$\hat{Z}$重建输入图像, 记为$\hat{X} = G(\hat{Z})$.
+
+本文提出的RQ-VAE可以使自回归(autoregressive, AR)模型在较低的计算成本下有效生成高分辨率图像. 在固定下采样因子$f$的情况下, 由于RQ-VAE能够在给定码本大小下精确逼近特征图, 因而其重建结果比VQ-VAE更为逼真. 需要注意的是, 重建图像的保真度对于生成图像的最高质量至关重要. 此外, 得益于其更精确的逼近能力, RQ-VAE在保持重建质量的同时相比VQ-VAE允许更大的$f$和更小的$(H, W)$. 因此, RQ-VAE使AR模型能够降低计算成本, 提高图像生成速度, 并更好地学习码之间的长程交互.
+
+##### 训练
+
+为了训练RQ-VAE的编码器E与解码器G, 作者针对损失:
+
+$$
+\mathcal{L}= \mathcal{L}_{\text{recon}} + β\mathcal{L}_{\text{commit}},\quad β>0
+$$
+
+采用梯度下降法. 其中, 重构损失$\mathcal{L}_{\text{recon}}$与承诺损失$\mathcal{L}_{\text{commit}}$定义为
+
+$$
+\mathcal{L}_{\text{recon}} = \lVert \mathbf{X}-\hat{\mathbf{X}}\rVert_2^2
+$$
+
+$$
+\mathcal{L}_{\text{commit}} = \sum_{d=1}^{D}\Bigl\lVert \mathbf{Z}-\text{sg}\!\bigl[\hat{\mathbf{Z}}^{(d)}\bigr]\Bigr\rVert_2^2
+$$
+
+其中sg\[·]表示断梯度(stop-gradient)运算符, RQ模块的反向传播采用直通估计器(straight-through estimator). 需要注意的是, $\mathcal{L}_{\text{commit}}$为各层$d$量化误差之和, 而非单一项$\lVert \mathbf{Z}-\text{sg}[\hat{\mathbf{Z}}]\rVert_2^2$. 该损失旨在使$\hat{\mathbf{Z}}^{(d)}$随着$d$的增加逐步减少$\mathbf{Z}$的量化误差. 因此, RQ-VAE以粗到细(coarse-to-fine)的方式逼近特征图, 并保持训练稳定. 码本$C$通过聚类特征的指数移动平均(exponential moving average, EMA)进行更新.
+
+#### 对抗训练
+
+RQ-VAE同样采用对抗学习进行训练, 以提升重建图像的感知质量. 按照前人研究的描述, 模型联合使用基于patch的对抗损失与感知损失. 相关实现细节收录于补充材料.
+
+> 类似于VQ-GAN.
+
+### RQ-Transformer
+
+在本节中, 作者提出了图2中的RQ-Transformer, 用于自回归地预测RQ-VAE的code stack. 首先, 作者对RQVAE提取的离散码进行自回归AR建模, 随后介绍RQ-Transformer如何高效学习离散码的堆叠映射. 最后, 作者提出了针对RQ-Transformer的训练技巧, 以在AR模型训练过程中避免exposure bias(训练与推断阶段不一致的问题).
+
+#### 深度为$D$的离散码AR建模
+
+在RQ-VAE提取得到码图$M∈[K]^{H×W×D}$之后, 栅格扫描(raster scan)顺序会将$M$的空间索引重新排列为二维码数组$S∈[K]^{T×D}$, 其中$T=HW$. 具体而言, 第$t$行$S_t$由$D$个码组成:
+
+$$
+S_t=(S_{t1},\cdots,S_{tD})∈[K]^D,\quad t∈[T].
+$$
+
+将$S$视为图像的离散潜变量, AR模型学习的分布$p(S)$可自回归地分解为
+
+$$
+p(S)=\prod_{t=1}^{T}\prod_{d=1}^{D}p\bigl(S_{td}\mid S_{<t,d},S_{t,<d}\bigr).
+$$
+
+#### RQ-Transformer架构
+
+一种朴素做法是按照栅格扫描顺序将$S$展开为长度为$TD$的序列, 并输入传统transformer. 然而, 该方法既未利用RQ-VAE对$T$长度的压缩, 也未降低计算开销. 因此, 作者提出RQ-Transformer, 以高效学习深度为$D$的RQ-VAE离散码. 如[图2](#fig2)所示, RQ-Transformer由spatial transformer与depth transformer两部分组成.
+
+##### 空间Transformer
+
+Spatial transformer由若干masked self-attention块堆叠而成, 用于提取汇总前序位置信息的上下文向量. 在其输入端, 作者复用了学习到的RQ-VAE码本. 具体地, 定义spatial transformer的输入$u_t$为
+
+$$
+u_t=\mathrm{PE}_T(t)+\sum_{d=1}^{D}e(S_{t-1,d}),\quad t>1
+$$
+
+其中$\mathrm{PE}_T(t)$是针对栅格扫描(raster-scan,即按行逐像素扫描)顺序下空间位置$t$的位置信嵌入(positional embedding). 需要注意,第二项与式5中的图像量化特征向量(quantized feature vector)相同. 对于序列的首个位置,将$u_1$设为可学习嵌入(learnable embedding),用作序列起始标记. 序列$(u_t)_{t=1}^T$经空间transformer(spatial transformer)处理后,上下文向量$h_t$编码了$S_{<t}$的全部信息,具体为
+
+$$h_t = \mathrm{SpatialTransformer}(u_1,\cdots,u_t)$$
+
 
 [^1]: Lee,  D., Kim, C., Kim, S., Cho, M., & Han, W.-S. (2022). Autoregressive image generation using residual quantization (No. arXiv:2203.01941). arXiv. https://doi.org/10.48550/arXiv.2203.01941
