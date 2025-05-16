@@ -122,10 +122,18 @@ chmod 700 ~/.ssh
 
 ## 无sudo权限安装homebrew
 
+???+ warning "已知问题"
+
+    如果没有`/home/linuxbrew`, 那么好像没法直接安装二进制预编译包, 装其他软件会很慢.
+
 ```bash
 mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
 ```
 
-然后添加`/homebrew/bin`到`PATH`.
+然后添加`/homebrew/bin`到`PATH`. 然后执行`brew shellenv`, 将输出添加到`.bashrc`.
 
 然后你就会发现, 基本上, 能在macos上装的软件都能在无sudo的情况下装,  包括上面那个让人头疼的tex.
+
+## 换源
+
+用https://github.com/RubyMetric/chsrc. 可以替换上面brew的源.
