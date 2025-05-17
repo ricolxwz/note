@@ -166,5 +166,42 @@ $$
 
 $$h_t = \mathrm{SpatialTransformer}(u_1,\cdots,u_t)$$
 
+##### 深度Transformer
+
+给定上下文向量$h_t$, 深度Transformer在位置$t$以自回归方式预测$D$个码元$(S_{t1},\cdots,S_{tD})$. 在位置$t$, 深度$d$处, 它的输入$v_{td}$定义为至多深度$d-1$的码元嵌入之和, 因而有$v_{td}=PE_D(d)+\sum_{d'=1}^{d-1}e(S_{td'})\quad (d>1)$.
+
+其中$PE_D(d)$是针对深度$d$的位置信息嵌入, 在所有位置$t$共享. 由于位置信息已编码于$u_t$, $v_{td}$中不再使用$PE_T(t)$. 当$d=1$时, 取$v_{t1}=PE_D(1)+h_t$. 需注意, 上式中的第二项对应式(5)中深度$d-1$处的量化特征向量$\hat{Z}_{hw}^{(d-1)}$. 因此, 深度Transformer在已有至$d-1$阶估计的基础上预测下一个码元, 以获得对$\hat{Z}_t$更精细的估计. 最终, 深度Transformer给出的条件分布$p_{td}(k)=p(S_{td}=k|S_{<t,d},S_{t,<d})$为
+
+$$p_{td}=DepthTransformer(v_{t1},\cdots,v_{td})$$
+
+RQ-Transformer通过最小化$L_{AR}$进行训练, 该损失为负对数似然(NLL):
+
+$$\mathcal{L}_{AR}=\mathbb{E}_{S}\mathbb{E}_{t,d}\bigl[-\log p(S_{td}|S_{<t,d},S_{t,<d})\bigr]$$
+
+#### 软标签和随机采样
+
+暴露偏置(exposure bias)被认为会因为训练阶段与推理阶段预测差异导致的误差累积而降低AR模型(autoregressive model)的性能. 对于RQ-Transformer来说, 当深度$D$增加时, 预测误差也会累积, 因为随着$d$变大, 对特征向量进行更精细估计变得更加困难.
+
+!!! tip "暴露偏置"
+
+    暴露偏置是序列生成模型在训练-推断两种不同模式下输入分布不一致导致的系统性误差: 训练时候模型总是看到真实数据的上一时刻词(Teacher Forcing策略), 而推断时候只能接受自己刚才预测的词. 当早期预测出错以后, 错误会被反复喂给模型并迅速放大, 造成雪崩式质量下降.
+
+因此, 本文提出利用soft labeling(软标签, 即用概率分布而非one-hot硬标签)以及从RQ-VAE随机抽样码向量(stochastic sampling)来缓解暴露偏置. Scheduled sampling(计划抽样)虽可减少该差异, 但对大规模AR模型并不适用, 因为它要求在每一步训练中进行多次推理, 从而显著提高训练成本. 相反, 本文利用RQ-VAE中码嵌入(code embedding)的几何关系. 设向量$z∈ℝ^{n_z}$, 在$[K]$上定义条件分类分布$Q_τ(k|z)$, 其中$τ>0$为temperature(温度参数):
+
+!!! tip "计划抽样"
+
+    计划采样通过在训练过程中按预设概率逐步用模型自身预测替换TeacherForcing的真值输入, 让模型提前适应推断场景, 以低成本缓解暴露偏置.
+
+$$Q_τ(k|z) ∝ \exp(−‖z−e(k)‖₂² / τ),  k ∈ [K]$$
+
+该分布根据$z$与各码嵌入$e(k)$的欧氏距离为每个码$k$分配概率, 温度$τ$控制分布的平滑程度; $τ$越小, 分布越尖锐, 越倾向于选择距离最近的码.
+
+##### 软标签
+
+基于码嵌入之间的距离, 作者使用软标签来改进RQ-Transformer的训练, 通过对RQ-VAE中各码间几何关系进行显式监督实现. 对于位置$t$和深度$d$, 设$Z_t$为图像的特征向量, $r_{t,d-1}$为深度$d-1$处的残差向量. 随后, NLL损失将one-hot标签$Q_0(·|r_{t,d-1})$(即仅对单一码赋予概率$1$的离散标签)作为$S_{td}$的监督信号. 与one-hot标签不同, 作者采用经过平滑处理的概率分布$Q_τ(·|r_{t,d-1})$(soft label)作为监督.
+
+##### 随机采样
+
+在上述soft labeling(软标签)的基础上, 作者提出对RQ-VAE生成的code map(码图)进行stochastic sampling(随机采样), 以减小training与inference阶段的discrepancy(差异). 与RQ的deterministic code selection(确定性码选择)不同, 作者通过从$Q_τ(·|r_{t,d−1})$中采样来确定码$S_{td}$. 需要指出的是, 当$τ→0$时, 该随机采样退化为SQ的原始码选择. 随机采样使得对于给定图像的feature map, 可以获得不同组合的codes $S$.
 
 [^1]: Lee,  D., Kim, C., Kim, S., Cho, M., & Han, W.-S. (2022). Autoregressive image generation using residual quantization (No. arXiv:2203.01941). arXiv. https://doi.org/10.48550/arXiv.2203.01941

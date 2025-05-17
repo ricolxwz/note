@@ -137,3 +137,5 @@ mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar 
 ## 换源
 
 用https://github.com/RubyMetric/chsrc. 可以替换上面brew的源.
+
+## 无sudo权限安装nix
