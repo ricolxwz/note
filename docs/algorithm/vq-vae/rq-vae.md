@@ -1,10 +1,10 @@
 ---
-title: RVQ (2022)
+title: RQ-VAE (2022)
 comments: false
 addi: https://arxiv.org/pdf/2203.01941
 ---
 
-# RVQ[^1]
+# RQ-VAE[^1]
 
 ## 摘要
 
