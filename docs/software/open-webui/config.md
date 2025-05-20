@@ -37,9 +37,7 @@ async def _fetch(self, url: str) -> str:
 ```
 
 ```py
- async def ascrape_all(
-        self, urls: List[str], parser: Union[str, None] = None
-    ) -> List[Any]:
+async def ascrape_all(self, urls: List[str], parser: Union[str, None] = None) -> List[Any]:
     """Async fetch all urls, then return soups for all results."""
     raw_results = await self.fetch_all(urls)
     filtered = [
@@ -50,7 +48,15 @@ async def _fetch(self, url: str) -> str:
     if not filtered:
         return []
     results_clean, urls_clean = zip(*filtered)
-    import pdb
-    pdb.set_trace()
     return self._unpack_fetch_results(list(results_clean), list(urls_clean), parser=parser)
 ```
+
+## 检索返回条目内容质量不高
+
+这是因为默认的SentenceTransformer默认是在英文下训练的, 所以根本没法索引中文内容. 将嵌入模型替换为中英文训练过的embedding模型: jinaai/jina-embeddings-v2-base-zh.
+
+上面这个还是不太行, 使用BGE-M3, 使用huggingface-cli调用. 这个也不太行... 主要是速度比较慢, 用这个: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+
+## 开启CUDA支持
+
+embedding等操作都要用到CUDA, 在site-packages下面, env.py文件中注释掉`USE_CUDA`那一行, 直接`USE_CUDA: "true"`, 注意, 要装一下torch. `uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --force-reinstall`, 建议在公司服务器上就不要开了, 不然会被发现在占用内存... 逃.

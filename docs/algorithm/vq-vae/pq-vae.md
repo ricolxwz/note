@@ -1,10 +1,12 @@
 ---
-title: PQ-VAE (2024)
+title: PQ-VAE (2019)
 comments: false
 ---
 
 # PQ-VAE[^1]
 
+## 摘要
 
 
-[^1]: Huang, L., Qiu, Q., & Sapiro, G. (2024). PQ-VAE: Learning hierarchical discrete representations with progressive quantization. 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW), 7550–7558. https://doi.org/10.1109/CVPRW63382.2024.00750
+
+[^1]: Wu, H., & Flierl, M. (2019). Learning product codebooks using vector quantized autoencoders for image retrieval (No. arXiv:1807.04629). arXiv. https://doi.org/10.48550/arXiv.1807.04629

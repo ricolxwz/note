@@ -138,4 +138,8 @@ mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar 
 
 用https://github.com/RubyMetric/chsrc. 可以替换上面brew的源.
 
-## 无sudo权限安装nix
+## 干掉一堆vscode/cusor服务端
+
+```
+ps -ef | awk '/cursor-|code-/{print $2}' | xargs kill -9
+```

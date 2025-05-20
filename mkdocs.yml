@@ -529,6 +529,8 @@ nav:
       - 服务: software/nezha/service.md
       - Telegram机器人通知: software/nezha/telebot.md
       - 警告: software/nezha/warning.md
+    - Open-WebUI:
+      - 配置: software/open-webui/config.md
     - Portainer:
       - Https: software/portainer/https.md
       - 安装: software/portainer/install.md

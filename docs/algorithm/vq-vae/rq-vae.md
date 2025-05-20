@@ -178,6 +178,16 @@ RQ-Transformer通过最小化$L_{AR}$进行训练, 该损失为负对数似然(N
 
 $$\mathcal{L}_{AR}=\mathbb{E}_{S}\mathbb{E}_{t,d}\bigl[-\log p(S_{td}|S_{<t,d},S_{t,<d})\bigr]$$
 
+!!! example "RQ-Transformer推理示例"
+
+    1. Compute u2
+    2. Input u1 and u2 into the Spatial Transformer to get h2
+    3. Form v2,1 by adding the first depth positional embedding PED(1) and h2, then use Depth Transformer layer 1 to predict S2,1
+    4. Form v2,2 by adding PED(2) and the embedding of S2,1, then use Depth Transformer layer 2 to predict S2,2
+    5. Form v2,3 by adding PED(3) and the embeddings of S2,1 and S2,2, then use Depth Transformer layer 3 to predict S2,3
+    6. Form v2,4 by adding PED(4) and the embeddings of S2,1, S2,2 and S2,3, then use Depth Transformer layer 4 to predict S2,4
+    7. After all four depth codes at position 2 are predicted, compute u3 as PET(3) plus the sum of embeddings S2,1 through S2,4, then move to position 3 and repeat until every spatial position is generated
+
 #### 软标签和随机采样
 
 暴露偏置(exposure bias)被认为会因为训练阶段与推理阶段预测差异导致的误差累积而降低AR模型(autoregressive model)的性能. 对于RQ-Transformer来说, 当深度$D$增加时, 预测误差也会累积, 因为随着$d$变大, 对特征向量进行更精细估计变得更加困难.
