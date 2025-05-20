@@ -9,39 +9,48 @@ comments: true
 
 ## 请求很大延迟
 
-这是因为`.venv/lib/python3.11/site-packages/open_webui/retrieval/web/utils.py`中`SafeWebBaseLoader`的实现中`_fetch`没有设置timeout的时间, 还有retry的次数, 所以这是我的实现:
+这是因为`.venv/lib/python3.11/site-packages/open_webui/retrieval/web/utils.py`中`SafeWebBaseLoader`的实现中`_fetch`没有设置timeout的时间. 请求的机理是`ascrape_all`请求`fetch_all`, 由于`SafeWebBaseLoader`是一个`WebBaseLoader`的子类, 所以可以在`langchain-community`中找到`WebBaseLoader`, 其中有`fetch_all`函数, 它调用的是`_fetch_with_rate_limit`函数, 他会先调用`SafeWebBaseLoader`的`_fetch`, 如果有Exception, 返回的是空字符串.
+
+修改`SafeWebBaseLoader`:
 
 ```py
-async def _fetch(self, url: str, retries: int = 1, cooldown: int = 2, backoff: float = 1.5) -> str:
+async def _fetch(self, url: str) -> str:
     timeout = aiohttp.ClientTimeout(
             total=10,
             sock_connect=5,
             sock_read=5
         )
     async with aiohttp.ClientSession(trust_env=self.trust_env, timeout=timeout) as session:
-        for i in range(retries):
-            try:
-                kwargs: Dict = dict(
-                    headers=self.session.headers,
-                    cookies=self.session.cookies.get_dict(),
-                )
-                if not self.session.verify:
-                    kwargs["ssl"] = False
+        kwargs: Dict = dict(
+            headers=self.session.headers,
+            cookies=self.session.cookies.get_dict(),
+        )
+        if not self.session.verify:
+            kwargs["ssl"] = Falsk
 
-                async with session.get(
-                    url, **(self.requests_kwargs | kwargs)
-                ) as response:
-                    if self.raise_for_status:
-                        response.raise_for_status()
-                    return await response.text()
-            except aiohttp.ClientConnectionError as e:
-                if i == retries - 1:
-                    raise
-                else:
-                    log.warning(
-                        f"Error fetching {url} with attempt "
-                        f"{i + 1}/{retries}: {e}. Retrying..."
-                    )
-                    # await asyncio.sleep(cooldown * backoff**i)
-    raise ValueError("retry count exceeded")
+        async with session.get(
+            url, **(self.requests_kwargs | kwargs)
+        ) as response:
+            if self.raise_for_status:
+                response.raise_for_status()
+            return await response.text()
+```
+
+```py
+ async def ascrape_all(
+        self, urls: List[str], parser: Union[str, None] = None
+    ) -> List[Any]:
+    """Async fetch all urls, then return soups for all results."""
+    raw_results = await self.fetch_all(urls)
+    filtered = [
+        (result, url)
+        for result, url in zip(raw_results, urls)
+        if not result == ""
+    ]
+    if not filtered:
+        return []
+    results_clean, urls_clean = zip(*filtered)
+    import pdb
+    pdb.set_trace()
+    return self._unpack_fetch_results(list(results_clean), list(urls_clean), parser=parser)
 ```
