@@ -54,6 +54,28 @@ SetWinDelay(-1)          ; 禁用WinMove自动延时(默认100 ms)
     }
 }
 
+; Shift+左键拖动→自由缩放
++LButton::{
+    CoordMode("Mouse","Screen")
+    hwnd := WinExist("A")
+    WinGetPos(&wx,&wy,&ww,&wh, hwnd) ; 获取窗口的初始位置和大小
+    MouseGetPos(&sx,&sy) ; 获取鼠标的初始位置
+
+    While GetKeyState("LButton","P"){
+        MouseGetPos(&nx,&ny) ; 获取鼠标当前位置
+
+        ; 计算鼠标的移动量
+        deltaX := nx - sx
+        deltaY := ny - sy
+
+        ; 根据鼠标移动量调整窗口大小
+        ; 可以根据需要调整缩放比例或逻辑
+        WinMove(,, ww + deltaX, wh + deltaY, hwnd)
+
+        Sleep 0
+    }
+}
+
 ; Ctrl+Alt+右键拖动→缩放
 ^!RButton::{
     CoordMode("Mouse","Screen")
