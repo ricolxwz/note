@@ -26,7 +26,7 @@ async def _fetch(self, url: str) -> str:
             cookies=self.session.cookies.get_dict(),
         )
         if not self.session.verify:
-            kwargs["ssl"] = Falsk
+            kwargs["ssl"] = False
 
         async with session.get(
             url, **(self.requests_kwargs | kwargs)
