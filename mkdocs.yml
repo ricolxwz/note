@@ -511,6 +511,8 @@ nav:
       - 无法调整MD单元格内的文字大小: software/jetbrains/cannot-addjust-font-in-md-cell.md
     - KDE:
       - 配置: software/kde/config.md
+    - LiteLLM:
+      - 配置: software/litellm/config.md
     - Minio:
       - virtual host 风格: software/minio/virtual-host-style.md
       - 无法加载桶: software/minio/can-not-load-bucket.md
@@ -536,6 +538,8 @@ nav:
       - Https: software/portainer/https.md
       - 安装: software/portainer/install.md
       - 栈: software/portainer/stack.md
+    - SearXNG:
+      - 启动: software/searxng/setup.md
     - SSH:
       - SSH使用谷歌验证器2FA: software/ssh/use-google-2fa.md
       - 限制IP登录: software/ssh/restrict-ip-login.md

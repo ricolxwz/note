@@ -55,7 +55,9 @@ async def ascrape_all(self, urls: List[str], parser: Union[str, None] = None) ->
 
 这是因为默认的SentenceTransformer默认是在英文下训练的, 所以根本没法索引中文内容. 将嵌入模型替换为中英文训练过的embedding模型: jinaai/jina-embeddings-v2-base-zh.
 
-上面这个还是不太行, 使用BGE-M3, 使用huggingface-cli调用. 这个也不太行... 主要是速度比较慢, 用这个: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+上面这个还是不太行, 使用BGE-M3, 使用huggingface-cli调用. 这个也不太行... 主要是速度比较慢, 用这个: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2. 或者用这个: jinaai/jina-embeddings-v3
+
+目前的方法: 使用Azure API平台, 然后在本地部署LiteLLM, 相当于一个proxy服务器, Open WebUI发送的是Openai格式的请求, 经过LiteLLM转换之后变成Azure API格式, Azure上面的embedding模型的速率非常非常高. 关于搜索, 见如何搭建searxng, 记得开启json格式调用.
 
 ## 开启CUDA支持
 
