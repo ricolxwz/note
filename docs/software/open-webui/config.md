@@ -57,7 +57,7 @@ async def ascrape_all(self, urls: List[str], parser: Union[str, None] = None) ->
 
 上面这个还是不太行, 使用BGE-M3, 使用huggingface-cli调用. 这个也不太行... 主要是速度比较慢, 用这个: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2. 或者用这个: jinaai/jina-embeddings-v3
 
-目前的方法: 使用Azure API平台, 然后在本地部署LiteLLM, 相当于一个proxy服务器, Open WebUI发送的是Openai格式的请求, 经过LiteLLM转换之后变成Azure API格式, Azure上面的embedding模型的速率非常非常高. 关于搜索, 见如何搭建searxng, 记得开启json格式调用.
+目前的方法: 使用Azure API平台, 然后在本地部署LiteLLM, 相当于一个proxy服务器, Open WebUI发送的是Openai格式的请求, 经过LiteLLM转换之后变成Azure API格式, Azure上面的embedding模型的速率非常非常高. 关于搜索, 见如何搭建searxng, 记得开启json格式调用. emmm. 好像openai platform上面的速率也没差多少, 都是1000000 TPM, 但是鉴于Openai API是拒付国内信用卡的, 还是老老实实用Azure吧... 嵌入批处理建议设置为10, 因为上面的块大小是1000, 那么一批大概是10000 token, 差不多算是一个比较温和的单位了.
 
 ## 开启CUDA支持
 
