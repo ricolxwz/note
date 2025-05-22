@@ -29,11 +29,7 @@ comments: false
 
 ### VAE
 
-考虑一个观测数据$\mathbf{x} \in \mathbb{R}^D$和一个目标数据分布$p_{\text{data}}(\mathbf{x})$,它对有限的样本进行建模.标准的VAE由一个随机编码器-解码器对组成:一个解码器$p_\theta(\mathbf{x}|\mathbf{z})$和一个近似后验$q_\phi(\mathbf{z}|\mathbf{x})$,其中$\theta$和$\phi$是可训练的参数.假定隐变量$\mathbf{z} \in \mathbb{R}^{d_z}$服从先验分布$p(\mathbf{z})$.数据的生成方式为首先从先验$p(\mathbf{z})$中采样$\mathbf{z}$,然后将$\mathbf{z}$输入到随机解码器$p_\theta(\mathbf{x}|\mathbf{z})$中得到$\mathbf{x}$.每个样本$\mathbf{x}$的负对数证据下界(ELBO)表示为$\mathcal{L}_{\text{VAE}} = \mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})}[-\log p_\theta(\mathbf{x}|\mathbf{z})] + D_{KL}(q_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}))$.为了解析地计算样本$\mathbf{x}$的似然的ELBO,近似后验通常建模为条件高斯分布$q_\phi(\mathbf{z}|\mathbf{x}) = \mathcal{N}(q_\phi(\mathbf{x}), \text{diag}(\sigma_\phi(\mathbf{x})))$,其中有两个映射$g_\phi: \mathbb{R}^D \rightarrow \mathbb{R}^{d_z}$和$\sigma_\phi: \mathbb{R}^D \rightarrow \mathbb{R}^{d_z}$(分别是编码器输出的均值和方差向量).
-
-如果目标数据分布是连续的, 则随机解码器可以用一个映射$f_\theta: \mathbb{R}^{d_z} \rightarrow \mathbb{R}^D$建模为高斯分布: $p_\theta(\mathbf{x}|\mathbf{z}) = \mathcal{N}(f_\theta(\mathbf{z}), \sigma^2 \mathbf{I})$. 这会将ELBO中的第一项简化为均方误差(MSE). 相反, 如果数据分布是离散的并且有$C_{\text{all}}$个类别, 则$\mathbf{x}$的第$d$个元素$x_d$的随机解码器可以用一个映射$f_{\theta, d}^c: \mathbb{R}^{d_z} \rightarrow \mathbb{R} (c \in [C_{\text{all}}])$建模为分类分布: $p_\theta(x_d = c|\mathbf{z}) = \text{softmax}_c(\{f_{\theta, d}^{c'}(\mathbf{z})\}_{c'=1}^{C_{\text{all}}})$. 其中softmax操作在$c'$上进行. 在这种情况下, ELBO中的第一项变为交叉熵(CE)损失.
-
-!!! note "第二段推导"
+!!! note inline "第二段推导"
 
     === "连续数据"
 
@@ -54,5 +50,21 @@ comments: false
         $-\mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})] = -\mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})}\left[\sum_{d=1}^D \sum_{c=1}^{C_{\text{all}}} y_{d,c} \log P_{d,c}(\mathbf{z})\right]$
         $= \mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})}\left[-\sum_{d=1}^D \sum_{c=1}^{C_{\text{all}}} y_{d,c} \log P_{d,c}(\mathbf{z})\right]$
         这就是期望交叉熵损失. 同样, 在实践中, 这个期望通过从 $q_\phi(\mathbf{z}|\mathbf{x})$ 中采样 $\mathbf{z}$ 来近似.
+
+考虑一个观测数据$\mathbf{x} \in \mathbb{R}^D$和一个目标数据分布$p_{\text{data}}(\mathbf{x})$,它对有限的样本进行建模.标准的VAE由一个随机编码器-解码器对组成:一个解码器$p_\theta(\mathbf{x}|\mathbf{z})$和一个近似后验$q_\phi(\mathbf{z}|\mathbf{x})$,其中$\theta$和$\phi$是可训练的参数.假定隐变量$\mathbf{z} \in \mathbb{R}^{d_z}$服从先验分布$p(\mathbf{z})$.数据的生成方式为首先从先验$p(\mathbf{z})$中采样$\mathbf{z}$,然后将$\mathbf{z}$输入到随机解码器$p_\theta(\mathbf{x}|\mathbf{z})$中得到$\mathbf{x}$.每个样本$\mathbf{x}$的负对数证据下界(ELBO)表示为$\mathcal{L}_{\text{VAE}} = \mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})}[-\log p_\theta(\mathbf{x}|\mathbf{z})] + D_{KL}(q_\phi(\mathbf{z}|\mathbf{x}) || p(\mathbf{z}))$.为了解析地计算样本$\mathbf{x}$的似然的ELBO,近似后验通常建模为条件高斯分布$q_\phi(\mathbf{z}|\mathbf{x}) = \mathcal{N}(q_\phi(\mathbf{x}), \text{diag}(\sigma_\phi(\mathbf{x})))$,其中有两个映射$g_\phi: \mathbb{R}^D \rightarrow \mathbb{R}^{d_z}$和$\sigma_\phi: \mathbb{R}^D \rightarrow \mathbb{R}^{d_z}$(分别是编码器输出的均值和方差向量).
+
+如果目标数据分布是连续的, 则随机解码器可以用一个映射$f_\theta: \mathbb{R}^{d_z} \rightarrow \mathbb{R}^D$建模为高斯分布: $p_\theta(\mathbf{x}|\mathbf{z}) = \mathcal{N}(f_\theta(\mathbf{z}), \sigma^2 \mathbf{I})$. 这会将ELBO中的第一项简化为均方误差(MSE). 相反, 如果数据分布是离散的并且有$C_{\text{all}}$个类别, 则$\mathbf{x}$的第$d$个元素$x_d$的随机解码器可以用一个映射$f_{\theta, d}^c: \mathbb{R}^{d_z} \rightarrow \mathbb{R} (c \in [C_{\text{all}}])$建模为分类分布: $p_\theta(x_d = c|\mathbf{z}) = \text{softmax}_c(\{f_{\theta, d}^{c'}(\mathbf{z})\}_{c'=1}^{C_{\text{all}}})$. 其中softmax操作在$c'$上进行. 在这种情况下, ELBO中的第一项变为交叉熵(CE)损失.
+
+### VQ-VAE
+
+与变分自编码器(VAE)不同, 向量量化变分自编码器(VQ-VAE)包含一个确定的编码器-解码器路径和一个可训练的码本$\mathbf{B}$. 该码本是一个集合, 包含$K$个$d_b$维向量$\{\mathbf{b}_k\}_{k=1}^K$. 一个$d_z$维离散潜在变量与码本相关联(这里讲的应该是对于一张图片, 我们需要用$d_z$个离散的潜向量来表示它), 可以被解释为$\mathbf{B}^{d_z} \subset \mathbb{R}^{d_b \times d_z}$的$d_z$个笛卡尔积. 作者将潜在变量表示为$\mathbf{Z}_q \in \mathbf{B}^{d_z}$, 它的第$i$个列向量为$\mathbf{z}_{q,i} \in \mathbf{B}$. 从输入$x$到$\mathbf{Z}_q$的确定性编码过程包括一个映射$\mathbf{\hat{Z}}_q = g_\phi(x)$, 其中$g_\phi: \mathbb{R}^D \rightarrow \mathbb{R}^{d_b \times d_z}$, 以及将$\mathbf{\hat{Z}}_q$量化到$\mathbf{B}^{d_z}$上的量化过程. 量化过程被建模为一个确定的分类后验分布, 其中$\hat{\mathbf{z}}_{q,i}$总是映射到其最近邻$\mathbf{z}_{q,i}$, 即$\mathbf{z}_{q,i} = \arg \min_{\mathbf{b}_k} \|\mathbf{\hat{z}}_{q,i} - \mathbf{b}_k\|_2$. VQ-VAE的目标函数为: $\mathcal{L}_{VQ} = - \log p_\theta(x|\mathbf{Z}_q) + \|sg[g_\phi(x)] - \mathbf{Z}_q\|_2^2 + \beta \|g_\phi(x) - sg[\mathbf{Z}_q]\|_2^2$. 其中$sg[\cdot]$表示停止梯度算子, 且$\beta$设置为$0.1$. 为了提高性能和收敛速度, 指数移动平均(EMA)更新通常只应用于与码本更新相对应的第二项.
+
+---
+
+请注意, VAE和VQ-VAE的目标函数都可以解释为重建误差和潜在正则化惩罚之和.
+
+## 方法
+
+
 
 [^1]: Takida, Y., Shibuya, T., Liao, W., Lai, C.-H., Ohmura, J., Uesaka, T., Murata, N., Takahashi, S., Kumakura, T., & Mitsufuji, Y. (2022). SQ-VAE: Variational bayes on discrete representation with self-annealed stochastic quantization (No. arXiv:2205.07547). arXiv. https://doi.org/10.48550/arXiv.2205.07547
