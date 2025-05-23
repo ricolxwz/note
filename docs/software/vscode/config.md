@@ -92,7 +92,7 @@ comments: true
         "lab": "linux"
     },
     "[python]": {
-        "editor.formatOnSave": true
+        "editor.formatOnSave": false
     }
 }
 ```
