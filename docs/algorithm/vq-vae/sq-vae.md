@@ -65,6 +65,44 @@ comments: false
 
 ## 方法
 
+本节中,作者提出了SQ-VAE及其两个子种类:高斯SQ-VAE和vMF SQ-VAE.该框架桥接了VAE和VQ-VAE的训练方案,减轻了VQ-VAE对启发式技术的依赖,并降低了超参数调优的难度.此外,它融入了可训练的类别后验分布的自退火过程,该分布在训练过程中逐渐逼近VQ-VAE的确定性量化.此外,作者还提供了关于自退火机制益处的理论和实证支持.
 
+### 概括
+
+SQ-VAE的框架如[图1](#fig1)所示. 与VQ-VAE类似, SQ-VAE也具有一个可训练的码本$\mathbf{B} := \{\mathbf{b}_k\}_{k=1}^K$. 作为一个生成模型, SQ-VAE的目标是学习一个生成过程$\mathbf{x} \sim p_\theta(\mathbf{x}|\mathbf{Z}_q)$, 其中$\mathbf{Z}_q \sim P(\mathbf{Z}_q)$, 以生成属于数据分布$p_{data}(\mathbf{x})$的样本, 其中$P(\mathbf{Z}_q)$表示离散潜在空间$\mathbf{B}^d$的先验分布. 在主要的训练阶段, 与VQ-VAE中一样, 先验$P(\mathbf{Z}_q)$被假定为独立同均匀分布, 即$P(\mathbf{Z}_{q,i} = \mathbf{b}_k) = 1/K$, 对于$k \in [K]$. 在主要的训练阶段之后, 将进行第二次训练以学习$P(\mathbf{Z}_q)$. 由于精确评估$p_\theta(\mathbf{Z}_q|\mathbf{x})$是难以处理的, 因此使用近似后验$q_\phi(\mathbf{Z}_q|\mathbf{x})$来代替.
+
+!!! tip "为什么要进行第二阶段的学习?"
+
+    因为在初始训练的时候, 先验$P(\mathbf{Z}_q)$通常被假设为一个简单的均匀分布, 这便于模型训练. 但是在数据编码到离散的$\mathbf{Z}_q$之后, 其真实均匀分布往往不是均匀的. 因此, 在主要训练阶段之后, 需要第二阶段来专门学习一个更接近真实数据特征的$P(\mathbf{Z}_q)$, 这样做可以: 提升生成样本的质量, 并且能够更好的捕捉数据结构, 通常使用PixelCNN, Transformer等自回归模型学习这个先验.
+
+<figure markdown='1' id='fig1'>
+![](https://img.ricolxwz.io/2fe77603b62d7297ef74d2a10d58c8ad.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/2fe77603b62d7297ef74d2a10d58c8ad_inverted.webp#only-dark){ loading=lazy width='800' }
+<figcaption>图1: SQ-VAE的编码和生成过程. 从$\mathbf{x}$到$\mathbf{Z}_q$的编码路径包括(E1)确定性编码, (E2)随机解量化和(E3)量化过程. 对于生成, 在(G1)中, 我们首先从先验$p(\mathbf{Z}_q)$中采样$\mathbf{Z}_q \in \mathbf{B}^{d_z}$. 然后, 在(G2)中, 我们将$\mathbf{Z}_q$输入到随机解码器中以生成数据样本. </figcaption>
+</figure>
+
+> 下面这一段比较重要.
+
+在此设定下,尽管作者可以依照VQ-VAE中的方法建立生成过程,但由于$Z_q$的离散特性,构建从$x$到$Z_q$的编码过程并非易事. 因此,作者引入了两个辅助变量以简化说明:$Z$和$\hat{Z}_q$. $Z$是由$Z_q$通过反量化过程$p_φ(Z|Z_q)$转换得到的连续变量,其中$φ$表示其参数. 此外,作者可以根据贝叶斯定理$\hat{P}_φ(Z_q|Z) \propto p_φ(Z|Z_q)P(Z_q)$推导出$p_φ(Z|Z_q)$的逆过程,即随机量化过程$\hat{P}_φ(Z_q|Z)$. 另一方面,$\hat{Z}_q$定义为$\hat{Z}_q = g_φ(x)$,它是确定性编码器$g_φ : \mathbb{R}^D \rightarrow \mathbb{R}^{d \times d_z}$在给定样本$x$时的输出. 理想情况下,$\hat{Z}_q$应接近$Z_q$. 类似地,$\hat{Z}_q$的反量化过程可以写为$\hat{Z}|\hat{Z}_q \sim p_φ(Z|\hat{Z}_q)$. ^^如[图1](#fig1)所示,叠加过程$p_φ(Z|\hat{Z}_q)$和$\hat{P}_φ(Z_q|Z)$连接了$\hat{Z}_q$和$Z_q$,从而建立了从$x$到$Z_q$的随机编码过程$Q_ω(Z_q|x) := E_{q_ω(Z|x)}[\hat{P}_φ(Z_q|Z)]$,其中$ω := \{φ, ϕ\}$且$q_ω(Z|x) := p_φ(Z|g_ϕ(x))$.^^ (下方带有颜色的箭头路径)
+
+!!! note "贝叶斯公式推导"
+
+    根据贝叶斯定理 $P(A|B) = \frac{P(B|A)P(A)}{P(B)}$, 我们可以推导 $\hat{P}_φ(Z_q|Z)$. 在此情景下, 令 $A = Z_q$ 且 $B = Z$. 将这些代入贝叶斯定理, 我们得到 $\hat{P}_φ(Z_q|Z) = \frac{p_φ(Z|Z_q)P(Z_q)}{P(Z)}$. 由于 $P(Z)$ (即 $Z$ 的边际概率) 在给定 $Z$ 的条件下不依赖于我们所考虑的特定 $Z_q$ 值, 它在此处充当归一化常数, 确保 $\hat{P}_φ(Z_q|Z)$ 对所有 $Z_q$ 的总和为1. 因此, 我们可以将等式简化为正比关系: $\hat{P}_φ(Z_q|Z) \propto p_φ(Z|Z_q)P(Z_q)$.
+
+然后, 我们就能推导SQ-VAE的ELBO:
+
+$$
+\begin{aligned}
+\log p_{\theta}(\mathbf{x}) \ge -\mathcal{L}_{\text{SQ}}(\mathbf{x}; \theta, \omega, \mathbf{B}) & := \mathbb{E}_{q_{\omega}(\mathbf{Z}|\mathbf{x})\hat{P}_{\varphi}(\mathbf{Z}_q|\mathbf{Z})} \left[ \log \frac{p_{\theta}(\mathbf{x}|\mathbf{Z}_q)p_{\varphi}(\mathbf{Z}|\mathbf{Z}_q)P(\mathbf{Z}_q)}{q_{\omega}(\mathbf{Z}|\mathbf{x})\hat{P}_{\varphi}(\mathbf{Z}_q|\mathbf{Z})} \right] \\
+& = \mathbb{E}_{q_{\omega}(\mathbf{Z}|\mathbf{x})\hat{P}_{\varphi}(\mathbf{Z}_q|\mathbf{Z})} \left[ \log \frac{p_{\theta}(\mathbf{x}|\mathbf{Z}_q)p_{\varphi}(\mathbf{Z}|\mathbf{Z}_q)}{q_{\omega}(\mathbf{Z}|\mathbf{x})} \right] \\
+& \quad + \mathbb{E}_{q_{\omega}(\mathbf{Z}|\mathbf{x})} H(\hat{P}_{\varphi}(\mathbf{Z}_q|\mathbf{Z})) + \text{const.}
+\end{aligned}
+$$
+
+!!! tip "推导这个ELBO"
+
+    首先, 我们来回顾一下最原始的ELBO定义, 对于一个包含隐变量(设为$\textbf{z}$)的生成模型$p(\textbf{x}, \textbf{z})$和一个近似后验分布$q(\textbf{z}|\textbf{x})$, ELBO定义为: $L=E_{q(\textbf{z}|\textbf{x})}[\log \frac{p(\textbf{x}, \textbf{z})}{q(\textbf{z}|\textbf{x})}]$, 我们来最大化这个下界来近似最大化$\log p(x)$. 在SQ-VAE中, 近似后验分布为$q_w(\textbf{Z}|\textbf{x})\hat{P}_{\varphi}(\textbf{Z}_q|\textbf{Z})$, 首先将$\textbf{x}$映射到$\textbf{Z}$的分布, 然后$\textbf{Z}$通过一个概率量化得到$\textbf{Z}_q$的分布. SQ-VAE的ELBO的形式是这样子的: $L_{ELBO} = \mathbb{E}_{q_w(\textbf{Z}|\textbf{x})\hat{P}_{\varphi}(\textbf{Z}_q|\textbf{Z})} \left[ \log \frac{p_{\theta}(\mathbf{x, Z, Z_q})}{q_w(\textbf{Z}|\textbf{x})\hat{P}_{\varphi}(\textbf{Z}_q|\textbf{Z})} \right]$. 你会发现, 和上面的这个式子就差在分子部分, 这个联合分布可以写为$p(\textbf{x},\textbf{Z},\textbf{Z}_q)=p(\textbf{x}\mid \textbf{Z},\textbf{Z}_q)\,p(\textbf{Z}\mid \textbf{Z}_q)\,P(\textbf{Z}_q)$, 由于给定量化码本$\textbf{Z}_q$之后, 重构只依赖$\textbf{Z}_q$, 即$p(\textbf{x}\mid \textbf{Z},\textbf{Z}_q)=p(\textbf{x}\mid \textbf{Z}_q)$, 所以分子为$p_{\theta}(\mathbf{x}|\mathbf{Z}_q)p_{\varphi}(\mathbf{Z}|\mathbf{Z}_q)P(\mathbf{Z}_q)$.
+
+其中$H(P)$表示$P$的熵. 在上式中,由于假设$P(Z_q)$服从均匀分布,因此其值为一常数项,故被省略. 为简洁起见,作者此后省略$\mathcal{L}_{\text{SQ}}$的参数. 最终,主要训练通过最小化$\mathbb{E}_{p_{\text{data}}(\mathbf{x})}\mathcal{L}_{\text{SQ}}(\mathbf{x})$来进行. 在此过程中,编码器, 解码器和码本都同时进行优化. 这样,码本优化不再需要诸如停止梯度, 指数移动平均(EMA)以及码本重置等启发式技术. 上式中第一项的期望涉及类别分布$\hat{P}_{\phi}(Z_q|Z)$,该分布可以通过Gumbel-softmax松弛近似,以便在传统VAE的反向传播中使用重参数化技巧.
 
 [^1]: Takida, Y., Shibuya, T., Liao, W., Lai, C.-H., Ohmura, J., Uesaka, T., Murata, N., Takahashi, S., Kumakura, T., & Mitsufuji, Y. (2022). SQ-VAE: Variational bayes on discrete representation with self-annealed stochastic quantization (No. arXiv:2205.07547). arXiv. https://doi.org/10.48550/arXiv.2205.07547
