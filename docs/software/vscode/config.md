@@ -20,7 +20,7 @@ comments: true
     "editor.links": false,
     "editor.matchBrackets": "always",
     "editor.parameterHints.enabled": true,
-    "editor.lightbulb.enabled": "off"Maple Mono Normal NL NF CN,
+    "editor.lightbulb.enabled": "off",
     "editor.hover.enabled": true,
     "editor.lineNumbers": "on",
     "editor.showFoldingControls": "never",
