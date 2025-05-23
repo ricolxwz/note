@@ -105,4 +105,8 @@ $$
 
 其中$H(P)$表示$P$的熵. 在上式中,由于假设$P(Z_q)$服从均匀分布,因此其值为一常数项,故被省略(变成了上面的const). 为简洁起见,作者此后省略$\mathcal{L}_{\text{SQ}}$的参数. 最终,主要训练通过最小化$\mathbb{E}_{p_{\text{data}}(\mathbf{x})}\mathcal{L}_{\text{SQ}}(\mathbf{x})$来进行. 在此过程中,编码器, 解码器和码本都同时进行优化. 这样,码本优化不再需要诸如停止梯度, 指数移动平均(EMA)以及码本重置等启发式技术. 上式中第一项的期望涉及类别分布$\hat{P}_{\varphi}(Z_q|Z)$,该分布可以通过Gumbel-softmax松弛近似,以便在传统VAE的反向传播中使用重参数化技巧.
 
+!!! note "为什么SQ-VAE可以使用ELBO优化"
+
+    最主要的一点是它使用了随机量化的思想, 而不是传统的VQ-VAE那种确定性量化. 在标准的VAE中, 计算ELBO第一项$-\mathbb{E}_{q_{\phi}(\mathbf{z}|\textbf{x})}\log p_{\theta}(\textbf{x}|\textbf{z})$需要使用抽样$\textbf{z}$近似. 我们假设的是$q_{\phi}(\textbf{z}|\textbf{x})$服从高斯分布, 为了保证梯度能够传递到编码器上, 我们设计了重参数化技巧, 这样, 我们是能得到一个$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示的. 但是VQ-VAE是一种确定性的量化过程, 这会导致我们无法给出$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示, 也就无法计算第一项产生的梯度, 所以它使用了一些启发式的方法, 例如直通估计器和辅助损失项.
+
 [^1]: Takida, Y., Shibuya, T., Liao, W., Lai, C.-H., Ohmura, J., Uesaka, T., Murata, N., Takahashi, S., Kumakura, T., & Mitsufuji, Y. (2022). SQ-VAE: Variational bayes on discrete representation with self-annealed stochastic quantization (No. arXiv:2205.07547). arXiv. https://doi.org/10.48550/arXiv.2205.07547
