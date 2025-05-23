@@ -107,6 +107,13 @@ $$
 
 !!! note "为什么SQ-VAE可以使用ELBO优化"
 
-    最主要的一点是它使用了随机量化的思想, 而不是传统的VQ-VAE那种确定性量化. 在标准的VAE中, 计算ELBO第一项$-\mathbb{E}_{q_{\phi}(\mathbf{z}|\textbf{x})}\log p_{\theta}(\textbf{x}|\textbf{z})$需要使用抽样$\textbf{z}$近似. 我们假设的是$q_{\phi}(\textbf{z}|\textbf{x})$服从高斯分布, 为了保证梯度能够传递到编码器上, 我们设计了重参数化技巧, 这样, 我们是能得到一个$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示的. 但是VQ-VAE是一种确定性的量化过程, 这会导致我们无法给出$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示, 也就无法计算第一项产生的梯度, 所以它使用了一些启发式的方法, 例如直通估计器和辅助损失项.
+     在标准的VAE中, 计算ELBO第一项$-\mathbb{E}_{q_{\phi}(\mathbf{z}|\textbf{x})}\log p_{\theta}(\textbf{x}|\textbf{z})$需要使用抽样$\textbf{z}$近似. 我们假设的是$q_{\phi}(\textbf{z}|\textbf{x})$服从高斯分布, 为了保证梯度能够传递到编码器上, 我们设计了重参数化技巧, 这样, 我们是能得到一个$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示的. 但是VQ-VAE是一种确定性的量化过程, 这会导致我们无法给出$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示, 也就无法计算第一项产生的梯度, 所以它使用了一些启发式的方法, 例如直通估计器和辅助损失项.
+
+    这样就产生了一个问题, 我为什么不直接用Gumbel-Softmax这种随机量化的技巧对$\mathbf{\hat{Z}}_q$进行松弛呢? 我是否也能使用ELBO进行优化呢? 即把流程简化为$\mathbf{\hat{Z}}_q=g_{\phi}(\mathbf{x})\rightarrow \mathbf{Z}_q \sim \mathbf{Gumbel-Softmax}(\mathbf{\hat{Z}_q})$.
+
+
+### 高斯SQ-VAE
+
+作者设计高斯SQ-VAE的假设是去量化过程遵循高斯分布. 基于此假设, 去量化过程被建模为$p_{\varphi}(\mathbf{z}_i | \mathbf{Z}_q) = \mathcal{N}(\mathbf{z}_{q,i}, \mathbf{\Sigma}_{\varphi})$, 其中$\mathbf{\Sigma}_{\varphi}$是可训练的. 根据贝叶斯定理, 他们可以通过上式的逆过程, 即随机量化过程来恢复$\mathbf{Z}_q$, 表示为$\hat{P}_{\varphi}(\mathbf{z}_{q,i} = \mathbf{b}_k | \mathbf{Z}) = \text{softmax}_k \left( \left\{ -\frac{(\mathbf{b}_j - \mathbf{z}_i)^\top \mathbf{\Sigma}_{\varphi}^{-1} (\mathbf{b}_j - \mathbf{z}_i)}{2} \right\}_{j=1}^K \right)$. 其中, 上式中$\mathbf{b}_k$的未归一化对数概率对应于$\mathbf{z}_i$与方差$\mathbf{\Sigma}_{\varphi}$之间的马氏距离. 他们进一步考虑了$\mathbf{\Sigma}_{\varphi}$的几种参数化方法, 并总结了它们以及相应的未归一化负对数概率. 他们检验了这些方法的有效性. 高斯SQ-VAE的解码和编码设置描述如下.
 
 [^1]: Takida, Y., Shibuya, T., Liao, W., Lai, C.-H., Ohmura, J., Uesaka, T., Murata, N., Takahashi, S., Kumakura, T., & Mitsufuji, Y. (2022). SQ-VAE: Variational bayes on discrete representation with self-annealed stochastic quantization (No. arXiv:2205.07547). arXiv. https://doi.org/10.48550/arXiv.2205.07547
