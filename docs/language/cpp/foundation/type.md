@@ -165,17 +165,17 @@ std::cout << ref_r << std::endl; // 20
 
 std::string s = "world";
 // std::string&& ref_s = s; // 错误: 不能绑定到左值 s
-std::string&& ref_s = std::move(s);
+std::string&& ref_s = std::move(s);  // 注意, 这种写法其实没有移动
 std::cout << ref_s << std::endl; // "world"
 std::cout << s << std::endl; // "world"
-std::string s_move = std::move(s);
+std::string s_move = std::move(s);  // 这种写法有移动
 std::cout << s << std::endl; // ""
 
 std::string s1 = "wenzexu";
 std::string s2 = "a really long str";
-std::string&& s3 = s1 + s2;
+std::string&& s3 = s1 + s2; // 注意, 这种写法其实没有移动
 std::cout << s3 << std::endl; // "wenzexua really long str"
-std::string s4 = std::move(s1);
+std::string s4 = std::move(s1);  // 这种写法有移动
 std::cout << s1 << std::endl; // ""
 ```
 
@@ -194,6 +194,29 @@ std::cout << s1 << std::endl; // ""
 
     `std::string s_move = std::move(s);` 是通过移动构造函数创建新对象并转移资源, 而 `std::string&& ref_s = std::move(s);` 仅创建一个绑定到原对象的右值引用, 不发生移动.
 
-    `std::string s_move = std::move(s);`的实现: `std::move(s)`是一个强制类型转换, 实际上可以写为`(std::string&&)s`, 它将左值转换为一个右值引用. 等式左边的代码`std::string s_move`会调用构造函数, 由于等式的右边是一个右值引用, 编译器会选择调用`str::string`的移动构造函数. 移动构造函数的核心是资源窃取. 也就是说, 右值引用在这里只是作为一种类型标记, 触发C++的重载机制, 从而让编译器选择移动构造函数, 而不是拷贝构造函数.
+    `std::string s_move = std::move(s);`的实现: `std::move(s)`是一个强制类型转换, 实际上可以写为`(std::string&&)s`, 它将左值转换为一个右值引用. 等式左边的代码`std::string s_move`会调用构造函数, 由于等式的右边是一个右值引用, 编译器会选择调用`str::string`的移动构造函数. 移动构造函数的核心是资源窃取. 也就是说, 右值引用在这里只是作为一种类型标记, 触发C++的重载机制, 从而让编译器选择移动构造函数, 而不是拷贝构造函数. 为什么它会选择移动构造函数呢, 因为移动构造函数的函数签名里面接受的是一个右值引用, 而复制构造函数里面接受的是一个左值引用.
 
     而`std::string&& ref_s = std::move(s);`这句代码不会执行移动, 没有触发任何构造函数. 等式右边的这个`std::move(s)`的类型是`std::string&&`, 但是鉴于它是一个表达式, 所以它是右值, 或者更加具体化的说, 它是一个xvalue, 将亡值, 仍然属于右值的范畴, 所以可以赋值给等号的左边.
+
+#### `std::move`
+
+实际上, 我们在写C++代码的时候, 可能会包含很多的复制, 例如:
+
+```cpp
+std::string s1 = "long string........";
+std::string s2 = s1; // 触发复制构造函数
+void func(std::string s3) { /* ... */ }
+func(s1); // 也是复制
+```
+
+但是, 我们想要的是转交`s1`的所有权, 因为我们用不到`s1`了. 这个时候就要用到`std::move`了. `std::move`是一个函数模板, 它的作用是将一个左值转换为右值引用, 这样就可以触发移动构造函数而不是复制构造函数, 为什么呢? 因为移动构造函数的参数是右值引用, 而复制构造函数的参数是左值引用, 根据重构策略, 应该调用移动构造函数.
+
+```cpp
+std::string myString = "copy construct me";
+std::string newValue;
+std::cout << "myString: " << myString << std::endl; // "copy construct me"
+std::cout << "newValue: " << newValue << std::endl; // ""
+newValue = std::move(myString); // 等价于newValue = (std::string&&)myString;
+std::cout << "myString: " << myString << std::endl; // ""
+std::cout << "newValue: " << newValue << std::endl; // "copy construct me"
+```
