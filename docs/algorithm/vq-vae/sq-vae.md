@@ -95,7 +95,7 @@ $$
 \begin{aligned}
 \log p_{\theta}(\mathbf{x}) \ge -\mathcal{L}_{\text{SQ}}(\mathbf{x}; \theta, \omega, \mathbf{B}) & := \mathbb{E}_{q_{\omega}(\mathbf{Z}|\mathbf{x})\hat{P}_{\varphi}(\mathbf{Z}_q|\mathbf{Z})} \left[ \log \frac{p_{\theta}(\mathbf{x}|\mathbf{Z}_q)p_{\varphi}(\mathbf{Z}|\mathbf{Z}_q)P(\mathbf{Z}_q)}{q_{\omega}(\mathbf{Z}|\mathbf{x})\hat{P}_{\varphi}(\mathbf{Z}_q|\mathbf{Z})} \right] \\
 & = \mathbb{E}_{q_{\omega}(\mathbf{Z}|\mathbf{x})\hat{P}_{\varphi}(\mathbf{Z}_q|\mathbf{Z})} \left[ \log \frac{p_{\theta}(\mathbf{x}|\mathbf{Z}_q)p_{\varphi}(\mathbf{Z}|\mathbf{Z}_q)}{q_{\omega}(\mathbf{Z}|\mathbf{x})} \right] \\
-& \quad + \mathbb{E}_{q_{\omega}(\mathbf{Z}|\mathbf{x})} H(\hat{P}_{\varphi}(\mathbf{Z}_q|\mathbf{Z})) + \text{const.}
+& \quad + \mathbb{E}_{q_{\omega}(\mathbf{Z}|\mathbf{x})} H(\hat{P}_{\varphi}(\mathbf{Z}_q|\mathbf{Z})) + \text{const.} \tag{5}
 \end{aligned}
 $$
 
@@ -107,13 +107,116 @@ $$
 
 !!! note "为什么SQ-VAE可以使用ELBO优化"
 
-     在标准的VAE中, 计算ELBO第一项$-\mathbb{E}_{q_{\phi}(\mathbf{z}|\textbf{x})}\log p_{\theta}(\textbf{x}|\textbf{z})$需要使用抽样$\textbf{z}$近似. 我们假设的是$q_{\phi}(\textbf{z}|\textbf{x})$服从高斯分布, 为了保证梯度能够传递到编码器上, 我们设计了重参数化技巧, 这样, 我们是能得到一个$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示的. 但是VQ-VAE是一种确定性的量化过程, 这会导致我们无法给出$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示, 也就无法计算第一项产生的梯度, 所以它使用了一些启发式的方法, 例如直通估计器和辅助损失项.
+    在标准的VAE中, 计算ELBO第一项$-\mathbb{E}_{q_{\phi}(\mathbf{z}|\textbf{x})}\log p_{\theta}(\textbf{x}|\textbf{z})$需要使用抽样$\textbf{z}$近似. 我们假设的是$q_{\phi}(\textbf{z}|\textbf{x})$服从高斯分布, 为了保证梯度能够传递到编码器上, 我们设计了重参数化技巧, 这样, 我们是能得到一个$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示的. 但是VQ-VAE是一种确定性的量化过程, 这会导致我们无法给出$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示, 也就无法计算第一项产生的梯度, 所以它使用了一些启发式的方法, 例如直通估计器和辅助损失项.
 
-    这样就产生了一个问题, 我为什么不直接用Gumbel-Softmax这种随机量化的技巧对$\mathbf{\hat{Z}}_q$进行松弛呢? 我是否也能使用ELBO进行优化呢? 即把流程简化为$\mathbf{\hat{Z}}_q=g_{\phi}(\mathbf{x})\rightarrow \mathbf{Z}_q \sim \mathbf{Gumbel-Softmax}(\mathbf{\hat{Z}_q})$.
+    这样就产生了一个问题, 我为什么不直接用Gumbel-Softmax这种随机量化的技巧对$\mathbf{\hat{Z}}_q$进行松弛呢? 我是否也能使用ELBO进行优化呢? 即把流程简化为$\mathbf{\hat{Z}}_q=g_{\phi}(\mathbf{x})\rightarrow \mathbf{Z}_q \sim \mathbf{Gumbel-Softmax}(\mathbf{\hat{Z}_q})$. 答案是不可以的. Generally, 使用SQ-VAE可以使得ELBO的每一项都写成能计算的形式, 但是用更直接的方法没法把每一项都写为能计算的形式, 如果省略了中间的$\mathbf{Z}$, 那么, 最终得到的$q(\mathbf{Z}_q|\mathbf{x})$将会是一个形式特别复杂的分布, "Concrete分布", 这个分布是很难写出闭式解的, 或者说ELBO的第二项KL散度项无解析式, 只能使用Monte-Carlo估计, 方差大, 梯度不稳定, 难以优化(注意, 重构项即第一项都是用Monte-Carlo估计的, 区别在第二项上). 但是SQ-VAE里面, 每一项都能写出闭式解, 所以可以用ELBO优化.
 
 
 ### 高斯SQ-VAE
 
-作者设计高斯SQ-VAE的假设是去量化过程遵循高斯分布. 基于此假设, 去量化过程被建模为$p_{\varphi}(\mathbf{z}_i | \mathbf{Z}_q) = \mathcal{N}(\mathbf{z}_{q,i}, \mathbf{\Sigma}_{\varphi})$, 其中$\mathbf{\Sigma}_{\varphi}$是可训练的. 根据贝叶斯定理, 他们可以通过上式的逆过程, 即随机量化过程来恢复$\mathbf{Z}_q$, 表示为$\hat{P}_{\varphi}(\mathbf{z}_{q,i} = \mathbf{b}_k | \mathbf{Z}) = \text{softmax}_k \left( \left\{ -\frac{(\mathbf{b}_j - \mathbf{z}_i)^\top \mathbf{\Sigma}_{\varphi}^{-1} (\mathbf{b}_j - \mathbf{z}_i)}{2} \right\}_{j=1}^K \right)$. 其中, 上式中$\mathbf{b}_k$的未归一化对数概率对应于$\mathbf{z}_i$与方差$\mathbf{\Sigma}_{\varphi}$之间的马氏距离. 他们进一步考虑了$\mathbf{\Sigma}_{\varphi}$的几种参数化方法, 并总结了它们以及相应的未归一化负对数概率. 他们检验了这些方法的有效性. 高斯SQ-VAE的解码和编码设置描述如下.
+作者设计高斯SQ-VAE的假设是去量化过程遵循高斯分布. 基于此假设, 去量化过程被建模为$p_{\varphi}(\mathbf{z}_i | \mathbf{Z}_q) = \mathcal{N}(\mathbf{z}_{q,i}, \mathbf{\Sigma}_{\varphi})$, 其中$\mathbf{\Sigma}_{\varphi}$是可训练的. 根据贝叶斯定理, 他们可以通过上式的逆过程, 即随机量化过程来恢复$\mathbf{Z}_q$, 表示为
+
+$$\hat{P}_{\varphi}(\mathbf{z}_{q,i} = \mathbf{b}_k | \mathbf{Z}) = \text{softmax}_k \left( \left\{ -\frac{(\mathbf{b}_j - \mathbf{z}_i)^\top \mathbf{\Sigma}_{\varphi}^{-1} (\mathbf{b}_j - \mathbf{z}_i)}{2} \right\}_{j=1}^K \right) \tag{7}$$
+
+其中, 上式中$\mathbf{b}_k$的未归一化对数概率对应于$\mathbf{z}_i$与方差$\mathbf{\Sigma}_{\varphi}$之间的马氏距离. 他们进一步考虑了$\mathbf{\Sigma}_{\varphi}$的几种参数化方法, 并总结了它们以及相应的未归一化负对数概率. 他们检验了这些方法的有效性. 高斯SQ-VAE的解码和编码设置描述如下.
+
+#### 解码和编码
+
+解码过程采用了常见的高斯设置, 即 $p_{\theta}(\mathbf{x}|\mathbf{Z}_q) = \mathcal{N}(f_{\theta}(\mathbf{Z}_q), \sigma^2\mathbf{I})$, 其中 $\sigma^2 \in \mathbb{R}_+$ 且 $\theta$ 是可训练参数. 编码遵循[图1](#fig1)所示的过程, 且应用于 $\hat{\mathbf{Z}}_q$ 的去量化过程为 $p_{\varphi}(\mathbf{z}_i|\hat{\mathbf{Z}}_q) = \mathcal{N}(\hat{\mathbf{z}}_{q,i}, \mathbf{\Sigma}_{\varphi})$.
+
+#### 目标函数
+
+将上述编码和解码过程代入公式(5)可得到:
+
+$$\mathcal{L}_{\mathcal{N}\text{-}SQ} = \mathbb{E}_{q_{\omega}(\mathbf{z}|\mathbf{x})\hat{P}_{\varphi}(\mathbf{z}_q|\mathbf{z})}\left[\frac{1}{2\sigma^2}\|\mathbf{x} - f_{\theta}(\mathbf{Z})\|^2_2 + \mathcal{R}_{\varphi}^{\mathcal{N}}(\mathbf{Z}, \mathbf{Z}_q)\right] - \mathbb{E}_{q_{\omega}(\mathbf{z}|\mathbf{x})}H(\hat{P}_{\varphi}(\mathbf{z}_q|\mathbf{Z})) + \frac{D}{2}\log \sigma^2 + \text{const.} \tag{8}
+$$
+
+其中$\mathcal{R}_{\varphi}^{\mathcal{N}}(\mathbf{Z}, \mathbf{Z}_q)$表示[表1](#tab1)中的正则化目标, 具体取决于$\Sigma_{\varphi}$的参数化形式.
+
+<figure markdown='1' id='tab1'>
+![](https://img.ricolxwz.io/f639f22a061bd19f43631bb641b6752e.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/f639f22a061bd19f43631bb641b6752e_inverted.webp#only-dark){ loading=lazy width='800' }
+<figcaption>表1: 高斯SQ-VAE中方差$\Sigma_{\varphi}$的不同参数化方法. </figcaption>
+</figure>
+
+### 自退火量化
+
+在提出下一个SQ-VAE实例之前, 作者希望证明可训练参数在(反)量化过程中的有效性. 在本小节中, 为简单起见, 作者采用参数化$\Sigma_{\varphi} = \sigma_{\varphi}^2 \mathbf{I}$ ([表1](#tab1)中的类型I).
+
+根据公式(7), $\Sigma_{\varphi}$控制了训练过程中量化的随机程度. 作者首先考虑两种极端情况, $\sigma^2 \to \infty$和$\sigma^2 \to 0$, 并给出以下命题, 其证明见附录. 注意, 这里的$\sigma^2$是解码器方差, 它控制的是重建数据和解码器输出的随机性程度, 而$\sigma_{\varphi}^2$是随机反量化过程的方差, 它控制的是$\mathbf{Z}$和$\mathbf{Z}_q$之间的随机性程度.
+
+**命题1.** 假设$p_{\text{data}}(\mathbf{x})$具有有限支撑集, 而$g_{\phi}$和$\{b_k\}_{k=1}^K$是有界的. 设$\omega^* = \{\phi^*, \varphi^*\}$是在固定$\theta$, $\sigma^2$和$\{b_k\}_{k=1}^K$的条件下, $\mathbb{E}_{p_{\text{data}}(\mathbf{x})} D_{\text{KL}}(Q_{\omega}(\mathbf{Z}_q|\mathbf{x}) \parallel P_{\theta}(\mathbf{Z}_q|\mathbf{x}))$的最小化器. 如果$\sigma^2 \to 0$, 那么$\sigma_{\varphi^*}^2 \to 0$.
+
+!!! tip "这个命题的意思"
+
+    这个命题的意思就是, 这两个方差之间存在一种关联: 如果模型学习到非常精确的重建(即$\sigma^2$)趋近于0, 那么为了达到这个目标, 最优的策略是也学习到非常精确, 接近确定性的量化(即$\sigma_{\varphi}^2$也趋近于0). 这也是自退火现象背后的原理之一, 随着训练的进行, 如果重建误差降低, 量化过程的随机性也会随着降低.
+
+当$\sigma^2 \to \infty$时, 公式(8)中的第一项减小. 当$\sigma^2_\phi \to \infty$时, 该项达到最小值, 此时$P_\phi(z_{q,i} = b_k|Z)$趋近于均匀分布. 另一方面, 根据命题1, 当$\sigma^2 \to 0$时, 会导致$\sigma^2_\phi \to 0$. 这意味着$P_\phi(z_{q,i} = b_k|Z)$收敛到克罗内克$\delta$函数$\delta_{k,\hat{k}}$, 其中$\hat{k} = \arg\min_k \|z_i - b_k\|_2$. 这种确定性量化正是VQ-VAE的后验类别分布. 根据以上两种情况, 如果在训练过程中$\sigma^2$逐渐减小, 那么量化过程的随机性也会逐渐降低, 并趋近于确定性量化. 作者将此过程称为*自退火*.
+
+为验证训练过程中是否发生*自退火*, 他们在MNIST上进行了一项实验. 他们训练了高斯SQ-VAE, 其中$\Sigma_\phi = \sigma^2_\phi \mathbf{I}$. 作为比较对象, 他们还训练了将$\sigma^2_\phi$固定为指定值$\sigma^2_q$的模型. 实验设置的细节可在附录中找到. 结果总结在[图2](#fig2)中.
+
+<figure markdown='1' id='fig2'>
+![](https://img.ricolxwz.io/6961403a3c2be096625f2c8d793ca3c4.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/6961403a3c2be096625f2c8d793ca3c4_inverted.webp#only-dark){ loading=lazy width='800' }
+<figcaption>图2: 本节中与$\sigma^2_\phi$相关的动态变化的实证研究. (a)方差参数$\sigma^2_\phi$(蓝色)随$\sigma^2$(红色)减小, 其中$\sigma^2_0$和$\sigma^2_{\phi,0}$是它们的初始值. (b)量化过程相对于迭代次数的平均熵, 通过蒙特卡洛估计获得. (c)测试集上可训练$\sigma^2_\phi$和不同$\sigma^2_q$值对应的均方误差(MSE). </figcaption>
+</figure>
+
+在[图2](#fig2)(a)中, 随着训练轮数的增加, $\sigma^2_\phi$与$\sigma^2$一同减小, 这与命题1和作者的预期一致. 如[图2](#fig2)(b)所示, 当$\sigma^2_\phi$可训练时, 平均熵随着训练的进行而降低. 这两个结果表明*自退火*在实际情况中会发生. 另一方面, [图2](#fig2)(b)显示, 当$\sigma^2_q$固定时, 平均熵保持相对恒定. 此外, 如[图2](#fig2)(c)所示, 均方误差(MSE)受所选$\sigma^2_q$的影响很大. 尽管固定$\sigma^2_q$存在一个最优值, 但由蓝线表示的可训练$\sigma^2_\phi$在所有情况中均获得了最低的均方误差. 因此, 作者证明了随机量化和*自退火*共同产生了一个码本, 该码本能够有效地覆盖潜在空间中更大的支撑集, 特别是在训练阶段的初期. 这有助于提高重建精度.
+
+### vMF SQ-VAE
+
+将SQ-VAE适用于分类数据分布的一种直观方法是, 将解码器输出建模为分类分布(原文公式3). 考虑一个典型的分类场景: 解码器的最后一层是一个线性层, 其后跟着一个softmax层. 解码器可以表示为线性层$w_{last,c} \in \mathbb{R}^F$和其余部分$\tilde{f}_{ \theta^-,d}^{rest}: \mathbb{B}^{dz} \to \mathbb{R}^F$的组合. 它变为$f^c_{\theta,d}(Z_q) = w^T_{last,c} \tilde{f}^{rest}_{\theta^-,d}(Z_q)$, 其中$\theta^-$表示除$w_{last,c}$之外的可训练参数.
+
+该模型基于分解的ELBO表示为
+
+$$\mathcal{L}_{\text{CE-SQ}}^{\text{naive}} = \mathbb{E}_{q_\omega(\mathbf{z}|\mathbf{x})\hat{P}_\varphi(\mathbf{Z}_q|\mathbf{z})} \left[ -\sum_{d=1}^D \log(P_\theta(x_d = c|\mathbf{Z}_q)) + \mathcal{R}_\varphi^N(\mathbf{Z}, \mathbf{Z}_q) \right] - \mathbb{E}_{q_\omega(\mathbf{z}|\mathbf{x})} H(\hat{P}_\varphi(\mathbf{Z}_q|\mathbf{z})) + \text{const.} \tag{9a}$$
+
+其中$P_\theta(x_d = c|\mathbf{Z}_q) = \text{softmax}_c \left( \{\mathbf{w}_{\text{last},c'}^{\text{T}} \tilde{f}_{\theta^-,d}^{\text{rest}}(\mathbf{Z}_q)\}_{c'=1}^C \right) \tag{9b}$.
+
+> 可以参考VAE解码器输出为分类分布, 差不多也是这个意思, 可以看作是一个交叉熵损失.
+
+然而, 他们发现这种朴素分类(NC)SQ-VAE的性能通常不尽如人意. 通过观察(8)和(9a)之间的差异, 可以找到一个可能的原因. 在(9a)中, 由于用分类分布替代了高斯分布, 像$\sigma^2$这样的可训练参数在目标函数中已不复存在. 这意味着该模型无法从自退火效应中受益.
+
+为了利用自退火的优势, 他们引入vMF分布来改进模型, 如[图3](#fig3)所示, 并将其称为vMF SQ-VAE. 考虑一个嵌入在$F$维空间中的超球面$S^{F-1}$. 令$w_c$表示第$c$个数据类别在$S^{F-1}$表面上的投影向量. 接下来, 他们将数据$x_d$在超球面上的投影表示为$v_d \in \{w_c\}_{c=1}^{C_{all}}$. 如果$x_d$属于类别$c$, 即$x_d = c$, 则$v_d = w_c$, 反之亦然.
+
+<figure markdown='1' id='fig3'>
+![](https://img.ricolxwz.io/d7448ea350c6854f92123230a8eec305.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.io/d7448ea350c6854f92123230a8eec305_inverted.webp#only-dark){ loading=lazy width='500' }
+<figcaption>图3: vMF解码器</figcaption>
+</figure>
+
+#### 解码
+
+第一步是使用解码器$\tilde{f}_{\theta,d}: \mathbb{B}^{dz} \to S^{F-1}$将$Z_q$解码为$V := \{v_d\}_{d=1}^D$. 然后, 通过使用
+
+$$P_\theta(v_d = w_c|\mathbf{Z}_q) = \text{softmax}_c \left( \{\kappa \mathbf{w}_{c'}^{\text{T}} \tilde{f}_{\theta,d}(\mathbf{Z}_q)\}_{c'=1}^{C_{\text{all}}} \right) \tag{10}$$
+
+来确定$v_d = w_c$的概率, 其中$\kappa \in \mathbb{R}_+$是一个可训练的标量. 这类似于(9b)中的分类解码器, 不同之处在于对$S^{F-1}$的归一化和缩放因子$\kappa$. 因此, 他们可以将解码后的$Z_q$的分类概率表示为
+
+$$p_\theta(v_d|\mathbf{Z}_q) \propto \exp(\kappa v_d^{\text{T}} \tilde{f}_{\theta,d}(\mathbf{Z}_q)) \tag{11}$$
+
+通过将(11)关于$v_d$在$S^{F-1}$上进行归一化, 他们得到$p_\theta(v_d|\mathbf{Z}_q) = \text{vMF}(\tilde{f}_{\theta,d}(\mathbf{Z}_q), \kappa)$, 其中$\tilde{f}_{\theta,d}(\mathbf{Z}_q)$和$\kappa$分别对应于vMF分布的平均方向和集中度参数.
+
+#### 编码
+
+相应地, 他们使用vMF分布对编码器的随机去量化过程进行建模:
+
+$$p_\varphi(\mathbf{z}_i|\mathbf{Z}_q) = \text{vMF}(\mathbf{z}_{q,i}, \kappa_\varphi) \tag{12}$$
+
+其中$\kappa_\varphi$是可训练的集中度参数. 与第3.2节中的高斯SQ-VAE类似, 使用贝叶斯定理恢复离散的$Z_q$, 表示为
+
+$$\hat{P}_\varphi(z_{q,i} = b_k|\mathbf{Z}) = \text{softmax}_k (\{ \kappa_\varphi b_j^{\text{T}} z_i \}_{j=1}^K) \tag{13}$$
+
+其中(13)中$b_k$的未归一化对数概率对应于$b_k$和$z_i$之间经$\kappa_\varphi$缩放的余弦相似度.
+
+#### 优化目标
+
+目标函数 将编码和解码过程代入(5)可得
+
+$$\mathcal{L}_{\text{vMF-SQ}} = \mathbb{E}_{q_\omega(\mathbf{z}|\mathbf{x})\hat{P}_\varphi(\mathbf{Z}_q|\mathbf{z})} \left[ -\kappa \sum_{d=1}^D \mathbf{v}_d^{\text{T}} \tilde{f}_{\theta,d}(\mathbf{Z}_q) + \mathcal{R}_\varphi^{\text{vMF}}(\mathbf{Z}, \mathbf{Z}_q) \right] - \mathbb{E}_{q_\omega(\mathbf{z}|\mathbf{v})} H(\hat{P}_\varphi(\mathbf{Z}_q|\mathbf{z})) - \log C_F(\kappa) + \text{const.}$$
+
+其中$\mathcal{R}_\varphi^{\text{vMF}}(\mathbf{x}, \mathbf{Z}_q)$是由$\mathcal{R}_\varphi^{\text{vMF}}(\mathbf{Z}, \mathbf{Z}_q) = \sum_{i=1}^{d_z} \kappa_{\varphi,i}(1 - \mathbf{z}_{q,i}^{\text{T}} \mathbf{z}_i)$定义的正则化目标(详见附录B.2). 此处, $C_F(\kappa)$表示vMF分布的归一化常数(详见附录A).
+
+> 总的来说, 这篇文章理论的知识点很多, 值得细细品味.
 
 [^1]: Takida, Y., Shibuya, T., Liao, W., Lai, C.-H., Ohmura, J., Uesaka, T., Murata, N., Takahashi, S., Kumakura, T., & Mitsufuji, Y. (2022). SQ-VAE: Variational bayes on discrete representation with self-annealed stochastic quantization (No. arXiv:2205.07547). arXiv. https://doi.org/10.48550/arXiv.2205.07547

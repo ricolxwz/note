@@ -236,7 +236,7 @@ nav:
           - 网络: language/python/foundation/network.md
           - 多进程/多线程: language/python/foundation/threading.md
           - 异步: language/python/foundation/async.md
-          - 数据库: language/python/foundation/general/database.md
+          - 数据库: language/python/foundation/database.md
           - 错误/调试/测试: language/python/foundation/debug.md
           - 编码: language/python/foundation/encoding.md
           - PVM: language/python/foundation/pvm.md
@@ -278,6 +278,8 @@ nav:
         - 基础:
           - 构建: language/cpp/foundation/build.md
           - 类型: language/cpp/foundation/type.md
+          - 函数: language/cpp/foundation/function.md
+          - 容器: language/cpp/foundation/container.md
   - 基石:
     - 数据库:
       - 数据模型: general/database/conceptual-model.md
