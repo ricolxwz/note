@@ -220,3 +220,5 @@ newValue = std::move(myString); // 等价于newValue = (std::string&&)myString;
 std::cout << "myString: " << myString << std::endl; // ""
 std::cout << "newValue: " << newValue << std::endl; // "copy construct me"
 ```
+
+> 所以, 右值引用到底是怎么发挥它的效果的呢? 我认为如果一个函数传入的是右值引用, 这就相当于告诉我们这个参数是一个临时对象, 可以直接抢占它的资源, 或者随意玩弄它, 这也就是为什么右值引用会被用于资源/句柄的转移.

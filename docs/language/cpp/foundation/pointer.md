@@ -184,3 +184,94 @@ int main() {
     return 0;
 }
 ```
+
+## 智能指针
+
+### `std::uniqe_ptr`
+
+`std::unique_ptr`是一个独占所有权的智能指针, 它确保同一时间只有一个指针可以拥有某个对象的所有权. 当`std::unique_ptr`被销毁时, 它会自动释放所管理的内存. 这可以避免内存泄露和悬空指针的问题. 但是需要注意的是, `std::unique_ptr`不能被复制, 只能被移动, 这意味着你不能有两个`std::unique_ptr`指向同一块内存.
+
+```cpp
+#include <iostream>
+#include <memory>
+
+class UDT {
+    public:
+        UDT() {
+            std::cout << "UDT constructor called" << std::endl;
+        }
+        ~UDT() {
+            std::cout << "UDT destructor called" << std::endl;
+        }
+};
+
+int main() {
+    // std::unique_ptr<UDT> mike = std::unique_ptr<UDT>(new UDT);
+    // std::unique_ptr<UDT[]> mike_array = std::unique_ptr<UDT[]>(new UDT[10]);
+    std::unique_ptr<UDT> mike = std::make_unique<UDT>();
+    std::unique_ptr<UDT[]> mike_array = std::make_unique<UDT[]>(10);
+    // std::unique_ptr<UDT> joe = mike; // 直接报错
+    std::unique_ptr<UDT> joe = std::move(mike); // 可以使用std::move转移所有权
+    return 0;
+}
+```
+
+### `std::shared_ptr`
+
+`std::shared_ptr`是一个引用计数的智能指针, 它允许多个指针共享同一块内存, 当最后一个指向该内存的指针被销毁时, 内存才会被释放. 这可以避免内存泄露和悬空指针的问题. 但是需要注意的是, `std::shared_ptr`会增加一些性能开销, 因为它需要维护一个引用计数.
+
+```cpp
+#include <iostream>
+#include <memory>
+
+class UDT {
+    public:
+        UDT() {
+            std::cout << "UDT constructor called" << std::endl;
+        }
+        ~UDT() {
+            std::cout << "UDT destructor called" << std::endl;
+        }
+};
+
+int main() {
+    std::shared_ptr<UDT> ptr1 = std::make_shared<UDT>();
+    {
+        std::shared_ptr<UDT> ptr2 = ptr1;
+        std::cout << "use count = " << ptr2.use_count() << std::endl; // use count = 2
+        // 离开作用域, ptr2被销毁, 但是ptr1仍然存在, 那块内存没有被释放
+    }
+    std::cout << "use count = " << ptr1.use_count() << std::endl; // use count = 1
+    return 0;
+}
+```
+
+### `std::weak_ptr`
+
+`std:weak_ptr`主要用于解决共享指针带来的循环引用问题. 当两个或多个对象通过`shared_ptr`相互引用的时候, 它们的引用计数永远不会降为0(即使离开scope, 即使它们已经无法从程序其他地方访问), 从而导致内存泄露. 在循环引用的场景中, 将其中的一个`shared_ptr`替换为`weak_ptr`可以打破循环引用, 使得内存可以被正确释放. `weak_ptr`不会增加引用计数, 它只是一个观察者, 可以安全地检查所指向的对象是否仍然存在.
+
+```cpp
+#include <iostream>
+#include <memory>
+
+class UDT {
+    public:
+        UDT() {
+            std::cout << "UDT constructor called" << std::endl;
+        }
+        ~UDT() {
+            std::cout << "UDT destructor called" << std::endl;
+        }
+};
+
+int main() {
+    std::shared_ptr<UDT> ptr1 = std::make_shared<UDT>();
+    {
+        std::weak_ptr<UDT> ptr2 = ptr1;
+        std::cout << "use count = " << ptr2.use_count() << std::endl; // use count = 1
+        // 离开作用域, ptr2被销毁, 但是ptr1仍然存在, 那块内存没有被释放
+    }
+    std::cout << "use count = " << ptr1.use_count() << std::endl; // use count = 1
+    return 0;
+}
+```
