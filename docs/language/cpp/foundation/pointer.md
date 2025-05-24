@@ -250,28 +250,100 @@ int main() {
 
 `std:weak_ptr`主要用于解决共享指针带来的循环引用问题. 当两个或多个对象通过`shared_ptr`相互引用的时候, 它们的引用计数永远不会降为0(即使离开scope, 即使它们已经无法从程序其他地方访问), 从而导致内存泄露. 在循环引用的场景中, 将其中的一个`shared_ptr`替换为`weak_ptr`可以打破循环引用, 使得内存可以被正确释放. `weak_ptr`不会增加引用计数, 它只是一个观察者, 可以安全地检查所指向的对象是否仍然存在.
 
+例如, 现在有一个循环引用的例子.
+
 ```cpp
 #include <iostream>
 #include <memory>
+#include <string>
 
-class UDT {
-    public:
-        UDT() {
-            std::cout << "UDT constructor called" << std::endl;
-        }
-        ~UDT() {
-            std::cout << "UDT destructor called" << std::endl;
-        }
+struct Person;
+struct Apartment;
+
+struct Person {
+    std::string name;
+    std::shared_ptr<Apartment> apartment;  // 使用 shared_ptr
+
+    Person(std::string n) : name(n) {
+        std::cout << name << " created.\n";
+    }
+    ~Person() {
+        std::cout << name << " destroyed.\n";
+    }
+};
+
+struct Apartment {
+    std::string unit;
+    std::shared_ptr<Person> owner; // 使用 shared_ptr
+
+    Apartment(std::string u) : unit(u) {
+        std::cout << "Apartment " << unit << " created.\n";
+    }
+    ~Apartment() {
+        std::cout << "Apartment " << unit << " destroyed.\n";
+    }
 };
 
 int main() {
-    std::shared_ptr<UDT> ptr1 = std::make_shared<UDT>();
-    {
-        std::weak_ptr<UDT> ptr2 = ptr1;
-        std::cout << "use count = " << ptr2.use_count() << std::endl; // use count = 1
-        // 离开作用域, ptr2被销毁, 但是ptr1仍然存在, 那块内存没有被释放
-    }
-    std::cout << "use count = " << ptr1.use_count() << std::endl; // use count = 1
+    std::shared_ptr<Person> john = std::make_shared<Person>("John");
+    std::shared_ptr<Apartment> apt101 = std::make_shared<Apartment>("101");
+
+    // 相互引用
+    john->apartment = apt101;
+    apt101->owner = john;
+
+    std::cout << "Exiting main...\n";
     return 0;
 }
 ```
+
+你会发现, 当离开`main`函数的时候, shared_ptr `apa101`被销毁, shared_ptr `john`也被销毁, 但是你会发现对象内部是相互引用的, 所以这两个对象的引用计数器都是从2变成了1. 不会变成0(`John`对象内部的apartment指向`apt101`, `apt101`对象内部的owner指向`john`), 所以这两个对象都不会被销毁, 导致内存泄露. 下面是一个修正的例子, 使用`weak_ptr`来解决这个问题.
+
+```cpp
+#include <iostream>
+#include <memory>
+#include <string>
+
+struct Person;
+struct Apartment;
+
+struct Person {
+    std::string name;
+    std::shared_ptr<Apartment> apartment;
+
+    Person(std::string n) : name(n) {
+        std::cout << name << " created.\n";
+    }
+    ~Person() {
+        std::cout << name << " destroyed.\n";
+    }
+};
+
+struct Apartment {
+    std::string unit;
+    std::weak_ptr<Person> owner; // 使用 weak_ptr
+
+    Apartment(std::string u) : unit(u) {
+        std::cout << "Apartment " << unit << " created.\n";
+    }
+    ~Apartment() {
+        std::cout << "Apartment " << unit << " destroyed.\n";
+    }
+};
+
+int main() {
+    std::shared_ptr<Person> john = std::make_shared<Person>("John");
+    std::shared_ptr<Apartment> apt101 = std::make_shared<Apartment>("101");
+
+    // 相互引用
+    john->apartment = apt101;
+    apt101->owner = john; // 从 shared_ptr 赋值给 weak_ptr (不增加引用计数)
+
+    std::cout << "Exiting main...\n";
+    return 0;
+}
+```
+
+当离开`main`的时候, `101`对象的引用计数仍然是1. `John`对象的引用计数是0, 因为`apa101->owner`是一个weak_ptr, 析构函数被调用, 显示John被销毁. 当John销毁的时候, 它的成员`apartment`也会被销毁, 因为它是一个shared_ptr, 所以`apt101`的引用计数也会变成0, 最终导致`apt101`也被销毁. 这样就避免了循环引用的问题.
+
+那为什么不直接使用一个普通的指针呢? 因为普通的指针可能会有悬空指针的风险. 在上的这个例子中, 如果我们使用普通指针替代weak_ptr, 那么当`john`被销毁之后, `apt101->owner`就会指向一个已经被销毁的对象, 这会导致悬空指针的问题. 而使用`weak_ptr`可以安全地检查所指向的对象是否仍然存在, 避免了这个问题. 怎么安全的检查呢? 可以调用`lock()`方法, 它会返回一个`shared_ptr`, 如果原来的对象已经被销毁, 那么返回的`shared_ptr`会是空的(nullptr).
