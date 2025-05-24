@@ -135,3 +135,52 @@ int main() {
     return 0;
 }
 ```
+
+## 陷阱
+
+下面是一些常见的陷阱:
+
+* 不要给空指针赋值, 或者说不要nullptr dereference, 这会导致程序崩溃
+* 忘记释放内存, 导致内存泄露, 然后系统爆了, 可以使用`valgrind`或者`-fsanitize`来检测内存泄露
+* 悬空指针, 也就是指向已经释放的内存的指针, 例如访问一个在某一个已经释放的栈帧中的局部变量
+* 双重释放, 也就是重复释放同一块内存
+
+## 函数指针
+
+函数指针的写法有一点奇怪, 它的类型是`返回值类型(*指针名)(参数类型列表)`.
+
+```cpp
+#include <iostream>
+#include <functional>
+
+int add(int x, int y) {
+    return x + y;
+}
+
+int multiply(int x, int y) {
+    return x * y;
+}
+
+int test(int (*func)(int , int), int a, int b) {
+    return func(a, b);
+}
+
+int test2(std::function<int(int, int)> func, int a, int b) {
+    return func(a, b);
+}
+
+int main() {
+    // 1. 第一种方式
+    int (*operation)(int, int); // 这个是函数指针的写法
+    operation = add;
+    std::cout << "Addition: " << operation(5, 3) << std::endl; // Addition: 8
+    operation = multiply;
+    std::cout << "Multiplication: " << operation(5, 3) << std::endl; // Multiplication: 15
+    std::cout << "Test Addition: " << test(add, 5, 3) << std::endl; // Test Addition: 8
+    // 2. 第二种方式
+    std::function<int(int, int)> funcptr;
+    funcptr = add;
+    std::cout << "Test2 Addition: " << test2(funcptr, 5, 3) << std::endl; // Test2 Addition: 8
+    return 0;
+}
+```

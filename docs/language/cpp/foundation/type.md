@@ -122,3 +122,78 @@ int main() {
     return 0;
 }
 ```
+
+## 左值右值
+
+这一节比较重要. 左值是一个有确定内存地址的东西. 右值是一个临时的没有内存地址的东西. 例如
+
+* `a`: 是左值
+* `b`: 是左值
+* `a + b`: 是右值, 因为没法获取到地址
+* `array[10+a]`: 是左值
+* `10 + a`: 是右值
+
+### 左值引用
+
+* 符号: `&`
+* 作用: 这是 C++ 传统的引用, 它是已存在对象的一个别名 (alias). 你通过引用修改对象, 就像直接修改原对象一样.
+* 绑定: 通常只能绑定到左值.
+* 例外: `const` 左值引用 (`const T&`) 可以绑定到右值.
+* 目的: 主要是为了避免拷贝 (尤其是在函数传参和返回值时) 以及允许函数修改其参数.
+
+例子:
+```cpp
+int x = 10;
+int& ref_l = x;
+
+// int& ref_bad = 10; // 错误: 不能绑定到右值 10
+const int& ref_const = 10; // 正确: const左值引用可以绑定到右值
+```
+
+### 右值引用
+
+* 符号: `&&`
+* 作用: 这是 C++11 引入的新特性, 专门用于绑定到右值 (临时对象).
+* 绑定: 只能绑定到右值.
+* 目的: 主要用于实现移动语义 (Move Semantics, 所有权转移) 和完美转发 (Perfect Forwarding). 移动语义允许我们"窃取" 临时对象的资源 (比如动态分配的内存), 避免不必要的深拷贝, 从而极大地提高性能.
+
+例子:
+```cpp
+int&& ref_r = 10;
+ref_r = 20;
+std::cout << ref_r << std::endl; // 20
+
+std::string s = "world";
+// std::string&& ref_s = s; // 错误: 不能绑定到左值 s
+std::string&& ref_s = std::move(s);
+std::cout << ref_s << std::endl; // "world"
+std::cout << s << std::endl; // "world"
+std::string s_move = std::move(s);
+std::cout << s << std::endl; // ""
+
+std::string s1 = "wenzexu";
+std::string s2 = "a really long str";
+std::string&& s3 = s1 + s2;
+std::cout << s3 << std::endl; // "wenzexua really long str"
+std::string s4 = std::move(s1);
+std::cout << s1 << std::endl; // ""
+```
+
+!!! tip "生命周期延长"
+
+    当你将一个右值引用绑定到一个临时对象时, 这个临时对象的生命周期会被延长到右值引用的作用域结束, `const T&`的右值引用也会延长临时对象的生命周期. 例如:
+
+    ```cpp
+    std::string&& ref = std::string("Hello");
+    const std::string& ref_const = std::string("World");
+    std::cout << ref << std::endl; // 输出 "Hello"
+    std::cout << ref_const << std::endl; // 输出 "World"
+    ```
+
+!!! warning "`std::string s_move = std::move(s)`和`std::string&& ref_s = std::move(s)`的区别"
+
+    `std::string s_move = std::move(s);` 是通过移动构造函数创建新对象并转移资源, 而 `std::string&& ref_s = std::move(s);` 仅创建一个绑定到原对象的右值引用, 不发生移动.
+
+    `std::string s_move = std::move(s);`的实现: `std::move(s)`是一个强制类型转换, 实际上可以写为`(std::string&&)s`, 它将左值转换为一个右值引用. 等式左边的代码`std::string s_move`会调用构造函数, 由于等式的右边是一个右值引用, 编译器会选择调用`str::string`的移动构造函数. 移动构造函数的核心是资源窃取. 也就是说, 右值引用在这里只是作为一种类型标记, 触发C++的重载机制, 从而让编译器选择移动构造函数, 而不是拷贝构造函数.
+
+    而`std::string&& ref_s = std::move(s);`这句代码不会执行移动, 没有触发任何构造函数. 等式右边的这个`std::move(s)`的类型是`std::string&&`, 但是鉴于它是一个表达式, 所以它是右值, 或者更加具体化的说, 它是一个xvalue, 将亡值, 仍然属于右值的范畴, 所以可以赋值给等号的左边.
