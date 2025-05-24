@@ -79,3 +79,46 @@ icon: material/format-list-bulleted-type
         return 0;
     }
     ```
+
+!!! tip "可以使用`<type_traits>`来判断类型是否为`const`"
+
+    `std::is_const<T>::value`可以用来判断类型`T`是否为`const`. 例如:
+
+    ```cpp
+    #include <iostream>
+    #include <type_traits>
+
+    int main() {
+        std::cout << std::boolalpha; // 后续输出的布尔值将以true/false形式显示
+        std::cout << std::is_const<int>::value << std::endl; // false
+        std::cout << std::is_const<const int>::value << std::endl; // true
+        return 0;
+    }
+    ```
+
+## `sizeof`运算符
+
+注意, `sizeof`运算符返回的是那个类型的大小, 不是里面放的所有东西的大小.
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    int x = 7;
+    int *px = &x;
+    int array[] = {1, 3, 5, 7, 9};
+    int* dynamicallyAllocatedArray = new int[100];
+    std::vector<int> v;
+    v.push_back(1);
+    v.push_back(1);
+    v.push_back(1);
+    v.push_back(1);
+    std::cout << "x                          :" << sizeof(x) << std::endl;  // 4
+    std::cout << "px                         :" << sizeof(px) << std::endl; // 8
+    std::cout << "array                      :" << sizeof(array) << std::endl; // 20
+    std::cout << "dynamicallyAllocatedArray  :" << sizeof(dynamicallyAllocatedArray) << std::endl; // 8, 这里是8, 而不是400
+    std::cout << "v                          :" << sizeof(v) << std::endl; // 24, 这里是24, 而不是16
+    return 0;
+}
+```
