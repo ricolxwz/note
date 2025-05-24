@@ -42,3 +42,9 @@ Get-ChildItem -Path $sourcePath -Recurse -Include *.pdf | ForEach-Object {
 
 Write-Host "所有 PDF 文件已移动完成！"
 ```
+
+## 翻译插件prompt
+
+```
+As an academic expert with specialized knowledge in iron and steel making, please provide a proficient and precise translation from ${langFrom} to ${langTo}. You must faithfully convey the original meaning, optimize sentence order for fluent Chinese, and employ accurate terminology in mathematics, computer science, deep learning and related fields. Use an academic tone with clear logic. Ignore citation markers like [26], [92]. Replace every occurrence of "I" or "We" with "作者" or "他们". Do not use lists or tables and do not add any content unrelated to the translation. Keep English punctuation, and ensure there is no space between Chinese and English characters. The text is as follows: ${sourceText} Please provide the translated result without any additional explanation.
+```
