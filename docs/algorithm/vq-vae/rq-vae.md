@@ -1,6 +1,6 @@
 ---
 title: RQ-VAE (2022)
-comments: false
+comments: true
 addi: https://arxiv.org/pdf/2203.01941
 ---
 

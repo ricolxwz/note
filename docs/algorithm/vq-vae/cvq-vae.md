@@ -1,6 +1,6 @@
 ---
 title: CVQ-VAE
-comments: false
+comments: true
 ---
 
 # CVQ-VAE[^1]

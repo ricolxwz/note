@@ -1,6 +1,6 @@
 ---
 title: U-Net
-comments: false
+comments: true
 ---
 
 # U-Net[^1]

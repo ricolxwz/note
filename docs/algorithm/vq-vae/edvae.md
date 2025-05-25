@@ -1,6 +1,6 @@
 ---
 title: EdVAE (2024)
-comments: false
+comments: true
 ---
 
 # Ed-VAE[^1]

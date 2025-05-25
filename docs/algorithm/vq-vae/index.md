@@ -60,4 +60,8 @@ $$\log(p(x \mid q(x))) + \left\| \text{sg}[z_e(x)] - e \right\|_2^2 + \beta \lef
 
 4. 码向量更新: 最后, 码向量$e_k$会被更新为其追踪到的特征总和除以其追踪到的计数: $e_k\leftarrow m_k/N_k$
 
+!!! warning "梯度更新"
+
+    通常使用EMA之后, 码本就不再直接收到梯度更新了, 也就是损失函数变成了2项.
+
 [^1]: 深入理解 VQ-VAE. (2022, June 2). Sunlin-ai. https://sunlin-ai.github.io/2022/06/02/VQ-VAE.html

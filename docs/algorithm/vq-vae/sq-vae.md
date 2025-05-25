@@ -1,6 +1,6 @@
 ---
 title: SQ-VAE
-comments: false
+comments: true
 ---
 
 # SQ-VAE[^1]

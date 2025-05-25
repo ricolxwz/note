@@ -1,6 +1,6 @@
 ---
 title: PQ-VAE (2019)
-comments: false
+comments: true
 ---
 
 # PQ-VAE[^1]

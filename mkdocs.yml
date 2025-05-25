@@ -380,6 +380,8 @@ nav:
         - PQ-VAE: algorithm/vq-vae/pq-vae.md
         - SQ-VAE: algorithm/vq-vae/sq-vae.md
         - CVQ-VAE: algorithm/vq-vae/cvq-vae.md
+        - VQGAN-LC: algorithm/vq-vae/vqgan-lc.md
+        - SimVQ: algorithm/vq-vqe/simvq.md
       - LLaVA: algorithm/llava.md
       - BLIP: algorithm/blip.md
       - GAN: algorithm/gan.md

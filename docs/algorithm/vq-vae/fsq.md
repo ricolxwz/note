@@ -1,6 +1,6 @@
 ---
 title: FSQ
-comments: false
+comments: true
 addi: https://arxiv.org/pdf/2309.15505
 ---
 

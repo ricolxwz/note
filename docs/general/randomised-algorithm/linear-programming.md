@@ -1,6 +1,6 @@
 ---
 title: 随机算法:线性规划
-comments: false
+comments: true
 ---
 
 ## 问题
