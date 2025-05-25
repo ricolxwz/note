@@ -26,7 +26,7 @@ int main() {
 }
 ```
 
-!!! tip "为啥要使用`void*`"
+!!! note "为啥要使用`void*`"
 
     这是因为, 在C++中, 当`a`是一个`char`类型的值的时候, `&a`是一个`char*`类型的值, 但是`std::cout`会对`char*`类型做一个特殊的处理, 当你直接将一个`char*`传递给`std::cout`的时候, 它会认为这个指针指向的是一个以`\0`结尾的C风格字符串, 并尝试从该地址打印字符, 直到为到空字符为止. 所以可能会看到一些不是地址的乱码. 为了打印`a`的地址, 需要将`&a`转化为`void*`类型.
 
@@ -59,7 +59,7 @@ int main() {
 
 注意, 原生数组传递进函数的时候传递的是首元素的指针(或者说退化为首元素的指针了), 但是如果你用的是`std::array`或者`std::vector`, 你传递的是一个对象. 所以说, 一个复制指针, 一个复制对象. 复制指针说明可以在函数内部修改原来的数组, 但是复制对象说明函数内部修改的只是一个拷贝, 不会影响原来的对象.
 
-!!! tip "如果你不希望引用在函数内被修改"
+!!! note "如果你不希望引用在函数内被修改"
 
     可以使用`const`修饰符来声明一个常量引用, 这样就可以在函数内部读取引用的值, 但是不能修改它.
 
@@ -157,7 +157,7 @@ int add(int x, int y) {
     return x + y;
 }
 
-int multiply(int x, int y) {
+int mulnotely(int x, int y) {
     return x * y;
 }
 
@@ -174,8 +174,8 @@ int main() {
     int (*operation)(int, int); // 这个是函数指针的写法
     operation = add;
     std::cout << "Addition: " << operation(5, 3) << std::endl; // Addition: 8
-    operation = multiply;
-    std::cout << "Multiplication: " << operation(5, 3) << std::endl; // Multiplication: 15
+    operation = mulnotely;
+    std::cout << "Mulnotelication: " << operation(5, 3) << std::endl; // Mulnotelication: 15
     std::cout << "Test Addition: " << test(add, 5, 3) << std::endl; // Test Addition: 8
     // 2. 第二种方式
     std::function<int(int, int)> funcptr;
