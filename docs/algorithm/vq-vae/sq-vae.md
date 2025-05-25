@@ -109,7 +109,7 @@ $$
 
     在标准的VAE中, 计算ELBO第一项$-\mathbb{E}_{q_{\phi}(\mathbf{z}|\textbf{x})}\log p_{\theta}(\textbf{x}|\textbf{z})$需要使用抽样$\textbf{z}$近似. 我们假设的是$q_{\phi}(\textbf{z}|\textbf{x})$服从高斯分布, 为了保证梯度能够传递到编码器上, 我们设计了重参数化技巧, 这样, 我们是能得到一个$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示的. 但是VQ-VAE是一种确定性的量化过程, 这会导致我们无法给出$\mathbb{E}_{q_{\phi}(\textbf{z}|\textbf{x})}$的解析表示, 也就无法计算第一项产生的梯度, 所以它使用了一些启发式的方法, 例如直通估计器和辅助损失项.
 
-    这样就产生了一个问题, 我为什么不直接用Gumbel-Softmax这种随机量化的技巧对$\mathbf{\hat{Z}}_q$进行松弛呢? 我是否也能使用ELBO进行优化呢? 即把流程简化为$\mathbf{\hat{Z}}_q=g_{\phi}(\mathbf{x})\rightarrow \mathbf{Z}_q \sim \mathbf{Gumbel-Softmax}(\mathbf{\hat{Z}_q})$. 答案是不可以的. Generally, 使用SQ-VAE可以使得ELBO的每一项都写成能计算的形式, 但是用更直接的方法没法把每一项都写为能计算的形式, 如果省略了中间的$\mathbf{Z}$, 那么, 最终得到的$q(\mathbf{Z}_q|\mathbf{x})$将会是一个形式特别复杂的分布, "Concrete分布", 这个分布是很难写出闭式解的, 或者说ELBO的第二项KL散度项无解析式, 只能使用Monte-Carlo估计, 方差大, 梯度不稳定, 难以优化(注意, 重构项即第一项都是用Monte-Carlo估计的, 区别在第二项上). 但是SQ-VAE里面, 每一项都能写出闭式解, 所以可以用ELBO优化.
+    这样就产生了一个问题, 我为什么不直接用Gumbel-Softmax这种随机量化的技巧对$\mathbf{\hat{Z}}_q$进行松弛呢? 我是否也能使用ELBO进行优化呢? 即把流程简化为$\mathbf{\hat{Z}}_q=g_{\phi}(\mathbf{x})\rightarrow \mathbf{Z}_q \sim \mathbf{Gumbel-Softmax}(\mathbf{\hat{Z}_q})$. 答案是不可以的. Generally, 使用SQ-VAE可以使得ELBO的每一项都写成能计算的形式, 但是用更直接的方法没法把每一项都写为能计算的形式, 如果省略了中间的$\mathbf{Z}$, 那么, 最终得到的$q(\mathbf{Z}_q|\mathbf{x})$将会是一个形式特别复杂的分布, "Concrete分布", 这个分布是很难写出闭式解的, 或者说ELBO的第二项KL散度项无解析式, 只能使用Monte-Carlo估计, 方差大, 梯度不稳定, 难以优化(注意, 重构项即第一项都是用Monte-Carlo估计的, 区别在第二项上). 但是SQ-VAE里面, 每一项都能写出闭式解, 所以可以用ELBO优化. 还有一点就是, 如果我们不使用这个中间变量$\mathbf{Z}$, 是无法对量化过程的随机性进行控制的, 就没有自退火机制一说.
 
 
 ### 高斯SQ-VAE
