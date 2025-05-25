@@ -209,3 +209,39 @@ int main() {
     return 0;
 }
 ```
+
+## 默认构造函数和析构函数
+
+C++中, 如果你没有定义构造函数和析构函数, 编译器会自动生成一个默认的构造函数和析构函数. 但是如果你定义了一个构造函数或析构函数, 编译器就不会再生成默认的构造函数和析构函数了.
+
+```cpp
+// student.hpp
+#ifndef STUDENT_HPP
+#define STUDENT_HPP
+
+#include <iostream>
+#include <string>
+
+class Student {
+    private:
+        std::string m_name;
+};
+
+#endif
+
+// student.cpp
+#include "student.hpp"
+
+// main.cpp
+#include <iostream>
+#include <string>
+#include "student.hpp"
+
+int main() {
+    Student joe;
+    // joe.m_name = "Mike"; // 不能访问, 因为 m_name 是私有成员
+    return 0;
+}
+```
+
+你会发现, 上面的代码执行`g++ student.cpp main.cpp -o prog && ./prog`什么也没有发生. 这是因为编译器自动生成的默认构造函数和析构函数是空的, 所以没有任何输出.
