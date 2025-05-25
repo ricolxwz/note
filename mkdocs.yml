@@ -281,6 +281,7 @@ nav:
           - 函数: language/cpp/foundation/function.md
           - 容器: language/cpp/foundation/container.md
           - 指针: language/cpp/foundation/pointer.md
+          - 对象: language/cpp/foundation/object.md
   - 基石:
     - 数据库:
       - 数据模型: general/database/conceptual-model.md

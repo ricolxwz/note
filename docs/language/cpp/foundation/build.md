@@ -176,7 +176,40 @@ CMake是一种用于解决跨平台构建系统问题的工具. 在上节, 我�
 
 Xmake是一个基于Lua语言的轻量级跨平台构建工具&生成构建工具, 它的独特之处在于可以扮演双重角色, 既可以作为构建系统直接执行编译, 又可以充当生成其他构建系统配置文件的工具.
 
-<br>
+## 接口和实现
+
+```cpp title="main.cpp"
+#include <iostream>
+#include "hello.hpp"
+
+int main() {
+    int result = sum(5, 3); // 调用 sum 函数
+    std::cout << "The sum is: " << result << std::endl; // 输出结果
+    return 0;
+}
+```
+
+```cpp title="hello.hpp"
+#ifndef HELLO_HPP
+#define HELLO_HPP
+int sum(int a, int b);
+#endif
+```
+
+```cpp title="hello.cpp"
+int sum(int a, int b) {
+    return a + b;
+}
+```
+
+```bash title="编译命令"
+g++ -c hello.cpp -o hello.o
+g++ -c main.cpp -o main.o
+g++ main.o hello.o -o prog
+./prog
+```
+
+上面的这个例子其实有个问题. 虽然我们可以成功编译和链接, 运行, 但是缺乏一致性检查. `hello.cpp`没有包含自己的头文件`hello.hpp`. 如果我们不在`hello.cpp`中包含`hello.hpp`, 那么编译器在编译`hello.cpp`的时候就没法将定义和声明进行比较, 如果将来有人修改了`hello.hpp`中的sum函数声明, 例如改变了参数类型或者返回值, 但忘记更新`hellp.cpp`中的视线, 那么`hello.cpp`仍然会编译通过, 但是在链接阶段发现`main.cpp`中调用的`sum`函数和`hello.cpp`中的定义不一致(链接器会分析`hello.cpp`中的函数声明, 发现和`main.cpp`中的调用不匹配), 这会导致链接错误.
 
 [^1]: 面试高频问题之C++编译过程_c++_小万哥_InfoQ写作社区. (不详). 从 https://xie.infoq.cn/article/ebda02316941c2141fcc5c4b5
 [^2]: C与CPP常见编译工具链与构建系统简介 - w4ngzhen - 博客园. (不详). 从 https://www.cnblogs.com/w4ngzhen/p/17695080.html
