@@ -3,7 +3,7 @@ title: 对象
 icon: material/code-braces
 ---
 
-## 类
+## 简单的介绍类
 
 可以使用`class{};`定义一个类.
 
@@ -465,118 +465,493 @@ free(): double free detected in tcache 2
 
 这是因为先声明, 后拷贝赋值调用的是拷贝赋值运算符.
 
-!!! note "拷贝重载运算符"
+### 拷贝重载运算符
+
+```cpp
+Vector3 myVector;
+Vector3 myVector2;
+myVector2 = myVector;
+```
+
+这里的等号就是拷贝赋值运算符. 如果你没有在类里面定义这个等号, 那么编译器会自动生成一个默认的拷贝赋值运算符. 这个默认版本会逐个拷贝对象的成员变量. 这个运算符是经过重载的, 和Java里面的类似, 它不是一个简单的等号.
+
+!!! warning "何时会调用拷贝重载运算符"
+
+    注意, 这个拷贝重载运算符是某个变量经过声明后, 例如`myVector2`经过声明后, 被`myVector`赋值才会调用这个拷贝重载运算符. 换句话说, 如果是下面这样, 只会调用拷贝构造函数, 而不是拷贝重载运算符:
 
     ```cpp
     Vector3 myVector;
-    Vector3 myVector2;
-    myVector2 = myVector;
+    Vector3 myVector2 = myVector;
     ```
 
-    这里的等号就是拷贝赋值运算符. 如果你没有在类里面定义这个等号, 那么编译器会自动生成一个默认的拷贝赋值运算符. 这个默认版本会逐个拷贝对象的成员变量. 这个运算符是经过重载的, 和Java里面的类似, 它不是一个简单的等号.
+拷贝重载运算符可以这样写:
 
-    !!! warning "何时会调用拷贝重载运算符"
+```cpp linenums="1" hl_lines="21-29"
+#include <iostream>
+#include <string>
 
-        注意, 这个拷贝重载运算符是某个变量经过声明后, 例如`myVector2`经过声明后, 被`myVector`赋值才会调用这个拷贝重载运算符. 换句话说, 如果是下面这样, 只会调用拷贝构造函数, 而不是拷贝重载运算符:
-
-        ```cpp
-        Vector3 myVector;
-        Vector3 myVector2 = myVector;
-        ```
-
-    拷贝重载运算符可以这样写:
-
-    ```cpp linenums="1" hl_lines="21-29"
-    #include <iostream>
-    #include <string>
-
-    class Array {
-        public:
-            Array() {
-                data = new int[10];
-                for (int i = 0; i < 10; i++) {
-                    data[i] = i*i;
-                }
+class Array {
+    public:
+        Array() {
+            data = new int[10];
+            for (int i = 0; i < 10; i++) {
+                data[i] = i*i;
             }
-            ~Array() {
+        }
+        ~Array() {
+            delete[] data;
+        }
+        Array(const Array& other) {
+            data = new int[10];
+            for (int i = 0; i < 10; i++) {
+                data[i] = other.data[i];
+            }
+        }
+        void operator=(const Array& other) {
+            if (this != &other) {
                 delete[] data;
-            }
-            Array(const Array& other) {
                 data = new int[10];
                 for (int i = 0; i < 10; i++) {
                     data[i] = other.data[i];
                 }
             }
-            void operator=(const Array& other) {
-                if (this != &other) {
-                    delete[] data;
-                    data = new int[10];
-                    for (int i = 0; i < 10; i++) {
-                        data[i] = other.data[i];
+        }
+        void PrintingData() {
+            for (int i = 0; i < 10; i++) {
+                std::cout << data[i] << " ";
+            }
+            std::cout << std::endl;
+        }
+        void setData(int index, int value) {
+            data[index] = value;
+        }
+    private:
+        int* data;
+};
+
+int main() {
+    Array myArray;
+    Array myArray2;
+    myArray2 = myArray;
+    myArray.setData(0, 100);
+    myArray2.PrintingData();
+    myArray.PrintingData();
+    return 0;
+}
+```
+
+首先, 它会删除掉原有`myArray2`中的所有数据, 即`data`. 然后创建一个新的数据`data`, 把`myArray`中的内容复制过来. Ok, 现在我们成功了:
+
+```bash
+0 1 4 9 16 25 36 49 64 81
+100 1 4 9 16 25 36 49 64 81
+```
+
+!!! tip "`this`是啥"
+
+    `this`本质上是一个指针. 它是一个隐含的, 特殊的指针, 指向调用成员函数的那个对象实例. 在类的成员函数内部, 你可以像使用其他指针一样使用它 (比如用`->`访问成员, 或者用`*`解引用), 只是你不能改变`this`指针本身的值.
+
+!!! note "`if (this != &other)`啥意思"
+
+    `this`是`myArray2`的指针, `&other`是`myArray`的指针, 这个的意思就是防止自己赋值给自己, 当然`myArray2 = myArray`不是这种情况, 如果`myArray2 = myArray2`, 就不会触发这个if.
+
+!!! question "返回值是`Array&`还是`void`还是`Array`"
+
+    Well... `Array&`和`Array`的区别主要是一个是引用返回, 一个是值返回. 但是这里我们好像不需要返回值, 因为`myArray2 = myArray`, 而不是`tmp = myArray2 = myArray`, 所以这里设置为`void`也可以, 跑起来没问题.
+
+    但是, 官方教程推荐这里返回的是`Array&`, 支持链式赋值, 就是`tmp = myArray2 = myArray`. 为什么不是`Array`呢? 因为链式复制的时候可以少一次对象的拷贝:
+
+    考虑链式赋值 `a = b = c;`.
+
+    * 如果 `operator=` 返回 `Array&`:
+        * `b = c` 执行, `b` 被修改, 并返回 `b` 自身的引用.
+        * `a = (b 的引用)` 执行, `a` 被修改 (通过拷贝 `b` 的数据).
+        * 整个过程只涉及两次赋值操作, 没有创建额外的临时对象.
+    * 如果 `operator=` 返回 `Array`:
+        * `b = c` 执行, `b` 被修改.
+        * 然后, `operator=` 创建一个 `b` 的临时拷贝并返回它.
+        * `a = (b 的临时拷贝)` 执行, `a` 被修改 (通过拷贝临时对象的数据).
+        * 这个过程不仅有两次赋值操作, 还额外增加了一次对象的拷贝 (或移动) 和销毁, 带来了性能开销.
+
+    ??? example "其实你可以做一个小小的实验看出`Array&`和`Array`的区别"
+
+        === "如果是`Array`"
+
+            ```cpp
+            #include <iostream>
+            #include <string>
+
+            class Array {
+                public:
+                    Array() {
+                        data = new int[10];
+                        for (int i = 0; i < 10; i++) {
+                            data[i] = i*i;
+                        }
                     }
+                    ~Array() {
+                        delete[] data;
+                    }
+                    Array(const Array& other) {
+                        std::cout << "Copy Constructor Called" << std::endl;
+                        data = new int[10];
+                        for (int i = 0; i < 10; i++) {
+                            data[i] = other.data[i];
+                        }
+                    }
+                    Array operator=(const Array& other) {
+                        if (this != &other) {
+                            delete[] data;
+                            data = new int[10];
+                            for (int i = 0; i < 10; i++) {
+                                data[i] = other.data[i];
+                            }
+                        }
+                        return *this;
+                    }
+                    void PrintingData() {
+                        for (int i = 0; i < 10; i++) {
+                            std::cout << data[i] << " ";
+                        }
+                        std::cout << std::endl;
+                    }
+                    void setData(int index, int value) {
+                        data[index] = value;
+                    }
+                private:
+                    int* data;
+            };
+
+            int main() {
+                Array myArray;
+                Array myArray2;
+                myArray2 = myArray;
+                myArray.setData(0, 100);
+                myArray2.PrintingData();
+                myArray.PrintingData();
+                return 0;
+            }
+            ```
+
+            输出:
+
+            ```bash
+            Copy Constructor Called
+            0 1 4 9 16 25 36 49 64 81
+            100 1 4 9 16 25 36 49 64 81
+            ```
+
+            你会发现调用了一次拷贝构造函数.
+
+        === "如果是`Array&`"
+
+            ```cpp
+            #include <iostream>
+            #include <string>
+
+            class Array {
+                public:
+                    Array() {
+                        data = new int[10];
+                        for (int i = 0; i < 10; i++) {
+                            data[i] = i*i;
+                        }
+                    }
+                    ~Array() {
+                        delete[] data;
+                    }
+                    Array(const Array& other) {
+                        std::cout << "Copy Constructor Called" << std::endl;
+                        data = new int[10];
+                        for (int i = 0; i < 10; i++) {
+                            data[i] = other.data[i];
+                        }
+                    }
+                    Array& operator=(const Array& other) {
+                        if (this != &other) {
+                            delete[] data;
+                            data = new int[10];
+                            for (int i = 0; i < 10; i++) {
+                                data[i] = other.data[i];
+                            }
+                        }
+                        return *this;
+                    }
+                    void PrintingData() {
+                        for (int i = 0; i < 10; i++) {
+                            std::cout << data[i] << " ";
+                        }
+                        std::cout << std::endl;
+                    }
+                    void setData(int index, int value) {
+                        data[index] = value;
+                    }
+                private:
+                    int* data;
+            };
+
+            int main() {
+                Array myArray;
+                Array myArray2;
+                myArray2 = myArray;
+                myArray.setData(0, 100);
+                myArray2.PrintingData();
+                myArray.PrintingData();
+                return 0;
+            }
+            ```
+
+            输出:
+
+            ```bash
+            0 1 4 9 16 25 36 49 64 81
+            100 1 4 9 16 25 36 49 64 81
+            ```
+
+            你会发现没调用拷贝构造函数.
+
+!!! warning "`=`不能去掉"
+
+    这里的`=`就是你要重载的那个符号. 去掉它就不叫重载赋值运算符了, 编译器不会调用这个重载, 也无法实现`a = b`这种语义.
+
+!!! warning "内存泄漏"
+
+    上述的代码其实有可能内存泄漏的, 如果我忘记定义析构函数的话, 那么`data`是不会被销毁的. 但是离开作用域的时候, `data`这个指针变量没了, 内存还在, 所以引起了内存泄漏, 一个方法就是使用智能指针, 用`std::unique_ptr<int[]>`来管理这个堆数组, 当智能指针离开作用域的时候, 它会自动调用其内部的析构函数(不是类的我们手写的析构函数), 帮助我们清理掉这部分内存, 所以我们就不需要关心自己写的析构函数了, 反正自动会被释放.
+
+### 拷贝构造函数调用时机
+
+1. 一个对象赋值给另一个对象的时候(含有另一个对象的声明)
+
+    看下面的这个例子:
+
+    === "`main.cpp`"
+
+        ```cpp
+        #include <iostream>
+        #include "array.hpp"
+
+        int main() {
+            Array arr;
+            arr.set_data(0, 10);
+            Array arr2 = arr;
+            arr.print_data();
+            arr2.print_data();
+            return 0;
+        }
+        ```
+
+    === "`array.cpp`"
+
+        ```cpp
+        #include "array.hpp"
+        #include <iostream>
+
+        Array::Array() {
+            std::cout << "Array Constructor Called" << std::endl;
+            for (int i = 0; i < 1; i++) {
+                data.push_back(i);
+            }
+        }
+
+        Array::~Array() {
+            std::cout << "Array Destructor Called" << std::endl;
+        }
+
+        Array& Array::operator=(const Array& other) {
+            std::cout << "Array Copy Assignment Operator Called" << std::endl;
+            if (this == &other) {
+                return *this;
+            }
+            data.clear();
+            for (int i = 0; i < other.data.size(); i++) {
+                data.push_back(other.data[i]);
+            }
+            return *this;
+        }
+
+        Array::Array(const Array& other) {
+            std::cout << "Array Copy Constructor Called" << std::endl;
+            if (!other.data.empty()) {
+                for (int i = 0; i < other.data.size(); i++) {
+                    data.push_back(other.data[i]);
                 }
             }
-            void PrintingData() {
-                for (int i = 0; i < 10; i++) {
-                    std::cout << data[i] << " ";
-                }
-                std::cout << std::endl;
-            }
-            void setData(int index, int value) {
-                data[index] = value;
-            }
-        private:
-            int* data;
-    };
+        }
 
-    int main() {
-        Array myArray;
-        Array myArray2;
-        myArray2 = myArray;
-        myArray.setData(0, 100);
-        myArray2.PrintingData();
-        myArray.PrintingData();
-        return 0;
-    }
-    ```
+        void Array::print_data() {
+            if (data.empty()) {
+                std::cout << "Array is empty" << std::endl;
+                return;
+            }
+            for (int i = 0; i < data.size(); i++) {
+                std::cout << data[i] << std::endl;
+            }
+        }
 
-    首先, 它会删除掉原有`myArray2`中的所有数据, 即`data`. 然后创建一个新的数据`data`, 把`myArray`中的内容复制过来. Ok, 现在我们成功了:
+        void Array::set_data(int index, int value) {
+            if (index < 0 || index >= data.size()) {
+                std::cerr << "Error: Index out of bounds" << std::endl;
+                return;
+            }
+            data[index] = value;
+        }
+        ```
+
+    === "`array.hpp`"
+
+        ```cpp
+        # ifndef ARRAY_HPP
+        # define ARRAY_HPP
+        #include <vector>
+
+        class Array {
+            public:
+                Array();
+                ~Array();
+                Array(const Array& other);
+                Array& operator=(const Array& other);
+                void print_data();
+                void set_data(int index, int value);
+            private:
+                std::vector<int> data;
+        };
+        # endif
+        ```
+
+
+    输出结果是:
 
     ```bash
-    0 1 4 9 16 25 36 49 64 81
-    100 1 4 9 16 25 36 49 64 81
+    Array Constructor Called
+    Array Copy Constructor Called
+    10
+    10
+    Array Destructor Called
+    Array Destructor Called
     ```
 
-    !!! tip "`this`是啥"
+    `Array arr2 = arr`会调用拷贝构造函数.
 
-        `this`本质上是一个指针. 它是一个隐含的, 特殊的指针, 指向调用成员函数的那个对象实例. 在类的成员函数内部, 你可以像使用其他指针一样使用它 (比如用`->`访问成员, 或者用`*`解引用), 只是你不能改变`this`指针本身的值.
+2. 按值传递的时候
 
-    !!! note "`if (this != &other)`啥意思"
+    看下面的这个例子:
 
-        `this`是`myArray2`的指针, `&other`是`myArray`的指针, 这个的意思就是防止自己赋值给自己, 当然`myArray2 = myArray`不是这种情况, 如果`myArray2 = myArray2`, 就不会触发这个if.
+    === "`main.cpp`"
 
-    !!! question "返回值是`Array&`还是`void`还是`Array`"
+        ```cpp  linenums="1" hl_lines="4-6 15"
+        #include <iostream>
+        #include "array.hpp"
 
-        Well... `Array&`和`Array`的区别主要是一个是引用返回, 一个是值返回. 但是这里我们好像不需要返回值, 因为`myArray2 = myArray`, 而不是`tmp = myArray2 = myArray`, 所以这里设置为`void`也可以, 跑起来没问题.
+        void print_array(Array a) {
+            a.print_data();
+        }
 
-        但是, 官方教程推荐这里返回的是`Array&`, 支持链式赋值, 就是`tmp = myArray2 = myArray`. 为什么不是`Array`呢? 因为链式复制的时候可以少一次对象的拷贝:
+        int main() {
+            Array arr;
+            arr.set_data(0, 10);
+            Array arr2 = arr;
+            arr.print_data();
+            arr2.print_data();
 
-        考虑链式赋值 `a = b = c;`.
+            print_array(arr);
+            return 0;
+        }
+        ```
 
-        * 如果 `operator=` 返回 `Array&`:
-            * `b = c` 执行, `b` 被修改, 并返回 `b` 自身的引用.
-            * `a = (b 的引用)` 执行, `a` 被修改 (通过拷贝 `b` 的数据).
-            * 整个过程只涉及两次赋值操作, 没有创建额外的临时对象.
-        * 如果 `operator=` 返回 `Array`:
-            * `b = c` 执行, `b` 被修改.
-            * 然后, `operator=` 创建一个 `b` 的临时拷贝并返回它.
-            * `a = (b 的临时拷贝)` 执行, `a` 被修改 (通过拷贝临时对象的数据).
-            * 这个过程不仅有两次赋值操作, 还额外增加了一次对象的拷贝 (或移动) 和销毁, 带来了性能开销.
+    === "`array.cpp`"
 
-    !!! warning "`=`不能去掉"
+        ```cpp
+        #include "array.hpp"
+        #include <iostream>
 
-        这里的`=`就是你要重载的那个符号. 去掉它就不叫重载赋值运算符了, 编译器不会调用这个重载, 也无法实现`a = b`这种语义.
+        Array::Array() {
+            std::cout << "Array Constructor Called" << std::endl;
+            for (int i = 0; i < 1; i++) {
+                data.push_back(i);
+            }
+        }
 
-    !!! warning "内存泄漏"
+        Array::~Array() {
+            std::cout << "Array Destructor Called" << std::endl;
+        }
 
-        上述的代码其实有可能内存泄漏的, 如果我忘记定义析构函数的话, 那么`data`是不会被销毁的. 但是离开作用域的时候, `data`这个指针变量没了, 内存还在, 所以引起了内存泄漏, 一个方法就是使用智能指针, 用`std::unique_ptr<int[]>`来管理这个堆数组, 当智能指针离开作用域的时候, 它会自动调用其内部的析构函数(不是类的我们手写的析构函数), 帮助我们清理掉这部分内存, 所以我们就不需要关心自己写的析构函数了, 反正自动会被释放.
+        Array& Array::operator=(const Array& other) {
+            std::cout << "Array Copy Assignment Operator Called" << std::endl;
+            if (this == &other) {
+                return *this;
+            }
+            data.clear();
+            for (int i = 0; i < other.data.size(); i++) {
+                data.push_back(other.data[i]);
+            }
+            return *this;
+        }
+
+        Array::Array(const Array& other) {
+            std::cout << "Array Copy Constructor Called" << std::endl;
+            if (!other.data.empty()) {
+                for (int i = 0; i < other.data.size(); i++) {
+                    data.push_back(other.data[i]);
+                }
+            }
+        }
+
+        void Array::print_data() {
+            if (data.empty()) {
+                std::cout << "Array is empty" << std::endl;
+                return;
+            }
+            for (int i = 0; i < data.size(); i++) {
+                std::cout << data[i] << std::endl;
+            }
+        }
+
+        void Array::set_data(int index, int value) {
+            if (index < 0 || index >= data.size()) {
+                std::cerr << "Error: Index out of bounds" << std::endl;
+                return;
+            }
+            data[index] = value;
+        }
+        ```
+
+    === "`array.hpp`"
+
+        ```cpp
+        # ifndef ARRAY_HPP
+        # define ARRAY_HPP
+        #include <vector>
+
+        class Array {
+            public:
+                Array();
+                ~Array();
+                Array(const Array& other);
+                Array& operator=(const Array& other);
+                void print_data();
+                void set_data(int index, int value);
+            private:
+                std::vector<int> data;
+        };
+        # endif
+        ```
+
+    输出结果是:
+
+    ```bash linenums="1" hl_lines="5-6"
+    Array Constructor Called
+    Array Copy Constructor Called
+    10
+    10
+    Array Copy Constructor Called
+    10
+    Array Destructor Called
+    Array Destructor Called
+    Array Destructor Called
+    ```
+
+    你可以看到, 在传递进入函数的时候, 会把这个对象`arr`复制一份给`a`, 调用了拷贝构造函数. 然后, 你可以进一步做实验, 把`print_array`签名中加上一个`&`, 就没有上面的这两行输出了, 因为是按引用传递, 不会复制.
+
+!!! tip "如何彻底删掉拷贝构造函数"
+
+    我就是不想要这个拷贝构造函数, 我可能有时候不小心用了它, 所以我想把它禁用掉, 怎么办呢? 有两种方法: 1. 在header文件中把拷贝构造函数的调用权限置为private; 2. 使用一种更加现代的方法: `Array(const Array& other)=delete`, 加上`=delete`这个小尾巴. 实际上, 在对象一节中, 我们学到的拷贝赋值操作符`=`也是一个操作符, 不是一个简单的等号.

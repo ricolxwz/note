@@ -276,6 +276,7 @@ nav:
           - 简要介绍: language/python/seaborn/introduction.md
       - CPP:
         - 基础:
+          - language/cpp/foundation/index.md
           - 构建: language/cpp/foundation/build.md
           - 类型: language/cpp/foundation/type.md
           - 函数: language/cpp/foundation/function.md
