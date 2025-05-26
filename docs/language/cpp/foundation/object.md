@@ -250,15 +250,6 @@ int main() {
 
 其实, C++在创建对象的时候, ^^除了自动生成constructor和destuctor之外, 还会自动生成一个拷贝构造函数, 还有一个拷贝赋值运算符^^, 这个深拷贝构造函数的signature应该是`const ClassName& other`, 所以它既可以接受左值, 又可以接受右值(但是如果你特别定义了一个移动构造函数且signature是`ClassName&& other`, 那么这个时候, 编译器会优先使用移动构造函数).
 
-!!! note "拷贝重载运算符"
-
-    ```cpp
-    Vector3 myVector;
-    Vector3 myVector2 = myVector;
-    ```
-
-    这里的等号就是拷贝赋值运算符. 如果你没有在类里面定义这个等号, 那么编译器会自动生成一个默认的拷贝赋值运算符. 这个默认版本会逐个拷贝对象的成员变量. 这个运算符是经过重载的, 和Java里面的类似, 它不是一个简单的等号.
-
 !!! question "`data`定义的差异会导致什么"
 
     === "`data`是指针, 动态分配给他数组"
@@ -366,7 +357,7 @@ int main() {
 ClassName(const ClassName& other) {} // 上面其实已经写过了
 ```
 
-```cpp hl_lines="15-20"
+```cpp linenums="1" hl_lines="15-20"
 #include <iostream>
 #include <string>
 
@@ -409,3 +400,165 @@ int main() {
     return 0;
 }
 ```
+
+现在的输出就是:
+
+```bash
+0 1 4 9 16 25 36 49 64 81
+100 1 4 9 16 25 36 49 64 81
+```
+
+然而, 如果我稍微改写一下, 你就会发现输出结果又变回老样子了:
+
+```cpp linenums="1" hl_lines="36-37"
+#include <iostream>
+#include <string>
+
+class Array {
+    public:
+        Array() {
+            data = new int[10];
+            for (int i = 0; i < 10; i++) {
+                data[i] = i*i;
+            }
+        }
+        ~Array() {
+            delete[] data;
+        }
+        Array(const Array& other) {
+            data = new int[10];
+            for (int i = 0; i < 10; i++) {
+                data[i] = other.data[i];
+            }
+        }
+        void PrintingData() {
+            for (int i = 0; i < 10; i++) {
+                std::cout << data[i] << " ";
+            }
+            std::cout << std::endl;
+        }
+        void setData(int index, int value) {
+            data[index] = value;
+        }
+    private:
+        int* data;
+};
+
+int main() {
+    Array myArray;
+    Array myArray2;
+    myArray2 = myArray;
+    myArray.setData(0, 100);
+    myArray2.PrintingData();
+    myArray.PrintingData();
+    return 0;
+}
+```
+
+输出结果:
+
+```bash
+100 1 4 9 16 25 36 49 64 81
+100 1 4 9 16 25 36 49 64 81
+free(): double free detected in tcache 2
+```
+
+这是因为先声明, 后拷贝赋值调用的是拷贝赋值运算符.
+
+!!! note "拷贝重载运算符"
+
+    ```cpp
+    Vector3 myVector;
+    Vector3 myVector2;
+    myVector2 = myVector;
+    ```
+
+    这里的等号就是拷贝赋值运算符. 如果你没有在类里面定义这个等号, 那么编译器会自动生成一个默认的拷贝赋值运算符. 这个默认版本会逐个拷贝对象的成员变量. 这个运算符是经过重载的, 和Java里面的类似, 它不是一个简单的等号.
+
+    !!! warning "何时会调用拷贝重载运算符"
+
+        注意, 这个拷贝重载运算符是某个变量经过声明后, 例如`myVector2`经过声明后, 被`myVector`赋值才会调用这个拷贝重载运算符. 换句话说, 如果是下面这样, 只会调用拷贝构造函数, 而不是拷贝重载运算符:
+
+        ```cpp
+        Vector3 myVector;
+        Vector3 myVector2 = myVector;
+        ```
+
+    拷贝重载运算符可以这样写:
+
+    ```cpp linenums="1" hl_lines="21-29"
+    #include <iostream>
+    #include <string>
+
+    class Array {
+        public:
+            Array() {
+                data = new int[10];
+                for (int i = 0; i < 10; i++) {
+                    data[i] = i*i;
+                }
+            }
+            ~Array() {
+                delete[] data;
+            }
+            Array(const Array& other) {
+                data = new int[10];
+                for (int i = 0; i < 10; i++) {
+                    data[i] = other.data[i];
+                }
+            }
+            void operator=(const Array& other) {
+                if (this != &other) {
+                    delete[] data;
+                    data = new int[10];
+                    for (int i = 0; i < 10; i++) {
+                        data[i] = other.data[i];
+                    }
+                }
+            }
+            void PrintingData() {
+                for (int i = 0; i < 10; i++) {
+                    std::cout << data[i] << " ";
+                }
+                std::cout << std::endl;
+            }
+            void setData(int index, int value) {
+                data[index] = value;
+            }
+        private:
+            int* data;
+    };
+
+    int main() {
+        Array myArray;
+        Array myArray2;
+        myArray2 = myArray;
+        myArray.setData(0, 100);
+        myArray2.PrintingData();
+        myArray.PrintingData();
+        return 0;
+    }
+    ```
+
+    首先, 它会删除掉原有`myArray2`中的所有数据, 即`data`. 然后创建一个新的数据`data`, 把`myArray`中的内容复制过来. Ok, 现在我们成功了:
+
+    ```bash
+    0 1 4 9 16 25 36 49 64 81
+    100 1 4 9 16 25 36 49 64 81
+    ```
+
+    !!! tip "`this`是啥"
+
+        `this`本质上是一个指针. 它是一个隐含的, 特殊的指针, 指向调用成员函数的那个对象实例. 在类的成员函数内部, 你可以像使用其他指针一样使用它 (比如用`->`访问成员, 或者用`*`解引用), 只是你不能改变`this`指针本身的值.
+
+    !!! note "`if (this != &other)`啥意思"
+
+        `this`是`myArray2`的指针, `&other`是`myArray`的指针, 这个的意思就是防止自己赋值给自己, 当然`myArray2 = myArray`不是这种情况, 如果`myArray2 = myArray2`, 就不会触发这个if.
+
+    !!! question "返回值是`Array&`还是`void`还是`Array`"
+
+        Well... `Array&`和`Array`的区别主要是一个是引用返回, 一个是值返回. 但是这里我们好像不需要返回值, 因为`myArray2 = myArray`, 而不是`tmp = myArray2 = myArray`, 所以设置为`void`就可以了, 跑起来没问题.
+
+    !!! warning "`=`不能去掉"
+
+        这里的`=`就是你要重载的那个符号. 去掉它就不叫重载赋值运算符了, 编译器不会调用这个重载, 也无法实现`a = b`这种语义.
