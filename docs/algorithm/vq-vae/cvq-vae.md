@@ -3,7 +3,7 @@ title: CVQ-VAE
 comments: true
 ---
 
-# CVQ-VAE[^1]
+# CVQ-VAE (2023)[^1]
 
 ## 概要
 

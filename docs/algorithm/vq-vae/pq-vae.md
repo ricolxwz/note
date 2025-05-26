@@ -3,7 +3,7 @@ title: PQ-VAE (2019)
 comments: true
 ---
 
-# PQ-VAE[^1]
+# PQ-VAE (2019)[^1]
 
 !!! info "还有一篇也叫PQ-VAE"
 

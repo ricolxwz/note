@@ -1,9 +1,9 @@
 ---
-title: VQGAN-LC
+title: VQGAN-LC (2024)
 comments: true
 ---
 
-# VQGAN-LC[^1]
+# VQGAN-LC (2024)[^1]
 
 ## 概要
 

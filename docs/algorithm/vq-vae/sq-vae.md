@@ -1,9 +1,9 @@
 ---
-title: SQ-VAE
+title: SQ-VAE(2022)
 comments: true
 ---
 
-# SQ-VAE[^1]
+# SQ-VAE (2022)[^1]
 
 ## 摘要
 

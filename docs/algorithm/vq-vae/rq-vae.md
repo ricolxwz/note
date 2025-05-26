@@ -4,7 +4,7 @@ comments: true
 addi: https://arxiv.org/pdf/2203.01941
 ---
 
-# RQ-VAE[^1]
+# RQ-VAE (2022)[^1]
 
 ## 摘要
 

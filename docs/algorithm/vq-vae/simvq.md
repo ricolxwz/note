@@ -20,8 +20,4 @@ comments: false
 </figcaption>
 </figure>
 
----
-
-由于这篇论文被ICLR拒稿, 所以暂时不看了.
-
 [^1]: Zhu, Y., Li, B., Xin, Y., & Xu, L. (2024). Addressing representation collapse in vector quantized models with one linear layer (No. arXiv:2411.02038). arXiv. https://doi.org/10.48550/arXiv.2411.02038
