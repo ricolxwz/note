@@ -86,8 +86,19 @@ public:
         result.z = z + other.z;
         return result; // 这里会调用拷贝构造函数, 因为返回的不是一个引用, 是一个对象
     }
+    Vector3f& operator++() {
+        x = x + 1;
+        y = y + 1;
+        z = z + 1;
+        return *this;
+    }
     float x, y, z;
 };
+
+std::ostream& operator<<(std::ostream& os, const Vector3f& v) { // 注意, 必须定义在外面, 因为操作符的左边不是Vector3f的示例
+    os << v.x << " " << v.y << " " << v.z;
+    return os; // 不会自动RVO
+}
 
 int main() {
     Vector3f myVector;
@@ -101,6 +112,7 @@ int main() {
     Vector3f myVector3;
     myVector3 = myVector + myVector2; // 这里首先会调用我们自己定义的操作符=, 然后调用拷贝赋值操作符=
     std::cout << myVector3.x << " " << myVector3.y << " " << myVector3.z << std::endl;
+    ++myVector3;
     return 0;
 }
 ```
