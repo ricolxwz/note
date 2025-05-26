@@ -18,4 +18,20 @@ comments: false
 * 为解决单一码本容量有限, 难以高效捕捉复杂面部动作的问题, 作者提出了一种基于 Group Residual Finite Scalar Quantization (GRFSQ) 的多策略量化方案, 结合群组量化, 残差量化和 Finite Scalar Quantization, 既缩小了码本规模又提升了利用率, 能在 512×512 分辨率下以约 11 kbps(仅为连续表示方法 16 kbps 最低码率的 70%)进行运动表示.
 * 在此基础上, 作者设计了一个交织式码本生成模式: 同一运动粒度内采用非自回归方式以保持双向注意力并充分利用时间相关性, 不同粒度间则采用自回归策略实现从粗到细的生成流程, 从而在生成速度与动画质量之间取得平衡.
 
+## 方法
+
+<figure markdown='1' id='fig1'>
+![](https://img.ricolxwz.io/7cc71a0e5ccd7f49297ab9c3bf93b84b.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.io/7cc71a0e5ccd7f49297ab9c3bf93b84b_inverted.webp#only-dark){ loading=lazy width='800' }
+<figcaption>图1: VQTalker框架包含两个主要组成部分:(1)一个量化的面部运动编解码器, 它通过自监督学习和组残差FSQ(GRFSQ)来学习一种通用的运动表示. (2)一个使用BERT模型的从粗到精的运动生成过程, 该模型接收语音令牌, 并在多个残差层上迭代生成面部运动令牌. 最后, 图像渲染器根据生成的离散码字合成最终的说话头像视频. </figcaption>
+</figure>
+
+<figure markdown='1' id='fig2'>
+![](https://img.ricolxwz.io/04780f9740de57a0b57bade6e7e02d50.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.io/04780f9740de57a0b57bade6e7e02d50_inverted.webp#only-dark){ loading=lazy width='500' }
+<figcaption>图2: 码本交错模式与混合面部运动生成矩阵. 其中, 行(r1至r4)代表细节程度递增的残差码本. t1至t4则标示了每个残差层的顺序处理步骤, 每个ti步骤都会一次性生成对应的ri. </figcaption>
+</figure>
+
+总的来说, 就是一个大杂烩, [图1](#fig1)(左)里面对应的是那个RQ-VAE, Group VQ, FSQ的缝合版本, 右边是一个他们自己设计的自回归生成器. 同一层的所有样本是non-autoregressive生成的, 新的层的样本是autoregressive生成的.
+
 [^1]: Liu, T., Ma, Z., Chen, Q., Chen, F., Fan, S., Chen, X., & Yu, K. (2024). VQTalker: Towards multilingual talking avatars through facial motion tokenization (No. arXiv:2412.09892; Version 1). arXiv. https://doi.org/10.48550/arXiv.2412.09892
