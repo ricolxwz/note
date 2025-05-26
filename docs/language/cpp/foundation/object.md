@@ -557,7 +557,21 @@ free(): double free detected in tcache 2
 
     !!! question "返回值是`Array&`还是`void`还是`Array`"
 
-        Well... `Array&`和`Array`的区别主要是一个是引用返回, 一个是值返回. 但是这里我们好像不需要返回值, 因为`myArray2 = myArray`, 而不是`tmp = myArray2 = myArray`, 所以设置为`void`就可以了, 跑起来没问题.
+        Well... `Array&`和`Array`的区别主要是一个是引用返回, 一个是值返回. 但是这里我们好像不需要返回值, 因为`myArray2 = myArray`, 而不是`tmp = myArray2 = myArray`, 所以这里设置为`void`也可以, 跑起来没问题.
+
+        但是, 官方教程推荐这里返回的是`Array&`, 支持链式赋值, 就是`tmp = myArray2 = myArray`. 为什么不是`Array`呢? 因为链式复制的时候可以少一次对象的拷贝:
+
+        考虑链式赋值 `a = b = c;`.
+
+        * 如果 `operator=` 返回 `Array&`:
+            * `b = c` 执行, `b` 被修改, 并返回 `b` 自身的引用.
+            * `a = (b 的引用)` 执行, `a` 被修改 (通过拷贝 `b` 的数据).
+            * 整个过程只涉及两次赋值操作, 没有创建额外的临时对象.
+        * 如果 `operator=` 返回 `Array`:
+            * `b = c` 执行, `b` 被修改.
+            * 然后, `operator=` 创建一个 `b` 的临时拷贝并返回它.
+            * `a = (b 的临时拷贝)` 执行, `a` 被修改 (通过拷贝临时对象的数据).
+            * 这个过程不仅有两次赋值操作, 还额外增加了一次对象的拷贝 (或移动) 和销毁, 带来了性能开销.
 
     !!! warning "`=`不能去掉"
 
