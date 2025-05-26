@@ -92,6 +92,12 @@ public:
         z = z + 1;
         return *this;
     }
+    bool operator==(const Vector3f& rhs) {
+        if (x == rhs.x && y == rhs.y && z = rhs.z) {
+            return true;
+        }
+        return false;
+    }
     float x, y, z;
 };
 
@@ -113,6 +119,11 @@ int main() {
     myVector3 = myVector + myVector2; // 这里首先会调用我们自己定义的操作符=, 然后调用拷贝赋值操作符=
     std::cout << myVector3.x << " " << myVector3.y << " " << myVector3.z << std::endl;
     ++myVector3;
+    if (myVector == myVector2) {
+        std::cout << "Vectors are qeual" << std::endl;
+    } else {
+        std::cout << "Vectors are not equal" << std::endl;
+    }
     return 0;
 }
 ```
@@ -133,6 +144,10 @@ Copy Constructor Called
 Copy Assignment Operator Called
 5 7 9
 ```
+
+!!! note "操作符函数的位置"
+
+    看了上面的代码, 你会发现有些操作符函数定义在一个类的内部, 但是也有操作符函数是定义在类的外面的. well, 如果定义在类的里面, 操作符函数最多只能接受一个参数, 也就是rhs, 二元运算符; 或者不接受参数, 一元运算符. 如果定义在类的外面, 可以接受一个或者两个参数, 一个参数对应的是一元运算符, 两个参数对应的是二元运算符. 老师的建议是最好把这种操作符函数写在外面, 这样就可以很清楚的知道可以用啥参数. 然后, 还要强调一下, 如果有两个重载相同操作符的操作符重载函数, 一个写在类里面, 一个写在类外面, 那么默认类里面的优先级更高.
 
 ## 返回值优化
 
