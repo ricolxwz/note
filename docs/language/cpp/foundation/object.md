@@ -486,8 +486,8 @@ myVector2 = myVector;
 
 !!! abstract "总结拷贝构造函数和拷贝赋值操作符调用"
 
-    * 直接使用其他对象初始化 -> 调用拷贝构造函数
-    * 先新建一个对象, 再使用其他对象赋值 -> 调用拷贝赋值操作符
+    * 直接使用其他对象初始化(又叫做拷贝初始化) -> 调用拷贝构造函数
+    * 先新建一个对象(又叫做直接初始化), 再使用其他对象赋值 -> 调用拷贝赋值操作符
 
     同样的, 移动构造函数和移动赋值操作符也遵循这个规律.
 
@@ -1065,3 +1065,117 @@ IntArray& IntArray::operator=(IntArray&& source) { // 这是移动赋值操作�
     5.  移动赋值操作符 (Move Assignment Operator): 用于将一个临时对象的资源的所有权"移动"给另一个现有对象.
 
 * Rule of Three (C++03 及更早): 在 C++11 引入移动语义之前, 如果一个类需要自定义析构函数(通常意味着它管理资源), 那么它很可能也需要自定义拷贝构造函数和拷贝赋值操作符, 以避免浅拷贝导致的资源管理问题(例如 double free).
+
+## 友元
+
+### 友元函数
+
+友元函数是在 C++ 中声明在类外部但被授予访问该类私有 (private) 和受保护 (protected) 成员的权限的函数. 它不是类的成员函数, 但可以像类的成员函数一样访问类的内部数据. 需要在类的内部声明这个函数是我的朋友.
+
+```cpp
+#include <iostream>
+
+class UDT {
+    public:
+        UDT() : m_private_member_variable(10) {}
+        friend void print_private_member_variables_of_udt(UDT u);
+    private:
+        int m_private_member_variable;
+};
+
+void print_private_member_variables_of_udt(UDT u) {
+    std::cout << "m_private_member_variable: " << u.m_private_member_variable << std::endl;
+}
+
+int main() {
+    UDT u;
+    print_private_member_variables_of_udt(u);
+    return 0;
+}
+```
+
+### 友元类
+
+另一种use case是想要访问另一个私有的类, 比如我想要`UDT`能够访问`PST`这个类, 就要在`PST`类里面将`UDT`设置为朋友.
+
+```cpp
+class PST {
+    friend class UDT;
+    private:
+        int passcode;
+};
+
+class UDT {
+    public:
+        UDT() : m_private_member_variable(10) {
+            m_info.passcode = 7;
+        }
+        friend void print_private_member_variables_of_udt(UDT u);
+    private:
+        int m_private_member_variable;
+        PST m_info;
+};
+```
+
+---
+
+最好不要用友元.
+
+## 列表初始化
+
+!!! warning "注意"
+
+    列表初始化 ≠ 构造函数成员初始化列表
+
+| 时代        | 语法                                                             | 说明          |
+| --------- | -------------------------------------------------------------- | ----------- |
+| C++11 之前  | `string s("hi");`<br>`string s = "hi";`                        | 小括号 / 等号初始化 |
+| C++11 及以后 | `string s{"hi"};`  (直接列表初始化)<br>`string s = {"hi"};` (拷贝列表初始化) | "花括号"初始化    |
+
+常见写法
+
+```cpp
+int x{0};
+int a[]{1,2,3};
+std::vector<int> v{1,2,3};
+```
+
+### 直接vs贝列表初始化
+
+```cpp
+struct C{
+    C(int,int);          // 隐式
+    explicit C(int);     // 显式
+};
+
+C c1{1,2};      // OK, 直接列表初始化
+C c2 = {1,2};   // OK, 拷贝列表初始化
+
+C c3{1};        // OK, explicit 可用
+// C c4 = {1};  // ❌ explicit 禁止使用拷贝列表初始化
+```
+
+> 口诀: `T obj{...}` 能用 `explicit`, `T obj = {...}` 不能.
+
+
+## `explicit` 关键字
+
+* 目的: 禁止"隐式"把其他类型转成该类.
+* 不影响你显式调用构造函数, 也不阻止基本类型的标准转换.
+* 会影响所有的拷贝初始化
+
+```cpp
+class UDT{
+public:
+    explicit UDT(int);
+};
+
+UDT u1 = 5;        // ❌ 拷贝初始化, 隐式转换被 explicit 拦住
+UDT u2 = {5};      // ❌ 同上, 拷贝列表初始化, 隐式转换被 explicit 拦住
+UDT u3(5);         // ✅ 直接调用构造函数
+UDT u4{5};         // ✅ 直接列表初始化
+UDT u5(5.8f);      // ✅ float → int 标准转换后再直接初始化
+```
+
+为什么 `UDT u1 = 5;` 出错?
+拷贝初始化会尝试先把 `5` 隐式转换成临时 `UDT`, explicit 禁止了这一步; `UDT u1 = {5};` 同理.
