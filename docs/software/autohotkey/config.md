@@ -54,7 +54,7 @@ SetWinDelay(-1)
 }
 
 ; Shift+左键拖动→自由缩放
-+LButton::{
+>+LButton::{
     CoordMode("Mouse","Screen")
     MouseGetPos(&sx,&sy,&hwnd)
     WinGetPos(&wx,&wy,&ww,&wh, hwnd)
