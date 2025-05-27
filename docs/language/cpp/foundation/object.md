@@ -1140,6 +1140,62 @@ int a[]{1,2,3};
 std::vector<int> v{1,2,3};
 ```
 
+### `{}`的作用
+
+使用花括号 {} 进行初始化 (也称为统一初始化或列表初始化) 有几个关键点:
+
+* 优先选择签名中含有`std::initializer_list`构造函数: 如果类`T`有一个接受`std::initializer_list`的构造函数, 并且`{}`里的参数类型匹配, 那么会优先调用这个构造函数. 例如, `std::vector`就有一个接受`std::initializer_list<T>`的构造函数, 所以当你写`std::vector<int> v = {1, 2, 3}`的时候, 编译器就会优先选择那个构造函数
+
+    !!! example "举个例子"
+
+        ```cpp
+        #include <vector>
+        #include <initializer_list>
+        #include <iostream>
+
+        class MyData {
+        public:
+            // 接收 std::initializer_list<int> 的构造函数
+            MyData(std::initializer_list<int> list) {
+                std::cout << "Calling initializer_list constructor." << std::endl;
+                // 可以像遍历普通容器一样遍历 list
+                for (int item : list) {
+                    m_data.push_back(item);
+                }
+            }
+
+            // 另一个构造函数 (例如, 接收大小)
+            MyData(size_t size) {
+                std::cout << "Calling size constructor." << std::endl;
+                m_data.resize(size, 0);
+            }
+
+            void print() {
+                for (int item : m_data) {
+                    std::cout << item << " ";
+                }
+                std::cout << std::endl;
+            }
+
+        private:
+            std::vector<int> m_data;
+        };
+
+        int main() {
+            MyData d1 = {1, 2, 3, 4, 5}; // 这里会调用 std::initializer_list 构造函数
+            MyData d2(5);               // 这里会调用 size 构造函数
+
+            d1.print(); // 输出: 1 2 3 4 5
+            d2.print(); // 输出: 0 0 0 0 0
+
+            return 0;
+        }
+        ```
+
+* 防止窄化转换 (Narrowing Conversion): 列表初始化不允许可能导致信息丢失的隐式类型转换. 例如, `int x{3.14}`; 会编译失败, 因为`double`到`int`是窄化转换. 这是它相比于括号`()`初始化的一个安全优势.
+* 可用于初始化聚合类型(Aggregate): 可以方便地初始化数组和简单的结构体.
+* 解决"最令人烦恼的解析"(Most Vexing Parse): `Widget w();` 会被解析为函数声明, 但`Widget w{};`则明确表示是默认构造一个对象.
+
 ### 直接vs贝列表初始化
 
 ```cpp
@@ -1156,7 +1212,6 @@ C c3{1};        // OK, explicit 可用
 ```
 
 > 口诀: `T obj{...}` 能用 `explicit`, `T obj = {...}` 不能.
-
 
 ## `explicit` 关键字
 
@@ -1178,4 +1233,4 @@ UDT u5(5.8f);      // ✅ float → int 标准转换后再直接初始化
 ```
 
 为什么 `UDT u1 = 5;` 出错?
-拷贝初始化会尝试先把 `5` 隐式转换成临时 `UDT`, explicit 禁止了这一步; `UDT u1 = {5};` 同理.
+拷贝初始化会尝试先把 `5` 隐式转换成临时 `UDT`, explicit 禁止了这一步; `UDT u1 = {5};` 同理, 你会在错误里面看到`error: conversion from int to non-scalar type udt requested`, 说明这边是有一个隐式的转换的.
