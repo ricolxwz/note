@@ -69,7 +69,7 @@ int main() {
 
     !!! tip ":::的用法"
 
-        在C++中, `::`是作用域解析运算符, 它左边通常可以是以下几种:
+        在C++中, `::`是作用域解析操作符, 它左边通常可以是以下几种:
 
         1. 命名空间: `std::cout`表示使用`std`命名空间中的`cout`对象.
         2. 类:
@@ -210,7 +210,7 @@ int main() {
 }
 ```
 
-## 默认构造函数和析构函数
+## 构造函数和析构函数
 
 C++中, 如果你没有定义构造函数和析构函数, 编译器会自动生成一个默认的构造函数和析构函数. 但是如果你定义了一个构造函数或析构函数, 编译器就不会再生成默认的构造函数和析构函数了.
 
@@ -248,7 +248,7 @@ int main() {
 
 ## 拷贝构造函数
 
-其实, C++在创建对象的时候, ^^除了自动生成constructor和destuctor之外, 还会自动生成一个拷贝构造函数, 还有一个拷贝赋值运算符^^, 这个深拷贝构造函数的signature应该是`const ClassName& other`, 所以它既可以接受左值, 又可以接受右值(但是如果你特别定义了一个移动构造函数且signature是`ClassName&& other`, 那么这个时候, 编译器会优先使用移动构造函数).
+其实, C++在创建对象的时候, ^^除了自动生成constructor和destuctor之外, 还会自动生成一个拷贝构造函数, 还有一个拷贝赋值操作符^^, 这个深拷贝构造函数的signature应该是`const ClassName& other`, 所以它既可以接受左值, 又可以接受右值(但是如果你特别定义了一个移动构造函数且signature是`ClassName&& other`, 那么这个时候, 编译器会优先使用移动构造函数).
 
 !!! question "`data`定义的差异会导致什么"
 
@@ -463,9 +463,9 @@ int main() {
 free(): double free detected in tcache 2
 ```
 
-这是因为先声明, 后拷贝赋值调用的是拷贝赋值运算符(或者说没有用初始化的方式). 或者说, `Array myArray2`这个声明已经创建了一个默认对象了, 我们先要把默认对象删掉, 然后赋值. 不像`Array myArrays = myArray`是直接使用`myArray`初始化的, 没有创建默认对象这一步.
+这是因为先声明, 后拷贝赋值调用的是拷贝赋值操作符(或者说没有用初始化的方式). 或者说, `Array myArray2`这个声明已经创建了一个默认对象了, 我们先要把默认对象删掉, 然后赋值. 不像`Array myArrays = myArray`是直接使用`myArray`初始化的, 没有创建默认对象这一步.
 
-### 拷贝重载运算符
+### 拷贝赋值操作符
 
 ```cpp
 Vector3 myVector;
@@ -473,18 +473,25 @@ Vector3 myVector2;
 myVector2 = myVector;
 ```
 
-这里的等号就是拷贝赋值运算符. 如果你没有在类里面定义这个等号, 那么编译器会自动生成一个默认的拷贝赋值运算符. 这个默认版本会逐个拷贝对象的成员变量. 这个运算符是经过重载的, 和Java里面的类似, 它不是一个简单的等号.
+这里的等号就是拷贝赋值操作符. 如果你没有在类里面定义这个等号, 那么编译器会自动生成一个默认的拷贝赋值操作符. 这个默认版本会逐个拷贝对象的成员变量. 这个操作符是经过重载的, 和Java里面的类似, 它不是一个简单的等号.
 
-!!! warning "何时会调用拷贝重载运算符"
+!!! warning "何时会调用拷贝赋值操作符"
 
-    注意, 这个拷贝重载运算符是某个变量经过声明后, 例如`myVector2`经过声明后, 被`myVector`赋值才会调用这个拷贝重载运算符. 换句话说, 如果是下面这样, 只会调用拷贝构造函数, 而不是拷贝重载运算符:
+    注意, 这个拷贝赋值操作符是某个变量经过声明后, 例如`myVector2`经过声明后, 被`myVector`赋值才会调用这个拷贝赋值操作符. 换句话说, 如果是下面这样, 只会调用拷贝构造函数, 而不是拷贝赋值操作符:
 
     ```cpp
     Vector3 myVector;
     Vector3 myVector2 = myVector;
     ```
 
-拷贝重载运算符可以这样写:
+!!! abstract "总结拷贝构造函数和拷贝赋值操作符调用"
+
+    * 直接使用其他对象初始化 -> 调用拷贝构造函数
+    * 先新建一个对象, 再使用其他对象赋值 -> 调用拷贝赋值操作符
+
+    同样的, 移动构造函数和移动赋值操作符也遵循这个规律.
+
+拷贝赋值操作符可以这样写:
 
 ```cpp linenums="1" hl_lines="21-29"
 #include <iostream>
@@ -712,7 +719,7 @@ int main() {
 
 !!! warning "`=`不能去掉"
 
-    这里的`=`就是你要重载的那个符号. 去掉它就不叫重载赋值运算符了, 编译器不会调用这个重载, 也无法实现`a = b`这种语义.
+    这里的`=`就是你要重载的那个符号. 去掉它就不叫重载赋值操作符了, 编译器不会调用这个重载, 也无法实现`a = b`这种语义.
 
 !!! warning "内存泄漏"
 
@@ -987,3 +994,61 @@ public:
 ## RAII
 
 RAII, Resource Acquisition Is Initialization是一种编程范式. 它的核心思想是: 1. 资源获取和对象初始化相结合, 当创建一个对象时, 同时获取它所需要的资源(例如, 内存, 文件句柄, 锁等); 2. 资源释放与对象声明周期结束相绑定. 当对象不再使用的时候(例如, 超出作用域被销毁)的时候, 自动释放其占有的资源. In simple words, RAII就是用对象的生命周期来管理资源的生命周期. 一般来说, 如果你用智能指针来管理这些资源, 就不需要在析构函数中写明了, 因为智能指针本身存储在当前作用域的栈中, 当离开栈(离开作用域)的时候, 这个智能指针会被销毁, 销毁之前会调用其内部的析构函数, 把它所管理的对象一并销毁掉, 所以我们就不用手动销毁了. **所以个人的建议是, 如果是存储在堆中的变量(排除自身已经实现RAII的类, 例如`std::vector`, `std::string`, `std::list`, `std::map`, 它们在类的内部管理自己的资源, 并在其内部的析构函数释放这些资源, 我们不用管), 全部都套上智能指针, 这样就不用在自己的类里面写析构函数了xiaxiaxia...**
+
+## 移动构造..和移动赋值...
+
+其实和上面的拷贝构造函数和拷贝赋值操作符是差不多的东西. 只不过它们的函数签名里面接受的是右值, 传进来的对象是xvalue, 或者叫做将亡值, 也是右值的一种, 简单来说, 就是这个传进来的对象快死亡了, 我们需要把它的使命传递给一个新的对象, 它们的实现从本质上来说就是新的对象拿到了将亡对象的指针:
+
+```cpp title="intarray.cpp"
+// 假设我这个对象有属性m_name, 是一个std::string; 和一个m_data, 是一个堆数组
+IntArray::IntArray(IntArray&& source) { // 这是移动构造函数
+    m_name = source.m_name;
+    source.m_name = ""; // 将亡值的m_name被"榨干"了
+    m_data = source.m_data;
+    source.m_data = source.m_data; // 转移指针给的新的对象
+    source.m_data = nullptr; // again, 将亡值的m_data堆数组的指针也没了, 统统榨干
+    std::cout << m_name << "used move assignment" << std::endl; // 不要忘记吟唱一下
+}
+IntArray& IntArray::operator=(IntArray&& source) { // 这是移动赋值操作符
+    if (this != &source) { // 不要榨干自己
+        m_name = source.m_name;
+        source.m_name = "";
+        m_data = source.m_data;
+        source.m_data = nullptr;
+        std::cout << " used move assignment" << std::endl;
+    }
+    return *this;
+}
+```
+
+=== "调用拷贝构造函数"
+
+    ```cpp title="main.cpp"
+    int main() {
+        std::vector<IntArray> myArrays;
+        myArrays.reserve(10);
+        for (int i = 0; i < 10; i++) {
+            IntArray temp(std::to_string(i));
+            myArrays.push_back(temp)
+            // 100万行代码
+        }
+    }
+    ```
+
+    每次传参的时候, `push_back`都会自动调用拷贝构造函数, 创建一个和`tmp`一模一样的对象, 然鹅, 原来的一堆`tmp`对象还是在内存中, 并没有被释放掉, 这部分`tmp`是完全没有用的.
+
+=== "调用移动构造函数"
+
+    ```cpp title="main.cpp"
+    int main() {
+        std::vector<IntArray> myArrays;
+        myArrays.reserve(10);
+        for (int i = 0; i < 10; i++) {
+            IntArray temp(std::to_string(i));
+            myArrays.push_back(std::move(temp))
+            // 100万行代码
+        }
+    }
+    ```
+
+    这个时候, `push_back`会自动调用移动构造函数, 原来的`tmp`就被榨干了, 然后再执行接下来的100万行代的时候, 就没有那部分`tmp`占用内存了.
