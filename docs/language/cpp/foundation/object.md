@@ -1208,7 +1208,7 @@ C c1{1,2};      // OK, 直接列表初始化
 C c2 = {1,2};   // OK, 拷贝列表初始化
 
 C c3{1};        // OK, explicit 可用
-// C c4 = {1};  // ❌ explicit 禁止使用拷贝列表初始化
+// C c4 = {1};  // ❌ explicit 禁止使用拷贝列表初始化, 因为会发生隐式类型转换, 从标量1到一个类C
 ```
 
 > 口诀: `T obj{...}` 能用 `explicit`, `T obj = {...}` 不能.
@@ -1216,7 +1216,8 @@ C c3{1};        // OK, explicit 可用
 ## `explicit` 关键字
 
 * 目的: 禁止"隐式"把其他类型转成该类.
-* 不影响你显式调用构造函数, 也不阻止基本类型的标准转换.
+* 不影响你显式调用构造函数
+* 不阻止基本类型的标准转换.
 * 会影响所有的拷贝初始化
 
 ```cpp
@@ -1229,8 +1230,86 @@ UDT u1 = 5;        // ❌ 拷贝初始化, 隐式转换被 explicit 拦住
 UDT u2 = {5};      // ❌ 同上, 拷贝列表初始化, 隐式转换被 explicit 拦住
 UDT u3(5);         // ✅ 直接调用构造函数
 UDT u4{5};         // ✅ 直接列表初始化
-UDT u5(5.8f);      // ✅ float → int 标准转换后再直接初始化
+UDT u5(5.8f);      // ✅ float → int 标准转换后再直接初始化, 可以使用下面的列表初始化阻止这种情况
+UDT u6{5.8f};      //  ❌ 报错, 因为不能标准转换
 ```
 
-为什么 `UDT u1 = 5;` 出错?
-拷贝初始化会尝试先把 `5` 隐式转换成临时 `UDT`, explicit 禁止了这一步; `UDT u1 = {5};` 同理, 你会在错误里面看到`error: conversion from int to non-scalar type udt requested`, 说明这边是有一个隐式的转换的.
+为什么 `UDT u1 = 5;` 出错? 拷贝初始化会尝试先把 `5` 隐式转换成临时 `UDT`, explicit 禁止了这一步; `UDT u1 = {5};` 同理, 你会在错误里面看到`error: conversion from int to non-scalar type udt requested`, 说明这边是有一个隐式的转换的.
+
+!!! note "为啥`explicit`和列表初始化要一起用"
+
+    在`UDT u6{5.8f}`中, `explicit`无法阻止它进行标准转换, 所以要用到列表初始化, 防止窄化转换; `explicit`的作用是防止`UDT u6 = {5}`的情况出现, 因为这里会发生一个隐式的类型转换.
+
+## 继承
+
+C++ 中的继承允许一个类 (子类或派生类) 继承另一个类 (父类或基类) 的属性和方法. 这促进了代码重用和创建层次关系.
+
+* 基类 (Base Class): 被继承的类.
+* 派生类 (Derived Class): 继承基类的类. 派生类拥有基类的成员 (除了私有成员), 并且可以添加自己的成员或重写基类的方法.
+
+举个简单的例子把.
+
+```cpp
+#include <iostream>
+
+class Dog {
+    public:
+        Dog() {
+        }
+        void bark() {
+            std::cout << "woof woof" << std::endl;
+        }
+        void walk() {
+            x += 1;
+            y += 1;
+        }
+
+        float x, y;
+};
+
+class Golden : public Dog {
+    public:
+        void retrieve() {
+            std::cout << "retrieving a stick" << std::endl;
+        }
+};
+
+class Husky: public Dog {
+
+};
+
+int main() {
+    Golden golden;
+    golden.bark();
+    golden.walk();
+    golden.retrieve();
+    Husky husky;
+    husky.bark();
+    husky.walk();
+    return 0;
+}
+```
+
+输出:
+
+```bash
+woof woof
+retrieving a stick
+woof woof
+```
+
+### 继承类型
+
+* 单一继承: 一个派生类只继承一个基类.
+* 多重继承: 一个派生类继承多个基类.
+* 多级继承: 一个派生类继承自另一个派生类.
+* 层次继承: 一个基类被多个派生类继承.
+* 混合继承: 上述类型的组合.
+
+### 访问控制
+
+继承时可以使用访问修饰符 (`public`, `protected`, `private`) 来控制基类成员在派生类中的访问权限:
+
+* `public`继承: 基类的`public`成员在派生类中仍为`public`, `protected`成员仍为`protected`. 这是最常用的方式.
+* `protected`继承: 基类的`public`和`protected`成员在派生类中都变为`protected`.
+* `private`继承: 基类的`public`和`protected`成员在派生类中都变为`private`.
