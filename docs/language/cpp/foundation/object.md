@@ -1792,3 +1792,52 @@ Updating Vulkan state
     ```
 
     你会看到, 抽象类的实例`myRenderer2`无法调用`hello`函数, 尽管它是用`new Vulkan`创建的. 但是如果是`Vulkan* vulkanRenderer = new Vulkan;`就可以调用, 这是因为`myRenderer2`是一个抽象类的指针, 它只能调用抽象类中声明的虚函数, 而不能调用派生类中新增的函数.
+
+## 多重继承
+
+多重继承就是一个类可以继承多个基类. 这在 C++ 中是允许的, 但需要小心使用, 因为它可能导致一些复杂的问题, 如菱形继承问题 (Diamond Problem). 比如说, 假设有一个基类 `A`, 两个派生类 `B` 和 `C`, 以及一个派生类 `D` 继承自 `B` 和 `C`.
+
+```cpp
+#include <iostream>
+
+struct Dog {
+    virtual void bark() {
+        std::cout << "Woof!" << std::endl;
+    }
+};
+
+struct Golden : public Dog {
+    virtual void bark() override {
+        std::cout << "Woof!" << std::endl;
+    }
+};
+
+struct BorderCollie : public Dog {
+    virtual void bark() override {
+        std::cout << "Woof!" << std::endl;
+    }
+};
+
+struct Coltriever : public Golden, BorderCollie {
+    // 不定义bark()函数, 继承的是哪个类的bark()函数呢?
+};
+
+int main() {
+    Dog* dog1 = new Golden;
+    Dog* dog2 = new BorderCollie;
+    Dog* dog3 = new Coltriever; // 这一行就会报错
+    dog1 -> bark();
+    dog2 -> bark();
+    dog3 -> bark();
+    return 0;
+}
+```
+
+输出:
+
+```bash
+main.cpp: In function ‘int main()’:
+main.cpp:28:21: error: ‘Dog’ is an ambiguous base of ‘Coltriever’
+   28 |     Dog* dog3 = new Coltriever;
+      |                     ^~~~~~~~~~
+```
