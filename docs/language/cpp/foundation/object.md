@@ -1596,4 +1596,37 @@ Base Destructor
     }
     ```
 
-    又叫做vtable.
+    C++中其实有个东西叫做vtable, 之后小节会讲.
+
+### `virtual`析构函数
+
+上面留下了还没解决的问题: 没有调用`Derived`的析构函数, 解决:
+
+```cpp linenums="1" hl_lines="6"
+#include <iostream>
+
+class Base {
+public:
+    Base() { std::cout << "Base Constructor" << std::endl; }
+    virtual ~Base() { std::cout << "Base Destructor" << std::endl; }
+    virtual void MemberFunc() { std::cout << "Base::MemberFunc()\n"; }
+};
+
+class Derived : public Base {
+public:
+    Derived() { std::cout << "Derived Constructor" << std::endl; }
+    ~Derived() { std::cout << "Derived Destructor" << std::endl; }
+    void MemberFunc() override {
+        std::cout << "Derived::MemberFunc()\n";
+    }
+};
+
+int main() {
+    Base* instance = new Derived;
+    instance->MemberFunc();
+    delete instance;
+    return 0;
+}
+```
+
+### vtable
