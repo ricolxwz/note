@@ -1335,168 +1335,265 @@ woof woof
 
 简单来说, 就是从最基础的基类开始, 逐层向上构建, 直到最终的派生类.
 
-!!! warning "构造函数初始化列表是啥"
+#### 构造函数初始化列表
 
-    其实和成员初始化列表很像, 都是在构造函数的后面加一个`:`, 例如`Monster(const std::string& name) : EntityBase(name)`, 意思就是指定派生类的这个构造函数`Monster(const std::strin& name)`被调用之前, 先调用`EntityBase(name)`. 如果没有显式写出, 即只有`Monster(const std::string& name)`, 那么会尝试调用默认构造函数. 举个例子:
+其实和成员初始化列表很像, 都是在构造函数的后面加一个`:`, 例如`Monster(const std::string& name) : EntityBase(name)`, 意思就是指定派生类的这个构造函数`Monster(const std::strin& name)`被调用之前, 先调用`EntityBase(name)`. 如果没有显式写出, 即只有`Monster(const std::string& name)`, 那么会尝试调用默认构造函数. 举个例子:
 
-    === "没有`EntityBase(name)`"
+=== "没有`EntityBase(name)`"
 
-        ```cpp
-        #include <iostream>
-        #include <string>
+    ```cpp
+    #include <iostream>
+    #include <string>
 
-        class EntityBase{
-            public:
-                EntityBase(){
-                    std::cout << "EntityBase Constructor" << std::endl;
-                }
-                EntityBase(const std::string& name) : m_name(name) {
-                    std::cout << "EntityBase Constructor with name: " << m_name << std::endl;
-                }
-                ~EntityBase(){
-                    std::cout << "EntityBase Destructor" << std::endl;
-                }
-            private:
-                std::string m_name;
-        };
+    class EntityBase{
+        public:
+            EntityBase(){
+                std::cout << "EntityBase Constructor" << std::endl;
+            }
+            EntityBase(const std::string& name) : m_name(name) {
+                std::cout << "EntityBase Constructor with name: " << m_name << std::endl;
+            }
+            ~EntityBase(){
+                std::cout << "EntityBase Destructor" << std::endl;
+            }
+        private:
+            std::string m_name;
+    };
 
-        class Monster : public EntityBase{
-            public:
-                Monster(){ // 默认先调用EntityBase()
-                    std::cout << "Monster Constructor" << std::endl;
-                }
-                Monster(const std::string& name) { // 默认先调用EntityBase()
-                    std::cout << "Monster Constructor with name: " << name << std::endl;
-                }
-                ~Monster(){
-                    std::cout << "Monster Destructor" << std::endl;
-                }
-        };
+    class Monster : public EntityBase{
+        public:
+            Monster(){ // 默认先调用EntityBase()
+                std::cout << "Monster Constructor" << std::endl;
+            }
+            Monster(const std::string& name) { // 默认先调用EntityBase()
+                std::cout << "Monster Constructor with name: " << name << std::endl;
+            }
+            ~Monster(){
+                std::cout << "Monster Destructor" << std::endl;
+            }
+    };
 
-        int main(){
-            Monster badMonster("badMonster");
-            return 0;
-        }
-        ```
+    int main(){
+        Monster badMonster("badMonster");
+        return 0;
+    }
+    ```
 
-        输出:
+    输出:
 
-        ```bash
-        EntityBase Constructor
-        Monster Constructor with name: badMonster
-        Monster Destructor
-        EntityBase Destructor
-        ```
+    ```bash
+    EntityBase Constructor
+    Monster Constructor with name: badMonster
+    Monster Destructor
+    EntityBase Destructor
+    ```
 
-        你会发现, 实际上, 会先调用`EntityBase`的默认构造函数. 并且你会发现, 如果`EntityBase()`这个函数没有显式给出, 会报错.
+    你会发现, 实际上, 会先调用`EntityBase`的默认构造函数. 并且你会发现, 如果`EntityBase()`这个函数没有显式给出, 会报错.
 
-    === "有`EntityBase(name)`"
+=== "有`EntityBase(name)`"
 
-        ```cpp
-        #include <iostream>
-        #include <string>
+    ```cpp
+    #include <iostream>
+    #include <string>
 
-        class EntityBase{
-            public:
-                EntityBase(){
-                    std::cout << "EntityBase Constructor" << std::endl;
-                }
-                EntityBase(const std::string& name) : m_name(name) {
-                    std::cout << "EntityBase Constructor with name: " << m_name << std::endl;
-                }
-                ~EntityBase(){
-                    std::cout << "EntityBase Destructor" << std::endl;
-                }
-            private:
-                std::string m_name;
-        };
+    class EntityBase{
+        public:
+            EntityBase(){
+                std::cout << "EntityBase Constructor" << std::endl;
+            }
+            EntityBase(const std::string& name) : m_name(name) {
+                std::cout << "EntityBase Constructor with name: " << m_name << std::endl;
+            }
+            ~EntityBase(){
+                std::cout << "EntityBase Destructor" << std::endl;
+            }
+        private:
+            std::string m_name;
+    };
 
-        class Monster : public EntityBase{
-            public:
-                Monster(){ // 默认先调用EntityBase()
-                    std::cout << "Monster Constructor" << std::endl;
-                }
-                Monster(const std::string& name) : EntityBase(name) {
-                    std::cout << "Monster Constructor with name: " << name << std::endl;
-                }
-                ~Monster(){
-                    std::cout << "Monster Destructor" << std::endl;
-                }
-        };
+    class Monster : public EntityBase{
+        public:
+            Monster(){ // 默认先调用EntityBase()
+                std::cout << "Monster Constructor" << std::endl;
+            }
+            Monster(const std::string& name) : EntityBase(name) {
+                std::cout << "Monster Constructor with name: " << name << std::endl;
+            }
+            ~Monster(){
+                std::cout << "Monster Destructor" << std::endl;
+            }
+    };
 
-        int main(){
-            Monster badMonster("badMonster");
-            return 0;
-        }
-        ```
+    int main(){
+        Monster badMonster("badMonster");
+        return 0;
+    }
+    ```
 
-        输出:
+    输出:
 
-        ```bash
-        EntityBase Constructor with name: badMonster
-        Monster Constructor with name: badMonster
-        Monster Destructor
-        EntityBase Destructor
-        ```
+    ```bash
+    EntityBase Constructor with name: badMonster
+    Monster Constructor with name: badMonster
+    Monster Destructor
+    EntityBase Destructor
+    ```
 
-        你会发现, 经过显式写明之后, 会先调用`EntityBase`的`EntityBase(const std::string& name) : m_name(name)`函数, 这里还用了一个成员初始化列表. 再来举一个多层继承的例子.
+    你会发现, 经过显式写明之后, 会先调用`EntityBase`的`EntityBase(const std::string& name) : m_name(name)`函数, 这里还用了一个成员初始化列表. 再来举一个多层继承的例子.
 
-        ```cpp
-        #include <iostream>
-        #include <string>
+    ```cpp
+    #include <iostream>
+    #include <string>
 
-        class TopLevelClass {
-            public:
-                TopLevelClass() {
-                    std::cout << "TopLevelClass Constructor" << std::endl;
-                }
-                TopLevelClass(std::string arg) {
-                    std::cout << "TopLevelClass Constructor with arg: " << arg << std::endl;
-                }
-        };
+    class TopLevelClass {
+        public:
+            TopLevelClass() {
+                std::cout << "TopLevelClass Constructor" << std::endl;
+            }
+            TopLevelClass(std::string arg) {
+                std::cout << "TopLevelClass Constructor with arg: " << arg << std::endl;
+            }
+    };
 
-        class EntityBase : public TopLevelClass {
-            public:
-                EntityBase(){ // 默认先调用TopLevelClass()
-                    std::cout << "EntityBase Constructor" << std::endl;
-                }
-                EntityBase(const std::string& name) : TopLevelClass(name), m_name(name) {
-                    std::cout << "EntityBase Constructor with name: " << m_name << std::endl;
-                }
-                ~EntityBase(){
-                    std::cout << "EntityBase Destructor" << std::endl;
-                }
-            private:
-                std::string m_name;
-        };
+    class EntityBase : public TopLevelClass {
+        public:
+            EntityBase(){ // 默认先调用TopLevelClass()
+                std::cout << "EntityBase Constructor" << std::endl;
+            }
+            EntityBase(const std::string& name) : TopLevelClass(name), m_name(name) {
+                std::cout << "EntityBase Constructor with name: " << m_name << std::endl;
+            }
+            ~EntityBase(){
+                std::cout << "EntityBase Destructor" << std::endl;
+            }
+        private:
+            std::string m_name;
+    };
 
-        class Monster : public EntityBase{
-            public:
-                Monster(){ // 默认先调用EntityBase()
-                    std::cout << "Monster Constructor" << std::endl;
-                }
-                Monster(const std::string& name) : EntityBase(name) {
-                    std::cout << "Monster Constructor with name: " << name << std::endl;
-                }
-                ~Monster(){
-                    std::cout << "Monster Destructor" << std::endl;
-                }
-        };
+    class Monster : public EntityBase{
+        public:
+            Monster(){ // 默认先调用EntityBase()
+                std::cout << "Monster Constructor" << std::endl;
+            }
+            Monster(const std::string& name) : EntityBase(name) {
+                std::cout << "Monster Constructor with name: " << name << std::endl;
+            }
+            ~Monster(){
+                std::cout << "Monster Destructor" << std::endl;
+            }
+    };
 
-        int main(){
-            Monster badMonster("badMonster");
-            return 0;
-        }
-        ```
+    int main(){
+        Monster badMonster("badMonster");
+        return 0;
+    }
+    ```
 
-        输出:
+    输出:
 
-        ```bash
-        TopLevelClass Constructor with arg: badMonster
-        EntityBase Constructor with name: badMonster
-        Monster Constructor with name: badMonster
-        Monster Destructor
-        EntityBase Destructor
-        ```
+    ```bash
+    TopLevelClass Constructor with arg: badMonster
+    EntityBase Constructor with name: badMonster
+    Monster Constructor with name: badMonster
+    Monster Destructor
+    EntityBase Destructor
+    ```
 
-        虽然在`main`函数中没有涉及到无参构造函数, 也就是说, 实际上不会调用`EntityBase()`和`TopLevelClass()`, 但是again, `EntityBase()`没有构造函数初始化列表, 所以默认会调用`TopLevelClass()`, 虽然不会执行`TopLevelClass()`, 但是编译器找不到这个显式默认构造函数, 会报错.
+    虽然在`main`函数中没有涉及到无参构造函数, 也就是说, 实际上不会调用`EntityBase()`和`TopLevelClass()`, 但是again, `EntityBase()`没有构造函数初始化列表, 所以默认会调用`TopLevelClass()`, 虽然不会执行`TopLevelClass()`, 但是编译器找不到这个显式默认构造函数, 会报错.
+
+## 多态
+
+### 为啥要用
+
+首先, 和Python类似, 多态的目的就是能够写一个同一的函数, 接受基类及其所有派生类. 假设基类是`Base`, 派生类是`NPC, Player, Monster`, 那么如果你的函数签名是`void applyDamage(NPC* npc, int damage)`, 那么你需要为`player`和`Moster`也创建同样的函数`void applyDamage(Player* player, int damage)`, `void applyDamage(Monster* moster, int damage)`, 这样是非常不美观, 而且要增加新的派生类的时候, 就要再实现一遍对于那个派生类的特定函数, which is not efficient, 所以, 你可能需要一个这样的函数: `void applyDamage(Base* base, int damage)`, 虽然其对象是`NPC`, `Player`或者`Monster`, 当`applyDamaage`内部需要调用这个对象特定的成员函数的时候, C++的多态机制就发挥作用了, 这个多态机制是通过`virtual`和`override`关键字实现的. 先来看没加这两个关键字会怎样.
+
+### `virtual`和`override`的使用
+
+```cpp
+#include <iostream>
+
+class Base {
+public:
+    Base() { std::cout << "Base Constructor" << std::endl; }
+    ~Base() { std::cout << "Base Destructor" << std::endl; }
+    void MemberFunc() { std::cout << "Base::MemberFunc()\n"; }
+};
+
+class Derived : public Base {
+public:
+    Derived() { std::cout << "Derived Constructor" << std::endl; }
+    ~Derived() { std::cout << "Derived Destructor" << std::endl; }
+    void MemberFunc() {
+        std::cout << "Derived::MemberFunc()\n";
+    }
+};
+
+int main() {
+    Base* instance = new Derived;
+    instance->MemberFunc();
+    delete instance;
+    return 0;
+}
+```
+
+输出:
+
+```cpp
+Base Constructor
+Derived Constructor
+Base::MemberFunc()
+Base Destructor
+```
+
+你会发现, 调用的是`Base`的`MemberFunc()`函数, 而我们想要调用的是`Derived`的`MemberFunc()`函数; 另外, 还有一个很多的安全问题, 你会发现没有调用`Derived`的析构函数, 这会造成巨大的安全风险, 这是因为没有多态, 只有基类的析构函数会被调用, 我们**暂时先不管这个问题**, 将其改为多态的写法:
+
+```cpp
+#include <iostream>
+
+class Base {
+public:
+    Base() { std::cout << "Base Constructor" << std::endl; }
+    ~Base() { std::cout << "Base Destructor" << std::endl; }
+    virtual void MemberFunc() { std::cout << "Base::MemberFunc()\n"; }
+};
+
+class Derived : public Base {
+public:
+    Derived() { std::cout << "Derived Constructor" << std::endl; }
+    ~Derived() { std::cout << "Derived Destructor" << std::endl; }
+    void MemberFunc() override {
+        std::cout << "Derived::MemberFunc()\n";
+    }
+};
+
+int main() {
+    Base* instance = new Derived;
+    instance->MemberFunc();
+    delete instance;
+    return 0;
+}
+```
+
+输出:
+
+```bash
+Base Constructor
+Derived Constructor
+Derived::MemberFunc()
+Base Destructor
+```
+
+!!! tip "如果你还想调用`Base`的`MemberFunc()`"
+
+    如果你还想调用`Base`的`MemberFunc()`, 可以使用域限定符:
+
+    ```cpp
+    int main() {
+        Base* instance = new Derived;
+        instance->Base::MemberFunc();
+        delete instance;
+        return 0;
+    }
+    ```
+
+    又叫做vtable.
