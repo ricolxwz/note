@@ -1545,7 +1545,7 @@ Base::MemberFunc()
 Base Destructor
 ```
 
-你会发现, 调用的是`Base`的`MemberFunc()`函数, 而我们想要调用的是`Derived`的`MemberFunc()`函数; 另外, 还有一个很多的安全问题, 你会发现没有调用`Derived`的析构函数, 这会造成巨大的安全风险, 这是因为没有多态, 只有基类的析构函数会被调用, 我们**暂时先不管这个问题**, 将其改为多态的写法:
+你会发现, 调用的是`Base`的`MemberFunc()`函数, 而我们想要调用的是`Derived`的`MemberFunc()`函数; 另外, 还有一个很多的安全问题, 你会发现没有调用`Derived`的析构函数, 这会造成巨大的安全风险, 这是因为没有多态, 只有基类的析构函数会被调用, 我们暂时先不管这个问题, 将其改为多态的写法:
 
 ```cpp
 #include <iostream>
@@ -1630,3 +1630,165 @@ int main() {
 ```
 
 ### vtable
+
+在C++中, 编译器为含有虚函数的类创建一个隐藏的函数指针数组, 这个数组被称为虚函数表 (vtable). 每个包含虚函数的类的对象都会有一个隐藏的指针, 通常表示为 `__vtbl`, 它指向该类的 vtable. 任何从基类派生出来的类, 也会拥有自己的vtable. 这个vtable的内容会基于派生类对基类虚函数的重写情况: (1) 如果派生类重写了基类的虚函数, 那么派生类vtable中对应的条目会存放派生类重写后函数的地址; (2) 如果派生类没有重写基类的虚函数, 那么派生类vtable中对应条目会直接继承基类vtable中该虚函数的地址.
+
+当创建 `Derived` 类的对象并通过 `Base` 类的指针 `instance` 调用 `MemberFunc()` 时, 程序会通过 `instance` 指向的 `Derived` 对象的 `__vtbl` 指针找到 `Derived` 类的 vtable, 并在其中找到 `Derived::MemberFunc()` 的地址并执行它. 同样地, 当 `delete instance;` 被调用时, 会通过 `Derived` 对象的 vtable 找到正确的析构函数 (`Derived::~Derived` 然后是 `Base::~Base`) 并执行.
+
+## 抽象类
+
+抽象类, 和Java中的接口类似. 里面都是虚函数.
+
+```cpp
+#include <iostream>
+
+class IRenderer {
+    public:
+        virtual void draw() {}
+        virtual void update() {}
+};
+
+class OpenGL : public IRenderer {
+    public:
+        void draw() override {
+            std::cout << "Drawing with OpenGL" << std::endl;
+        }
+
+        void update() override {
+            std::cout << "Updating OpenGL state" << std::endl;
+        }
+};
+
+class Vulkan : public IRenderer {
+    public:
+        void draw() override {
+            std::cout << "Drawing with Vulkan" << std::endl;
+        }
+
+        void update() override {
+            std::cout << "Updating Vulkan state" << std::endl;
+        }
+};
+
+int main() {
+    IRenderer* myRenderer = new OpenGL;
+    myRenderer->draw();
+    myRenderer->update();
+    IRenderer* myRenderer2 = new Vulkan;
+    myRenderer2->draw();
+    myRenderer2->update();
+    delete myRenderer;
+    return 0;
+}
+```
+
+上面的`IRenderer`就是一个抽象类, 里面有两个虚函数`draw()`和`update()`, 这两个函数没有实现, 只有声明. `OpenGL`和`Vulkan`类继承自`IRenderer`, 并实现了这两个虚函数.
+
+### 纯虚函数
+
+纯虚函数是一个没有实现的虚函数, 在类中声明时使用`= 0`来表示. 任何继承自这个抽象类的派生类都必须实现所有的纯虚函数, 否则会报错.
+
+```cpp linenums="1" hl_lines="5-6"
+#include <iostream>
+
+class IRenderer {
+    public:
+        virtual void draw() = 0;
+        virtual void update() = 0;
+};
+
+class OpenGL : public IRenderer {
+    public:
+        void draw() override {
+            std::cout << "Drawing with OpenGL" << std::endl;
+        }
+
+        void update() override {
+            std::cout << "Updating OpenGL state" << std::endl;
+        }
+};
+
+class Vulkan : public IRenderer {
+    public:
+        void draw() override {
+            std::cout << "Drawing with Vulkan" << std::endl;
+        }
+
+        void update() override {
+            std::cout << "Updating Vulkan state" << std::endl;
+        }
+};
+
+int main() {
+    IRenderer* myRenderer = new OpenGL;
+    myRenderer->draw();
+    myRenderer->update();
+    IRenderer* myRenderer2 = new Vulkan;
+    myRenderer2->draw();
+    myRenderer2->update();
+    delete myRenderer;
+    return 0;
+}
+```
+
+输出:
+
+```bash
+Drawing with OpenGL
+Updating OpenGL state
+Drawing with Vulkan
+Updating Vulkan state
+```
+
+!!! warning "抽象类的实例不能调用其内部虚函数之外的函数"
+
+    ```cpp
+    #include <iostream>
+
+    class IRenderer {
+        public:
+            virtual void draw() = 0;
+            virtual void update() = 0;
+    };
+
+    class OpenGL : public IRenderer {
+        public:
+            void draw() override {
+                std::cout << "Drawing with OpenGL" << std::endl;
+            }
+
+            void update() override {
+                std::cout << "Updating OpenGL state" << std::endl;
+            }
+    };
+
+    class Vulkan : public IRenderer {
+        public:
+            void draw() override {
+                std::cout << "Drawing with Vulkan" << std::endl;
+            }
+
+            void update() override {
+                std::cout << "Updating Vulkan state" << std::endl;
+            }
+            void hello() {
+                std::cout << "Hello from Vulkan" << std::endl;
+            }
+    };
+
+    int main() {
+        IRenderer* myRenderer = new OpenGL;
+        myRenderer->draw();
+        myRenderer->update();
+        IRenderer* myRenderer2 = new Vulkan;
+        myRenderer2->draw();
+        myRenderer2->update();
+        // myRenderer2->hello(); // ❌ 报错
+        Vulkan* vulkanRenderer = new Vulkan;
+        vulkanRenderer->hello(); // ✅ 可以调用
+        delete myRenderer;
+        return 0;
+    }
+    ```
+
+    你会看到, 抽象类的实例`myRenderer2`无法调用`hello`函数, 尽管它是用`new Vulkan`创建的. 但是如果是`Vulkan* vulkanRenderer = new Vulkan;`就可以调用, 这是因为`myRenderer2`是一个抽象类的指针, 它只能调用抽象类中声明的虚函数, 而不能调用派生类中新增的函数.
