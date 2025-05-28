@@ -1325,3 +1325,178 @@ woof woof
     2.  `private` 继承:
         * 基类的 `public` 和 `protected` 成员在派生类中都变成 `private`.
         * 这意味着这些成员不可以被派生类的派生类 (孙子类) 访问. 它们只在派生类内部可用.
+
+### 构造函数调用
+
+在C++中, 派生类构造函数的调用遵循以下规则:
+
+1.  先基类后派生类: 创建派生类对象时, 首先调用基类的构造函数, 然后再调用派生类自己的构造函数.
+2.  构造函数初始化列表: 派生类构造函数可以通过初始化列表显式地调用基类的特定构造函数. 如果不显式调用, 编译器会尝试调用基类的默认构造函数. 看下面的例子.
+
+简单来说, 就是从最基础的基类开始, 逐层向上构建, 直到最终的派生类.
+
+!!! warning "构造函数初始化列表是啥"
+
+    其实和成员初始化列表很像, 都是在构造函数的后面加一个`:`, 例如`Monster(const std::string& name) : EntityBase(name)`, 意思就是指定派生类的这个构造函数`Monster(const std::strin& name)`被调用之前, 先调用`EntityBase(name)`. 如果没有显式写出, 即只有`Monster(const std::string& name)`, 那么会尝试调用默认构造函数. 举个例子:
+
+    === "没有`EntityBase(name)`"
+
+        ```cpp
+        #include <iostream>
+        #include <string>
+
+        class EntityBase{
+            public:
+                EntityBase(){
+                    std::cout << "EntityBase Constructor" << std::endl;
+                }
+                EntityBase(const std::string& name) : m_name(name) {
+                    std::cout << "EntityBase Constructor with name: " << m_name << std::endl;
+                }
+                ~EntityBase(){
+                    std::cout << "EntityBase Destructor" << std::endl;
+                }
+            private:
+                std::string m_name;
+        };
+
+        class Monster : public EntityBase{
+            public:
+                Monster(){ // 默认先调用EntityBase()
+                    std::cout << "Monster Constructor" << std::endl;
+                }
+                Monster(const std::string& name) { // 默认先调用EntityBase()
+                    std::cout << "Monster Constructor with name: " << name << std::endl;
+                }
+                ~Monster(){
+                    std::cout << "Monster Destructor" << std::endl;
+                }
+        };
+
+        int main(){
+            Monster badMonster("badMonster");
+            return 0;
+        }
+        ```
+
+        输出:
+
+        ```bash
+        EntityBase Constructor
+        Monster Constructor with name: badMonster
+        Monster Destructor
+        EntityBase Destructor
+        ```
+
+        你会发现, 实际上, 会先调用`EntityBase`的默认构造函数. 并且你会发现, 如果`EntityBase()`这个函数没有显式给出, 会报错.
+
+    === "有`EntityBase(name)`"
+
+        ```cpp
+        #include <iostream>
+        #include <string>
+
+        class EntityBase{
+            public:
+                EntityBase(){
+                    std::cout << "EntityBase Constructor" << std::endl;
+                }
+                EntityBase(const std::string& name) : m_name(name) {
+                    std::cout << "EntityBase Constructor with name: " << m_name << std::endl;
+                }
+                ~EntityBase(){
+                    std::cout << "EntityBase Destructor" << std::endl;
+                }
+            private:
+                std::string m_name;
+        };
+
+        class Monster : public EntityBase{
+            public:
+                Monster(){ // 默认先调用EntityBase()
+                    std::cout << "Monster Constructor" << std::endl;
+                }
+                Monster(const std::string& name) : EntityBase(name) {
+                    std::cout << "Monster Constructor with name: " << name << std::endl;
+                }
+                ~Monster(){
+                    std::cout << "Monster Destructor" << std::endl;
+                }
+        };
+
+        int main(){
+            Monster badMonster("badMonster");
+            return 0;
+        }
+        ```
+
+        输出:
+
+        ```bash
+        EntityBase Constructor with name: badMonster
+        Monster Constructor with name: badMonster
+        Monster Destructor
+        EntityBase Destructor
+        ```
+
+        你会发现, 经过显式写明之后, 会先调用`EntityBase`的`EntityBase(const std::string& name) : m_name(name)`函数, 这里还用了一个成员初始化列表. 再来举一个多层继承的例子.
+
+        ```cpp
+        #include <iostream>
+        #include <string>
+
+        class TopLevelClass {
+            public:
+                TopLevelClass() {
+                    std::cout << "TopLevelClass Constructor" << std::endl;
+                }
+                TopLevelClass(std::string arg) {
+                    std::cout << "TopLevelClass Constructor with arg: " << arg << std::endl;
+                }
+        };
+
+        class EntityBase : public TopLevelClass {
+            public:
+                EntityBase(){ // 默认先调用TopLevelClass()
+                    std::cout << "EntityBase Constructor" << std::endl;
+                }
+                EntityBase(const std::string& name) : TopLevelClass(name), m_name(name) {
+                    std::cout << "EntityBase Constructor with name: " << m_name << std::endl;
+                }
+                ~EntityBase(){
+                    std::cout << "EntityBase Destructor" << std::endl;
+                }
+            private:
+                std::string m_name;
+        };
+
+        class Monster : public EntityBase{
+            public:
+                Monster(){ // 默认先调用EntityBase()
+                    std::cout << "Monster Constructor" << std::endl;
+                }
+                Monster(const std::string& name) : EntityBase(name) {
+                    std::cout << "Monster Constructor with name: " << name << std::endl;
+                }
+                ~Monster(){
+                    std::cout << "Monster Destructor" << std::endl;
+                }
+        };
+
+        int main(){
+            Monster badMonster("badMonster");
+            return 0;
+        }
+        ```
+
+        输出:
+
+        ```bash
+        TopLevelClass Constructor with arg: badMonster
+        EntityBase Constructor with name: badMonster
+        Monster Constructor with name: badMonster
+        Monster Destructor
+        EntityBase Destructor
+        ```
+
+        虽然在`main`函数中没有涉及到无参构造函数, 也就是说, 实际上不会调用`EntityBase()`和`TopLevelClass()`, 但是again, `EntityBase()`没有构造函数初始化列表, 所以默认会调用`TopLevelClass()`, 虽然不会执行`TopLevelClass()`, 但是编译器找不到这个显式默认构造函数, 会报错.
