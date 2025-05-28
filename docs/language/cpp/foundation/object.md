@@ -1313,3 +1313,15 @@ woof woof
 * `public`继承: 基类的`public`成员在派生类中仍为`public`, `protected`成员仍为`protected`. 这是最常用的方式.
 * `protected`继承: 基类的`public`和`protected`成员在派生类中都变为`protected`.
 * `private`继承: 基类的`public`和`protected`成员在派生类中都变为`private`.
+
+!!! warning "`protected`和`private`的区别"
+
+    `protected`和`private`的主要区别在于基类成员在派生类的派生类(即孙子类)中的访问权限.
+
+    1.  `protected` 继承:
+        * 基类的 `public` 和 `protected` 成员在派生类中都变成 `protected`.
+        * 这意味着这些成员可以被派生类的派生类 (孙子类) 访问.
+
+    2.  `private` 继承:
+        * 基类的 `public` 和 `protected` 成员在派生类中都变成 `private`.
+        * 这意味着这些成员不可以被派生类的派生类 (孙子类) 访问. 它们只在派生类内部可用.
