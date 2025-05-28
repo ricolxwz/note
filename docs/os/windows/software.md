@@ -42,7 +42,7 @@ comments: true
 * RevoUninstaller: 类似于Geek
 * Officetoolplus: 激活Office
 * FileZilla: FTP工具
-* pdf-xchange: windows上最好的pdf
+* pdf-xchange: windows上最好的pdf, 🌟
 * v2rayN: 科学上网
 * F.Lux: 自动调节色温
 * Directory Opus 13: 替代默认文件管理器, 🌟
@@ -51,3 +51,6 @@ comments: true
 * Simplewall: WFP管理器
 * ShareMouse: 键鼠在不同的电脑之间移动, 🌟, powertoys那个不太好用
 * PixPin: 到底是谁在吹这款软件? 必Snipaste差了不知道多少倍, 最基的功能都做不流畅, 做不精细, 🌟
+* Xshell: SSH工具, 🌟
+* Xftp: SFTP工具, 🌟
+* Filezilla: SFTP工具, S3客户端, 🌟
