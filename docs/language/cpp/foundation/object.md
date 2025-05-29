@@ -1892,8 +1892,44 @@ main.cpp:28:21: error: 'Dog' is an ambiguous base of 'Coltriever'
 * `= delete`:
     * (C++11) 禁用某个成员函数 (通常是特殊成员函数), 防止其被调用.
 
-* 访问修饰符 (`public`, `protected`, `private`):
-    * 这些虽然不是直接修饰函数行为, 但它们控制了成员函数的可访问性.
-        * `public`: 任何地方都可以访问.
-        * `protected`: 类本身及其派生类可以访问.
-        * `private`: 只有类本身可以访问.
+## 组合
+
+继承表示的是"is-a"的关系, 组合表示的是"has-a"的关系. 组合是指一个类包含另一个类的实例作为其成员变量, 这使得组合类可以使用被组合类的功能, 而不需要继承它.
+
+```cpp
+struct Point2D {
+    float x, y;
+}
+
+class Character {
+    public:
+        Character() {};
+        ~Character() {};
+    private:
+        Point2D position; // 组合关系, Character 有一个 Point2D 成员变量
+}
+```
+
+## 聚合
+
+还有一种关系叫做"聚合" (Aggregation), 它和组合类似, 但有一个关键区别: 聚合表示的是一个类包含另一个类的引用或指针, 而不是直接包含其实例. 这意味着被聚合的类可以独立于聚合类存在, 而组合类的生命周期通常与被组合类的生命周期相关联.
+
+```cpp
+struct Point2D {
+    float x, y;
+};
+
+class Character {
+    public:
+        Character(Point2D& position) : position(position) {}; // 聚合关系, 使用了成员初始化列表, 确保在声明的时候初始化
+        ~Character() {};
+    private:
+        Point2D& position;
+};
+
+int main() {
+    Point2D p{1.0f, 2.0f};
+    Character c(p); // 创建一个 Character, 并将 Point2D 的引用传递给它
+    return 0;
+}
+```
