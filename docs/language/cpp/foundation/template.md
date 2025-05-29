@@ -382,3 +382,256 @@ int main() {
 partial template called
 1
 ```
+
+## 可变参数模版
+
+可变参数模板(Variadic Templates)是 C++11 引入的一个强大的特性. 它允许你创建可以接受任意数量参数的函数和类模板, 而不需要在模板定义时指定参数的个数和类型
+
+```cpp
+#include <iostream>
+
+template<typename T>
+T Sum(T arg){ // 基本情况：只有一个参数
+    return arg;
+}
+
+template<typename T, typename... Args>
+T Sum(T start, Args... args){ // 递归情况：至少有两个参数
+    return start + Sum(args...); // 将第一个参数与剩余参数的和相加
+}
+
+int main() {
+    int sum1 = Sum(1);        // 调用 Sum(int)
+    // 1. 匹配到 template<typename T> T Sum(T arg)
+    // 2. T 被推导为 int, arg 的值为 1
+    // 3. 返回 arg, 即返回 1
+
+    double sum2 = Sum(1.1, 2.2, 3, 4.4);
+    // 请见Cpp insights
+
+    std::cout << sum1 << ", " << sum2 << std::endl;  // 输出: 1, 10.3
+    return 0;
+}
+```
+
+上述的代码在编码器眼里是这样的:
+
+```cpp
+#include <iostream>
+
+template<typename T>
+T Sum(T arg)
+{
+  return arg;
+}
+
+/* First instantiated from: insights.cpp:14 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+int Sum<int>(int arg)
+{
+  return arg;
+}
+#endif
+
+
+/* First instantiated from: insights.cpp:10 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+double Sum<double>(double arg)
+{
+  return arg;
+}
+#endif
+
+
+template<typename T, typename ... Args>
+T Sum(T start, Args... args)
+{
+  return start + Sum(args... );
+}
+
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+int Sum<int>(int start);
+#endif
+
+
+/* First instantiated from: insights.cpp:19 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+double Sum<double, double, int, double>(double start, double __args1, int __args2, double __args3)
+{
+  return start + Sum(__args1, __args2, __args3);
+}
+#endif
+
+
+/* First instantiated from: insights.cpp:10 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+double Sum<double, int, double>(double start, int __args1, double __args2)
+{
+  return start + static_cast<double>(Sum(__args1, __args2));
+}
+#endif
+
+
+/* First instantiated from: insights.cpp:10 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+int Sum<int, double>(int start, double __args1)
+{
+  return static_cast<int>(static_cast<double>(start) + Sum(__args1));
+}
+#endif
+
+
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+double Sum<double>(double start);
+#endif
+
+
+int main()
+{
+  int sum1 = Sum(1);
+  double sum2 = Sum(1.1000000000000001, 2.2000000000000002, 3, 4.4000000000000004);
+  std::operator<<(std::cout.operator<<(sum1), ", ").operator<<(sum2).operator<<(std::endl);
+  return 0;
+}
+```
+
+可以看到, 这是一个递归的逻辑, 当然, 如果我这样写:
+
+```cpp linenums="1" hl_lines="19"
+#include <iostream>
+
+template<typename T>
+T Sum(T arg){ // 基本情况：只有一个参数
+    return arg;
+}
+
+template<typename T, typename... Args>
+T Sum(T start, Args... args){ // 递归情况：至少有两个参数
+    return start + Sum(args...); // 将第一个参数与剩余参数的和相加
+}
+
+int main() {
+    int sum1 = Sum(1);        // 调用 Sum(int)
+    // 1. 匹配到 template<typename T> T Sum(T arg)
+    // 2. T 被推导为 int, arg 的值为 1
+    // 3. 返回 arg, 即返回 1
+
+    double sum2 = Sum<double, double, double>(1.1, 2.2, 3, 4.4);
+    // 请见Cpp insights
+
+    std::cout << sum1 << ", " << sum2 << std::endl; // 输出: 1, 10.7
+    return 0;
+}
+```
+
+再看一下C++ insights的代码:
+
+```cpp
+#include <iostream>
+
+template<typename T>
+T Sum(T arg)
+{
+  return arg;
+}
+
+/* First instantiated from: insights.cpp:14 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+int Sum<int>(int arg)
+{
+  return arg;
+}
+#endif
+
+
+/* First instantiated from: insights.cpp:10 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+double Sum<double>(double arg)
+{
+  return arg;
+}
+#endif
+
+
+template<typename T, typename ... Args>
+T Sum(T start, Args... args)
+{
+  return start + Sum(args... );
+}
+
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+int Sum<int>(int start);
+#endif
+
+
+/* First instantiated from: insights.cpp:19 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+double Sum<double, double, double, double>(double start, double __args1, double __args2, double __args3)
+{
+  return start + Sum(__args1, __args2, __args3);
+}
+#endif
+
+
+/* First instantiated from: insights.cpp:10 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+double Sum<double, double, double>(double start, double __args1, double __args2)
+{
+  return start + Sum(__args1, __args2);
+}
+#endif
+
+
+/* First instantiated from: insights.cpp:10 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+double Sum<double, double>(double start, double __args1)
+{
+  return start + Sum(__args1);
+}
+#endif
+
+
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+double Sum<double>(double start);
+#endif
+
+
+int main()
+{
+  int sum1 = Sum(1);
+  double sum2 = Sum<double, double, double>(1.1000000000000001, 2.2000000000000002, 3, 4.4000000000000004);
+  std::operator<<(std::cout.operator<<(sum1), ", ").operator<<(sum2).operator<<(std::endl);
+  return 0;
+}
+```
+
+!!! warning "为啥要写成`<double, double, double>`"
+
+    你会发现生成的代码中原本的`int`变成了`double`. 这其实是正确的做法, 为啥呢? 因为最后一个元素`4.4`是`double`类型的, 如果第三个元素不声明是`double`, 那么这个函数:
+
+    ```cpp
+    /* First instantiated from: insights.cpp:10 */
+    #ifdef INSIGHTS_USE_TEMPLATE
+    template<>
+    int Sum<int, double>(int start, double __args1)
+    {
+    return static_cast<int>(static_cast<double>(start) + Sum(__args1));
+    }
+    #endif
+    ```
+
+    由于上面的函数要求返回一个`int`, 会使用`static_cast<int>`将`static_cast<double>(start) + Sum(__args1)`的结果`7.4`强制转为`7`, 所以有`0.4`消失了, 这就是为什么结果是1.1+2.2+7=10.3. 而如果我们使用`<double, double, double>`, 声明第三个是`double`, 就不会有`static_cast<int>`这样的转换, 就不会损失精度了, 所以输出是正确的10.7.
