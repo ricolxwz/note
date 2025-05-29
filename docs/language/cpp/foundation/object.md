@@ -2253,4 +2253,56 @@ struct GameState {
 
 ## pIMPL
 
-在`cpp`文件中, 我们一般是可以看到类中`private`小节的实现的, 但是有些大公司就不满意了, 我不想让我的客户看见`private`部分的代码, 这就是为什么我们需要pIMPL(pointer to implementation).
+在`hpp`文件中, 我们一般是可以看到类中`private`小节的实现的, 但是有些大公司就不满意了, 我不想让我的客户看见`private`部分的代码, 这就是为什么我们需要pIMPL(pointer to implementation).
+
+```cpp title="person.hpp"
+#ifndef PERSON_HPP
+#define PERSON_HPP
+#include <string>
+#include <memory>
+
+class Person {
+    public:
+        Person(std::string s);
+        ~Person();
+        std::string GetAttributes();
+    private:
+        struct pImplPerson;
+        std::unique_ptr<pImplPerson> m_impl;
+}
+#endif
+```
+
+```cpp title="person.cpp"
+#include "person.cpp"
+
+struct Person::pImplPerson {
+    std::string m_name;
+    std::string m_strength;
+    std::string m_speed;
+};
+
+Person::Person(std::string s) {
+    m_impl = std::make_unique<pImplPerson>();
+    m_impl -> m_name = s; // 由于你在pIMPL中定义了成员, 所以先要访问pIMPL的成员
+    m_impl -> m_strength = "n/a";
+    m_impl -> m_speed = "n/a";
+}
+
+Person::~Person() {
+    // 不需要删除m_impl, 智能指针会帮我们管理
+}
+```
+
+```cpp title="main.cpp"
+#include <iostream>
+#include "Person.hpp"
+
+int main() {
+    Person mike("mike");
+    std::cout << mike.GetAttributes() << std::endl;
+    return 0;
+}
+```
+
+使用pIMPL还有一个好处, 如果我们需要新增私有成员变量, 我们无需修改hpp文件, 只需要修改cpp文件就可以了, 然后重新编译.
