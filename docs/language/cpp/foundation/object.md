@@ -1501,6 +1501,171 @@ woof woof
 
     虽然在`main`函数中没有涉及到无参构造函数, 也就是说, 实际上不会调用`EntityBase()`和`TopLevelClass()`, 但是again, `EntityBase()`没有构造函数初始化列表, 所以默认会调用`TopLevelClass()`, 虽然不会执行`TopLevelClass()`, 但是编译器找不到这个显式默认构造函数, 会报错.
 
+### 多重继承
+
+多重继承就是一个类可以继承多个基类. 这在 C++ 中是允许的, 但需要小心使用, 因为它可能导致一些复杂的问题, 如菱形继承问题 (Diamond Problem). 比如说, 假设有一个基类 `A`, 两个派生类 `B` 和 `C`, 以及一个派生类 `D` 继承自 `B` 和 `C`.
+
+```cpp
+#include <iostream>
+
+struct Dog {
+    virtual void bark() {
+        std::cout << "Woof!" << std::endl;
+    }
+    float x, y; // 假设有一些属性
+};
+
+struct Golden : public Dog {
+    virtual void bark() override {
+        std::cout << "Woof!" << std::endl;
+    }
+};
+
+struct BorderCollie : public Dog {
+    virtual void bark() override {
+        std::cout << "Woof!" << std::endl;
+    }
+};
+
+struct Coltriever : public Golden, BorderCollie {
+    // 不定义bark()函数, 继承的是哪个类的bark()函数呢?
+};
+
+int main() {
+    Dog* dog1 = new Golden;
+    Dog* dog2 = new BorderCollie;
+    Dog* dog3 = new Coltriever; // 这一行就会报错
+    dog1 -> bark();
+    dog2 -> bark();
+    dog3 -> bark();
+    return 0;
+}
+```
+
+输出:
+
+```bash
+main.cpp: In function 'int main()':
+main.cpp:28:21: error: 'Dog' is an ambiguous base of 'Coltriever'
+   28 |     Dog* dog3 = new Coltriever;
+      |                     ^~~~~~~~~~
+```
+
+可以表示为:
+
+``` mermaid
+classDiagram
+    Dog <|-- Golden
+    Dog <|-- BorderCollie
+    Golden <|-- Coltriever
+    BorderCollie <|-- Coltriever
+    class Dog{
+    bark()
+    x, y
+    }
+    class Golden{
+    bark()
+    }
+    class BorderCollie{
+    bark()
+    }
+    class Coltriever{
+        我该继承哪个bark()函数呢?
+    }
+```
+
+#### 虚拟继承
+
+其实上面的菱形继承不是一个真正的菱形, 因为`Dog`类没有被虚拟继承, 所以`Coltriever`类有两个`Dog`类的实例, 这就导致了二义性(见下图). 为了解决这个问题, 可以使用虚拟继承 (Virtual Inheritance). 通过在基类前加上 `virtual` 关键字, 可以确保所有派生类共享同一个基类实例.
+
+=== "想象中的菱形继承"
+
+    ``` mermaid
+    classDiagram
+        Dog <|-- Golden
+        Dog <|-- BorderCollie
+        Golden <|-- Coltriever
+        BorderCollie <|-- Coltriever
+        class Dog{
+        bark()
+        x, y
+        }
+        class Golden{
+        bark()
+        }
+        class BorderCollie{
+        bark()
+        }
+        class Coltriever{
+        }
+    ```
+
+=== "真实的菱形继承"
+
+    ``` mermaid
+    classDiagram
+        Dog1 <|-- Golden
+        Dog2 <|-- BorderCollie
+        Golden <|-- Coltriever
+        BorderCollie <|-- Coltriever
+        class Dog1{
+            x, y
+            bark()
+        }
+        class Golden{
+            bark()
+        }
+        class Dog2{
+            x, y
+            bark()
+        }
+        class BorderCollie{
+            bark()
+        }
+    ```
+
+### 组合
+
+继承表示的是"is-a"的关系, 组合表示的是"has-a"的关系. 组合是指一个类包含另一个类的实例作为其成员变量, 这使得组合类可以使用被组合类的功能, 而不需要继承它.
+
+```cpp
+struct Point2D {
+    float x, y;
+}
+
+class Character {
+    public:
+        Character() {};
+        ~Character() {};
+    private:
+        Point2D position; // 组合关系, Character 有一个 Point2D 成员变量
+}
+```
+
+### 聚合
+
+还有一种关系叫做"聚合" (Aggregation), 它和组合类似, 但有一个关键区别: 聚合表示的是一个类包含另一个类的引用或指针, 而不是直接包含其实例. 这意味着被聚合的类可以独立于聚合类存在, 而组合类的生命周期通常与被组合类的生命周期相关联.
+
+```cpp
+struct Point2D {
+    float x, y;
+};
+
+class Character {
+    public:
+        Character(Point2D& position) : position(position) {}; // 聚合关系, 使用了成员初始化列表, 确保在声明的时候初始化
+        ~Character() {};
+    private:
+        Point2D& position;
+};
+
+int main() {
+    Point2D p{1.0f, 2.0f};
+    Character c(p); // 创建一个 Character, 并将 Point2D 的引用传递给它
+    return 0;
+}
+```
+
 ## 多态
 
 ### 为啥要用
@@ -1793,54 +1958,7 @@ Updating Vulkan state
 
     你会看到, 抽象类的实例`myRenderer2`无法调用`hello`函数, 尽管它是用`new Vulkan`创建的. 但是如果是`Vulkan* vulkanRenderer = new Vulkan;`就可以调用, 这是因为`myRenderer2`是一个抽象类的指针, 它只能调用抽象类中声明的虚函数, 而不能调用派生类中新增的函数.
 
-## 多重继承
 
-多重继承就是一个类可以继承多个基类. 这在 C++ 中是允许的, 但需要小心使用, 因为它可能导致一些复杂的问题, 如菱形继承问题 (Diamond Problem). 比如说, 假设有一个基类 `A`, 两个派生类 `B` 和 `C`, 以及一个派生类 `D` 继承自 `B` 和 `C`.
-
-```cpp
-#include <iostream>
-
-struct Dog {
-    virtual void bark() {
-        std::cout << "Woof!" << std::endl;
-    }
-};
-
-struct Golden : public Dog {
-    virtual void bark() override {
-        std::cout << "Woof!" << std::endl;
-    }
-};
-
-struct BorderCollie : public Dog {
-    virtual void bark() override {
-        std::cout << "Woof!" << std::endl;
-    }
-};
-
-struct Coltriever : public Golden, BorderCollie {
-    // 不定义bark()函数, 继承的是哪个类的bark()函数呢?
-};
-
-int main() {
-    Dog* dog1 = new Golden;
-    Dog* dog2 = new BorderCollie;
-    Dog* dog3 = new Coltriever; // 这一行就会报错
-    dog1 -> bark();
-    dog2 -> bark();
-    dog3 -> bark();
-    return 0;
-}
-```
-
-输出:
-
-```bash
-main.cpp: In function 'int main()':
-main.cpp:28:21: error: 'Dog' is an ambiguous base of 'Coltriever'
-   28 |     Dog* dog3 = new Coltriever;
-      |                     ^~~~~~~~~~
-```
 
 ## 成员函数修饰符
 
@@ -1891,45 +2009,3 @@ main.cpp:28:21: error: 'Dog' is an ambiguous base of 'Coltriever'
 
 * `= delete`:
     * (C++11) 禁用某个成员函数 (通常是特殊成员函数), 防止其被调用.
-
-## 组合
-
-继承表示的是"is-a"的关系, 组合表示的是"has-a"的关系. 组合是指一个类包含另一个类的实例作为其成员变量, 这使得组合类可以使用被组合类的功能, 而不需要继承它.
-
-```cpp
-struct Point2D {
-    float x, y;
-}
-
-class Character {
-    public:
-        Character() {};
-        ~Character() {};
-    private:
-        Point2D position; // 组合关系, Character 有一个 Point2D 成员变量
-}
-```
-
-## 聚合
-
-还有一种关系叫做"聚合" (Aggregation), 它和组合类似, 但有一个关键区别: 聚合表示的是一个类包含另一个类的引用或指针, 而不是直接包含其实例. 这意味着被聚合的类可以独立于聚合类存在, 而组合类的生命周期通常与被组合类的生命周期相关联.
-
-```cpp
-struct Point2D {
-    float x, y;
-};
-
-class Character {
-    public:
-        Character(Point2D& position) : position(position) {}; // 聚合关系, 使用了成员初始化列表, 确保在声明的时候初始化
-        ~Character() {};
-    private:
-        Point2D& position;
-};
-
-int main() {
-    Point2D p{1.0f, 2.0f};
-    Character c(p); // 创建一个 Character, 并将 Point2D 的引用传递给它
-    return 0;
-}
-```
