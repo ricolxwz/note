@@ -2306,3 +2306,27 @@ int main() {
 ```
 
 使用pIMPL还有一个好处, 如果我们需要新增私有成员变量, 我们无需修改hpp文件, 只需要修改cpp文件就可以了, 然后重新编译.
+
+## `this`关键字
+
+`this`是一个指针, 它只能在类的非静态成员函数内部使用, 指向调用该成员函数的那个对象市里, 和JavaScript中的那个`this`比较像. 当你在成员函数中直接访问成员变量, 如`m_var`或者调用其他非静态成员函数的时候, 编译器其实在背后隐式地使用了`this`指针, 如`this -> m_var`. 当成员函数的参数或局部参数和成员变量同名的时候, 必须使用`this ->`来明确指代成员变量. 它可以用于返回调用它的对象(在拷贝赋值操作符中, 我们返回的就是`*this`, 可以用于实现链式赋值).
+
+```cpp
+#inlcude <iostream>
+
+class Person {
+    public:
+        Person(int age) {
+            this.age = age;
+            // age = age; // 不行
+        }
+    private:
+        int age;
+}
+
+int main() {
+    Person mike(500);
+    std::cout << mike.GetAge() << std::endl;
+    return 0;
+}
+```
