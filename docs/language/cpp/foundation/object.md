@@ -2215,6 +2215,10 @@ int main() {
 }
 ```
 
+!!! warning "一个构造函数要么进行委托, 要么进行基类/成员初始化"
+
+    如果一个构造函数在它的初始化列表中调用了同一个类的另一个构造函数 (即使用了委托构造函数), 那么这个初始化列表只能包含这一个委托调用, 不能再包含任何基类或成员变量的初始化.
+
 ## 构造函数初始化列表
 
 总结一下, 一共三种:
@@ -2222,3 +2226,31 @@ int main() {
 * [成员变量初始化列表](#member-variable-initializer)
 * [基类构造函数初始化列表](#base-constructor-initializer)
 * [委托构造函数初始化列表](#delegation-constructor-initializer)
+
+## 类的空间分布
+
+C++中的类中成员变量在内存之间其实可能有padding的. 这会造成空间上的一定浪费. 这是因为内存分配大小是由类中最大的那个类型决定的, 比如说`double`占到了8个字节, 所以像是`bool`类型的就用不到那么大的空间. 比如说下面这个类:
+
+```cpp
+struct GameState {
+    bool checkpoint;
+    float score;
+    short number_of_players;
+}
+```
+
+在内存中的分布是, checkpoint占1个字节, 然后3个字节的padding, 然后4个字节的score, 然后2个字节的number_of_players, 然后两个字节的number_of_players, 总共占到了12个字节. 我们怎么对这个进行优化呢? well, 我们可以把number_of_players放到checkpoint后面的那3个字节的padding的位置:
+
+```cpp
+struct GameState {
+    bool checkpoint;
+    short number_of_players;
+    float score;
+}
+```
+
+现在, 只占到了`8`个字节. 所以最好把小的类型放在前面声明.
+
+## pIMPL
+
+在`cpp`文件中, 我们一般是可以看到类中`private`小节的实现的, 但是有些大公司就不满意了, 我不想让我的客户看见`private`部分的代码, 这就是为什么我们需要pIMPL(pointer to implementation).
