@@ -230,3 +230,4 @@ std::cout << "newValue: " << newValue << std::endl; // "copy construct me"
 1. 创建只读的变量: `const int x = 10;`
 2. 创建只读的函数参数: `void func(const int x);`, 在拷贝构造函数中`UDT(const UDT& rhs)`, 这个`const`使我们不仅能接受左值, 还可以接受右值(见上面的左值右值部分).
 3. 作为一种成员函数修饰符: `void func() const;`, 这意味着这个函数不会修改类的成员变量
+4. `const int *var` 表示指针可变但所指整数不可通过它修改; `int * const var` 表示指针自身不可变但所指整数可通过它修改; 而 `const int * const var` 则表示指针不可变且所指整数也不可通过它修改
