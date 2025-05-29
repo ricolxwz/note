@@ -2157,3 +2157,60 @@ int main() {
 ```
 
 输出是`0 1 7`, 因为类内初始化优先级更高.
+
+## 委托构造函数
+
+到现在为止, 我看到了构造函数后面加`:`的两种用途, 第一种, 初始化成员变量, 第二种, 继承过程中调用基类的构造函数; 那么, 现在, 第三种, 可不可以调用自己的另一个构造函数呢? 这就是委托构造函数的用法. 它能防止写重复的代码, 也就是说如果我可以复用在另一个构造函数中的代码.
+
+```cpp
+#include <iostream>
+
+class Rectangle {
+private:
+    double length;
+    double width;
+
+public:
+    // 目标构造函数 (Target Constructor): 所有的初始化逻辑都在这里.
+    Rectangle(double l, double w) : length(l), width(w) {
+        std::cout << "正在调用目标构造函数 (" << l << ", " << w << ")..." << std::endl;
+        // ... 所有复杂的初始化代码只需要写一次 ...
+    }
+
+    // 委托构造函数 1: 创建正方形.
+    // 它将工作委托给 Rectangle(double, double).
+    Rectangle(double side) : Rectangle(side, side) { // 委托!
+        std::cout << "正在调用委托构造函数 (正方形)..." << std::endl;
+        // 这个函数体会在 Rectangle(side, side) 执行完毕后执行.
+    }
+
+    // 委托构造函数 2: 创建默认矩形.
+    // 它将工作委托给 Rectangle(double). (它又会委托给第一个)
+    Rectangle() : Rectangle(1.0) { // 委托!
+        std::cout << "正在调用默认委托构造函数..." << std::endl;
+    }
+
+    void print() {
+        std::cout << "长: " << length << ", 宽: " << width << std::endl;
+    }
+};
+
+int main() {
+    std::cout << "创建 r1 (5, 3):" << std::endl;
+    Rectangle r1(5.0, 3.0);
+    r1.print();
+    std::cout << std::endl;
+
+    std::cout << "创建 r2 (4):" << std::endl;
+    Rectangle r2(4.0); // 调用 Rectangle(double), 它会委托给 Rectangle(double, double)
+    r2.print();
+    std::cout << std::endl;
+
+    std::cout << "创建 r3 ():" << std::endl;
+    Rectangle r3;      // 调用 Rectangle(), 它会委托给 Rectangle(double)
+    r3.print();
+    std::cout << std::endl;
+
+    return 0;
+}
+```
