@@ -1,5 +1,6 @@
 ---
 title: 对象
+comments: true
 icon: material/code-braces
 ---
 
@@ -2383,9 +2384,28 @@ int main() {
 
 
 1.  静态成员变量 (Static Member Variables):
-    * 它们存储在静态存储区.
+
+    * 它们存储在静态存储区, 它们不存在于对象中, 只是需要一个域限定符`className::`来访问.
     * 就像之前例子里的 `s_variable` 一样, 它们具有静态存储期 (static storage duration). 这意味着它们在程序开始时 (或者首次需要时) 被分配内存, 并且在整个程序运行期间都存在, 直到程序结束才被释放.
-    * 它们不属于任何特定的对象实例, 只有一份拷贝, 供所有对象共享 (或者在没有对象时也能访问).
+    * 它们不属于任何特定的对象实例, 只有一份拷贝, 供所有对象共享 (或者在没有对象时也能访问, 因为它不是存储在对象里面的, 是存储在静态区的).
+
+    ```cpp
+    #include <iostream>
+
+    struct API {
+        API() {};
+        ~API() {};
+        static int MAJOR;
+        static int MINOR;
+    }
+
+    int API::MAJOR = 7;
+
+    int main() {
+        std::cout << "Major:" << API::MAJOR << std::endl;
+        return 0;
+    }
+    ```
 
 2.  静态成员函数 (Static Member Functions):
 
@@ -2395,3 +2415,29 @@ int main() {
         * 它们不与任何特定的对象实例绑定 (它们没有 `this` 指针).
         * 它们可以通过类名直接调用 (`ClassName::static_function()`).
         * 它们只能直接访问静态成员变量 (因为它们没有 `this` 指针来访问非静态成员).
+
+    ```cpp
+    #include <iostream>
+
+    struct API {
+        API() {};
+        ~API() {};
+        int m_local;
+        static int MAJOR;
+        static int MINOR;
+
+        static int GetMajorVersion() {
+            // std::cout << this << std::endl; // 报错
+            // reutrn m_local;  //  报错
+            return MAJOR;
+        }
+    }
+
+    int API::MAJOR = 7;
+
+    int main() {
+        std::cout << "Major:" << API::MAJOR << std::endl;
+        std::cout << "Major:" << API::GetMajorVersion() << std::endl;
+        return 0;
+    }
+    ```

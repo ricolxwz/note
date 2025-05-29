@@ -1,5 +1,6 @@
 ---
 title: 构建
+comments: true
 icon: material/checkbox-multiple-marked-circle
 ---
 

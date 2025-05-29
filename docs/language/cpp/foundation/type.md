@@ -1,5 +1,6 @@
 ---
 title: 类型
+comments: true
 icon: material/format-list-bulleted-type
 ---
 

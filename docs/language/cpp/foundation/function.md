@@ -1,5 +1,6 @@
 ---
 title: 函数
+comments: true
 icon: material/function-variant
 ---
 

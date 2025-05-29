@@ -1,6 +1,6 @@
 ---
 title: GRFSQ
-comments: false
+comments: true
 ---
 
 # GRFSQ (2024)[^1]

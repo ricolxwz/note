@@ -1,6 +1,6 @@
 ---
 title: SimVQ
-comments: false
+comments: true
 ---
 
 # SimVQ[^1]

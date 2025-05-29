@@ -1,6 +1,6 @@
 ---
 title: VQRT
-comments: false
+comments: true
 ---
 
 # VQRT (ICLR 2025 ORAL)[^1]

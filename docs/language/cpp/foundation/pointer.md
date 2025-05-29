@@ -1,5 +1,6 @@
 ---
 title: 指针
+comments: true
 icon: material/laser-pointer
 ---
 
