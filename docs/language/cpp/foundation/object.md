@@ -2330,3 +2330,68 @@ int main() {
     return 0;
 }
 ```
+
+## `static`关键字
+
+static是除了堆和栈之外的另一种存储区域.
+
+```cpp
+#include <iostream>
+int main() {
+    int x = 0;
+    int *p = new int;
+    delete p;
+    return 0;
+}
+```
+
+在这里面, `x`和`p`处于栈中, `p`所指向的对象处于堆中. Ok, 我们来创建一个`static`.
+
+```cpp
+#include <iostream>
+void foo() {
+    static int s_variable = 0;
+    s_variable += 1;
+    std::cout << s_variable << std::endl;
+}
+int main() {
+    for (int i = 0; i < 10; i++) {
+        foo();
+    }
+    return 0;
+}
+```
+
+这个`s_variable`在static区域或者叫做静态区中. 输出为:
+
+```bash
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+```
+
+你会发现, 静态区中的变量从程序开始(或者在函数第一次被调用)的时候就存在, 知道程序结束才被销毁. 而且静态局部变量只会被初始化一次 `static int s_variable=0;`只会在`foo()`第一次被调用的时候执行, 后续的调用会跳过初始化, 直接使用变量的当前值, 这就是为什么输出是`1 2 3...`, 而不是`1 1 1...`.
+
+`static`关键字还在C++中有其他的重要用途, 包括:
+
+
+1.  静态成员变量 (Static Member Variables):
+    * 它们存储在静态存储区.
+    * 就像之前例子里的 `s_variable` 一样, 它们具有静态存储期 (static storage duration). 这意味着它们在程序开始时 (或者首次需要时) 被分配内存, 并且在整个程序运行期间都存在, 直到程序结束才被释放.
+    * 它们不属于任何特定的对象实例, 只有一份拷贝, 供所有对象共享 (或者在没有对象时也能访问).
+
+2.  静态成员函数 (Static Member Functions):
+
+    * 代码通常存储在内存中的一个特殊区域, 称为 代码段 (Code Segment) 或 文本段 (Text Segment). 这个区域通常是只读的.
+    * 函数本身并不 "存储" 在静态区. 它们被称为 "静态" 主要是因为:
+
+        * 它们不与任何特定的对象实例绑定 (它们没有 `this` 指针).
+        * 它们可以通过类名直接调用 (`ClassName::static_function()`).
+        * 它们只能直接访问静态成员变量 (因为它们没有 `this` 指针来访问非静态成员).
