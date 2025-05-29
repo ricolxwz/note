@@ -1516,13 +1516,13 @@ struct Dog {
 };
 
 struct Golden : public Dog {
-    virtual void bark() override {
+    void bark() override {
         std::cout << "Woof!" << std::endl;
     }
 };
 
 struct BorderCollie : public Dog {
-    virtual void bark() override {
+    void bark() override {
         std::cout << "Woof!" << std::endl;
     }
 };
@@ -1578,28 +1578,6 @@ classDiagram
 
 其实上面的菱形继承不是一个真正的菱形, 因为`Dog`类没有被虚拟继承, 所以`Coltriever`类有两个`Dog`类的实例, 这就导致了二义性(见下图). 为了解决这个问题, 可以使用虚拟继承 (Virtual Inheritance). 通过在基类前加上 `virtual` 关键字, 可以确保所有派生类共享同一个基类实例.
 
-=== "想象中的菱形继承"
-
-    ``` mermaid
-    classDiagram
-        Dog <|-- Golden
-        Dog <|-- BorderCollie
-        Golden <|-- Coltriever
-        BorderCollie <|-- Coltriever
-        class Dog{
-        bark()
-        x, y
-        }
-        class Golden{
-        bark()
-        }
-        class BorderCollie{
-        bark()
-        }
-        class Coltriever{
-        }
-    ```
-
 === "真实的菱形继承"
 
     ``` mermaid
@@ -1621,6 +1599,130 @@ classDiagram
         }
         class BorderCollie{
             bark()
+        }
+    ```
+
+    所以这样就会产生一个问题, `Coltriever`类有两个`Dog`类的实例, 所以他们的`x, y`其实是不一样的, 这就导致了二义性(见上图和下面的例子).
+
+    ```cpp
+    #include <iostream>
+
+    struct Dog {
+        virtual void bark() {
+            std::cout << "Woof!" << std::endl;
+        }
+        float x, y; // 假设有一些属性
+    };
+
+    struct Golden : public Dog {
+        void bark() override {
+            std::cout << "Woof!" << std::endl;
+        }
+    };
+
+    struct BorderCollie : public Dog {
+        void bark() override {
+            std::cout << "Woof!" << std::endl;
+        }
+    };
+
+    struct Coltriever : public Golden, BorderCollie {
+        void bark() override {
+            std::cout << "Woof!" << std::endl;
+        }
+    };
+
+    int main() {
+        Dog* dog1 = new Golden;
+        Dog* dog2 = new BorderCollie;
+        Dog* dog3 = new Coltriever;
+        dog1 -> bark();
+        dog2 -> bark();
+        dog3 -> bark();
+        std::cout << dog3 -> x << std::endl;
+        return 0;
+    }
+    ```
+
+    输出:
+
+    ```bash
+    main.cpp: In function ‘int main()’:
+    main.cpp:31:25: error: ‘Dog’ is an ambiguous base of ‘Coltriever’
+    31 |         Dog* dog3 = new Coltriever;
+        |                         ^~~~~~~~~~
+    ```
+
+    为了解决这个问题, 可以使用虚拟继承 (Virtual Inheritance). 通过在基类前加上 `virtual` 关键字, 可以确保所有派生类共享同一个基类实例.
+
+    ```cpp linenums="1" hl_lines="10 16"
+    #include <iostream>
+
+    struct Dog {
+        virtual void bark() {
+            std::cout << "Woof!" << std::endl;
+        }
+        float x, y; // 假设有一些属性
+    };
+
+    struct Golden : virtual public Dog {
+        void bark() override {
+            std::cout << "Woof!" << std::endl;
+        }
+    };
+
+    struct BorderCollie : virtual public Dog {
+        void bark() override {
+            std::cout << "Woof!" << std::endl;
+        }
+    };
+
+    struct Coltriever : public Golden, BorderCollie {
+        void bark() override {
+            std::cout << "Woof!" << std::endl;
+        }
+    };
+
+    int main() {
+        Dog* dog1 = new Golden;
+        Dog* dog2 = new BorderCollie;
+        Dog* dog3 = new Coltriever;
+        dog1 -> bark();
+        dog2 -> bark();
+        dog3 -> bark();
+        std::cout << dog3 -> x << std::endl;
+        return 0;
+    }
+    ```
+
+    输出:
+
+    ```bash
+    Woof!
+    Woof!
+    Woof!
+    0
+    ```
+
+=== "想象中的菱形继承"
+
+    ``` mermaid
+    classDiagram
+        Dog <|-- Golden
+        Dog <|-- BorderCollie
+        Golden <|-- Coltriever
+        BorderCollie <|-- Coltriever
+        class Dog{
+        bark()
+        x, y
+        }
+        class Golden{
+        bark()
+        }
+        class BorderCollie{
+        bark()
+        }
+        class Coltriever{
         }
     ```
 
