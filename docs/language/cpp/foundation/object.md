@@ -2111,3 +2111,49 @@ Updating Vulkan state
 
 * `= delete`:
     * (C++11) 禁用某个成员函数 (通常是特殊成员函数), 防止其被调用.
+
+## 零初始化
+
+当你在创建一个对象的时候, 如果这个类没有任何显式构造函数, 那么, 你尝试访问成员变量的时候, 发现输出的都是一些junk. 这是因为C++不会帮你把成员变量自动初始化为默认值. 但是, 如果某个成员变量是一个类类型, 并且这个类有默认的构造函数, 那么这个默认构造函数会被调用来初始化该成员变量, 如果没有默认构造函数, 那么它也可能处于未初始化状态. 可以使用零初始化来解决上述问题, 在创建对象的时候使用`{}`.
+
+```cpp
+struct Entity {
+    std::string name;
+    int* collection;
+    int x;
+    int y;
+};
+
+int main() {
+    Entit e{}; // 零初始化
+    std::cout << e.name << std::endl;
+    std::cout << e.collection std::endl;
+    std::cout << e.x << std::endl;
+    std::cout << e.y << std::endl;
+    return 0;
+}
+```
+
+## 类内初始化
+
+除了上述零初始化外, 在没有任何显式构造函数的情况下, 还可以在类的里面使用`{}`定义初始值, 并且, 相较于零初始化有更高的优先级.
+
+```cpp
+struct Entity {
+    std::string name;
+    int* collection{nullptr}; // 类内初始化
+    int x{1}; // 类内初始化
+    int y{7}; // 类内初始化
+};
+
+int main() {
+    Entit e{}; // 零初始化
+    std::cout << e.name << std::endl;
+    std::cout << e.collection std::endl;
+    std::cout << e.x << std::endl;
+    std::cout << e.y << std::endl;
+    return 0;
+}
+```
+
+输出是`0 1 7`, 因为类内初始化优先级更高.
