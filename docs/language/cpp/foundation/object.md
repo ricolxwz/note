@@ -1648,8 +1648,8 @@ classDiagram
     输出:
 
     ```bash
-    main.cpp: In function ‘int main()’:
-    main.cpp:31:25: error: ‘Dog’ is an ambiguous base of ‘Coltriever’
+    main.cpp: In function 'int main()':
+    main.cpp:31:25: error: 'Dog' is an ambiguous base of 'Coltriever'
     31 |         Dog* dog3 = new Coltriever;
         |                         ^~~~~~~~~~
     ```
@@ -2406,6 +2406,66 @@ int main() {
         return 0;
     }
     ```
+
+    !!! warning "静态成员变量必须在类外部声明"
+
+        静态成员变量必须在类的外部声明, 并且不能在任何函数内部声明, 说白了就是在全局作用域中声明, 一方面是因为C++ 语法规定静态数据成员的定义必须在类定义之外的命名空间作用域进行, 将其放入函数内部不符合该语法. 另一方面是因为在函数内部定义变量(如 main 中)会使该变量成为局部变量, 其作用域和生命周期仅限于该函数. 这与静态成员变量的特性相冲突.
+
+        下面的这种就是错误的做法:
+
+        ```cpp
+        #include <iostream>
+
+        struct API {
+            API() {};
+            ~API() {};
+            int m_local;
+            static int MAJOR;
+            static int MINOR;
+
+            static int GetMajorVersion() {
+                // std::cout << this << std::endl; // 报错
+                // reutrn m_local;  //  报错
+                return MAJOR;
+            }
+        };
+
+        int main() {
+            int API::MAJOR = 7;
+            std::cout << "Major:" << API::MAJOR << std::endl;
+            std::cout << "Major:" << API::GetMajorVersion() << std::endl;
+            return 0;
+        }
+        ```
+
+        下是正确的做法:
+
+        ```cpp
+        #include <iostream>
+
+        struct API {
+            API() {};
+            ~API() {};
+            int m_local;
+            static int MAJOR;
+            static int MINOR;
+
+            static int GetMajorVersion() {
+                // std::cout << this << std::endl; // 报错
+                // reutrn m_local;  //  报错
+                return MAJOR;
+            }
+        };
+
+        int API::MAJOR;
+
+        int main() {
+            API::MAJOR = 7;
+            std::cout << "Major:" << API::MAJOR << std::endl;
+            std::cout << "Major:" << API::GetMajorVersion() << std::endl;
+            return 0;
+        }
+        ```
 
 2.  静态成员函数 (Static Member Functions):
 

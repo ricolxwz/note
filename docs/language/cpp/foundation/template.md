@@ -781,3 +781,192 @@ int main()
   return 0;
 }
 ```
+
+### 带有静态成员变量
+
+有时候, 可能在模板类中需要包含一个静态的成员变量, 比如:
+
+```cpp
+#include <iostream>
+
+template <typename T>
+class Container {
+    public:
+        Container(int N) {
+            m_data = new T[N];
+        }
+        ~Container() {
+            delete[] m_data;
+        }
+
+        static T m_variable;
+    private:
+        T* m_data;
+};
+
+int main() {
+    Container<int> c{10};
+    Container<double> c2{10};
+    Container<float> c3{10};
+    return 0;
+}
+```
+
+上述的代码在编译器眼里是这样的:
+
+```cpp
+#include <iostream>
+
+template<typename T>
+class Container
+{
+
+  public:
+  inline Container(int N)
+  {
+    this->m_data = new T[static_cast<unsigned long>(N)];
+  }
+
+  inline ~Container()
+  {
+    delete[] this->m_data;
+  }
+
+  static T m_variable;
+
+  private:
+  T * m_data;
+};
+
+/* First instantiated from: insights.cpp:19 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+class Container<int>
+{
+
+  public:
+  inline Container(int N)
+  {
+    this->m_data = new int[static_cast<unsigned long>(N)];
+  }
+
+  inline ~Container() noexcept
+  {
+    delete[] this->m_data;
+  }
+
+  static int m_variable;
+
+  private:
+  int * m_data;
+  public:
+};
+
+#endif
+/* First instantiated from: insights.cpp:20 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+class Container<double>
+{
+
+  public:
+  inline Container(int N)
+  {
+    this->m_data = new double[static_cast<unsigned long>(N)];
+  }
+
+  inline ~Container() noexcept
+  {
+    delete[] this->m_data;
+  }
+
+  static double m_variable;
+
+  private:
+  double * m_data;
+  public:
+};
+
+#endif
+/* First instantiated from: insights.cpp:21 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+class Container<float>
+{
+
+  public:
+  inline Container(int N)
+  {
+    this->m_data = new float[static_cast<unsigned long>(N)];
+  }
+
+  inline ~Container() noexcept
+  {
+    delete[] this->m_data;
+  }
+
+  static float m_variable;
+
+  private:
+  float * m_data;
+  public:
+};
+
+#endif
+
+int main()
+{
+  Container<int> c = Container<int>{10};
+  Container<double> c2 = Container<double>{10};
+  Container<float> c3 = Container<float>{10};
+  return 0;
+}
+```
+
+你会发现, 在每个生成的模板类的示例中, 都会有一个不的静态`m_variable`. 第一个`m_variable`的所属类是`Container<int>`, 第二个`m_variable`的所属类是`Container<double>`, 第三个`m_variable`的所属类是`Container<float>`, 所以这三个`m_variable`实际上在静态区上的位置是不同的, 需要通过`Container<int>::m_variable`来访问第一个静态变量, 以此类推. 当然, 必须在全局作用域进行一个声明: `template <typename T> T Container<T>::m_variable;`.  所以正确的代码应该写为:
+
+```cpp linenums="1" hl_lines="18-19 25-27"
+#include <iostream>
+
+template <typename T>
+class Container {
+    public:
+        Container(int N) {
+            m_data = new T[N];
+        }
+        ~Container() {
+            delete[] m_data;
+        }
+
+        static T m_variable;
+    private:
+        T* m_data;
+};
+
+template <typename T>
+T Container<T>::m_variable;
+
+int main() {
+    Container<int> c{10};
+    Container<double> c2{10};
+    Container<float> c3{10};
+    Container<int>::m_variable = 10;
+    Container<double>::m_variable = 10.5;
+    Container<float>::m_variable = 10.4f;
+    return 0;
+}
+```
+
+你会发现编译器帮我们生成了这些声明:
+
+```cpp
+#ifdef INSIGHTS_USE_TEMPLATE
+int Container<int>::m_variable;
+#endif
+#ifdef INSIGHTS_USE_TEMPLATE
+double Container<double>::m_variable;
+#endif
+#ifdef INSIGHTS_USE_TEMPLATE
+float Container<float>::m_variable;
+#endif
+```
