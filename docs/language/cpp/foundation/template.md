@@ -1012,7 +1012,7 @@ int main() {
 template <typename T, int size=10>
 class Container {
     public:
-        Container(int size) {
+        Container() {
             m_data = new T[size];
         }
         ~Container() {
@@ -1039,7 +1039,7 @@ int main() {
 template <typename T=int, int size=10>
 class Container {
     public:
-        Container(int size) {
+        Container() {
             m_data = new T[size];
         }
         ~Container() {
