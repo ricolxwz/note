@@ -96,7 +96,7 @@ comments: true
 "scm.inputFontFamily": "Maple Mono Normal NL NF CN",
 "scm.diffDecorations": "gutter",
 
-"extensions.ignoreRecommendations": true,
+"extensions.ignoreRecommendations": false,
 
 "inlineChat.lineNaturalLanguageHint": false,
 
@@ -457,7 +457,7 @@ comments: true
         // 远程开发
         "ms-vscode-remote.remote-ssh",
         "ms-vscode-remote.remote-ssh-edit",
-        "ms-vscode.remote-explorer",
+        "ms-vscode.remote-explprint()orer",
 
         // 编辑
         "vscodevim.vim",
@@ -474,7 +474,7 @@ comments: true
         // 版本管理
         "MichaelCurrin.auto-commit-msg",
         "mhutchie.git-graph",
-        "codezombiech.gitignore"
+        "codezombiech.gitignore",
 
         // 服务器
         "ritwickdey.LiveServer",
