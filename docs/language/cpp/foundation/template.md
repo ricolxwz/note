@@ -1003,3 +1003,58 @@ int main() {
 最好不要使用CTAD.
 
 ### 默认参数
+
+模板类的默认模板参数 (default template arguments) 允许你在定义类模板时, 为它的一个或多个模板参数指定一个默认值.
+
+```cpp
+#include <iostream>
+
+template <typename T, int size=10>
+class Container {
+    public:
+        Container(int N) {
+            m_data = new T[size];
+        }
+        ~Container() {
+            delete[] m_data;
+        }
+
+        static T m_variable;
+    private:
+        T* m_data;
+};
+
+int main() {
+    Container<int, 15> c;
+    Container<int> c2; // size是10
+    return 0;
+}
+```
+
+或者:
+
+```cpp
+#include <iostream>
+
+template <typename T=int, int size=10>
+class Container {
+    public:
+        Container(int N) {
+            m_data = new T[size];
+        }
+        ~Container() {
+            delete[] m_data;
+        }
+
+        static T m_variable;
+    private:
+        T* m_data;
+};
+
+int main() {
+    Container<int, 15> c;
+    Container<int> c2; // size是10
+    Container c2; // T是int, size是10
+    return 0;
+}
+```
