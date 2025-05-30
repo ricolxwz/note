@@ -154,6 +154,17 @@ int main()
 }
 ```
 
+!!! tip "使用`auto`自动推断返回值类型"
+
+    可以使用`auto`自动推断返回值的类型, 例如:
+
+    ```cpp
+    template <typename T1, typename T2>
+    auto Multiply(const T1& a, const T2& b) {
+        return a * b;
+    }
+    ```
+
 ### 使用`auto`
 
 另外一种实现模版的方法是使用`auto`, 它会帮我们自动推断类型.
@@ -635,3 +646,138 @@ int main()
     ```
 
     由于上面的函数要求返回一个`int`, 会使用`static_cast<int>`将`static_cast<double>(start) + Sum(__args1)`的结果`7.4`强制转为`7`, 所以有`0.4`消失了, 这就是为什么结果是1.1+2.2+7=10.3. 而如果我们使用`<double, double, double>`, 声明第三个是`double`, 就不会有`static_cast<int>`这样的转换, 就不会损失精度了, 所以输出是正确的10.7.
+
+## 模板类
+
+模板类的思想是和函数模版是差不多的.
+
+```cpp
+#include <iostream>
+
+template <typename T>
+class Container {
+    public:
+        Container(int N) {
+            m_data = new T[N];
+        }
+        ~Container() {
+            delete[] m_data;
+        }
+    private:
+        T* m_data;
+};
+
+int main() {
+    Container<int> c{10};
+    Container<double> c2{10};
+    Container<float> c3{10};
+    return 0;
+}
+```
+
+在编译器眼里是这样的:
+
+```cpp
+#include <iostream>
+
+template<typename T>
+class Container
+{
+
+  public:
+  inline Container(int N)
+  {
+    this->m_data = new T[static_cast<unsigned long>(N)];
+  }
+
+  inline ~Container()
+  {
+    delete[] this->m_data;
+  }
+
+
+  private:
+  T * m_data;
+};
+
+/* First instantiated from: insights.cpp:17 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+class Container<int>
+{
+
+  public:
+  inline Container(int N)
+  {
+    this->m_data = new int[static_cast<unsigned long>(N)];
+  }
+
+  inline ~Container() noexcept
+  {
+    delete[] this->m_data;
+  }
+
+
+  private:
+  int * m_data;
+  public:
+};
+
+#endif
+/* First instantiated from: insights.cpp:18 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+class Container<double>
+{
+
+  public:
+  inline Container(int N)
+  {
+    this->m_data = new double[static_cast<unsigned long>(N)];
+  }
+
+  inline ~Container() noexcept
+  {
+    delete[] this->m_data;
+  }
+
+
+  private:
+  double * m_data;
+  public:
+};
+
+#endif
+/* First instantiated from: insights.cpp:19 */
+#ifdef INSIGHTS_USE_TEMPLATE
+template<>
+class Container<float>
+{
+
+  public:
+  inline Container(int N)
+  {
+    this->m_data = new float[static_cast<unsigned long>(N)];
+  }
+
+  inline ~Container() noexcept
+  {
+    delete[] this->m_data;
+  }
+
+
+  private:
+  float * m_data;
+  public:
+};
+
+#endif
+
+int main()
+{
+  Container<int> c = Container<int>{10};
+  Container<double> c2 = Container<double>{10};
+  Container<float> c3 = Container<float>{10};
+  return 0;
+}
+```

@@ -231,3 +231,47 @@ std::cout << "newValue: " << newValue << std::endl; // "copy construct me"
 2. 创建只读的函数参数: `void func(const int x);`, 在拷贝构造函数中`UDT(const UDT& rhs)`, 这个`const`使我们不仅能接受左值, 还可以接受右值(见上面的左值右值部分).
 3. 作为一种成员函数修饰符: `void func() const;`, 这意味着这个函数不会修改类的成员变量
 4. `const int *var` 表示指针可变但所指整数不可通过它修改; `int * const var` 表示指针自身不可变但所指整数可通过它修改; 而 `const int * const var` 则表示指针不可变且所指整数也不可通过它修改
+
+## `decltype`的用法
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+
+int main() {
+    int i = 10;
+    decltype(i) j = 20; // j 的类型是 int
+
+    double x = 3.14;
+    decltype(x) y = 2.71; // y 的类型是 double
+
+    std::string s = "hello";
+    decltype(s) t = "world"; // t 的类型是 std::string
+
+    decltype(i + x) k; // k 的类型是 double, 因为 i (int) + x (double) 的结果是 double
+
+    std::cout << "j: " << j << std::endl;
+    std::cout << "y: " << y << std::endl;
+    std::cout << "t: " << t << std::endl;
+    // std::cout << "k: " << k << std::endl; // k 未初始化, 输出其值是未定义行为
+
+    std::vector<int> vec = {1, 2, 3};
+    decltype(vec[0]) first_element_ref = vec[0]; // first_element_ref 的类型是 int& (引用)
+    first_element_ref = 100; // 修改 vec[0] 的值
+
+    std::cout << "vec[0]: " << vec[0] << std::endl; // 输出 100
+
+    const int ci = 5;
+    decltype(ci) cj = 15; // cj 的类型是 const int
+
+    return 0;
+}
+```
+
+在这个例子里:
+
+1.  `decltype(i)` 推断出 `i` 的类型是 `int`, 所以 `j` 也是 `int`.
+2.  `decltype(i + x)` 推断出表达式 `i + x` 的结果类型是 `double`, 所以 `k` 是 `double`.
+3.  `decltype(vec[0])` 推断出 `vec[0]` (访问 `std::vector` 元素) 的类型是 `int&` (对 `int` 的引用).
+4.  `decltype(ci)` 推断出 `ci` 的类型是 `const int`, 所以 `cj` 也是 `const int`.
