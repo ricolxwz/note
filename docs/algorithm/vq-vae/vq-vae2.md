@@ -15,8 +15,8 @@ addi: https://arxiv.org/pdf/1906.00446
 近年来, 深度生成模型取得了显著进展. 这部分得益于架构创新以及计算能力的提升, 使得在更大规模的数据量和模型规模上进行训练成为可能. 这些模型生成的样本若不仔细辨别, 很难与真实数据区分开来, 它们的应用涵盖超分辨率, 领域编辑, 艺术化操作, 以及文本到语音和音乐生成等场景.
 
 <figure markdown='1' id='fig1'>
-![](https://img.ricolxwz.io/0e24e058738aa0c57c799f81e0303bf3.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.io/0e24e058738aa0c57c799f81e0303bf3_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.download/0e24e058738aa0c57c799f81e0303bf3.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.download/0e24e058738aa0c57c799f81e0303bf3_inverted.webp#only-dark){ loading=lazy width='800' }
 </figure>
 
 本文将生成模型区分为两大类: 基于似然的模型(包括VAE, 流模型和自动回归模型); 以及隐式生成模型, 如GAN. 不同模型在样本质量, 多样性, 生成速度等方面各有取舍.
@@ -64,8 +64,8 @@ GANs通过极小极大目标函数进行优化, 其中生成器神经网络将�
 该方法采取两阶段策略: 首先训练一个分层VQ-VAE([图2](#fig2)a)将图像编码到离散潜在空间; 然后在由全部数据诱导的离散潜在空间上拟合强大的PixelCNN先验模型.
 
 <figure markdown='1' id='fig2'>
-![](https://img.ricolxwz.io/d95ae047637ae0ab74474af7f0246774.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.io/d95ae047637ae0ab74474af7f0246774_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.download/d95ae047637ae0ab74474af7f0246774.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.download/d95ae047637ae0ab74474af7f0246774_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图2: (a) 本文提出的分层VQ-VAE架构概览如下. 编码器与解码器均由深度神经网络构成. 模型输入为一张256 × 256图像, 经压缩后分别在底层和顶层得到尺寸为64 × 64与32 × 32的离散量化潜在映射(quantized latent map). 解码器随后利用这两张潜在映射重建原始图像. (b) 多阶段图像生成. 顶层PixelCNN先验以类别标签作为条件, 底层PixelCNN则同时以类别标签和第一层码作为条件. 由于采用前馈解码器, 潜变量到像素的映射速度很快. (示例中的鹦鹉图像即由该模型生成).
 </figcaption>
 </figure>
@@ -92,8 +92,8 @@ Require: Functions E_top, E_bottom, D, x  (batch of training images)
 
 
 <figure markdown='1' id='fig3'>
-![](https://img.ricolxwz.io/80cda014b7813c83e35f8a4fb805d924_inverted.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.io/80cda014b7813c83e35f8a4fb805d924.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.download/80cda014b7813c83e35f8a4fb805d924_inverted.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.download/80cda014b7813c83e35f8a4fb805d924.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图3: 三个潜在映射(top, middle, bottom)分层VQ-VAE的重构结果如图所示, 最右侧为原始图像. 每加入一层潜在映射, 重构图像便获得更多细节. 这三个潜在映射的分辨率分别约为原图的1/3072, 1/768, 1/192.
 </figcaption>
 </figure>

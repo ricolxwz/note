@@ -10,13 +10,13 @@ comments: true
 就拿心跳消息来说吧. 
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/a7f34828dfed10ebf293bb2b0cf2b104.png){ loading=lazy width='200' }
+![](https://img.ricolxwz.download/a7f34828dfed10ebf293bb2b0cf2b104.png){ loading=lazy width='200' }
 </figure>
 
 左侧是源变量, 右侧是目标变量. 在这种情况下, 目标变量只是简单地复制源变量的消息. 源变量的消息状态的转变符合泊松分布. 将源变量记为$s$, 目标变量记为$t$, 有$t_{n+1}=s_n$.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/dab1a772c5a6d3dc55345d9dfb1465ea.png){ loading=lazy width='250' }
+![](https://img.ricolxwz.download/dab1a772c5a6d3dc55345d9dfb1465ea.png){ loading=lazy width='250' }
 </figure>
 
 由于$\lambda_1, \lambda_2 << 0.5$, 且$\lambda_1 < \lambda_0$, 所以原变量的状态基本上是$0$.
@@ -47,7 +47,7 @@ comments: true
 TE和存储信息的关系可以用下图来表示:
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/95f22e475af285b2d1cf69de0cec0c87.png){ loading=lazy width='250' }
+![](https://img.ricolxwz.download/95f22e475af285b2d1cf69de0cec0c87.png){ loading=lazy width='250' }
 </figure>
 
 图中, 整个椭圆表示的是总体的互信息量, 表示源变量$Y$和目标变量的过去状态$M$共同对目标未来状态提供的信息. AIS对应的是白色部分, $\{M\}$表示的是目标变量过去的信息, 就是存储信息. 可以看到, 存储信息$\{M\}$是和源变量对于目标变量的贡献$\{Y\}$是有重叠部分的, 即$\{M\}\{Y\}$, 这个重叠部分就是被条件互信息中的条件给消除掉了, 是冗余信息. 
@@ -61,7 +61,7 @@ TE和存储信息的关系可以用下图来表示:
 如下面的这个例子:
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/33fbfbc509e98244e8dd31f7e903cc30.png){ loading=lazy width='280' }
+![](https://img.ricolxwz.download/33fbfbc509e98244e8dd31f7e903cc30.png){ loading=lazy width='280' }
 </figure>
 
 过程1中$Y$和$X$的值交替变化, 过程2中$Y$和$X$的值各自独立变化. 因果效应分析会认为过程1中$Y$有可能影响X, 过程2可能没有影响. 但是信息传递模型可能认为这两个过程都没有真正的信息传递, 更多的是参考自己的历史信息, 即存储信息.
@@ -88,11 +88,11 @@ TE和存储信息的关系可以用下图来表示:
 
 - 冗余去除: 如果源变量$Y$和条件变量$Z$之间共享某些信息, 这种冗余信息会被条件化消除
     <figure markdown='1'>
-    ![](https://img.ricolxwz.io/ea71b0c1bb9bd1601d1d87a06bf026eb.png){ loading=lazy width='280' }
+    ![](https://img.ricolxwz.download/ea71b0c1bb9bd1601d1d87a06bf026eb.png){ loading=lazy width='280' }
     </figure>
 - 协同效应: 当$Y$和$Z$共同作用影响$X$的时候, 能够捕捉到这种协同信息
     <figure markdown='1'>
-    ![](https://img.ricolxwz.io/b0dcb14f8456a3a5d15f59f0198158a0.png){ loading=lazy width='180' }
+    ![](https://img.ricolxwz.download/b0dcb14f8456a3a5d15f59f0198158a0.png){ loading=lazy width='180' }
     </figure>
 
 ## 信息回归
@@ -100,7 +100,7 @@ TE和存储信息的关系可以用下图来表示:
 当我们考虑目标变量的未来状态$X_{n+1}$的时候, 有两个信源$Y_n$和$Z_n$(后者是选择性的, 可有可无), 再加上历史信息$\bm{X}_n^{(k)}$, 我们能够分解$X_{n+1}$的信息来源. 
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/55d4376cb94e5e341d9ed3382f3b3329.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.download/55d4376cb94e5e341d9ed3382f3b3329.png){ loading=lazy width='500' }
 </figure>
 
 其中, 主要的概念有:

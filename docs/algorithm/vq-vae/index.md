@@ -10,8 +10,8 @@ comments: true
 VAE和VQ-VAE的根本区别在于VAE学习连续的潜在表示, 而VQ-VAE学习离散的潜在表示. 一般来说, 我们在现实世界中遇到的许多数据都倾向于离散表示. 例如, 人类语音可以由离散的因素和语言很好地表示. 此外, 图像还包含具有一些离散限定字符集的离散对象. 可以想象用一个离散变量表示对象类型, 一个用于表示其颜色, 一个用于表示其大小, 一个用于表示其方向, 一个用于表示其形状, 一个用于表示其纹理, 一个用于表示背景颜色, 一个用于表示背景纹理, 等等.. 除了表示之外, 还有许多算法, 例如transformer旨在处理离散数据, 因此我们希望有一个离散的数据表示提供这些算法使用.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.io/41b4006f1329fb9ce771f65f5e3887fe.webp#only-light){ loading=lazy width='600' }
-![](https://img.ricolxwz.io/41b4006f1329fb9ce771f65f5e3887fe_inverted.webp#only-dark){ loading=lazy width='600' }
+![](https://img.ricolxwz.download/41b4006f1329fb9ce771f65f5e3887fe.webp#only-light){ loading=lazy width='600' }
+![](https://img.ricolxwz.download/41b4006f1329fb9ce771f65f5e3887fe_inverted.webp#only-dark){ loading=lazy width='600' }
 <figcaption>隐空间离散表示</figcaption>
 </figure>
 
@@ -22,8 +22,8 @@ VAE和VQ-VAE的根本区别在于VAE学习连续的潜在表示, 而VQ-VAE学习
 VQ-VAE通过向网络添加离散的codebook组件来扩展标准自编码器. codebook是与之相应索引关联的向量列表. 将编码器网络的输出和codebook的所有向量进行比较, 并将欧氏距离最近的codebook向量喂给解码器. 数学上可以写成$z_q(x)=\argmin _i||z_e(x)-e_i||_2$, 其中, $z_e(x)$是原始输入的encoder向量, 比如$i$表示第$i$个codebook向量, $z_q(x)$表示生成的量化矢量, 作为输入传递给解码器. 这个$\argmin$的操作有点让人担忧, 因为它无法传递梯度. 为了解决这个问题, 在反向传播的时候, 会对那个被选中的codebook向量直接设定为$1$, 即$\frac{\partial z_q(x)}{z_e(x)}\simeq 1$, 而其他的codebook中的向量其梯度为$0$, 即$\frac{\partial z_q(x)}{z_{\neq e(x)}}=0$. 然后, 解码器的任务就是重构来自量化矢量的输入, 就像在标准的VAE公式中的那样.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.io/07aedd2214af362a23006f2a4bed48e3.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.io/07aedd2214af362a23006f2a4bed48e3_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.download/07aedd2214af362a23006f2a4bed48e3.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.download/07aedd2214af362a23006f2a4bed48e3_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>量化自编码器</figcaption>
 </figure>
 

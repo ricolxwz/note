@@ -26,14 +26,14 @@ NLP邻域最重要的一个范式是先使用通用领域的大规模数据进�
 **Adapter层会导致推理延迟**. Adapters有很多变种, 作者关注的是由Houlsby等人[^2]提供的原始设计, 这个设计在每个Transformer的block中都有两个adapter模块. Lin等人[^8]提出了一种更为简化的设计, 每个块中只有一个适配器层, 但是有一个额外的LN层. 虽然可以通过剪枝或者利用多任务来降低延迟, 但是由adapter这一层带来的额外计算量是无法绕过的. 这看起来不成问题, 因为adapter被设计成一种"瓶颈结构", 所增加的参数量非常少(有时甚至是原预训练模型的$1\%$之内), 但是, ^^大型神经网络依赖于硬件上的并行性使得延迟降低, 而adapter层是串行处理的, 特别是在线推理的场景下, batch_size通常为1, adapter层推理时间的占比会显著增加.^^ 实验显示, 在没有模型并行的情况下, 在单块GPU上运行GPT-2, 即使adapter的瓶颈维度非常小, 也会显著增加延迟(见下表). 
 
 <figure markdown='1'>
-  ![](https://img.ricolxwz.io/b4cce089d30456a9b8007148c07c08ba.webp#only-light){ loading=lazy width='600' }
-  ![](https://img.ricolxwz.io/b4cce089d30456a9b8007148c07c08ba_inverted.webp#only-dark){ loading=lazy width='600' }
+  ![](https://img.ricolxwz.download/b4cce089d30456a9b8007148c07c08ba.webp#only-light){ loading=lazy width='600' }
+  ![](https://img.ricolxwz.download/b4cce089d30456a9b8007148c07c08ba_inverted.webp#only-dark){ loading=lazy width='600' }
   <figcaption>GPT-2中型模型单次前向传播的100次实验平均值, 单位毫秒. 使用的是NVIDIA Quadro RTX8000. $|\Theta|$表示的是adapter层的可训练参数数量. AdapterL和AdapterH是两种adapter调优的方法</figcaption>
 </figure>
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/51b932b2b2603d0713554d1306e6dd04.webp#only-light){ loading=lazy width='600' }
-![](https://img.ricolxwz.io/51b932b2b2603d0713554d1306e6dd04_inverted.webp#only-dark){ loading=lazy width='600' }
+![](https://img.ricolxwz.download/51b932b2b2603d0713554d1306e6dd04.webp#only-light){ loading=lazy width='600' }
+![](https://img.ricolxwz.download/51b932b2b2603d0713554d1306e6dd04_inverted.webp#only-dark){ loading=lazy width='600' }
 <figcaption>以没有adapter(r=0)作为基线, 比较不同seq_len, batch_size, r下adapter延迟增加的百分比. 上面的一条是AdapterH, 下面的一条是AdapterL. 大batch_size和seq_len能够缓解延迟. 在线推理, 短序列的情况下, 这种推理时间增加的百分比高达30%</figcaption>
 </figure>
     
@@ -70,8 +70,8 @@ NLP邻域最重要的一个范式是先使用通用领域的大规模数据进�
 作者受到Li等人[^6]和Aghajanyan等人[^7]研究工作的启发. 🌟他们的研究表明, 学习到的过参数化模型(Over-Parameterized Model)实际上存在于一个低内在维度空间(Low Intrinsic Dimension)中. 基于这一发现, 作者假设在模型的**调优/适应**过程中, 权重的变化**也**具有低内在秩(Intrinsic Rank). 这促使作者提出了低秩适应(LoRA)的方法.🌟 ^^LoRA允许我们通过在调优过程中优化某些特定密集层(Dense Layer)的权重变化的秩分解矩阵(Rank Decomposition Matrices)来间接"训练"这些密集层, 同时保持预训练的权重冻结.^^ 如下图所示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/1ed1d2f0549dd53c0a7684355d9f56a4.webp#only-light){ loading=lazy width='210' }
-![](https://img.ricolxwz.io/1ed1d2f0549dd53c0a7684355d9f56a4_inverted.webp#only-dark){ loading=lazy width='210' }
+![](https://img.ricolxwz.download/1ed1d2f0549dd53c0a7684355d9f56a4.webp#only-light){ loading=lazy width='210' }
+![](https://img.ricolxwz.download/1ed1d2f0549dd53c0a7684355d9f56a4_inverted.webp#only-dark){ loading=lazy width='210' }
 <figcaption>LoRA. 会对原始权重和调整权重进行相加操作, $d$表示密集层的理论最大秩, $r$表示在调优中的权重变换矩阵的秩</figcaption>
 </figure>
 

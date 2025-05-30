@@ -23,13 +23,13 @@ comments: true
 如下图所示, 是一个构建替代分布的过程.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/e338ef1c8544a6b116d2cfd5f9222da9.png){ loading=lazy width='300' }
+![](https://img.ricolxwz.download/e338ef1c8544a6b116d2cfd5f9222da9.png){ loading=lazy width='300' }
 </figure>
 
 计算替代分布的互信息, 进行p检验. 
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/4ab1b34488bc3977132f2b5dbf28b213.png){ loading=lazy width='300' }
+![](https://img.ricolxwz.download/4ab1b34488bc3977132f2b5dbf28b213.png){ loading=lazy width='300' }
 </figure>
 
 对于条件互信息$I(X;Y|Z)$来说, 它的估计和普通互信息类似, 都需要生成替代分布. 在生成替代分布的时候, 需要通过将条件分布$p(x|y, z)$作为$p(x|z)$来进行, 这意味着, 在固定条件$Z$的情况下, 对$Y$进行重采样.
@@ -44,7 +44,7 @@ comments: true
 某些情况下, 替代分布的互信息的分布经过适当变换后服从卡方分布. 卡方分布的形状是由自由度, degrees of freedom, 决定的. 在[估计器](/algorithm/estimator)章节中, 我们讲了用于预测离散, 连续随机变量信息统计量的估计器, 不同的估计器的自由度计算方法不同, 如下表所示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/b7065e4909ebd15cac035d26c8d8b7e1.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.download/b7065e4909ebd15cac035d26c8d8b7e1.png){ loading=lazy width='500' }
 </figure>
 
 其中, $dim(X)$的含义是$X$的纬度. $|A_X|$表示的是$A_X$可能的取值数量. 替代分布的互信息经过的转换可以表示为$2N\times I(X;Y^S)$, 或者是$2N\times I(X;Y^S|Z)$. 注意, 单位是Nats. Nats是一种用于度量信息量的单位. 类似于比特, 但它是用自然对数来计算的信息量单位, 使用Nats做单位的时候, 信息量的计算公式为$I(X)=-\ln p(X)$. 在JIDT中, 虽然计算使用的单位是Nats, 但是最终的结果会被转换为bits. 

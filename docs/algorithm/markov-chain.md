@@ -12,7 +12,7 @@ comments: true
 上述只是一阶马尔可夫假设, 即假定当前的状态仅依赖于前面一个状态. 由此衍生出$k$阶马尔可夫假设, 即假设当前状态依赖于最近的$k$个状态, 即$p(X)=\prod_{i=1}^n p(S_t|S_{t-1}, ..., S_{t-k})$. 这个概率又叫作状态转移概率.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/7b64c88a1a92c1805aecf02b76d5c679.png){ loading=lazy width='400' }
+![](https://img.ricolxwz.download/7b64c88a1a92c1805aecf02b76d5c679.png){ loading=lazy width='400' }
 </figure>
 
 ???+ example "例子"
@@ -20,7 +20,7 @@ comments: true
     通过今天的天气预测明天的天气. 假设今天是雨天☔️, 预测明天的天气, 符合(一阶)马尔可夫假设. 下面是形象的概率图.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.io/06853a90f88f172bc0e710a6f551656d.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.download/06853a90f88f172bc0e710a6f551656d.png){ loading=lazy width='300' }
     </figure>
 
     我们可以看到, 从雨天到晴天的概率是$0.3$, 从雨天到阴天的概率是$0.3$, 从雨天到雨天的概率是$0.4$, 所以明天大概率还是雨天. 我们可以将上图用一个矩阵来表示.
@@ -38,7 +38,7 @@ comments: true
     其中$S_{ij}=p(S_t=j|S_{t-1}=i)$, 表示从$i$到$j$的转移概率. 那么, 我们可不可以从任意的初始状态开始, 推导出后面的所有状态呢? 假设起始概率为$\pi_i$, 表示马尔可夫链从状态$i$开始. 
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.io/89db496511dfb7d4cedd80c50aad8a05.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.download/89db496511dfb7d4cedd80c50aad8a05.png){ loading=lazy width='300' }
     </figure>
 
     给你一个小小的练习, 计算下列天气变化的可能性:
@@ -57,19 +57,19 @@ comments: true
     再举一个例子, 如下图所示是一个普通马尔可夫模型.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.io/2e166902b66dc31881b927e274c403a4.png){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.download/2e166902b66dc31881b927e274c403a4.png){ loading=lazy width='400' }
     </figure>
 
     HMM就是在这个基础上, 加入了一个隐藏状态和观测状态的概念.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.io/015f83e68047ff2b374f6a36781a7bd6.png){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.download/015f83e68047ff2b374f6a36781a7bd6.png){ loading=lazy width='400' }
     </figure>
 
     图中, X的状态是不可见的, 而Y的状态是可见的. 我们可以将X看成是天气情况, 而Y看成是某个人穿的衣物类型, 如下图所示.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.io/5ad9c697155c00ebf6ee8e4f8fd611b4.png){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.download/5ad9c697155c00ebf6ee8e4f8fd611b4.png){ loading=lazy width='400' }
     </figure>
 
     我们的任务就是从这个人穿的衣物类型预测天气变化. 在这里, 有两种类型的概率:
@@ -78,7 +78,7 @@ comments: true
     - 观测概率: emission probabilities, 从一个隐藏状态到一个观测变量的过程
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.io/3faef5ee59ce156c08236dbc928ce456.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.download/3faef5ee59ce156c08236dbc928ce456.png){ loading=lazy width='300' }
     </figure>
 
     注意⚠️, HMM模型做了两个很重要的假设:
@@ -89,13 +89,13 @@ comments: true
     下图给出了一个可能的观测状态和隐藏状态之间的关系, 这个就是HMM所要达到的最终效果.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.io/1150eb0fe6c7bfe1390438827e567784.png){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.download/1150eb0fe6c7bfe1390438827e567784.png){ loading=lazy width='400' }
     </figure>
 
     可视化表达: 
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.io/e4556d9676b6bd8bb2ee73554008d8d1.png){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.download/e4556d9676b6bd8bb2ee73554008d8d1.png){ loading=lazy width='400' }
     </figure>
 
 ### 参数
@@ -134,7 +134,7 @@ HMM的三个基本问题:
 	给定一个HMM模型如下(包含初始状态向量, 状态转移概率矩阵, 观测概率矩阵):
 
 	<figure markdown='1'>
-	![](https://img.ricolxwz.io/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
+	![](https://img.ricolxwz.download/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
 	</figure>
 
 	计算观测序列$X=$ Shirt, Hoodie出现的概率. 
@@ -180,7 +180,7 @@ HMM的三个基本问题:
 	$1$的初始状态向量 + $2$个矩阵:
 
 	<figure markdown='1'>
-	![](https://img.ricolxwz.io/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
+	![](https://img.ricolxwz.download/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
 	</figure>	
 
 	1. 初始化
@@ -240,7 +240,7 @@ Viterbi得分可以给出最终状态结束的最佳路径的概率, 但是仅�
 	还是上面的例子. 给定一个模型:
 
 	<figure markdown='1'>
-	![](https://img.ricolxwz.io/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
+	![](https://img.ricolxwz.download/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
 	</figure>	
 
 	和观测序列$X=$ Shirt, Hoodie.

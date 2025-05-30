@@ -32,16 +32,16 @@ comments: true
 在普通的AE中, 我们在潜空间中随机选一个潜向量, 再通过decoder生成的像素向量所代表的图片往往是没有意义的噪声, 这是因为普通AE的encoder只将输入的图片映射到了潜空间中的一个潜向量上, 所以潜空间中只有一些特定的潜向量能够重构回原图, 这会导致潜空间的"支离破碎", 其他的潜向量经过解码器后只会得到没有意义的噪声, 如潜向量1能重构图1, 潜向量2能重构图2, 但是在潜向量1和潜向量2之间的潜向量3经过decoder会得到一张没有意义的图片. 
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/092c19c9031472a566c9cd3122dba8fd.webp#only-light){ loading=lazy width='700' }
-![](https://img.ricolxwz.io/092c19c9031472a566c9cd3122dba8fd_inverted.webp#only-dark){ loading=lazy width='700' }
+![](https://img.ricolxwz.download/092c19c9031472a566c9cd3122dba8fd.webp#only-light){ loading=lazy width='700' }
+![](https://img.ricolxwz.download/092c19c9031472a566c9cd3122dba8fd_inverted.webp#only-dark){ loading=lazy width='700' }
 <figcaption></figcaption>
 </figure>
 
 在VAE中的潜空间中, 大部分区域的潜向量都能重构回看起来合理的样本. 这是因为VAE的encoder会将输入的图片映射到潜空间中的一个分布上, 这个分布内的潜向量都能构建出一张和原图类似的图片, 在这些潜向量中, 某些潜向量构建出原图的概率更高, 某些潜向量构建出原图的概率较低. 假设图片1被映射到的潜空间中潜向量2...潜向量8...潜向量12这个区域内, 图片2被映射到潜空间中潜向量10...潜向量14...潜向量18的区域内, 那么如果我们从潜空间中取潜向量11, 经过decoder之后大概率得到的是图片1和图片2的融合品, 如图片1是猫, 图片2是狗, 那么出来的图片可能是带有狗鼻子的猫. 换句话说, 现在, 在这个潜空间中随机去一个点, 经过decoder都能得到一个有意义的图. 这让VAE不仅仅能够重建图片, 还能够创造新的图片, 这说明, VAE具有极其强大的泛化性能.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/7e539da4e2d8feb1d3e1f5c973b8ad2c.webp#only-light){ loading=lazy width='300' }
-![](https://img.ricolxwz.io/7e539da4e2d8feb1d3e1f5c973b8ad2c_inverted.webp#only-dark){ loading=lazy width='300' }
+![](https://img.ricolxwz.download/7e539da4e2d8feb1d3e1f5c973b8ad2c.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.download/7e539da4e2d8feb1d3e1f5c973b8ad2c_inverted.webp#only-dark){ loading=lazy width='300' }
 <figcaption></figcaption>
 </figure>
 
@@ -52,8 +52,8 @@ comments: true
 VAE在训练的时候, 往往会让这些由encoder生成的潜向量的分布往先验分布靠, 于此同时, 也不能让它们靠得太紧. (1) 为什么要往先验分布靠? 这是一个正则化的过程. 举个例子, 如果图片1被映射到潜向量2...潜向量8...潜向量12, 图片2被映射到潜向量20...潜向量24...潜向量28, 那么如果我们取潜向量15, 经过decoder生成的是无意义的图片, 这种叫做潜空间的"真空区", 这个真空区内的潜向量经过decoder之后生成的是噪声, 所以要尽量减少这种分布之间的真空区; (2) 为什么不能靠得太紧? 举个例子, 如果图片1被映射到潜向量2...潜向量8...潜向量12, 图片2被映射到潜向量3...潜向量9...潜向量13, 那么我们甚至无法找到一个合理的潜向量去重构图1或者图2. 这就是为什么VAE的损失函数里面第一部分是重构损失, 第二部分是encoder生成的潜向量分布和先验分布的KL散度.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/843639a0a1b9f9e3e24c5a78e731bf43.webp#only-light){ loading=lazy width='600' }
-![](https://img.ricolxwz.io/843639a0a1b9f9e3e24c5a78e731bf43_inverted.webp#only-dark){ loading=lazy width='600' }
+![](https://img.ricolxwz.download/843639a0a1b9f9e3e24c5a78e731bf43.webp#only-light){ loading=lazy width='600' }
+![](https://img.ricolxwz.download/843639a0a1b9f9e3e24c5a78e731bf43_inverted.webp#only-dark){ loading=lazy width='600' }
 <figcaption></figcaption>
 </figure>
 
@@ -157,8 +157,8 @@ $$
 如下图所示, 框的大小表示$\log p(\mathbf{X}=\mathbf{x})$, 不变, ELBO越大, KL散度越小.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/edd0237538287148b1827fc06b54a318.webp#only-light){ loading=lazy width='180' }
-![](https://img.ricolxwz.io/edd0237538287148b1827fc06b54a318_inverted.webp#only-dark){ loading=lazy width='180' }
+![](https://img.ricolxwz.download/edd0237538287148b1827fc06b54a318.webp#only-light){ loading=lazy width='180' }
+![](https://img.ricolxwz.download/edd0237538287148b1827fc06b54a318_inverted.webp#only-dark){ loading=lazy width='180' }
 <figcaption></figcaption>
 </figure>
 
@@ -205,8 +205,8 @@ $\mathcal{Loss}$中的第二项表示的是重建损失. 也就是说, 给定了
 ## 架构
 
 <figure markdown='1'>
-![](https://img.ricolxwz.io/d0c1e3e28dfb9f11ceb867b0764bfbb6.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.io/d0c1e3e28dfb9f11ceb867b0764bfbb6_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.download/d0c1e3e28dfb9f11ceb867b0764bfbb6.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.download/d0c1e3e28dfb9f11ceb867b0764bfbb6_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption></figcaption>
 </figure>
 

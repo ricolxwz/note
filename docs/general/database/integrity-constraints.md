@@ -133,7 +133,7 @@ SQL的DDL语句允许字段在`CREATE TABLE`语句中被进一步约束:
 
 参与完整性约束确保在数据库中, 表与表之间通过外键建立的引用关系始终保持一致. 对于每一个子表/从属表中的一个元组的外键为$\alpha$, 则一定有一个父表/被引用表的元组其被引用的属性的值为$\alpha$. 
 
-可以简单的理解为外键不能出现悬空引用, 如[图](https://img.ricolxwz.io/e0fa20affecb5a6d2c2498656ef05f81.png). 理解外键不能出现悬空之后, 就可以很好的理解外键约束在父表上执行删除或更新操作时的几种选项:
+可以简单的理解为外键不能出现悬空引用, 如[图](https://img.ricolxwz.download/e0fa20affecb5a6d2c2498656ef05f81.png). 理解外键不能出现悬空之后, 就可以很好的理解外键约束在父表上执行删除或更新操作时的几种选项:
 
 1. 默认选项(`NO ACTION`): 当在父记录上执行删除或者更新操作的时候, 默认情况下不采取任何动作. 这意味着, 如果试图删除或者更新一个在外键中被引用的父记录, 数据库将拒绝执行该动作, 防止破坏参照完整性
 2. 级联操作(`CASCADE`): 当在父记录上执行删除或者更新操作的时候, 所有引用该记录的子记录也会相应地被删除或者更新. 这种操作确保所有引用的记录保持一致性
@@ -285,8 +285,8 @@ SQL的DDL语句允许字段在`CREATE TABLE`语句中被进一步约束:
             )
             ```
 
-            - 如[图](https://img.ricolxwz.io/be08a9f2e269d73038f5e78ec3028264.png), 这个操作是被拒绝的
-            - 如[图](https://img.ricolxwz.io/a043d3639a5fd6999bdb4e11235270a3.png), 这个操作是被允许的
+            - 如[图](https://img.ricolxwz.download/be08a9f2e269d73038f5e78ec3028264.png), 这个操作是被拒绝的
+            - 如[图](https://img.ricolxwz.download/a043d3639a5fd6999bdb4e11235270a3.png), 这个操作是被允许的
 
     - 虽然断言是一个SQL标准, 但是支持它的DBMs较少, 如Oracle是支持的. 可以用`CHECK`作为替代. PostgreSQL是不支持的
 
@@ -350,7 +350,7 @@ PostgreSQL在触发`UPDATE`或`DELETE`可以使用`OLD`变量, 代表更新/删�
 - 行级出发器: 这种触发器会对每一行需要更新的数据触发一次, 也就是说, 如果你的SQL语句更新了多行数据, 行级触发器会针对每一行分别执行一次. 例如, 假设你有一条SQL语句更新了10条数据, 那么行级触发器会执行10次, 每次处理一行
 - 语句级触发器: 这种触发器在每个触发事件发生时仅仅触发一次, 而不论这次操作影响了多少行数据. 例如, 假设你有一条SQL语句更新了10行数据, 语句级触发器只会在这条SQL语句执行后触发一次
 
-两者之间的详细比较可以见[图](https://img.ricolxwz.io/afff0b0693df1a0fb6ef9a9817294292.png).
+两者之间的详细比较可以见[图](https://img.ricolxwz.download/afff0b0693df1a0fb6ef9a9817294292.png).
 
 ##### 行级
 
@@ -363,7 +363,7 @@ PostgreSQL在触发`UPDATE`或`DELETE`可以使用`OLD`变量, 代表更新/删�
     FOR EACH ROW EXECUTE PROCEDURE emp_stamp();
     ```
 
-如[图](https://img.ricolxwz.io/090a3963ffb6015e442186321013f041.png).
+如[图](https://img.ricolxwz.download/090a3963ffb6015e442186321013f041.png).
 
 ##### 语句级
 
@@ -376,8 +376,8 @@ PostgreSQL在触发`UPDATE`或`DELETE`可以使用`OLD`变量, 代表更新/删�
     FOR EACH STATEMENT EXECUTE PROCEDURE Salary_Average();
     ```
 
-如[图](https://img.ricolxwz.io/e54f8653a17c64b34c7828998f459fb5.png).
+如[图](https://img.ricolxwz.download/e54f8653a17c64b34c7828998f459fb5.png).
 
 #### 语法
 
-见[图](https://img.ricolxwz.io/8ea78f6df2632bc7afba00011b8240ba.png).
+见[图](https://img.ricolxwz.download/8ea78f6df2632bc7afba00011b8240ba.png).

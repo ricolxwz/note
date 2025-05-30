@@ -40,7 +40,7 @@ Seaborn是一个绘制统计图形的Python库. 它建立在Matplotlib至上并�
 
     输出:
 
-    ![](https://img.ricolxwz.io/cca4c3866d6d22eff8d3d53c640ae8d3.png){:style="width:680px"}
+    ![](https://img.ricolxwz.download/cca4c3866d6d22eff8d3d53c640ae8d3.png){:style="width:680px"}
 
     解释:
 
@@ -86,7 +86,7 @@ Seaborn是一个绘制统计图形的Python库. 它建立在Matplotlib至上并�
 
     输出:
 
-    ![](https://img.ricolxwz.io/9b8acb9e250b3d738200f06e8fe36255.png){:style="width:680px"}
+    ![](https://img.ricolxwz.download/9b8acb9e250b3d738200f06e8fe36255.png){:style="width:680px"}
 
     可以注意到`size`和`style`属性在散点图和折线图中的表现形式是不一样的. 在散点图中, 表现为点的大小和点的样式; 在这线图中, 表现为线宽和线的样式. 我们无需关注这些细节, 只需要关注整体的结构和信息.
 
@@ -109,7 +109,7 @@ Seaborn是一个绘制统计图形的Python库. 它建立在Matplotlib至上并�
 
     输出:
 
-    ![](https://img.ricolxwz.io/8c3652651af2bfaaa744595a9dcc9cac.png){:style="width:680px"}
+    ![](https://img.ricolxwz.download/8c3652651af2bfaaa744595a9dcc9cac.png){:style="width:680px"}
 
 当估计统计值的时候, Seaborn将使用自举法计算置信区间, 并绘制表示估计不确定性的误差条. 
 
@@ -126,7 +126,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
     输出:
 
-    ![](https://img.ricolxwz.io/b047e90a9ddb125c57ae1a77afec08ac.png){:style="width:680px"}
+    ![](https://img.ricolxwz.download/b047e90a9ddb125c57ae1a77afec08ac.png){:style="width:680px"}
 
 ### 分布一览
 
@@ -145,7 +145,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
         输出:
 
-        ![](https://img.ricolxwz.io/2de4aebb24a049959d67456a46dcde37.png){:style="width:680px"}
+        ![](https://img.ricolxwz.download/2de4aebb24a049959d67456a46dcde37.png){:style="width:680px"}
 
     === "核密度估计"
 
@@ -158,7 +158,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
         输出:
 
-        ![](https://img.ricolxwz.io/5dfe53af5b6b0b90dc7a43da7bffb07c.png){:style="width:680px"}
+        ![](https://img.ricolxwz.download/5dfe53af5b6b0b90dc7a43da7bffb07c.png){:style="width:680px"}
 
 ### 绘制分类数据
 
@@ -177,7 +177,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
         输出:
 
-        ![](https://img.ricolxwz.io/aa9d69269b0f6a08d200c3d4ec049d60.png){style="width:400px"}
+        ![](https://img.ricolxwz.download/aa9d69269b0f6a08d200c3d4ec049d60.png){style="width:400px"}
 
     === "小提琴图"
 
@@ -192,7 +192,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
         输出:
 
-        ![](https://img.ricolxwz.io/691ee143fe024eecdb5d9bfa814bfd9d.png){:style="width:400px"}
+        ![](https://img.ricolxwz.download/691ee143fe024eecdb5d9bfa814bfd9d.png){:style="width:400px"}
 
     === "条形图"
 
@@ -205,7 +205,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
         输出:
 
-        ![](https://img.ricolxwz.io/10212999a727395aaf2e77a473adfd9a.png){:style="width:400px"}
+        ![](https://img.ricolxwz.download/10212999a727395aaf2e77a473adfd9a.png){:style="width:400px"}
 
 ## 多变量视图在复杂数据集上的应用
 
@@ -222,7 +222,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
     输出:
     
-    ![](https://img.ricolxwz.io/5bf67848c9937c5b833d58da465f22f8.png){:style="width:400px"}
+    ![](https://img.ricolxwz.download/5bf67848c9937c5b833d58da465f22f8.png){:style="width:400px"}
 
 另一个函数`pairplot`, 采取更加广泛的视角, 它分别显示了所有成对关系和每个变量的联合分布率和边缘分布函数.
 
@@ -237,7 +237,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
     输出:
 
-    ![](https://img.ricolxwz.io/2330f9ee031951a4e682ab317c3f7fbb.png){:style="width:680px"}
+    ![](https://img.ricolxwz.download/2330f9ee031951a4e682ab317c3f7fbb.png){:style="width:680px"}
 
 ### 构建图形的低级工具
 
@@ -259,7 +259,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
     输出:
 
-    ![](https://img.ricolxwz.io/6bac39d5783de6544096522f89b3f872.png){:style="width:680px"}
+    ![](https://img.ricolxwz.download/6bac39d5783de6544096522f89b3f872.png){:style="width:680px"}
 
     解释:
 
@@ -311,7 +311,7 @@ Seaborn通过一次函数调用就能创建完整的图形. 在可能的情况�
 
     输出:
 
-    ![](https://img.ricolxwz.io/aa8a80a940f730450d879b91f026c83f.png){:style="width:400px"}
+    ![](https://img.ricolxwz.download/aa8a80a940f730450d879b91f026c83f.png){:style="width:400px"}
 
 当你准备发布你的作品的时候, 你可能希望对图形进行更加精细的打磨. Seaborn允许多层次的自定义. 它定义了多个适用于所有图形的内置主题. 当你创建了一个图之后, 其属性可以通过Seaborn API进行修改, 也可以通过降到matplotlib层进行更加精细的修改.
 
@@ -336,4 +336,4 @@ Seaborn通过一次函数调用就能创建完整的图形. 在可能的情况�
 
     输出:
 
-    ![](https://img.ricolxwz.io/674ba39973e4cbe3c4bef7f0b8861d0f.png){:style="width:400px"}
+    ![](https://img.ricolxwz.download/674ba39973e4cbe3c4bef7f0b8861d0f.png){:style="width:400px"}
