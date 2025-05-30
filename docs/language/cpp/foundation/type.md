@@ -275,3 +275,96 @@ int main() {
 2.  `decltype(i + x)` 推断出表达式 `i + x` 的结果类型是 `double`, 所以 `k` 是 `double`.
 3.  `decltype(vec[0])` 推断出 `vec[0]` (访问 `std::vector` 元素) 的类型是 `int&` (对 `int` 的引用).
 4.  `decltype(ci)` 推断出 `ci` 的类型是 `const int`, 所以 `cj` 也是 `const int`.
+
+## `union`的用法
+
+在C++中, `union`是一种特殊的数据结构, 它允许在相同的内存位置存储不同的数据类型. 但在任何时候, 只有一个成员可以包含值. 在`union`中, 所有成员共享同一块内存空间. 并且, 你只能同时使用`union`中的一个成员, 给一个成员赋值会覆盖其他成员的值. 它的大小取决于最大成员的大小. 
+
+```cpp
+#include <iostream>
+
+union U {
+    int i;
+    short s;
+    float f;
+
+    void printi() {
+        std::cout << i << std::endl;
+    }
+};
+
+int main() {
+    U myUnion;
+    myUnion.i = 50253;
+    std::cout << "Integer value: " << myUnion.i << std::endl;
+    std::cout << "Short value: " << myUnion.s << std::endl;
+    std::cout << "size of union: " << sizeof(myUnion) << " bytes" << std::endl;
+    myUnion.printi();
+    return 0;
+}
+```
+
+输出:
+
+```bash
+Integer value: 50253
+Short value: -15283
+size of union: 4 bytes
+50253
+```
+
+为什么要用`union`呢? 举个例子, 看SDL_Event这个union(它是用C实现的, 所以有`typedef`):
+
+```c
+typedef union SDL_Event
+{
+    Uint32 type;                            /**< Event type, shared with all events */
+    SDL_CommonEvent common;                 /**< Common event data */
+    SDL_DisplayEvent display;               /**< Display event data */
+    SDL_WindowEvent window;                 /**< Window event data */
+    SDL_KeyboardEvent key;                  /**< Keyboard event data */
+    SDL_TextEditingEvent edit;              /**< Text editing event data */
+    SDL_TextEditingExtEvent editExt;        /**< Extended text editing event data */
+    SDL_TextInputEvent text;                /**< Text input event data */
+    SDL_MouseMotionEvent motion;            /**< Mouse motion event data */
+    SDL_MouseButtonEvent button;            /**< Mouse button event data */
+    SDL_MouseWheelEvent wheel;              /**< Mouse wheel event data */
+    SDL_JoyAxisEvent jaxis;                 /**< Joystick axis event data */
+    SDL_JoyBallEvent jball;                 /**< Joystick ball event data */
+    SDL_JoyHatEvent jhat;                   /**< Joystick hat event data */
+    SDL_JoyButtonEvent jbutton;             /**< Joystick button event data */
+    SDL_JoyDeviceEvent jdevice;             /**< Joystick device change event data */
+    SDL_JoyBatteryEvent jbattery;           /**< Joystick battery event data */
+    SDL_ControllerAxisEvent caxis;          /**< Game Controller axis event data */
+    SDL_ControllerButtonEvent cbutton;      /**< Game Controller button event data */
+    SDL_ControllerDeviceEvent cdevice;      /**< Game Controller device event data */
+    SDL_ControllerTouchpadEvent ctouchpad;  /**< Game Controller touchpad event data */
+    SDL_ControllerSensorEvent csensor;      /**< Game Controller sensor event data */
+    SDL_AudioDeviceEvent adevice;           /**< Audio device event data */
+    SDL_SensorEvent sensor;                 /**< Sensor event data */
+    SDL_QuitEvent quit;                     /**< Quit request event data */
+    SDL_UserEvent user;                     /**< Custom event data */
+    SDL_SysWMEvent syswm;                   /**< System dependent window event data */
+    SDL_TouchFingerEvent tfinger;           /**< Touch finger event data */
+    SDL_MultiGestureEvent mgesture;         /**< Gesture event data */
+    SDL_DollarGestureEvent dgesture;        /**< Gesture event data */
+    SDL_DropEvent drop;                     /**< Drag and drop event data */
+
+    /* This is necessary for ABI compatibility between Visual C++ and GCC.
+       Visual C++ will respect the push pack pragma and use 52 bytes (size of
+       SDL_TextEditingEvent, the largest structure for 32-bit and 64-bit
+       architectures) for this union, and GCC will use the alignment of the
+       largest datatype within the union, which is 8 bytes on 64-bit
+       architectures.
+
+       So... we'll add padding to force the size to be 56 bytes for both.
+
+       On architectures where pointers are 16 bytes, this needs rounding up to
+       the next multiple of 16, 64, and on architectures where pointers are
+       even larger the size of SDL_UserEvent will dominate as being 3 pointers.
+    */
+    Uint8 padding[sizeof(void *) <= 8 ? 56 : sizeof(void *) == 16 ? 64 : 3 * sizeof(void *)];
+} SDL_Event;
+```
+
+可以看到, 如果我们创建一个非`union`的`SDL_Event`, 那么我们就需要给这么多这么多的变量分配内存, 而实际情况是, 由于实际上我们每一时刻仅仅会使用其中的一个变量, 所以需要使用`union`来节省空间.

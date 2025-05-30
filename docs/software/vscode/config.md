@@ -39,7 +39,7 @@ comments: true
 "editor.hideCursorInOverviewRuler": true,
 "editor.experimentalEditContextEnabled": true,
 "editor.formatOnSave": false,
-"editor.accessibilitySupport": false,
+"editor.accessibilitySupport": "off",
 "editor.cursorSmoothCaretAnimation": "on",
 "editor.smoothScrolling": true,
 "editor.codeLensFontFamily": "Maple Mono Normal NL NF CN",

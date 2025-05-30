@@ -177,3 +177,76 @@ Copy Assignment Operator Called
     ```
 
     这个时候, 是会调用拷贝构造函数的, 因为`*this`是一个在scope之外的对象, 已经创建好了, RVO无法优化.
+
+## 工厂函数
+
+工厂函数是用于创建对象的函数. 他们常用于抽象对象创建的逻辑, 隐藏对象的具体类型和创建过程. 工厂函数的主要优点包括: (1) 封装性, 他们封装了对象创建的细节, 客户端代码不需要知道如何创建对象, 只需要调用工厂函数即可. (2) 灵活性: 工厂函数可以根据不同的输入返回不同类型的对象, 从而提高更大的灵活性. (3) 延迟实例化: 对象可以在被需要的时候才创建; (4) 易于测试: 可以更容易地替换工厂函数以进行单元测试.
+
+```cpp
+#include <iostream>
+#include <string>
+#include <memory>
+
+// 接口类
+class Shape {
+public:
+    virtual ~Shape() {}
+    virtual void draw() = 0;
+};
+
+// 具体类: Circle
+class Circle : public Shape {
+private:
+    double radius;
+public:
+    Circle(double r) : radius(r) {}
+    void draw() override {
+        std::cout << "Drawing a circle with radius: " << radius << std::endl;
+    }
+};
+
+// 具体类: Rectangle
+class Rectangle : public Shape {
+private:
+    double width;
+    double height;
+public:
+    Rectangle(double w, double h) : width(w), height(h) {}
+    void draw() override {
+        std::cout << "Drawing a rectangle with width: " << width << " and height: " << height << std::endl;
+    }
+};
+
+// 工厂函数
+std::unique_ptr<Shape> createShape(const std::string& type, double param1 = 0, double param2 = 0) {
+    if (type == "circle") {
+        return std::make_unique<Circle>(param1);
+    } else if (type == "rectangle") {
+        return std::make_unique<Rectangle>(param1, param2);
+    } else {
+        return nullptr;
+    }
+}
+
+int main() {
+    // 使用工厂函数创建对象
+    std::unique_ptr<Shape> circle = createShape("circle", 5.0);
+    if (circle) {
+        circle->draw();
+    }
+
+    std::unique_ptr<Shape> rectangle = createShape("rectangle", 4.0, 6.0);
+    if (rectangle) {
+        rectangle->draw();
+    }
+
+    std::unique_ptr<Shape> unknown = createShape("triangle", 3.0, 3.0);
+    if (!unknown) {
+        std::cout << "Unknown shape type." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+BTW, `std::make_unique`这个函数也是工厂函数. 

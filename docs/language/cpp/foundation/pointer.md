@@ -217,6 +217,27 @@ int main() {
 }
 ```
 
+#### 自定义`Deleter`
+
+在模板那节中, 我们讲到过`std::unique_ptr`是一个模板类, 其模板包含两个参数: `class T, class Deleter = std::default_delete<T>`, 所以, 我们是可以自定义`Deleter`的. 
+
+```cpp
+#include <iostream>
+#include <memory>
+
+struct IntDeleter {
+    void operator()(int* int_ptr) {
+        std::cout << "Deleting int: " << *int_ptr << std::endl;
+        delete int_ptr;
+    }
+};
+
+int main() {
+    std::unique_ptr<int, IntDeleter> my_ptr(new int);
+    return 0;
+}
+```
+
 ### `std::shared_ptr`
 
 `std::shared_ptr`是一个引用计数的智能指针, 它允许多个指针共享同一块内存, 当最后一个指向该内存的指针被销毁时, 内存才会被释放. 这可以避免内存泄露和悬空指针的问题. 但是需要注意的是, `std::shared_ptr`会增加一些性能开销, 因为它需要维护一个引用计数.
