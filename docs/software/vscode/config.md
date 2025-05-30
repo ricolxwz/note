@@ -39,18 +39,24 @@ comments: true
     "editor.experimentalEditContextEnabled": true,
     "editor.formatOnSave": false,
     "editor.accessibilitySupport": false,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.smoothScrolling": true,
     "editor.codeLensFontFamily": "Maple Mono Normal NL NF CN",
     "editor.inlayHints.fontFamily": "Maple Mono Normal NL NF CN",
-    "debug.console.fontFamily": "Maple Mono Normal NL NF CN",
-    "scm.inputFontFamily": "Maple Mono Normal NL NF CN",
-    "notebook.markup.fontFamily": "Maple Mono Normal NL NF CN",
-    "notebook.output.fontFamily": "Maple Mono Normal NL NF CN",
-    "chat.editor.fontFamily": "Maple Mono Normal NL NF CN",
-    "markdown.preview.fontFamily": "Maple Mono Normal NL NF CN",
     "editor.inlineSuggest.fontFamily": "Maple Mono Normal NL NF CN",
+
+    "debug.console.fontFamily": "Maple Mono Normal NL NF CN",
     "debug.enableStatusBarColor": false,
     "debug.inlineValues": "off",
     "debug.toolBarLocation": "commandCenter",
+
+    "notebook.markup.fontFamily": "Maple Mono Normal NL NF CN",
+    "notebook.output.fontFamily": "Maple Mono Normal NL NF CN",
+
+    "chat.editor.fontFamily": "Maple Mono Normal NL NF CN",
+
+    "markdown.preview.fontFamily": "Maple Mono Normal NL NF CN",
+
     "workbench.colorTheme": "Vesper",  // vesper, minimal, poimandres
     "workbench.activityBar.location": "top",
     "workbench.sideBar.location": "right",
@@ -62,37 +68,49 @@ comments: true
     "workbench.tree.enableStickyScroll": false,
     "workbench.tree.renderIndentGuides": "none",
     "workbench.tree.indent": 16,
+    "workbench.list.smoothScrolling": true,
+
     "explorer.compactFolders": false,
     "explorer.confirmDragAndDrop": false,
     "explorer.confirmDelete": false,
     "explorer.decorations.badges": false,
+
     "git.decorations.enabled": false,
     "git.autofetch": true,
     "git.confirmSync": false,
+
     "window.zoomLevel": 0,
-    "breadcrumbs.enabled": false,
-    "files.autoSave": "onFocusChange",
-    "files.trimFinalNewlines": true,
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
-    "material-icon-theme.hidesExplorerArrows": true,
-    "scm.diffDecorations": "gutter",
-    "extensions.ignoreRecommendations": true,
     "window.commandCenter": true,
-    "inlineChat.lineNaturalLanguageHint": false,
-    "files.eol": "\n",
-    "terminal.integrated.copyOnSelection": true,
-    "editor.cursorSmoothCaretAnimation": "on",
-    "editor.smoothScrolling": true,
-    "workbench.list.smoothScrolling": true,
-    "terminal.integrated.smoothScrolling": true,
     "window.autoDetectColorScheme": true,
+
+    "breadcrumbs.enabled": true,
+
+    "files.autoSave": "onFocusChange",
+    "files.trimFinalNewlines": false,
+    "files.trimTrailingWhitespace": false,
+    "files.insertFinalNewline": false,
+    "files.eol": "\n",
+
+    "material-icon-theme.hidesExplorerArrows": true,
+
+    "scm.inputFontFamily": "Maple Mono Normal NL NF CN",
+    "scm.diffDecorations": "gutter",
+
+    "extensions.ignoreRecommendations": true,
+
+    "inlineChat.lineNaturalLanguageHint": false,
+
+    "terminal.integrated.copyOnSelection": true,
+    "terminal.integrated.smoothScrolling": true,
+
     "animations.Enabled": true,
     "animations.CursorAnimation": true,
     "animations.UseCursorColorForCursorAnimation": true,
+
     "remote.SSH.remotePlatform": {
         "lab": "linux"
     },
+
     "[python]": {
         "editor.formatOnSave": false
     }
