@@ -89,3 +89,23 @@ d_{TV}(\mathbf{p},\mathbf{q})=\tfrac12\sum_{x\in\mathcal X}\bigl|\mathbf{p}(x)-\
 $$
 
 这个fact是一个非常有用的东西. 因为$\ell_p$范数已经被玩烂了, 可以利用常见的不等式进行分析, 例如Hölder不等式, Cauchy-Schwarz不等式, 以及$\ell_p$范数的单调性等, 从而简化证明过程.
+
+## 一枚硬币问题
+
+### 问题定义
+
+Well, 前面, 我们假设未知分布定义在离散集合$\mathcal X$上, $|\mathcal X|=k$; 目标是通过$n$个样本了解分布$\mathbf p$本身, 某些参数$f(\mathbf p)$, 或检验$\mathbf p$是否满足某些性质, 同样用距离参数$\epsilon$和失败概率$\delta$来刻画. 
+
+现在, 让我们专注于一个更加简单的问题: 假设未知分布只在${0,1}$上, 也就是一枚可能有偏的硬币, 它的偏置记作$p$; 目标是通过$n$次独立抛硬币来估计$p$, 使得估计误差在$\pm\epsilon$之内, 且以概率至少$1-\delta$正确. 也就是说, 我们要求的是伯努利分布中的$p$. 
+
+### 我们需要抛多少次硬币
+
+那么我们需要抛多少次硬币呢? 是\(n = O\bigl(\tfrac{1}{\varepsilon\delta}\bigr),\; n = O\bigl(\tfrac{1}{\varepsilon^2\delta}\bigr),\; n = O\bigl(\tfrac{1}{\varepsilon^2}\log\tfrac{1}{\delta}\bigr),\; n = O\bigl(\tfrac{1}{\varepsilon}\log\tfrac{1}{\delta}\bigr)\)? 事实上, 如果我们事先知道一些关于硬币偏置$p$的一些额外信息, 例如, 知道$p$不太接近0或者1, 或者落在某个狭窄的区间中, 可以得到比这些更加精细的结果.
+
+定理: 假设已知硬币真实偏置满足$0<p<q\leq \frac{1}{2}$, 其中$q$是一个常数上界. 目标是用$n$次独立抛掷把$p$估计到误差为$\pm \epsilon$内, 且失败概率不超过$\delta$. 结论样本的数量只需:
+
+$$n = O(\frac{q}{\epsilon^2}\ln \frac{1}{\delta})$$
+
+证明: 首先, 我们有经验均值$\hat{p}=\frac{1}{n}\sum_{i=1}nx_i$, 其中, $x_i$符合$x_i\sim \text{Bern}(p)$. 因为$\text{Var}(x_i)=p(1-p)\leq q(1-q)\leq q$, 所以可以使用Chernoff界来控制$\hat{p}$偏离$p$超过$\epsilon$的概率$\Pr[|\hat{p} - p| \ge \varepsilon] \le 2 \exp(-\frac{n \varepsilon^2}{2q}).$, 令右侧不超过$\delta$, 解得$n = O(\frac{q}{\epsilon^2}\ln \frac{1}{\delta})$.o
+
+并且, 选择$q\in (0, 1/2]$是without loss of generality的. 如果实际情形是$q<p\leq 1$, 即$q\in (1/2, 1)$, 我们只需要把每次抛硬币得的样本$x_i$取反, 定义$x_i'=1-x_i$, 这个时候就有$0\leq p'< 1-q\leq 1/2$. 也就是说, 无论原本偏置$p$在$[0,1/2]$还是$[1/2,1]$区间, 都可以通过"翻转结果"把问题归约到$p<1/2$的情况, 不会改变估计误差要求. 
