@@ -1,6 +1,6 @@
 site_name: 机器蝉
 site_author: ricolxwz
-site_url: https://note.ricolxwz.de
+site_url: https://note.ricolxwz.cc
 edit_uri: https://github.com/ricolxwz/note/edit/master/docs
 copyright: <p xmlns:cc="http://creativecommons.org/ns#" >版权所有 &copy 由 <span property="cc:attributionName">麦旋风超好吃</span> 采用 <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0&nbsp</a>许可证发布</p>
 theme:
@@ -74,7 +74,7 @@ extra:
     - icon: fontawesome/mug-hot-solid
       link: https://buymeacoffee.com/ricolxwz
     - icon: fontawesome/compass-solid
-      link: https://ricolxwz.de
+      link: https://ricolxwz.cc
     - icon: fontawesome/brands/github
       link: https://github.com/ricolxwz
     - icon: fontawesome/telegram-brands-solid
@@ -82,7 +82,7 @@ extra:
     - icon: fontawesome/at-solid
       link: mailto:ricol.xwz@outlook.com
     - icon: fontawesome/rss-solid
-      link: https://note.ricolxwz.de/feed_rss_created.xml
+      link: https://note.ricolxwz.cc/feed_rss_created.xml
   generator: false
   # analytics:
   #   provider: google

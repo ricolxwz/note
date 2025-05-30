@@ -7,7 +7,7 @@ comments: true
 
 ## 只允许特定Referer/IP源访问
 
-(http.host eq "share.ricolxwz.io" and not http.referer contains "ricolxwz.de") or (http.host eq "rshare.ricolxwz.io" and ip.src ne 52.62.78.98) or (http.host eq "img.ricolxwz.io" and http.referer eq "") => Block
+(http.host eq "share.ricolxwz.io" and not http.referer contains "ricolxwz.cc") or (http.host eq "rshare.ricolxwz.io" and ip.src ne 52.62.78.98) or (http.host eq "img.ricolxwz.io" and http.referer eq "") => Block
 
 ## 站内链接防护
 
@@ -17,7 +17,7 @@ comments: true
 
 符合下面这些条件的关闭热链防护:
 
-(http.host eq "img.ricolxwz.io" and http.referer contains "ricolxwz.de") or (http.host eq "img.ricolxwz.io" and http.referer contains "localhost:[port1]") or (http.host eq "img.ricolxwz.io" and http.referer contains "localhost:[port2]") => Disable Hotlink Protection
+(http.host eq "img.ricolxwz.io" and http.referer contains "ricolxwz.cc") or (http.host eq "img.ricolxwz.io" and http.referer contains "localhost:[port1]") or (http.host eq "img.ricolxwz.io" and http.referer contains "localhost:[port2]") => Disable Hotlink Protection
 
 注意将图片热链防护打开.
 
