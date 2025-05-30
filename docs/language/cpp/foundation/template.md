@@ -1058,3 +1058,5 @@ int main() {
     return 0;
 }
 ```
+
+如果你看一下`std::vector`的实现, 你会发现他其实模版是`template <class T, class Allocator = std::allocator<T>> class vector`, 所以有一个默认给定的`Allocator`类, 我们可以自定义的其实. 还有`std::unique_ptr`的实现是`template <class T, class Deleter = std::default_delete<T>> class unique_ptr`这个`Deleter`也是可以自己实现的.
