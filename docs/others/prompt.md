@@ -135,6 +135,7 @@ Follow these detailed instructions to accomplish your task effectively:
 5. "I/We"一律转为"作者/他们".
 6. 严禁使用列表/表格.
 7. 严禁加入和翻译不相关的内容.
+8. 严禁在中文和英文, 中文和公式之间插入标点.
 
 **格式要求**
 
