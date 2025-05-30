@@ -1,0 +1,59 @@
+{
+    "recommendations": [
+        // 主题
+        "ms-ceintl.vscode-language-pack-zh-hans",
+        "PKief.material-product-icons",
+        "daltonmenezes.aura-theme",
+        "be5invis.vscode-custom-css",
+        "JonathanHarty.gruvbox-material-icon-theme",
+        "BrandonKirbyson.vscode-animations",
+
+        // 远程开发
+        "ms-vscode-remote.remote-ssh",
+        "ms-vscode-remote.remote-ssh-edit",
+        "ms-vscode.remote-explorer",
+
+        // 编辑
+        "vscodevim.vim",
+        "buuug7.chinese-punctuation-to-english",
+        "EditorConfig.EditorConfig",
+        "ms-vscode.wordcount",
+
+        // 代码智能
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "VisualStudioExptTeam.intellicode-api-usage-examples",
+
+        // 版本管理
+        "MichaelCurrin.auto-commit-msg",
+        "mhutchie.git-graph",
+        "codezombiech.gitignore",
+
+        // 服务器
+        "ritwickdey.LiveServer",
+
+        // C/C++
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-packs",
+        "ms-vscode.cpptools-themes",
+        "ms-vscode.cmake-tools",
+
+        // Python
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "WeidaWang.quick-python-print",
+        "ms-toolsai.tensorboard",
+
+        // LaTeX
+        "James-Yu.latex-workshop",
+        "nickfode.latex-formatter",
+
+        // Markdown
+        "yzhang.markdown-all-in-one",
+
+        // YAML
+        "redhat.vscode-yaml",
+    ]
+}
