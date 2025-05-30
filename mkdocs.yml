@@ -574,6 +574,7 @@ nav:
       - 基础配置: software/vscode/config.md
       - 使用CapsLock作为Escape: software/vscode/capslock-as-esc.md
       - Vim模式下自动切换输入法: software/vscode/vim-switch-ime.md
+      - Snippets: software/vscode/snippets.md
     - XChange:
       - 配置: software/xchange/config.md
     - Xray:

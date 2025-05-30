@@ -1,6 +1,6 @@
 ---
 title: 学习与检测未知概率分布
-comments: false
+comments: true
 ---
 
 ## 主题
@@ -56,7 +56,7 @@ comments: false
 
 ### 总变差距离
 
-两个概率分布$\mathbf{p},\mathbf{q} \in \Delta(\mathcal{X})$之间的总变差距离由下式给出
+设$S$是$\mathcal{X}$的一个子集, 两个概率分布$\mathbf{p},\mathbf{q} \in \Delta(\mathcal{X})$之间的总变差距离由下式给出
 
 $$\mathrm{d}_{\mathrm{TV}}(\mathbf{p}, \mathbf{q}) = \sup_{S \subseteq \mathcal{X}} |\mathbf{p}(S) - \mathbf{q}(S)|.$$
 
@@ -76,4 +76,16 @@ $$d_{TV}(\mathbf{p}_f, \mathbf{q}_f) \leq d_{TV}(\mathbf{p}, \mathbf{q}).$$
 
 不可区分性指的是某些统计推断或者决策无法区分两个不同的分布. 总变差距离可以被视为衡量这种不可区分性的程度. 距离越小, 不可区分性越强. 下面是Pearson-Neyman等人给出的Lemma:
 
-任何(可能是随机的)从单个样本区分$p$和$q$的算法其第一类(假阳性)和第二类(假阴性)错误满足 $\text{第一类} + \text{第二类} \ge 1 - d_{TV}(p,q)$. 此外, 该下界可以通过一个检验达到, 该检验当且仅当样本属于Scheffé集$S^* := \{ x : q(x) > p(x) \}$时输出$q$.
+任何(可能是随机的)从单个样本区分$\mathbf{p}$和$\mathbf{q}$的算法其第一类(假阳性)和第二类(假阴性)错误满足 $\text{第一类} + \text{第二类} \ge 1 - d_{TV}(\mathbf{p},\mathbf{q})$. 此外, 该下界可以通过一个检验达到, 该检验当且仅当样本属于Scheffé集$S^* := \{ x : \mathbf{q}(x) > \mathbf{p}(x) \}$时输出$\mathbf{q}$.
+
+对于这个Lemma的证明见课件. 这里说一下可以怎么理解这个Lemma, 假设$\mathbf{p}$和$\mathbf{q}$定义在集合$\mathcal{X}=\{0, 1\}$上, $\mathbf{p}(0)=0.8, \mathbf{p}=0.2; \mathbf{q}(0)=0.3, \mathbf{q}(1)=0.7$, 那么$d_{\text{TV}}(\mathbf{p}, \mathbf{q})=\frac{1}{2}(|0.8-0.3|+|0.2-0.7|)=0.5$. 假设Alice和Bob正在玩一个游戏, 他们两个人都知道$\mathbf{p}, \mathbf{q}$分布的具体解析式. Alice首先投掷一枚均匀硬币, 并且不向Bob展示结果: 如果是正面, 她抽取$x \sim \mathbf{p}$; 如果是反面, 她抽取$x \sim \mathbf{q}$. 然后她将$x$的值展示给Bob, Bob必须猜测硬币投掷的结果是否为正面(也就是判断是从分布$\mathbf{p}$中抽的, 还是从分布$\mathbf{q}$中抽的). 设Bob猜硬币是正面(认为是分布$\mathbf{p}$)但是错误的概率是$\alpha$, 猜硬币是反面(认为是分布$\mathbf{q}$)但是错误的概率是$\beta$, 由于是均匀硬币, 所以是以$1/2$为概率生成硬币的, 那么整体出错的概率可以表为$P_{err}=\frac{1}{2}\alpha+\frac{1}{2}\beta$. 由上述的Lemma可以得到, $\alpha+\beta \geq 1-d_{\text{TV}(\mathbf{p}, \mathbf{q})}$, 所以有$P_{err}\geq \frac{1}{2}-\frac{1}{2}d_{\text{TV}(\mathbf{p}, \mathbf{q})}$, 故胜率$P_{win}=1-P_{err}\leq 1-(\frac{1}{2}-\frac{1}{2}d_{\text{TV}(\mathbf{p}, \mathbf{q})})=\frac{1}{2}+\frac{1}{2}d_{\text{TV}(\mathbf{p}, \mathbf{q})}=0.75$. 这是最高的胜率. 
+
+#### 计算公式
+
+还有一个非常有用的fact: 总变差距离就是$\ell_1$距离的一半. 这叫做Scheffé's Lemma. 对于任意分布$\mathbf{p}, \mathbf{q}$, 总变差距离等于他们在每个取值点上概率差值绝对值之和的一半. 即:
+
+$$
+d_{TV}(\mathbf{p},\mathbf{q})=\tfrac12\sum_{x\in\mathcal X}\bigl|\mathbf{p}(x)-\mathbf{q}(x)\bigr|=\tfrac12\|\mathbf{p}-\mathbf{q}\|_1.  
+$$
+
+这个fact是一个非常有用的东西. 因为$\ell_p$范数已经被玩烂了, 可以利用常见的不等式进行分析, 例如Hölder不等式, Cauchy-Schwarz不等式, 以及$\ell_p$范数的单调性等, 从而简化证明过程.

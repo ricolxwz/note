@@ -8,9 +8,11 @@ comments: true
 ## 总体配置
 
 ```json
+"editor.fontSize": 14,
 "editor.fontFamily": "Maple Mono Normal NL NF CN",
 "editor.wrappingStrategy": "advanced",
 "editor.minimap.enabled": true,
+"editor.tabCompletion": "onlySnippets",
 "editor.cursorBlinking": "solid",
 "editor.cursorStyle": "line",
 "editor.fontLigatures": false,
@@ -133,6 +135,55 @@ comments: true
 ```
 
 ## 键盘配置
+
+## macOS
+
+```json
+{
+    "key": "cmd+e",
+    "command": "editor.action.insertSnippet",
+    "when": "editorTextFocus",
+    "args": {
+        "snippet": "$${0}$"
+    },
+},
+{
+    "key": "shift+cmd+/",
+    "command": "chinese-punctuation-to-english.toEnglish"
+},
+{
+    "key": "ctrl+\\",
+    "command": "workbench.action.toggleAuxiliaryBar"
+},
+{
+    "key": "alt+cmd+b",
+    "command": "-workbench.action.toggleAuxiliaryBar"
+},
+{
+    "key": "cmd+\\",
+    "command": "workbench.action.toggleSidebarVisibility"
+},
+{
+    "key": "cmd+b",
+    "command": "-workbench.action.toggleSidebarVisibility"
+},
+{
+    "key": "alt+\\",
+    "command": "workbench.action.togglePanel"
+},
+{
+    "key": "cmd+j",
+    "command": "-workbench.action.togglePanel"
+},
+{
+    "key": "ctrl+z",
+    "command": "editor.action.toggleWordWrap"
+},
+{
+    "key": "alt+z",
+    "command": "-editor.action.toggleWordWrap"
+},
+```
 
 ## Windows
 
