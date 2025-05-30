@@ -402,12 +402,12 @@ partial template called
 #include <iostream>
 
 template<typename T>
-T Sum(T arg){ // 基本情况：只有一个参数
+T Sum(T arg){ // 基本情况: 只有一个参数
     return arg;
 }
 
 template<typename T, typename... Args>
-T Sum(T start, Args... args){ // 递归情况：至少有两个参数
+T Sum(T start, Args... args){ // 递归情况: 至少有两个参数
     return start + Sum(args...); // 将第一个参数与剩余参数的和相加
 }
 
@@ -519,12 +519,12 @@ int main()
 #include <iostream>
 
 template<typename T>
-T Sum(T arg){ // 基本情况：只有一个参数
+T Sum(T arg){ // 基本情况: 只有一个参数
     return arg;
 }
 
 template<typename T, typename... Args>
-T Sum(T start, Args... args){ // 递归情况：至少有两个参数
+T Sum(T start, Args... args){ // 递归情况: 至少有两个参数
     return start + Sum(args...); // 将第一个参数与剩余参数的和相加
 }
 
@@ -970,3 +970,36 @@ double Container<double>::m_variable;
 float Container<float>::m_variable;
 #endif
 ```
+
+### CTAD
+
+CTAD, Class Template Argument Deduction, 简单来说, 它是 C++17 引入的一个特性, 允许编译器在创建类模板的对象时, 根据构造函数参数的类型自动推导出模板参数, 而不需要你显式指定它们.
+
+```cpp
+#include <vector>
+#include <string>
+#include <utility> // for std::pair
+
+template <typename T1, typename T2>
+struct MyPair {
+    T1 first;
+    T2 second;
+    MyPair(T1 f, T2 s) : first(f), second(s) {}
+};
+
+int main() {
+    std::pair p1(10, "hello"); // 编译器自动推导出 T1=int, T2=const char*
+                               // 对于 std::pair<int, std::string> p(10, "hello") 来说,
+                               // 推导出的pair类型是 std::pair<int, const char*>,
+                               // 然后 p1 会被构造成 std::pair<int, std::string>.
+
+    MyPair mp1(3.14, "pi"); // 编译器自动推导出 T1=double, T2=const char*
+                            // mp1 的类型是 MyPair<double, const char*>
+
+    std::vector v = {1, 2, 3, 4, 5}; // 推导出 std::vector<int>
+}
+```
+
+最好不要使用CTAD.
+
+### 默认参数
