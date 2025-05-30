@@ -1054,7 +1054,7 @@ class Container {
 int main() {
     Container<int, 15> c;
     Container<int> c2; // size是10
-    Container c2; // T是int, size是10
+    Container c3; // T是int, size是10
     return 0;
 }
 ```
