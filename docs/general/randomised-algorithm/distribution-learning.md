@@ -126,6 +126,6 @@ emmmmm. 这可能有点不尽如人意. 因为在偏差$\frac{\epsilon}{2}$以�
 
 > 定理: 对于任意$0 < \alpha \le 1/2$和$\epsilon \in (0, 1]$, 检验一枚硬币的偏差至多为$\alpha$或至少为$\alpha(1+\epsilon)$, 以至少$1-\delta$的概率, 可通过$n = O(\frac{1}{\alpha\epsilon^2}\log\frac{1}{\delta})$个独立同分布样本完成.
 
-可以看到, 当$\alpha$非常小的时候, 这个结果比另一种估计偏差到加性误差$\pm \frac{1}{2}\alpha\epsilon$的方法(需要$n = O(\frac{1}{\alpha^2\epsilon^2} \log \frac{1}{\delta})$的样本)要好得多, 因为前者需要的样本数更少. 这是因为当$\alpha$很小时, $\frac{1}{\alpha\epsilon^2}$比$\frac{1}{\alpha^2\epsilon^2}$小. 
+这里, $\alpha$代表硬币偏差的一个基准水平. 我们要做的是判断一枚硬币的$p$是至多$\alpha$, 还是至少$\alpha(1+\epsilon)$, 有了这个结果, 我们就能判断硬币是否是偏置的, 如果至多是$\alpha$, 说明它不是偏置的硬币; 如果至少是$\alpha+(1+\epsilon)$, 说明它是偏置的硬币. 要将$p$放到哪个区间需要投掷$n = O(\frac{1}{\alpha\epsilon^2}\log\frac{1}{\delta})$个硬币, 正确率为$1-\delta$.
 
-具体如何证明这个定理见notes. 
+可以看到, 当$\alpha$非常小的时候, 这个结果比另一种估计偏差到加性误差$\pm \frac{1}{2}\alpha\epsilon$的方法(需要$n = O(\frac{1}{\alpha^2\epsilon^2} \log \frac{1}{\delta})$的样本)要好得多, 因为前者需要的样本数更少. 这是因为当$\alpha$很小时, $\frac{1}{\alpha\epsilon^2}$比$\frac{1}{\alpha^2\epsilon^2}$小. 
