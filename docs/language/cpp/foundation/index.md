@@ -65,6 +65,8 @@
 - (指针) 自定义`Deleter`
 - (类型) `union`的用法
 - (类型) `std::variant`的用法
+- (类型) `constexpr`的用法
+- (调试) `assert`的用法
 
 ## 引用
 

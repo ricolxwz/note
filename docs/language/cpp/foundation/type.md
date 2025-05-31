@@ -425,4 +425,53 @@ data: 8
 
 为啥呢? 这是因为`std::variant`会和最大的类型对齐(`float`, 4个字节), 然后用一些额外的空间存储当前类型的tag, 由于要和最大的类型对齐, 所以用于存储tag的空间是4个字节, 所以加起来总共8个字节. 这就是为啥`std::variant`又被称为tagged union.
 
-还有另一个点是`std:get_if`的使用. 它的主要作用是, 在不抛出异常的情况下(上面的`std::bad_variant_access`), 尝试获取`std::variant`中特定类型的值的指针. `std::get_if<T>(&v)`会检查`std::variant`对象`v`是否持有类型为`T`的值. 如果`v`确实持有类型为`T`的值, `std::get_if`会返回一个指向该值的指针. 如果`v`不持有类型为`T`的值, `std::get_if`会返回`nullptr`. 它和`std::get`的主要区别是, `std::get<T>(v)`在类型不匹配的时候会抛出`std::bad_variant_access`异常, 而`std::get_if`则通过返回`nullptr`来表示类型不匹配或者值不存在, 使得你可以使用更加平和的方式(如`if`语句检查指针)来处理这种情况. 
+还有另一个点是`std:get_if`的使用. 它的主要作用是, 在不抛出异常的情况下(上面的`std::bad_variant_access`), 尝试获取`std::variant`中特定类型的值的指针. `std::get_if<T>(&v)`会检查`std::variant`对象`v`是否持有类型为`T`的值. 如果`v`确实持有类型为`T`的值, `std::get_if`会返回一个指向该值的指针. 如果`v`不持有类型为`T`的值, `std::get_if`会返回`nullptr`. 它和`std::get`的主要区别是, `std::get<T>(v)`在类型不匹配的时候会抛出`std::bad_variant_access`异常, 而`std::get_if`则通过返回`nullptr`来表示类型不匹配或者值不存在, 使得你可以使用更加平和的方式(如`if`语句检查指针)来处理这种情况.
+
+## `constexpr`的用法
+
+constexpr是C++11引入的关键字. 它用于声明可以在编译时求值的常量表达式.
+
+具体来说, constexpr可以用于以下几个方面:
+
+1.  constexpr变量: 声明的变量必须在编译时初始化, 且其值在整个程序运行期间保持不变. 初始化的表达式只能包含字面值, constexpr变量和constexpr函数. 例如:
+
+    ```c++
+    constexpr int max_size = 100 + 5;
+    constexpr double pi = 3.14159 + 0.001;
+    ```
+
+2.  constexpr函数: 声明的函数如果其参数也是常量表达式, 则可以在编译时被求值. constexpr函数必须满足一些限制, 例如函数体只能包含return语句, 空语句和constexpr声明等. 例如:
+
+    ```c++
+    constexpr int square(int n) {
+        return n * n;
+    }
+
+    int main() {
+        constexpr int result = square(5); // result在编译时被计算为25
+        int x = 2;
+        // int runtime_result = square(x); // 可以在运行时计算
+    }
+    ```
+
+3.  constexpr构造函数: 声明的构造函数可以用于创建constexpr对象. constexpr类的所有成员都必须是字面值类型, 并且构造函数的函数体必须为空. 例如:
+
+    ```c++
+    struct Point {
+        constexpr Point(double x_val, double y_val) : x(x_val), y(y_val) {}
+        double x;
+        double y;
+    };
+
+    constexpr Point origin(0.0, 0.0);
+    ```
+
+使用 constexpr 的原因有很多, 主要包括以下几点:
+
+1. 性能优化: constexpr 允许在编译时计算表达式的值. 这意味着在程序运行时, 这些值已经是预先计算好的, 避免了运行时的计算开销, 从而提高了程序的性能.
+2. 编译时检查: constexpr 函数和变量的值在编译时确定, 编译器可以对它们进行更严格的类型检查和错误诊断. 这有助于在程序运行之前发现潜在的错误.
+3. 定义常量: constexpr 可以用来定义真正的常量, 这些常量可以用于模板参数, 数组大小, 枚举值等需要在编译时确定的地方. 这增强了代码的灵活性和可读性.
+4. 更好的代码可读性和可维护性: 通过使用 constexpr, 可以将一些计算逻辑放在编译时进行, 使得代码更加清晰, 易于理解和维护.
+5. 在模板编程中的应用: constexpr 函数可以作为模板参数的非类型参数, 从而实现更强大的模板元编程.
+
+简单来说, constexpr 的核心优势在于将计算从运行时提前到编译时, 从而提升性能, 增强类型安全, 并使代码更具表达力. 其实template也是在编译的时候起作用的. 
