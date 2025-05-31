@@ -42,3 +42,4 @@ comments: true
 * Transmit: SFTP客户端, 和Cyberduck类似, 🌟
 * PixPin: 到底是谁在吹这款软件? 必Snipaste差了不知道多少倍, 最基的功能都做不流畅, 做不精细, 🌟
 * Pdf expert: 主要看上了文本标注功能, 🌟
+* SoundSource: 声音控制
