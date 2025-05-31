@@ -371,5 +371,58 @@ typedef union SDL_Event
 
 ### `std::variant`
 
-`std::variant`是C++17引入的一个非常有用的特性, 它是一个类型安的`union`. 它可以在任何时候持有其预定义类型列表中的一个值.
+`std::variant`是C++17引入的一个非常有用的特性, 它是一个类型安全的`union`. 它可以在任何时候持有其预定义类型列表中的一个值. 在声明`std::variant`的时候, 你必须指定它可以持有的所有可能类型, 例如`std::variant<int, double, std::string>`, 这个`v`可以持有`int`, `double`, 或者`std::string`. 访问值的方法一般由两种:
 
+1. `std::get<T>v`: 如果`v`当前持有类型`T`的值, 则返回该值的引用, 如果`v`不持有类型`T`的值, 则会抛出`std::bad_variant_access`异常
+2. `std::get<I>v`: 如果`v`当前持有第`I`个备选类型(索引从0开始)的值, 则返回该值的引用, 否则抛出`std::bad_variant_access`异常
+
+那么, 它的类型安全是啥意思呢? 
+
+```cpp
+union MyUnion {
+    int i;
+    double d;
+};
+MyUnion u;
+u.i = 10;
+// double value = u.d; // 编译通过, 但这是未定义行为, value可能是垃圾值
+```
+
+但是对于`std::variant`:
+
+```cpp
+std::variant<int, double> v;
+v = 10; // v 现在持有 int
+// double d = std::get<double>(v); // 会抛出 std::bad_variant_access 异常
+// int i = std::get<int>(v);     // 正确, i 的值为 10
+```
+
+另外, 你会发现相同情况下, `std::variant`的内存占用比`union`要大:
+
+```cpp
+#include <iostream>
+#include <variant>
+
+union U {
+    int i;
+    float s;
+};
+
+int main() {
+    std::variant<int, float> data;
+    std::cout << "U: " << sizeof(U) << std::endl;
+    std::cout << "data: " << sizeof(data) << std::endl;
+    return 0;
+}
+```
+
+使用C++17编译之后, 发现:
+
+```bash
+U: 4
+data: 8
+```
+
+为啥呢? 这是因为`std::variant`会和最大的类型对齐(`float`, 4个字节), 然后用一些额外的空间存储当前类型的tag, 由于要和最大的类型对齐, 所以用于存储tag的空间是4个字节, 所以加起来总共8个字节. 这就是为啥`std::variant`又被称为tagged union.
+
+还有另一个点是`std:get_if`的使用. 它的主要作用是, 在不抛出异常的情况下(上面的`std::bad_variant_access`), 尝试获取`std::variant`中特定类型的值的指针. `std::get_if<T>(&v)`会检查`std::variant`对象`v`是否持有类型为`T`的值. 如果`v`确实持有类型为`T`的值, `std::get_if`会返回一个指向该值的指针. 如果`v`不持有类型为`T`的值, `std::get_if`会返回`nullptr`. 它和`std::get`的主要区别是, `std::get<T>(v)`在类型不匹配的时候会抛出`std::bad_variant_access`异常, 而`std::get_if`则通过返回`nullptr`来表示类型不匹配或者值不存在, 使得你可以使用更加平和的方式(如`if`语句检查指针)来处理这种情况. 
