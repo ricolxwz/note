@@ -67,6 +67,7 @@
 - (类型) `std::variant`的用法
 - (类型) `constexpr`的用法
 - (调试) `assert`的用法
+- (类型) `auto`的用法
 
 ## 引用
 

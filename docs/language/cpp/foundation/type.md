@@ -475,3 +475,45 @@ constexpr是C++11引入的关键字. 它用于声明可以在编译时求值的�
 5. 在模板编程中的应用: constexpr 函数可以作为模板参数的非类型参数, 从而实现更强大的模板元编程.
 
 简单来说, constexpr 的核心优势在于将计算从运行时提前到编译时, 从而提升性能, 增强类型安全, 并使代码更具表达力. 其实template也是在编译的时候起作用的. 
+
+## `auto`的用法
+
+在C++中, `auto`关键字主要用于类型推导. 它允许你在声明变量时不必显式指定其类型, 而是让编译器根据初始化表达式自动推断出变量的类型. 自C++11标准引入以来,`auto`的主要作用体现在以下几个方面:
+
+1.  简化代码, 提高可读性: 当变量的类型很长或很明显时, 使用`auto`可以减少代码的冗余, 使代码更简洁易懂. 例如:
+    ```cpp
+    std::vector<std::pair<std::string, int>> my_vector;
+    // 不使用 auto
+    std::vector<std::pair<std::string, int>>::iterator it = my_vector.begin();
+    // 使用 auto
+    auto it = my_vector.begin();
+    for (it; my_vector.end(); it++) {
+        ...
+    }
+    ```
+    在上面的例子中, 使用`auto`可以避免写出冗长的迭代器类型.
+
+2.  处理复杂类型: 对于一些难以书写或名称复杂的类型 (例如 lambda 表达式的类型),`auto`非常有用. 你不需要知道或显式写出 lambda 表达式的具体类型.
+    ```cpp
+    // lambda 表达式
+    auto my_lambda = [](int x) { return x * 2; };
+    ```
+
+3.  泛型编程: 在模板编程中,`auto`可以方便地处理依赖于模板参数的类型.
+    ```cpp
+    template <typename T, typename U>
+    auto add(T t, U u) -> decltype(t + u) {
+        return t + u;
+    }
+    ```
+    虽然上面的例子使用了尾置返回类型(使用`decltype`自动推导), 但在 C++14 中, 函数的返回类型也可以直接使用`auto`让编译器推导.
+
+4.  避免类型不匹配: 有时, 表达式的类型可能很复杂或容易出错, 使用`auto`可以确保变量的类型与初始化表达式的类型完全一致, 从而避免潜在的类型不匹配问题.
+
+需要注意的是:
+
+* 使用`auto`声明的变量必须进行初始化, 因为编译器需要根据初始化表达式来推导类型.
+* `auto`不是一个占位符, 它会根据初始化表达式推导出一个确切的类型.
+* `auto`不能用于函数参数的类型 (C++14 中 lambda 表达式的参数可以使用 `auto`).
+* `auto`可以和引用(`&`)或指针(`*`)结合使用. 例如: `auto& ref = variable;` 或`auto* ptr = &variable;`.
+* `auto`会忽略初始化表达式的顶层 `const`和`volatile`限定符, 但如果需要保留这些限定符, 可以显式地添加, 例如`const auto`或`volatile auto`. 对于引用类型, `const`会被保留.
