@@ -515,6 +515,7 @@ comments: true
         "buuug7.chinese-punctuation-to-english",
         "EditorConfig.EditorConfig",
         "ms-vscode.wordcount",
+        "alefragnani.Bookmarks",
 
         // 代码智能
         "GitHub.copilot",
