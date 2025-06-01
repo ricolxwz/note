@@ -553,7 +553,7 @@ int main() {
 #include <iostream>
 
 int main() {
-    std::cout << float(7)/5 << std::endl;
+    std::cout << float(7)/5 << std::endl; // C风格的类型转换
     return 0;
 }
 ```
@@ -563,6 +563,31 @@ int main() {
 ```bash
 1.4
 ```
+
+再来看下面的这个例子:
+
+```cpp
+#include <iostream>
+
+int main() {
+    int result = 50000;
+    short c = result;
+    std::cout << c << std::endl;
+    std::cout << sizeof(result) << std::endl>>
+    std::cout << sizeof(c) << std:;endl;
+    return 0;
+}
+```
+
+输出:
+
+```
+-15536
+4
+2
+```
+
+你会发现, 咦, 为啥不是5000, 这是因为`int`的大小是4字节, 但是`short`的大小是2字节, 我们进行了隐式类型转换, 中间损失了两个字节. 
 
 ### `dynamic_cast`
 
