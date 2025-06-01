@@ -162,6 +162,14 @@ $$\frac{1}{2} \sum_{i=1}^k |\hat{\mathbf{p}}_i - \mathbf{p}_i| \le \epsilon$$
 
 #### 改进版本1
 
-这种方法试图通过对每个$\mathbf{p}_i$进行乘性估计来获得更好的样本复杂度. **策略**: 学习每个$\mathbf{p}_i$, 使其满足乘性因子$(1 \pm 2\epsilon)$, 即$(1-2\epsilon)\mathbf{p}_i \le \hat{\mathbf{p}}_i \le (1+2\epsilon)\mathbf{p}_i$. 这意味着$|\hat{\mathbf{p}}_i - \mathbf{p}_i| \le 2\epsilon \mathbf{p}_i$. **中间假设**: 为了推导, 先假设对于所有$i$, $\mathbf{p}_i \ge \frac{\epsilon}{k}$. **结果**: 利用Chernoff界和并集界限, 可以表明在上述乘性误差下, 所有$\hat{\mathbf{p}}_i$都满足要求 (概率至少为$1-\delta$), 所需的样本数量$n$为: $n = O\left(\frac{k}{\epsilon^2} \log\frac{k}{\delta}\right)$. **整体误差**: 如果每个$|\hat{\mathbf{p}}_i - \mathbf{p}_i| \le 2\epsilon \mathbf{p}_i$, 那么: $\frac{1}{2} \sum_{i=1}^k |\hat{\mathbf{p}}_i - \mathbf{p}_i| \le \frac{1}{2} \sum_{i=1}^k 2\epsilon \mathbf{p}_i = \epsilon \sum_{i=1}^k \mathbf{p}_i = \epsilon$, 这正好满足了我们的总体目标. **评价**: 这种方法的样本数对$k$的依赖性大约是$k \log k$, 这比第一种方法的$k^2 \log k$要好得多. 
+这种方法试图通过对每个$\mathbf{p}_i$进行乘性估计来获得更好的样本复杂度. **策略**: 学习每个$\mathbf{p}_i$, 使其满足乘性因子$(1 \pm 2\epsilon)$, 即$(1-2\epsilon)\mathbf{p}_i \le \hat{\mathbf{p}}_i \le (1+2\epsilon)\mathbf{p}_i$. 这意味着$|\hat{\mathbf{p}}_i - \mathbf{p}_i| \le 2\epsilon \mathbf{p}_i$. **中间假设**: 为了推导, 先假设对于所有$i$, $\mathbf{p}_i \ge \frac{\epsilon}{k}$. **结果**: 利用Chernoff界和并集界限, 可以表明在上述乘性误差下, 所有$\hat{\mathbf{p}}_i$都满足要求 (概率至少为$1-\delta$), 所需的样本数量$n$为: $n = O\left(\frac{k}{\epsilon^3} \log\frac{k}{\delta}\right)$. **整体误差**: 如果每个$|\hat{\mathbf{p}}_i - \mathbf{p}_i| \le 2\epsilon \mathbf{p}_i$, 那么: $\frac{1}{2} \sum_{i=1}^k |\hat{\mathbf{p}}_i - \mathbf{p}_i| \le \frac{1}{2} \sum_{i=1}^k 2\epsilon \mathbf{p}_i = \epsilon \sum_{i=1}^k \mathbf{p}_i = \epsilon$, 这正好满足了我们的总体目标. **评价**: 这种方法的样本数对$k$的依赖性大约是$k \log k$, 这比第一种方法的$k^2 \log k$要好得多. 
 
 总的来说, 上面的两种方法对比了两种估计离散概率分布的策略. 第二种基于乘性误差的策略在样本复杂度上对参数$k$的依赖性更优, 因此在$k$较大时更为高效.
+
+#### 改进版本2
+
+我们可以继续提升! 这段文字在说:
+
+(之前讨论的) 那两个上限中, 一个对参数$k$有 (近似) 平方级别的依赖关系, 但对$1/\epsilon$也是平方级别的依赖关系; 另一个对$k$是 (近似) 线性级别的依赖关系, 但对$1/\epsilon$却是立方级别的依赖关系. 并且, 由于使用了并集界限 (union bound), 两者都额外多了一个关于$k$的对数因子. 这让人感觉不太对劲, 而且事实也的确如此.
+
+> 定理53: 学习一个未知的概率分布$p \in \Delta(k)$ (即一个在$k$个可能结果上的分布), 使其与真实分布的总变差距离 (total variation distance) 在$\epsilon$以内, 并且成功的概率至少为$1-\delta$, 可以通过以下数量的独立同分布 (i.i.d.) 样本来完成: $n = O\left(\frac{k + \log \frac{1}{\delta}}{\epsilon^2}\right)$. 此外, 定理还指出: (而且, 这是最优的.) 这意味着这个样本复杂度既是充分的 (可以达到) 也是必要的 (不能再少).
