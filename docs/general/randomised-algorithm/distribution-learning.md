@@ -1,6 +1,6 @@
 ---
 title: 学习与检测未知概率分布
-comments: false
+comments: true
 ---
 
 ## 主题
@@ -151,3 +151,17 @@ $$
 $$
 
 这里的$d_{\text{TV}}$是总变差距离. 这意味着, 估计分布$\hat{\mathbf{p}}$和真实分布$\mathbf{p}$的距离大于$\epsilon$的概率至少为$1-\delta$. 课件中指出, 其实可以定义为其他的metric, 例如KL散度, 在机器学习中非常有用. 那么, 我们需要多少的样本呢? 
+
+#### 最初的想法
+
+我们要估计一个具有$k$个可能结果的离散概率分布$\mathbf{p} = (\mathbf{p}_1, \dots, \mathbf{p}_k)$所需的样本数量$n$. 目标是得到一个估计分布$\hat{\mathbf{p}} = (\hat{\mathbf{p}}_1, \dots, \hat{\mathbf{p}}_k)$, 使得它与真实分布$\mathbf{p}$的总变差距离 (等于$L_1$距离的一半) 小于或等于$\epsilon$:
+
+$$\frac{1}{2} \sum_{i=1}^k |\hat{\mathbf{p}}_i - \mathbf{p}_i| \le \epsilon$$
+
+我们的第一种思路是对每个概率$\mathbf{p}_i$进行加性估计. 这种方法的目标是分别估计每个概率$\mathbf{p}_i$, 使得加性误差$|\hat{\mathbf{p}}_i - \mathbf{p}_i|$足够小. **策略**: 为了确保整体$L_1$误差不超过$\epsilon$, 我们需要估计每个$\mathbf{p}_i$, 使得其加性误差不超过$\frac{\epsilon}{k}$. **误差概率**: 为了保证所有$k$个估计都以高概率成功, 我们设定对每个$\mathbf{p}_i$的估计失败概率为$\frac{\delta}{k}$. 通过并集界限 (union bound), 所有$k$个估计都成功的总概率至少为$1-\delta$. **样本复杂度**: 根据推论50.1, 达到此目标的总样本数$n$为: $n = O\left(\frac{1}{(\epsilon/k)^2} \log\frac{1}{(\delta/k)}\right) = O\left(\frac{k^2}{\epsilon^2} \log\frac{k}{\delta}\right)$. **评价**: 这种方法的样本数对参数$k$的依赖性超过了二次方 ($k^2 \log k$), 这在$k$很大时效率不高.
+
+#### 改进版本1
+
+这种方法试图通过对每个$\mathbf{p}_i$进行乘性估计来获得更好的样本复杂度. **策略**: 学习每个$\mathbf{p}_i$, 使其满足乘性因子$(1 \pm 2\epsilon)$, 即$(1-2\epsilon)\mathbf{p}_i \le \hat{\mathbf{p}}_i \le (1+2\epsilon)\mathbf{p}_i$. 这意味着$|\hat{\mathbf{p}}_i - \mathbf{p}_i| \le 2\epsilon \mathbf{p}_i$. **中间假设**: 为了推导, 先假设对于所有$i$, $\mathbf{p}_i \ge \frac{\epsilon}{k}$. **结果**: 利用Chernoff界和并集界限, 可以表明在上述乘性误差下, 所有$\hat{\mathbf{p}}_i$都满足要求 (概率至少为$1-\delta$), 所需的样本数量$n$为: $n = O\left(\frac{k}{\epsilon^2} \log\frac{k}{\delta}\right)$. **整体误差**: 如果每个$|\hat{\mathbf{p}}_i - \mathbf{p}_i| \le 2\epsilon \mathbf{p}_i$, 那么: $\frac{1}{2} \sum_{i=1}^k |\hat{\mathbf{p}}_i - \mathbf{p}_i| \le \frac{1}{2} \sum_{i=1}^k 2\epsilon \mathbf{p}_i = \epsilon \sum_{i=1}^k \mathbf{p}_i = \epsilon$, 这正好满足了我们的总体目标. **评价**: 这种方法的样本数对$k$的依赖性大约是$k \log k$, 这比第一种方法的$k^2 \log k$要好得多. 
+
+总的来说, 上面的两种方法对比了两种估计离散概率分布的策略. 第二种基于乘性误差的策略在样本复杂度上对参数$k$的依赖性更优, 因此在$k$较大时更为高效.
