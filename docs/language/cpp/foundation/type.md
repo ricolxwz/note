@@ -517,3 +517,105 @@ constexpr是C++11引入的关键字. 它用于声明可以在编译时求值的�
 * `auto`不能用于函数参数的类型 (C++14 中 lambda 表达式的参数可以使用 `auto`).
 * `auto`可以和引用(`&`)或指针(`*`)结合使用. 例如: `auto& ref = variable;` 或`auto* ptr = &variable;`.
 * `auto`会忽略初始化表达式的顶层 `const`和`volatile`限定符, 但如果需要保留这些限定符, 可以显式地添加, 例如`const auto`或`volatile auto`. 对于引用类型, `const`会被保留.
+
+## 类型转换
+
+在C++中, "casting"(类型转换) 是指将一个数据类型的值转换为另一个数据类型的过程. 这在需要不同类型的数据进行操作或交互时非常有用. 类型转换主要分为隐式转换和显示转换.
+
+1. 隐式转换
+
+    记起来类那一节讲到的`explicit`关键字吗? 它的作用就是防止隐式地类型转换, 例如`MyString s1 = 10`; 如果构造函数前面有`explicit`, 那么会报错, 因为将`10`隐式转换为了`MyString`对象. 必须显式地写成例如`MyString s1{10};`才行. 隐式转换是由编译器自动完成的, 通常发生在安全且无信息丢失风险的情况下, 例如将较小的整数类型转换为较大的整数类型, 或将派生对象转换为其基类指针或者引用. 
+
+2. 显式转换
+
+    需要程序员明确指定要进行的转换, 用于可能存在信息丢失或者类型不兼容风的情况, C++提供了4种命名的强制类型转换操作符, `static_cast`, `dynamic_cast`, `reinterpret_cast`, `const_cast`. 下面将会一一展开. 
+
+看这个例子:
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::cout << 7/5 << std::endl;
+    return 0;
+}
+```
+
+输出:
+
+```bash
+1
+```
+
+这是因为`7`是`long`, `7`是`long`, `5`是`int`, 所以`7/5`的结果是`long/long`, 结果是`1`. 如果我们想要得到`1.4`, 那么就需要将至少其中一个数转换为浮点数, 例如:
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::cout << float(7)/5 << std::endl;
+    return 0;
+}
+```
+
+输出:
+
+```bash
+1.4
+```
+
+### `dynamic_cast`
+
+`static_cast`仅仅在编译期间进行类转换, 不会在运行的时候检查实际对象类型. `dynamic_cast`会通过RTTI(Run Time Type Information)检查对象的类型, 类似于Java的反射. 通常用于将基类的指针转为派生类的指针(down casting). 如果对象不是`derived`会返回`nullptr`, 如果对象是``derived`会返回指向派生类的指针. 那么, 为什么不直接使用`static_cast`进行down casting呢? 来看下面的这个例子:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Base {
+public:
+    virtual ~Base() {}
+};
+
+class Derived: public Base {
+public:
+    void doDerived() {
+        cout<<"Called Derived method"<<endl;
+    }
+};
+
+class AnotherDerived: public Base {
+public:
+    void doAnother() {
+        cout<<"Called AnotherDerived method"<<endl;
+    }
+};
+
+void process(Base* ptr) {
+    // 尝试使用static_cast将Base*转换为Derived*
+    Derived* d1 = static_cast<Derived*>(ptr);
+    // 如果ptr实际指向AnotherDerived, 以下调用会导致未定义行为
+    d1->doDerived(); // 可能崩溃
+
+    // 使用dynamic_cast更安全
+    Derived* d2 = dynamic_cast<Derived*>(ptr);
+    if(d2) {
+        d2->doDerived();
+    } else {
+        cout<<"ptr不指向Derived, 转换失败"<<endl;
+    }
+}
+
+int main() {
+    Base* obj1 = new Derived();
+    Base* obj2 = new AnotherDerived();
+
+    process(obj1); // obj1实际指向Derived, 都能正常调用
+    process(obj2); // obj2实际指向AnotherDerived, static_cast编译通过但在运行时调用doDerived未定义, dynamic_cast返回nullptr
+    delete obj1;
+    delete obj2;
+    return 0;
+}
+```
+
+你会发现, `static_cast`无论`ptr`是否指向`Derived`实例, 都会执行转换, 但是如果`ptr`指向其他类型, 然后你调用了其他类型的成员函数, 如`d1->doDerived()`, 这会导致未定义行为. `dynamic_cast`则会在运行时检查类型, 如果转换失败, 返回`nullptr`, 否则返回有效指针, 这样的转换更加安全. 这就是为啥`static_cast`通常用于up casting(将派生类指针转换为基类指针), 而`dynamic_cast`通常用于down casting(将基类指针转换为派生类指针).
