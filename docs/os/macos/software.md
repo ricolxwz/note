@@ -43,3 +43,5 @@ comments: true
 * PixPin: 到底是谁在吹这款软件? 必Snipaste差了不知道多少倍, 最基的功能都做不流畅, 做不精细, 🌟
 * Pdf expert: 主要看上了文本标注功能, 🌟
 * SoundSource: 声音控制, 🌟, 不是特别好用, 特别是在homepod mini上
+* Dockdoor: 在dock栏有一个preview, 特别好用, 并且包含了Alt-tab的功能
+* Dock Expose: 和dockdoor类似, 但是好像停更了

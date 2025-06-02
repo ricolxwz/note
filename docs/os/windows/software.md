@@ -55,3 +55,4 @@ comments: true
 * Xftp: SFTP工具, 🌟
 * Filezilla: SFTP工具, S3客户端, 🌟
 * HoneyView: 图片查看器, 🌟
+* Bing Wallpaper: 必应壁纸, 赏心悦目
