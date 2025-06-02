@@ -334,6 +334,7 @@ nav:
       - 流处理: general/randomised-algorithm/streaming.md
       - 线性规划问题: general/randomised-algorithm/linear-programming.md
       - 学习与检测未知分布: general/randomised-algorithm/distribution-learning.md
+      - 专家学习: general/randomised-algorithm/learn-from-experts.md
   - 算法:
     - 人工智能:
       - algorithm/index.md
