@@ -589,6 +589,36 @@ int main() {
 
 你会发现, 咦, 为啥不是5000, 这是因为`int`的大小是4字节, 但是`short`的大小是2字节, 我们进行了隐式类型转换, 中间损失了两个字节. 
 
+### 比较
+
+在不同的两个类型进行比较前, 编译器会自动对它们进行隐式类型转换, 已使它们具有相同的类型, 然后再进行比较. 所以在这个过程中, 可能会产生一些问题, 例如:
+
+```cpp
+#include <iostream>
+
+int main() {
+    int i = -2;
+    unsigned int u = 1;
+    if (i > u) {
+        std::cout << "huh?" << std::endl;
+    }
+    return 0;
+}
+```
+
+输出:
+
+```
+huh?
+```
+
+可以看到, 这里即便`i`是-2, 但是结果是`i`比`u`大. 对于这种情况, 我们大概有两种方法: 
+
+1. 使用`-Wall`选项: 在编译的时候, 我们可以加上`-Wall`选项, 例如`g++ -Wall my_program.cpp`, 因为当你使用这个命令编译代码的时候, 编译器会像一个严格的代码审核员, 对你的代码进行更加深入的静态分析, 并报告它发现出的各种潜在问题. 
+2. 使用`std::cmp_greater`进行比较.
+
+解释
+
 ### `dynamic_cast`
 
 `static_cast`仅仅在编译期间进行类转换, 不会在运行的时候检查实际对象类型. `dynamic_cast`会通过RTTI(Run Time Type Information)检查对象的类型, 类似于Java的反射. 通常用于将基类的指针转为派生类的指针(down casting). 如果对象不是`derived`会返回`nullptr`, 如果对象是``derived`会返回指向派生类的指针. 那么, 为什么不直接使用`static_cast`进行down casting呢? 来看下面的这个例子:
