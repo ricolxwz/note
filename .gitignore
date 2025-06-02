@@ -171,6 +171,5 @@ cython_debug/
 .cache/
 
 *.cache
-.obsidian/
 
 encryptcontent.cache
