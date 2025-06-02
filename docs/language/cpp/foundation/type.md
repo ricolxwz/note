@@ -715,3 +715,5 @@ int main() {
 ```
 
 你会发现, `static_cast`无论`ptr`是否指向`Derived`实例, 都会执行转换, 但是如果`ptr`指向其他类型, 然后你调用了其他类型的成员函数, 如`d1->doDerived()`, 这会导致未定义行为. `dynamic_cast`则会在运行时检查类型, 如果转换失败, 返回`nullptr`, 否则返回有效指针, 这样的转换更加安全. 这就是为啥`static_cast`通常用于up casting(将派生类指针转换为基类指针), 而`dynamic_cast`通常用于down casting(将基类指针转换为派生类指针).
+
+总结来说, 如果想要`dynamic_cast`返回一个有效的指针, 需要`<>`里面的指针类型和`ptr` `new`的那个类型一致, 也就是说, 转换之后要能够调用`new`的那个类型的所有成员函数, 否则返回的是`nullptr`. 
