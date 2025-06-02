@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "47a4dcab8ead5a97",
+        "id": "026d3ec8a57926f6",
         "type": "tabs",
         "children": [
           {
-            "id": "d40cda48d2a529c3",
+            "id": "78d374ac49343453",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "docs/others/it-innovation.md",
+                "mode": "source",
+                "source": true
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "it-innovation"
             }
           }
         ]
@@ -177,8 +181,10 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "e799487657b7bb65",
+  "active": "78d374ac49343453",
   "lastOpenFiles": [
+    "docs/others/prompt.md",
+    "docs/algorithm/vq-vae/fsq.md",
     "docs/others/it-innovation.md",
     "未命名",
     "未命名.md",
@@ -209,7 +215,6 @@
     "docs/software/torrent/qbittorrent-unauthorized.md",
     "docs/software/vmware/vmware-tools.md",
     "docs/software/vmware/storage.md",
-    "docs/software/vmware/shared-cannot-find.md",
     "docs/software/xshell",
     "docs/software/xray",
     "docs/software/xchange",
