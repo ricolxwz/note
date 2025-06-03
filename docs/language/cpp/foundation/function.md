@@ -402,7 +402,7 @@ int main() {
 #include <algorithm>
 
 struct print_functor {
-    int& last_result = -1;
+    int& last_result;
     void operator()(int n) {
         last_result = n;
         std::cout << n << ",";
@@ -430,7 +430,59 @@ int main() {
 9
 ```
 
-其实这个Lambda表达式的实现底层就是实现了`print_functor`这个函数对象, 它没有名字. 
+其实这个Lambda表达式的实现底层就是实现了`print_functor`这个函数对象, 它没有名字. 在C++ insights中, 它是这样的: 
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+struct print_functor
+{
+  int & last_result;
+  inline void operator()(int n)
+  {
+    this->last_result = n;
+    std::operator<<(std::cout.operator<<(n), ",");
+  }
+  
+};
+
+
+int main()
+{
+  std::vector<int, std::allocator<int> > v = std::vector<int, std::allocator<int> >{std::initializer_list<int>{1, 3, 2, 5, 9}, std::allocator<int>()};
+  int last_result = -1;
+    
+  class __lambda_16_20
+  {
+    public: 
+    inline /*constexpr */ void operator()(int n) const
+    {
+      last_result = n;
+      std::operator<<(std::cout.operator<<(n), ",");
+    }
+    
+    private: 
+    int & last_result;
+    public: 
+    // inline /*constexpr */ __lambda_16_20(const __lambda_16_20 &) noexcept = default;
+    // inline /*constexpr */ __lambda_16_20(__lambda_16_20 &&) noexcept = default;
+    __lambda_16_20(int & _last_result)
+    : last_result{_last_result}
+    {}
+    
+  };
+  
+  __lambda_16_20 print_v = __lambda_16_20{last_result};
+  std::for_each(std::begin(v), std::end(v), __lambda_16_20(print_v));
+  std::cout.operator<<(std::endl);
+  std::cout.operator<<(last_result).operator<<(std::endl);
+  return 0;
+}
+```
+
+可以看到, 在内部Lambda表达式的实现是一个匿名函数对象`__lambda_16_20`. 
 
 ### 捕获变量
 
@@ -463,8 +515,10 @@ int main() {
             }
             ```
 
-        * 即使外部变量在lambda定义后被修改, lambda内部捕获的值也不会改变.
+        * 即使外部变量在lambda定义后被修改, lambda内部捕获的值不会改变.
+        * 尽管捕获列表式`[=]`, 但是也不会捕获全局变量, 因为全局变量不属于任何局部作用域.
         * 对于大对象的值捕获可能导致性能开销.
+        * 默认只读, 需要在Lambda作用域内修改的话使用`mutable`关键字.
     * 示例:
         ```cpp
         int x = 10;
@@ -527,6 +581,7 @@ int main() {
     * 特点:
         * 允许lambda访问其定义所在类的成员.
         * `this`捕获通常用于类成员函数内部定义lambda.
+        * `this`表示按照引用传递, `*this`表示按照值传递.
     * 示例:
         ```cpp
         class MyClass {
