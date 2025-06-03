@@ -347,4 +347,87 @@ int main() {
 
 ## Lambda表达式
 
-Lambda表达式是C++11引入的一种轻量级的匿名函数, 其作用是构建一个闭包: 一个匿名的函数对象(可调用对象), 它能够捕获在当前作用域内的变量. Lambda表达式之所以能够捕获变量, 根本原因在于它们在底层被实现为函数对象, 而函数对象可以拥有状态. "捕获"的本质就是将外部作用域的变量变成了Lambda生成的函数对象内部的状态(成员变量), 当这个lambda对象被调用的时候, 它实际上是在执行其匿名函数对象的`operator()`函数, 这个函数自然可以访问该匿名函数对象内部的状态(成员变量). 
+Lambda表达式是C++11引入的一种轻量级的匿名函数, 其作用是构建一个闭包: 一个匿名的函数对象(可调用对象), 它能够捕获在当前作用域内的变量. Lambda表达式之所以能够捕获变量, 根本原因在于它们在底层被实现为函数对象, 而函数对象可以拥有状态. "捕获"的本质就是将外部作用域的变量变成了Lambda生成的函数对象内部的状态(成员变量), 当这个lambda对象被调用的时候, 它实际上是在执行其匿名函数对象的`operator()`函数, 这个函数自然可以访问该匿名函数对象内部的状态(成员变量). 下面举个例子:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+void func(int n) {
+    std::cout << n << ",";
+}
+
+struct print_functor {
+    void operator()(int n) {
+        std::cout << n << ",";
+    }
+};
+
+int main() {
+    std::vector<int> v{1, 3, 2, 5, 9};
+    auto print_v = [](int n) {
+        std::cout << n << ",";
+    };
+    std::for_each(begin(v), end(v), [](int n) {
+        std::cout << n << ",";
+    });
+    std::cout << std::endl << "--------" << std::endl;
+    std::for_each(begin(v), end(v), print_v);
+    std::cout << std::endl << "--------" << std::endl;
+    std::for_each(begin(v), end(v), print_functor());
+    std::cout << std::endl << "--------" << std::endl;
+    std::for_each(begin(v), end(v), func);
+    return 0;
+}
+```
+
+输出:
+
+```bash
+1,3,2,5,9,
+--------
+1,3,2,5,9,
+--------
+1,3,2,5,9,
+--------
+1,3,2,5,9,
+```
+
+举一个捕获变量的例子:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+struct print_functor {
+    int last_result = -1;
+    void operator()(int n) {
+        last_result = n;
+        std::cout << n << ",";
+    }
+};
+
+int main() {
+    std::vector<int> v{1, 3, 2, 5, 9};
+    int last_result = -1;
+    auto print_v = [&last_result](int n) {
+        last_result = n;
+        std::cout << n << ",";
+    };
+    std::for_each(begin(v), end(v), print_v);
+    std::cout << std::endl;
+    std::cout << last_result << std::endl;
+    return 0;
+}
+```
+
+输出:
+
+```bash
+1,3,2,5,9,
+9
+```
+
+其实这个Lambda表达式的实现底层就是实现了`print_functor`这个函数对象, 它没有名字. 
