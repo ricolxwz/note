@@ -717,3 +717,78 @@ int main() {
 你会发现, `static_cast`无论`ptr`是否指向`Derived`实例, 都会执行转换, 但是如果`ptr`指向其他类型, 然后你调用了其他类型的成员函数, 如`d1->doDerived()`, 这会导致未定义行为. `dynamic_cast`则会在运行时检查类型, 如果转换失败, 返回`nullptr`, 否则返回有效指针, 这样的转换更加安全. 这就是为啥`static_cast`通常用于up casting(将派生类指针转换为基类指针), 而`dynamic_cast`通常用于down casting(将基类指针转换为派生类指针).
 
 总结来说, 如果想要`dynamic_cast`返回一个有效的指针, 需要`<>`里面的指针类型和`ptr` `new`的那个类型一致, 也就是说, 转换之后要能够调用`new`的那个类型的所有成员函数, 否则返回的是`nullptr`. 
+
+### `reinterpret_cast`
+
+`reinterpret_cast是C++`中一种非常底层的类型转换运算符. 它允许将任何指针类型转换为任何其他指针类型.
+
+```cpp
+#include <iostream>
+
+int main() {
+    float pi = 3.14f;
+    std::cout << &(pi) << std::endl;
+    std::cout << reinterpret_cast<int*>(&pi) << std::endl;
+    std::cout << reinterpret_cast<float*>(&pi) << std::endl;
+    std::cout << *reinterpret_cast<int*>(&pi) << std::endl;
+    std::cout << *reinterpret_cast<float*>(&pi) << std::endl;
+    return 0;
+}
+```
+
+输出:
+
+```bash
+0x7ffecd8dc924
+0x7ffecd8dc924
+0x7ffecd8dc924
+1078523331
+3.14
+```
+
+你会发现, 尽管他们的地址都是相同的, 但是存储的值却截然不同. 当通过`*reinterpret_cast<int*>(&pi)`访问时, 存储浮点数`3.14f`的内存位模式被当作整数解析, 得到了`1078523331`. 而通过`*reinterpret_cast<float*>(&pi)`访问时, 同样的位模式被正确解析为浮点数`3.14`.
+
+这清晰地展示了`reinterpret_cast`的核心作用: 它不改变实际存储的二进制数据, 仅改变编译器如何解释这些数据对应的类型. 浮点数 (例如遵循IEEE 754标准) 与整数在内存中的二进制表示方式有本质区别. 因此, 同一段二进制码, 在不同的类型视角下会呈现出不同的数值.
+
+那么, 什么时候用`interpret_cast`呢?
+
+```cpp
+#include <iostream>
+#include <cstring>
+
+struct GameState {
+    int level;
+    int health;
+    int points;
+    bool GameComplete;
+    bool BossDefeated;
+};
+
+int main() {
+    GameState gs = {66, 100, 999, false, false};
+    std::cout << sizeof(GameState) << std::endl << std::endl;
+    char bagOfbytes[sizeof(GameState)];  // 假设这是一个文件, 我们要往里面写入GameState(即序列化)
+    std::memcpy(bagOfbytes, &gs, sizeof(GameState));  // 将GameState的内容复制到bagOfbytes中
+    // 现在, 我们要从文件中读取内容
+    std::cout << *reinterpret_cast<int*>(bagOfbytes) << std::endl;
+    std::cout << *reinterpret_cast<int*>(bagOfbytes + 4) << std::endl;
+    std::cout << *reinterpret_cast<int*>(bagOfbytes + 8) << std::endl;
+    std::cout << *reinterpret_cast<bool*>(bagOfbytes + 12) << std::endl;
+    std::cout << *reinterpret_cast<bool*>(bagOfbytes + 13) << std::endl;
+    return 0;
+}
+```
+
+上面的`GameState`成员变量在内存中的分布为: level(4字节), health(4字节), points(4字节), GameComplete(1字节), BossDefeated(1字节), 由于最大的成员变量占用4个字节, 所以另外还有2个字节的padding, 所以整个`GameState`结构体占用16个字节. 
+
+输出:
+
+```bash
+16
+
+66
+100
+999
+0
+0
+```
