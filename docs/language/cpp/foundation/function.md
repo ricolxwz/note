@@ -250,3 +250,97 @@ int main() {
 ```
 
 BTW, `std::make_unique`这个函数也是工厂函数. 
+
+## 函数对象
+
+在C++中, 通常说的"functor" (函数对象) 指的是一个行为像函数的对象. 更准确地说, 它是任何重载了函数调用运算符`operator()`的类的对象. 因为它可以像函数一样被"调用", 所以被称为函数对象或仿函数. 你写的"functors()"中的括号可能就是指这种可调用性.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+struct Value {
+    int m_result{0};
+    float m_result2{0.0f};
+
+    int operator()(int new_result) {
+        m_result = new_result;
+        return m_result;
+    }
+
+    float operator()(float new_result2) {
+        m_result2 = new_result2;
+        return m_result2;
+    }
+};
+
+int main() {
+    Value v;
+    v(42); // 进行调用
+    v(42.7f); // 进行调用
+    std::cout << v.m_result << std::endl;
+    std::cout << v.m_result2 << std::endl;
+    return 0;
+}
+```
+
+输出:
+
+```bash
+42
+42.7
+```
+
+再举一个例子:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+struct Goblin {
+    int m_health;
+    int m_strength;
+    Goblin(int h, int s) : m_health{h}, m_strength{s} {};
+    bool operator<(const Goblin& rhs) { // std::sort要知道怎么进行Goblin之间的比较
+        return this->m_health < rhs.m_health;
+    }
+};
+
+struct Comperator {
+    bool operator()(const Goblin& lhs, const Goblin& rhs) {
+        return lhs.m_strength < rhs.m_strength;
+    }
+};
+
+int main() {
+    std::vector<Goblin> goblins {
+        Goblin{5, 25},
+        Goblin{3, 25},
+        Goblin{100, 1}
+    };
+    std::sort(begin(goblins), end(goblins));
+    for (auto g : goblins) {
+        std::cout << g.m_health << std::endl;
+    }
+    std::cout << "------------------" << std::endl;
+    std::sort(begin(goblins), end(goblins), Comperator()); // 使用自定义比较器
+    for (auto g : goblins) {
+        std::cout << g.m_health << std::endl;
+    }
+    return 0;
+}
+```
+
+输出:
+
+```bash
+3
+5
+100
+------------------
+100
+3
+5
+```
