@@ -402,7 +402,7 @@ int main() {
 #include <algorithm>
 
 struct print_functor {
-    int last_result = -1;
+    int& last_result = -1;
     void operator()(int n) {
         last_result = n;
         std::cout << n << ",";
@@ -431,3 +431,128 @@ int main() {
 ```
 
 其实这个Lambda表达式的实现底层就是实现了`print_functor`这个函数对象, 它没有名字. 
+
+### 捕获变量
+
+在C++中, lambda表达式的捕获(capture)机制允许lambda访问其定义作用域中的变量. 这使得lambda表达式能够使用来自外部环境的数据. 捕获方式主要有以下几种:
+
+1.  值捕获(Capture by Value)
+    * 语法: `[var]` 或 `[=]`
+    * 特点:
+        * 当lambda创建时, 外部变量的值会被复制到lambda内部.
+        * 可用于实现闭包
+
+            ```cpp
+            #include <iostream>
+            #include <functional> // for std::function
+
+            std::function<void()> createLambda() {
+                int x = 10;
+                // x是值捕获, 它的值10会被复制到lambda内部
+                auto lambda = [x]() {
+                    std::cout << "Lambda内部的x: " << x << std::endl;
+                };
+                return lambda; // 返回这个lambda对象
+            } // x在这里销毁了
+
+            int main() {
+                auto myLambda = createLambda();
+                // 外部作用域(createLambda函数)已经销毁, 但myLambda仍然可以调用
+                myLambda(); // 输出: Lambda内部的x: 10
+                return 0;
+            }
+            ```
+
+        * 即使外部变量在lambda定义后被修改, lambda内部捕获的值也不会改变.
+        * 对于大对象的值捕获可能导致性能开销.
+    * 示例:
+        ```cpp
+        int x = 10;
+        auto lambda = [x]() {
+            std::cout << x; // x的值是10
+        };
+        x = 20; // 外部x改变不影响lambda内部的x
+        lambda(); // 输出10
+        ```
+
+2.  引用捕获(Capture by Reference)
+    * 语法: `[&var]` 或 `[&]`
+    * 特点:
+        * lambda内部存储的是外部变量的引用.
+        * lambda内部对捕获变量的修改会直接反映到外部变量.
+        * 外部变量的生命周期必须长于lambda的生命周期, 否则可能导致悬空引用(dangling reference).
+    * 示例:
+        ```cpp
+        int y = 10;
+        auto lambda = [&y]() {
+            y++; // 修改外部y
+        };
+        lambda();
+        std::cout << y; // 输出11
+        ```
+
+3.  隐式捕获(Implicit Capture)
+    * 语法: `[=]` (值捕获所有外部变量) 或 `[&]` (引用捕获所有外部变量)
+    * 特点: 方便但可能不明确, 尤其是在大型函数中. 推荐显式捕获以提高代码可读性.
+
+4.  混合捕获(Mixed Capture)
+    * 语法: 组合使用值捕获和引用捕获.
+    * 示例:
+        ```cpp
+        int a = 1;
+        int b = 2;
+        auto lambda = [a, &b]() { // a值捕获 b引用捕获
+            std::cout << a << " " << b;
+        };
+        ```
+
+5.  C++14 泛型lambda捕获(Generic Lambda Capture)
+    * 语法: `[variable_name = expression]`
+    * 特点:
+        * 允许在捕获列表中初始化新的变量.
+        * 这个变量可以是右值, 可以捕获移动语义.
+        * 非常灵活, 允许更复杂的捕获逻辑.
+    * 示例:
+        ```cpp
+        std::unique_ptr<int> ptr = std::make_unique<int>(42);
+        auto lambda = [p = std::move(ptr)]() { // 移动ptr到lambda内部的p
+            std::cout << *p;
+        };
+        lambda(); // 输出42
+        // ptr现在是空的
+        ```
+
+6.  `this`捕获(Capture `this`)
+    * 语法: `[this]` 或 `[=]` (隐式捕获`this`) 或 `[&]` (隐式捕获`this`)
+    * 特点:
+        * 允许lambda访问其定义所在类的成员.
+        * `this`捕获通常用于类成员函数内部定义lambda.
+    * 示例:
+        ```cpp
+        class MyClass {
+        public:
+            int member_var = 5;
+            void foo() {
+                auto lambda = [this]() { // 捕获当前对象的this指针
+                    std::cout << this->member_var;
+                };
+                lambda(); // 输出5
+            };
+        };
+        ```
+
+捕获的注意事项:
+
+* 生命周期: 引用捕获时务必确保被捕获变量的生命周期长于lambda的生命周期, 否则可能导致程序崩溃.
+* 默认捕获: `[=]`和`[&]`非常方便, 但可能捕获过多不必要的变量, 降低代码可读性和可维护性. 推荐显式捕获需要的变量.
+* 可变lambda: 如果lambda通过值捕获了一个变量, 但你希望在lambda内部修改这个被捕获的副本, 需要将lambda声明为`mutable`.
+    ```cpp
+    int i = 0;
+    auto lambda = [i]() mutable { // mutable允许修改i的副本
+        i++;
+        std::cout << i;
+    };
+    lambda(); // 输出1
+    lambda(); // 输出2
+    std::cout << i; // 外部i仍是0
+    ```
