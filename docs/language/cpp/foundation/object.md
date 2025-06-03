@@ -2541,3 +2541,38 @@ int main() {
     return 0;
 }
 ```
+
+## `mutable`的用法
+
+在C++中, `mutable`关键字的作用是允许类的某个数据成员即使在对象被声明为`const`时也能被修改. 通常, 当一个对象被声明为`const`时, 它的所有非`static`数据成员都不能被修改. 但是, 如果你希望某个特定的数据成员可以在`const`成员函数中被修改, 或者在一个`const`对象中被修改, 就可以将其声明为`mutable`.
+
+```cpp
+#include <iostream>
+#include <vector>
+
+struct Point3f {
+    public:
+    explicit Point3f(float _x, float _y, float _z) : x{_x}, y{_y}, z{_z} {};
+    void change_w(float new_w) const {
+        w = new_w;
+    }
+    float x, y, z;
+    mutable float w;
+};
+
+int main() {
+    Point3f p{1.0f, 2.0f, 3.0f};
+    p.change_w(5.0f);
+    std::cout << p.x << std::endl << p.y << std::endl << p.z << std::endl << p.w << std::endl;
+    return 0;
+}
+```
+
+输出:
+
+```bash
+1
+2
+3
+5
+```
