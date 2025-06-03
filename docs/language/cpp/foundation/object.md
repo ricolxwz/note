@@ -2501,3 +2501,43 @@ int main() {
         return 0;
     }
     ```
+
+## 嵌套类
+
+在C++中, 嵌套类 (nested class) 也是指在一个类的声明或定义内部声明或定义的另一个类. 它的主要特点为:
+
+1. 作用域: 嵌套类的名称位于其外部类的作用域内, 要在外部类的作用域之外使用嵌套类, 需要使用外部类的名称作为前缀, 如 `OuterClass::NestedClass`.
+2. 访问权限: 嵌套类的成员函数可以访问其外部类的所有成员. 但是如果要访问外部类的非静态成员, 嵌套类的成员函数需要一个外部类对象的实例(例如, 通过传递一个外部类对象的指针或引用), 嵌套类本身不持有外部类实例的隐式`this`指针. 外部类对嵌套类的成员没有特殊的访问权限, 访问权限遵循嵌套类中成员的访问修饰符(`public`, `protected`, `private`). 如果外部类需要访问嵌套类中的私有成员, 嵌套类可以将外部类声明为友元类. 
+3. 独立性: 可以独立于外部类的对象来创建嵌套类的对象
+4. 封装和组织: 用于将逻辑上紧密相连的类组织在一起, 可以将辅助来或者实现细节隐藏在主类的内部, 减少全局命名空间的污染. 
+
+```cpp
+#include <iostream>
+#include <vector>
+
+class ParticleSystem {
+    public:
+    struct Particle {
+        float x{0.0f};
+        float y{0.0f};
+        float z{0.0f};
+        float speed{1.0f};
+        float lifetime{50.0f};
+        void move() {};
+    };
+    void Simulation() {
+        for (size_t i = 0; i < m_particles.size(); ++i) {
+            m_particles[i].move();
+        }
+    }
+    private:
+    std::vector<Particle> m_particles;
+};
+
+int main() {
+    ParticleSystem p;
+    ParticleSystem::Particle individual_particle;
+    p.Simulation();
+    return 0;
+}
+```
