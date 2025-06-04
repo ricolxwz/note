@@ -611,3 +611,92 @@ int main()
     lambda(); // 输出2
     std::cout << i; // 外部i仍是0
     ```
+
+## 处理命令行参数
+
+在C++中, 处理命令行参数通常通过`main`函数的参数来实现. `main`函数可以接受两个参数: `int argc` 和 `char* argv[]`.
+
+```cpp
+#include <iostream>
+
+int main(int argc, char* argv[]) {
+    std::cout << "Number of arguments: " << argc << std::endl;
+    for (int i = 0; i < argc; ++i) {
+        std::cout << "Argument " << i << ": " << argv[i] << std::endl;
+    }
+    for (int i = 0; i < argc; i++) {
+        std::cout << "[" << i << "]" << argv[i] << std::endl;
+    }
+    return 0;
+}
+```
+
+输出:
+
+```bash
+$ g++ main.cpp -o prog
+$ ./prog arg1 arg2 arg3
+Number of arguments: 4
+Argument 0: ./prog
+Argument 1: arg1
+Argument 2: arg2
+Argument 3: arg3
+```
+
+### `std::get_env`的用法
+
+其实, 还有第三个参数, 还可以传入环境变量. 
+
+```cpp
+#include <iostream>
+
+int main(int argc, char* argv[], char* env[]) {
+    std::cout << "Number of arguments: " << argc << std::endl;
+    for (int i = 0; i < argc; ++i) {
+        std::cout << "Argument " << i << ": " << argv[i] << std::endl;
+    }
+    for (int i = 0; i < argc; i++) {
+        std::cout << "[" << i << "]" << argv[i] << std::endl;
+    }
+    std::cout << "Environment Variables:" << std::endl;
+    int i = 0;
+    for (;;) {
+        std::cout << env[i++];
+        if (env[i] == nullptr) {
+            break;
+        }
+    }
+    return 0;
+}
+```
+
+输出:
+
+```bash
+$ g++ main.cpp -o prog
+$ ./prog
+Number of arguments: 1
+Argument 0: ./prog
+[0]./prog
+Environment Variables:
+SHELL=/bin/bash ...... // 一堆环境变量
+```
+
+
+你会发现, 这样用起来比较困难, 可以改为使用`std::get_env`来获取环境变量. 例如:
+
+```cpp
+#include <iostream>
+#include <cstdlib>
+
+int main() {
+    std::cout << std::getenv("HOME") << std::endl;
+    return 0;
+}
+```
+
+输出:
+
+```bash
+/home/wexu0327
+```
