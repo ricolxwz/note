@@ -700,3 +700,211 @@ int main() {
 ```bash
 /home/wexu0327
 ```
+
+## `using`的用法
+
+在C++中`using`关键字主要有以下作用:
+
+* 引入命名空间成员: 允许直接使用命名空间中的名称, 无需前缀.
+    * `using namespace std;` 引入整个`std`命名空间.
+    * `using std::cout;` 仅引入`std::cout`.
+* 类型别名 (C++11起): 创建类型的别名, 类似`typedef`, 但更灵活, 可用于模板.
+    * `using MyInt = int;`
+    * `template<typename T> using MyVector = std::vector<T>;`
+* 引入基类成员: 在派生类中引入基类的成员 (如构造函数或被隐藏的同名函数) 到当前作用域.
+    * `using Base::Base;` 引入基类构造函数.
+    * `using Base::func;` 引入基类成员函数`func`到派生类的重载集合.
+
+### `using Base::Base`的用法
+
+举个例子:
+
+```cpp
+#include <iostream>
+#include <string>
+
+// 基类 Base
+class Base {
+public:
+    int value_int;
+    std::string value_str;
+
+    // 默认构造函数
+    Base() : value_int(0), value_str("Default") {
+        std::cout << "Base Default Constructor called. value_int: " << value_int << ", value_str: " << value_str << std::endl;
+    }
+
+    // 带一个int参数的构造函数
+    Base(int i) : value_int(i), value_str("FromInt") {
+        std::cout << "Base(int) Constructor called. value_int: " << value_int << ", value_str: " << value_str << std::endl;
+    }
+
+    // 带一个string参数和int参数的构造函数
+    Base(const std::string& s, int i) : value_int(i), value_str(s) {
+        std::cout << "Base(string, int) Constructor called. value_int: " << value_int << ", value_str: " << value_str << std::endl;
+    }
+
+    void display() const {
+        std::cout << "Base display: value_int = " << value_int << ", value_str = " << value_str << std::endl;
+    }
+};
+
+// 派生类 Derived
+class Derived : public Base {
+public:
+    double derived_val;
+
+    // 使用 using 声明继承 Base 类的所有构造函数
+    using Base::Base; // 关键点
+
+    // Derived 类可以有自己的构造函数, 但这里为了演示方便, 我们不添加额外的
+    // 如果 Derived 需要初始化 derived_val, 通常会提供自己的构造函数
+    // 或者像下面这样提供一个需要初始化 derived_val 的构造函数
+    Derived(int i, double d) : Base(i), derived_val(d) {
+        std::cout << "Derived(int, double) Constructor called. derived_val: " << derived_val << std::endl;
+    }
+
+    // 如果不使用 using Base::Base;, 并且希望能够通过例如 (std::string, int) 的参数创建 Derived 对象
+    // 你可能需要这样写一个转发构造函数:
+    // Derived(const std::string& s, int i) : Base(s, i) {}
+
+    void show_derived() const {
+        display(); // 调用基类的 display 方法
+        // 如果 Derived 有自己的成员需要显示, 可以在这里添加
+        // std::cout << "Derived display: derived_val = " << derived_val << std::endl; (如果 derived_val 有被初始化的场景)
+    }
+};
+
+int main() {
+    std::cout << "Creating d1 (Derived with Base's default constructor):" << std::endl;
+    Derived d1; // 调用 Base()
+    d1.show_derived();
+    std::cout << "--------------------------" << std::endl;
+
+    std::cout << "Creating d2 (Derived with Base's int constructor):" << std::endl;
+    Derived d2(10); // 调用 Base(int)
+    d2.show_derived();
+    std::cout << "--------------------------" << std::endl;
+
+    std::cout << "Creating d3 (Derived with Base's string, int constructor):" << std::endl;
+    Derived d3("Hello", 20); // 调用 Base(const std::string&, int)
+    d3.show_derived();
+    std::cout << "--------------------------" << std::endl;
+
+    std::cout << "Creating d4 (Derived with Derived's own constructor):" << std::endl;
+    Derived d4(30, 3.14); // 调用 Derived(int, double)
+    d4.show_derived();
+    std::cout << "Derived d4.derived_val: " << d4.derived_val << std::endl; // 显示派生类特有成员
+    std::cout << "--------------------------" << std::endl;
+
+    return 0;
+}
+```
+
+**解释**:
+
+1.  `Base`类有三个构造函数: 默认构造函数`Base()`, `Base(int)`, 和`Base(const std::string&, int)`.
+2.  `Derived`类继承自`Base`.
+3.  通过`using Base::Base;`这行代码, `Derived`类"继承"了`Base`类的所有构造函数.
+4.  在`main`函数中:
+    * `Derived d1;`能够成功创建对象, 因为它使用了从`Base`继承来的默认构造函数`Base()`.
+    * `Derived d2(10);`能够成功创建对象, 因为它使用了从`Base`继承来的`Base(int)`构造函数.
+    * `Derived d3("Hello", 20);`能够成功创建对象, 因为它使用了从`Base`继承来的`Base(const std::string&, int)`构造函数.
+    * `Derived d4(30, 3.14);`调用了`Derived`自己定义的构造函数`Derived(int, double)`, 这个构造函数内部通过`: Base(i)`显式调用了基类的`Base(int)`构造函数来初始化基类部分, 然后初始化自己的成员`derived_val`.
+
+如果没有`using Base::Base;`, 那么尝试使用`Derived d1;`, `Derived d2(10);`或`Derived d3("Hello", 20);` (除非`Derived`也定义了对应参数的构造函数并显式调用基类构造函数) 将会导致编译错误, 因为`Derived`类本身并没有直接定义这些构造函数签名. `using Base::Base;`简化了这一过程, 使得派生类可以直接重用基类的构造逻辑. 简单来说, 就是不用费神在`Derived`中重新定义一个类似的构造函数了. 不然就要写成这样:
+
+```cpp
+class Derived : public Base {
+public:
+    // 必须为每个希望使用的 Base 构造函数写一个对应的 Derived 构造函数
+    Derived() : Base() {}
+    Derived(int i) : Base(i) {}
+    Derived(const std::string& s, int i) : Base(s, i) {}
+    // ... 等等
+};
+```
+
+这会产生很多样板代码 (boilerplate code), 尤其是当基类有很多构造函数时.  `using Base::Base;` (C++11起) 允许你简洁地告诉编译器: "请让`Derived`类能够使用`Base`类的所有构造函数来初始化`Derived`对象 (的基类部分)". 编译器会自动生成这些必要的"转发"构造函数. 所以, 它的核心优势在于代码更简洁, 减少冗余.
+
+### `using::Base::func`的用法
+
+在C++的继承中, 如果派生类定义了一个和基类同名的成员函数 (即使参数列表不同), 那么基类中所有同名的成员函数 (所有重载版本) 都会在派生类的作用域中被"隐藏". 这意味着, 当你通过派生类的对象或引用调用该名称的函数时, 编译器只会查找派生类中定义的版本, 而不会考虑基类的版本, 除非你显式指定 (例如使用`Base::func()`).
+
+`using Base::func;`声明的作用是将被隐藏的基类成员函数`func` (所有同名重载版本) 重新引入到派生类的作用域中. 这样一来, 这些来自基类的`func`函数就会和派生类自己定义的`func`函数 (如果也有的话) 一起参与重载决议.
+
+简单来说:
+
+* 没有`using Base::func;`: 如果`Derived`定义了`func(int)`, 那么`Base`中的`func()`或`func(double)`对`Derived`对象来说是不可见的 (被隐藏了).
+* 有了`using Base::func;`: `Derived`不仅可以使用自己定义的`func(int)`, 还可以使用从`Base`引入的`func()`和`func(double)`. 它们共同构成一个重载集合.
+
+举个例子:
+
+```cpp
+#include <iostream>
+#include <string>
+
+class Base {
+public:
+    void func() {
+        std::cout << "Base::func() called" << std::endl;
+    }
+
+    void func(int i) {
+        std::cout << "Base::func(int i) called with i = " << i << std::endl;
+    }
+
+    void another_func() {
+        std::cout << "Base::another_func() called" << std::endl;
+    }
+};
+
+class Derived : public Base {
+public:
+    // 使用 using 声明将 Base 类中的所有名为 func 的成员函数引入到 Derived 类的作用域
+    using Base::func; // 关键点
+
+    // Derived 类也定义了一个自己的 func 版本
+    void func(double d) {
+        std::cout << "Derived::func(double d) called with d = " << d << std::endl;
+    }
+
+    // 如果没有上面的 using Base::func;
+    // 那么 Base::func() 和 Base::func(int) 将会被 Derived::func(double) 隐藏
+};
+
+int main() {
+    Derived d;
+
+    std::cout << "Calling func() on Derived object:" << std::endl;
+    d.func(); // 调用 Base::func() 因为它被 using 引入了
+
+    std::cout << "\nCalling func(int) on Derived object:" << std::endl;
+    d.func(10); // 调用 Base::func(int) 因为它被 using 引入了
+
+    std::cout << "\nCalling func(double) on Derived object:" << std::endl;
+    d.func(3.14); // 调用 Derived::func(double)
+
+    std::cout << "\nCalling another_func() on Derived object:" << std::endl;
+    d.another_func(); // Base::another_func() 正常继承, 没有名称冲突
+
+    // 如果注释掉 Derived 类中的 'using Base::func;', 然后取消下面两行的注释, 将会导致编译错误:
+    // d.func();       // 错误: Derived::func(double) 隐藏了 Base::func()
+    // d.func(10);     // 错误: Derived::func(double) 隐藏了 Base::func(int)
+
+    return 0;
+}
+```
+
+解释:
+
+1. `Base`类有两个名为`func`的重载函数: `func()`和`func(int)`.
+2. `Derived`类继承自`Base`, 并且自己也定义了一个函数`func(double)`.
+3. 在`Derived`类中, `using Base::func;` 语句将`Base::func()`和`Base::func(int)`引入到`Derived`的作用域.
+4. 因此, 当我们通过`Derived`的对象`d`调用`func`时:
+
+    * `d.func();` 会匹配并调用`Base::func()`.
+    * `d.func(10);` 会匹配并调用`Base::func(int)`.
+    * `d.func(3.14);` 会匹配并调用`Derived::func(double)`.
+
+如果`Derived`类中没有`using Base::func;`这一行, 那么`Derived::func(double)`会隐藏`Base`类中所有的`func`版本. 此时, 尝试调用`d.func()`或`d.func(10)`会导致编译错误, 因为编译器在`Derived`的作用域中只能找到`func(double)`, 而参数不匹配. 所以, `using Base::func;`是解决基类成员函数在派生类中被意外隐藏并希望恢复它们参与重载决议的一种有效方式.
