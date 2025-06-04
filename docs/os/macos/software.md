@@ -45,3 +45,4 @@ comments: true
 * SoundSource: 声音控制, 🌟, 不是特别好用, 特别是在homepod mini上
 * Dockdoor: 在dock栏有一个preview, 特别好用, 并且包含了Alt-tab的功能
 * Dock Expose: 和dockdoor类似, 但是好像停更了
+* PicView: 看图软件, 🌟
