@@ -917,3 +917,34 @@ int main() {
     * `d.func(3.14);` 会匹配并调用`Derived::func(double)`.
 
 如果`Derived`类中没有`using Base::func;`这一行, 那么`Derived::func(double)`会隐藏`Base`类中所有的`func`版本. 此时, 尝试调用`d.func()`或`d.func(10)`会导致编译错误, 因为编译器在`Derived`的作用域中只能找到`func(double)`, 而参数不匹配. 所以, `using Base::func;`是解决基类成员函数在派生类中被意外隐藏并希望恢复它们参与重载决议的一种有效方式.
+
+## 默认参数
+
+C++中的默认参数允许你在函数声明中为一个或多个参数指定默认值. 如果在调用函数时没有为这些参数提供实参, 编译器将自动使用这些默认值.
+
+核心要点:
+
+1.  声明位置: 默认参数值通常在函数声明中指定.
+2.  从右到左: 如果一个参数有默认值, 那么它右边的所有参数也必须有默认值.
+3.  调用: 调用函数时, 可以省略有默认值的参数, 编译器会使用默认值. 如果提供了实参, 则使用提供的实参.
+
+示例:
+```cpp
+#include <iostream>
+
+// 函数声明 (原型) 中指定默认参数
+void showMessage(const char* message = "Hello!", int repeat = 1);
+
+void showMessage(const char* message, int repeat) { // 函数定义 (通常不重复默认值)
+    for (int i = 0; i < repeat; ++i) {
+        std::cout << message << std::endl;
+    }
+}
+
+int main() {
+    showMessage();                     // 输出: Hello! (message使用默认值, repeat使用默认值)
+    showMessage("Custom Message");     // 输出: Custom Message (repeat使用默认值)
+    showMessage("Another Message", 3); // 输出: Another Message (3遍)
+    return 0;
+}
+```

@@ -78,6 +78,7 @@
 - (函数) `using`的用法, 特别关注`using::Base::Base`和`using::Base::func`
 - (类型) `#define`的用法
 - (类型) `__file__`和`__line__`的用法, 还有`std::source_location`的用法
+- (函数) 默认参数
 
 ## 引用
 
