@@ -711,6 +711,15 @@ int main() {
 * 类型别名 (C++11起): 创建类型的别名, 类似`typedef`, 但更灵活, 可用于模板.
     * `using MyInt = int;`
     * `template<typename T> using MyVector = std::vector<T>;`
+
+        ```cpp
+        template<typename T>
+        using MyVector = std::vector<T>; // 清晰, 直接
+
+        MyVector<int> myIntVector;
+        MyVector<std::string> myStringVector;
+        ```
+        
 * 引入基类成员: 在派生类中引入基类的成员 (如构造函数或被隐藏的同名函数) 到当前作用域.
     * `using Base::Base;` 引入基类构造函数.
     * `using Base::func;` 引入基类成员函数`func`到派生类的重载集合.
