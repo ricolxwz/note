@@ -110,6 +110,8 @@ comments: true
 "animations.CursorAnimation": true,
 "animations.UseCursorColorForCursorAnimation": true,
 
+"0.print function": "logger.debug",
+
 "remote.SSH.remotePlatform": {
     "lab": "linux"
 },
