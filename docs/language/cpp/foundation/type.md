@@ -792,3 +792,254 @@ int main() {
 0
 0
 ```
+
+## 宏
+
+### `#define`的用法
+
+#### 文本替换
+
+`#define`是C++预处理器指令, 用于创建宏. 宏主要有两种形式: 类对象宏 (object-like macros) 和类函数宏 (function-like macros).
+
+1.  类对象宏 (定义常量或符号):
+
+    这种宏用于将一个标识符定义为一个特定的文本片段. 预处理器会在编译前将代码中所有出现的该标识符替换为指定的文本片段.
+
+    语法:
+    ```cpp
+    #define 标识符 替换文本
+    ```
+
+    示例:
+    ```cpp
+    #define PI 3.14159
+    #define GREETING "Hello, World!"
+    #define MAX_USERS 100
+    ```
+    在预处理阶段:
+
+    * `double circumference = 2 * PI * radius;` 会变成 `double circumference = 2 * 3.14159 * radius;`
+    * `std::cout << GREETING << std::endl;` 会变成 `std::cout << "Hello, World!" << std::endl;`
+
+    优点:
+
+    * 可以提高代码的可读性, 用有意义的名称代替魔法数字或字符串.
+    * 方便修改, 只需修改`#define`语句即可更新所有引用的地方.
+
+    注意:
+
+    * 替换文本可以是任何内容, 包括表达式, 但通常用于定义常量.
+    * 宏定义不进行类型检查.
+
+2.  类函数宏 (定义带参数的宏):
+
+    这种宏看起来像函数调用, 但实际上也是文本替换. 它可以接受参数.
+
+    语法:
+    ```cpp
+    #define 标识符(参数列表) 替换文本
+    ```
+    重要提示: 标识符和左括号`( `之间不能有空格.
+
+    示例:
+    ```cpp
+    #define SQUARE(x) ((x) * (x))
+    #define MAX(a, b) (((a) > (b)) ? (a) : (b))
+    #define PRINT_VAR(var) std::cout << #var << " = " << var << std::endl;
+    ```
+    在预处理阶段:
+
+    * `int area = SQUARE(5);` 会变成 `int area = ((5) * (5));`
+    * `int larger = MAX(x + 1, y);` 会变成 `int larger = (((x + 1) > (y)) ? (x + 1) : (y));`
+    * `PRINT_VAR(myVariable);` 会变成 `std::cout << "myVariable" << " = " << myVariable << std::endl;` (这里的`#var`是字符串化操作符, 会将参数名转换为字符串)
+
+    优点:
+
+    * 可以减少函数调用的开销 (对于非常简单的操作).
+    * 可以进行一些文本操作, 如字符串化 (`#`) 和标记连接 (`##`).
+
+    重要注意事项 (陷阱):
+
+    * 括号: 在宏定义中, 参数和整个表达式通常需要用括号括起来, 以避免操作符优先级问题.
+        例如, 如果`SQUARE(x)`定义为`x*x`, 那么`SQUARE(2+3)`会变成`2+3*2+3`, 结果是`2+6+3=11`, 而不是预期的`5*5=25`. 使用`((x)*(x))`可以避免这个问题.
+    * 副作用: 如果参数带有副作用 (例如`i++`), 它们可能会被多次求值.
+        例如, `int i = 3; int j = SQUARE(i++);` 可能会变成 `int j = ((i++) * (i++));`, `i`的值会增加两次, 结果可能不是预期的.
+    * 类型安全: 宏不进行类型检查, 这可能导致难以发现的错误.
+    * 调试: 宏会在预处理阶段被替换掉, 调试时可能看到的是替换后的代码, 这会增加调试难度.
+    * 作用域: 宏定义从其定义点开始到文件末尾有效, 或者直到遇到`#undef`指令.
+
+    ```cpp
+    #define MY_VALUE 10
+    // ... MY_VALUE is 10
+    #undef MY_VALUE
+    // ... MY_VALUE is no longer defined
+    ```
+
+尽管宏在某些情况下很有用 (例如条件编译中的标志, 非常简单的文本替换), 但在现代C++中, 对于类对象宏, 通常推荐使用`const`或`constexpr`变量, 因为它们具有类型安全且遵循作用域规则. 对于类函数宏, 通常推荐使用内联函数 (inline functions) 或模板 (templates), 它们也提供类型安全且行为更可预测.
+
+#### 条件编译
+
+`#define`还可以用于条件编译, 通过与`#ifdef`, `#ifndef`, `#if`, `#else`, `#elif`, `#endif`等指令结合使用, 可以根据宏是否被定义来控制代码的编译. 例如:
+
+以下是解释和示例:
+
+当你使用`#define`定义一个宏时, 该宏就被认为是"已定义"状态.
+
+```cpp
+#define MY_FEATURE_ENABLED
+// 或者定义一个带值的宏 (尽管在条件编译中, 通常只检查是否定义)
+// #define VERSION 2
+```
+
+然后, 其他预处理指令可以检查这个宏的状态:
+
+1.  `#ifdef 标识符`: "if defined" (如果标识符已定义)
+    如果`标识符`通过`#define`定义了, 那么`#ifdef`和对应的`#endif` (或`#else`/`#elif`) 之间的代码块将被编译.
+
+    ```cpp
+    #define DEBUG_MODE
+
+    #ifdef DEBUG_MODE
+      // 这部分代码只有在 DEBUG_MODE 被定义时才会被编译
+      std::cout << "Debugging information..." << std::endl;
+    #endif
+    ```
+
+2.  `#ifndef 标识符`: "if not defined" (如果标识符未定义)
+    如果`标识符`没有通过`#define`定义, 那么`#ifndef`和对应的`#endif` (或`#else`/`#elif`) 之间的代码块将被编译. 这常用于防止头文件被多次包含 (头文件保护符).
+
+    ```cpp
+    #ifndef MY_HEADER_H
+    #define MY_HEADER_H
+      // 头文件内容
+    #endif // MY_HEADER_H
+    ```
+
+3.  `#if 表达式`: "if expression is true"
+    `#if`指令会计算后面的常量表达式. 如果表达式的结果为非零 (真), 则其后的代码块被编译. 你可以在表达式中使用通过`#define`定义的宏 (通常是代表数值的宏).
+
+    ```cpp
+    #define VERSION_NUMBER 3
+
+    #if VERSION_NUMBER > 2
+      // 这部分代码只有在 VERSION_NUMBER 大于 2 时才会被编译
+      std::cout << "Using features from version 3 or later." << std::endl;
+    #elif VERSION_NUMBER == 2
+      std::cout << "Using features from version 2." << std::endl;
+    #else
+      std::cout << "Using legacy features." << std::endl;
+    #endif
+    ```
+    也可以使用`defined(标识符)`操作符在`#if`中检查宏是否被定义:
+    ```cpp
+    #define FEATURE_A
+    // #define FEATURE_B // FEATURE_B 未定义
+
+    #if defined(FEATURE_A) && !defined(FEATURE_B)
+      // 只有当 FEATURE_A 定义了且 FEATURE_B 未定义时, 这部分代码才会被编译
+      std::cout << "Feature A is enabled, Feature B is not." << std::endl;
+    #endif
+    ```
+
+!!! note "还可以通过命令行参数定义宏"
+
+    通过编译器的命令行参数来定义宏, 进而影响`#if`, `#ifdef`等条件编译指令的行为, 是一种非常常见且强大的实践. 编译器通常提供一个选项 (例如GCC/Clang中的`-D`, MSVC中的`/D`) 来在命令行中定义宏, 就像在代码中使用了`#define`一样.
+
+    工作原理:
+
+    1.  在代码中: 你像之前那样使用条件编译指令.
+        ```cpp
+        // main.cpp
+        #include <iostream>
+
+        #ifndef BUILD_MESSAGE
+        #define BUILD_MESSAGE "Default build message."
+        #endif
+
+        #ifdef SPECIAL_FEATURE
+        #define FEATURE_LEVEL 2
+        #else
+        #define FEATURE_LEVEL 1
+        #endif
+
+        int main() {
+            std::cout << BUILD_MESSAGE << std::endl;
+
+            #if FEATURE_LEVEL > 1
+                std::cout << "Special feature is enabled at level " << FEATURE_LEVEL << std::endl;
+            #else
+                std::cout << "Basic feature set at level " << FEATURE_LEVEL << std::endl;
+            #endif
+
+            #ifdef DEBUG_BUILD
+                std::cout << "This is a debug build." << std::endl;
+            #endif
+
+            return 0;
+        }
+        ```
+
+    2.  在编译时: 你可以通过命令行参数传入宏定义.
+
+        * 定义一个宏 (不带值, 主要用于`#ifdef`或`defined()`):
+            ```bash
+            g++ -DSPECIAL_FEATURE main.cpp -o main_special
+            g++ -DDEBUG_BUILD main.cpp -o main_debug
+            ```
+            在第一个命令中, `SPECIAL_FEATURE`被定义了, 所以`FEATURE_LEVEL`会被设为`2`.
+            在第二个命令中, `DEBUG_BUILD`被定义了.
+
+        * 定义一个带值的宏:
+            ```bash
+            g++ -DBUILD_MESSAGE="\"Custom message from command line\"" main.cpp -o main_custom_msg
+            g++ -DSPECIAL_FEATURE -DFEATURE_LEVEL=3 main.cpp -o main_feature_level_3
+            ```
+            注意: 当宏的值是字符串时, 通常需要在命令行中额外使用引号来确保字符串被正确传递.
+            在第一个命令中, `BUILD_MESSAGE`会被设为`"Custom message from command line"`.
+            在第二个命令中, `SPECIAL_FEATURE`被定义, 并且`FEATURE_LEVEL`被命令行直接定义为`3`, 这会覆盖代码中 `#else` 分支的 `#define FEATURE_LEVEL 1`. (如果`SPECIAL_FEATURE`未在命令行定义, 则代码中的逻辑会生效).
+
+    输出示例:
+
+    * 执行 `./main_special`:
+        ```
+        Default build message.
+        Special feature is enabled at level 2
+        ```
+
+    * 执行 `./main_debug`:
+        ```
+        Default build message.
+        Basic feature set at level 1
+        This is a debug build.
+        ```
+
+    * 执行 `./main_custom_msg`:
+        ```
+        Custom message from command line
+        Basic feature set at level 1
+        ```
+
+    * 执行 `./main_feature_level_3`:
+        ```
+        Default build message.
+        Special feature is enabled at level 3
+        ```
+总结:
+
+`#define`用于创建这些条件编译指令赖以判断的"开关". 通过定义或取消定义不同的宏, 你可以有效地告诉预处理器哪些代码段应该包含在最终的编译单元中, 哪些应该被忽略.
+
+常见用途:
+
+* 平台特定代码:
+    ```cpp
+    #ifdef _WIN32
+      // Windows特定代码
+    #elif __linux__
+      // Linux特定代码
+    #endif
+    ```
+* 调试代码的启用/禁用: 如第一个`#ifdef DEBUG_MODE`示例.
+* 功能切换: 根据需要启用或禁用实验性功能或可选模块.
+* 头文件保护: 防止头文件被重复包含, 如`#ifndef MY_HEADER_H`示例.
+
+通过这种方式, `#define`与条件编译指令结合, 为C++代码的灵活性和可移植性提供了强大的机制.
