@@ -1043,3 +1043,75 @@ int main() {
 * 头文件保护: 防止头文件被重复包含, 如`#ifndef MY_HEADER_H`示例.
 
 通过这种方式, `#define`与条件编译指令结合, 为C++代码的灵活性和可移植性提供了强大的机制.
+
+### `__file__`和`__line__`用法
+
+`__FILE__`和`__LINE__`是C++中预定义的宏, 主要用于调试和日志记录.
+
+* `__FILE__`: 一个字符串字面量, 代表当前源文件的文件名.
+* `__LINE__`: 一个整型常量, 代表当前代码在源文件中的行号.
+
+```cpp linenums="1"
+#include <iostream>
+
+void log_message(const char* message, const char* file, int line) {
+    std::cerr << "Message: " << message << " at " << file << ":" << line << std::endl;
+}
+
+#define LOG(msg) log_message(msg, __FILE__, __LINE__)
+
+int main() {
+    std::cout << "This is file: " << __FILE__ << " at line: " << __LINE__ << std::endl;
+    int x = 10;
+    if (x > 5) {
+        LOG("x is greater than 5");
+    }
+    return 0;
+}
+```
+
+当编译并运行上述代码时:
+
+* 第一条`std::cout`会打印出包含该语句的文件名和行号.
+* `LOG("x is greater than 5");`会展开为`log_message("x is greater than 5", "your_file_name.cpp", 13);`, 从而在错误输出流中打印包含文件名和行号的日志信息.
+
+输出:
+
+```bash
+This is file: main.cpp at line: 10
+Message: x is greater than 5 at main.cpp:13
+```
+
+它们帮助定位代码中产生信息或错误的确切位置.
+
+!!! tip "`std::source_location`的用法"
+
+    在C++20中, `std::source_location`提供了一种更强大和灵活的方式来获取源代码位置的信息. 它可以替代`__FILE__`和`__LINE__`, 提供更多的上下文信息, 如函数名、类名等.
+
+    使用示例:
+
+    ```cpp linenums="1"
+    #include <iostream>
+    #include <source_location>
+
+    void log_message(const char* message, const std::source_location& location = std::source_location::current()) {
+        std::cerr << "Message: " << message 
+                  << " at " << location.file_name() 
+                  << ":" << location.line() 
+                  << " in function " << location.function_name() 
+                  << std::endl;
+    }
+
+    #define LOG(msg) log_message(msg)
+
+    int main() {
+        LOG("This is a log message");
+        return 0;
+    }
+    ```
+
+    输出:
+
+    ```bash
+    Message: This is a log message at main.cpp:15 in function int main()
+    ```
