@@ -10,6 +10,7 @@ comments: true
 ```json
 "editor.fontSize": 14,
 "editor.fontFamily": "Maple Mono Normal NL NF CN",
+"editor.mouseWheelZoom": true,
 "editor.wrappingStrategy": "advanced",
 "editor.minimap.enabled": true,
 "editor.tabCompletion": "onlySnippets",
