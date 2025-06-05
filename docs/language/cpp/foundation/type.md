@@ -1115,3 +1115,163 @@ Message: x is greater than 5 at main.cpp:13
     ```bash
     Message: This is a log message at main.cpp:15 in function int main()
     ```
+
+## 内联变量
+
+C++17引入了内联变量 (inline variables), 允许在头文件中定义变量 (包括全局变量和类的静态成员变量), 而不会违反"单一定义规则" (One Definition Rule, ODR).
+
+核心要点:
+
+1.  目的: 解决在头文件中定义全局或静态变量时可能导致的多重定义链接错误.
+2.  关键字: 使用`inline`关键字.
+3.  行为: 即使头文件被多个`.cpp`文件包含, `inline`变量也确保在整个程序中只有一个实例. 链接器会合并所有定义为一个.
+4.  定义位置: 通常在头文件中定义.
+5.  适用场景:
+    * 在头文件中定义全局常量或变量.
+    * 在类定义内部初始化静态成员变量 (尤其是在C++17之前这比较麻烦, 通常需要在类外定义).
+
+示例:
+
+在头文件 (`config.h`) 中:
+```cpp
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#include <string>
+
+// 内联全局变量
+inline int globalMaxUsers = 100;
+inline const std::string globalAppName = "MyApplication";
+
+struct Settings {
+    // 内联静态成员变量 (C++17起可以直接在类内初始化)
+    inline static double version = 1.2;
+    inline static const int defaultTimeout = 5000; // const static 成员C++17前也可类内初始化
+};
+
+#endif
+```
+
+在多个`.cpp`文件中使用:
+```cpp
+// main.cpp
+#include <iostream>
+#include "config.h"
+
+int main() {
+    std::cout << "App Name: " << globalAppName << std::endl;
+    std::cout << "Max Users: " << globalMaxUsers << std::endl;
+    globalMaxUsers = 150; // 修改的是同一个变量实例
+    std::cout << "Settings Version: " << Settings::version << std::endl;
+    return 0;
+}
+```
+
+```cpp
+// utils.cpp
+#include <iostream>
+#include "config.h"
+
+void printConfig() {
+    std::cout << "From utils - App Name: " << globalAppName << std::endl;
+    std::cout << "From utils - Max Users: " << globalMaxUsers << std::endl; // 会看到main.cpp中修改后的值
+    std::cout << "From utils - Settings Version: " << Settings::version << std::endl;
+}
+```
+
+如果`config.h`被`main.cpp`和`utils.cpp`都包含, `globalMaxUsers`, `globalAppName`, `Settings::version`, 和 `Settings::defaultTimeout` 都将只有一个定义和实例在整个程序中, 避免了链接错误.
+
+对于类的`static const`整型或枚举成员, C++17之前就可以在类内初始化. `inline`变量将此能力扩展到其他类型的静态成员变量和全局变量, 使得在头文件中管理它们更为便捷.
+
+!!! note "如果在头文件中没有使用`inline`会怎样"
+
+    如果你在头文件中定义一个普通的全局变量 (非`const`且没有`inline`关键字), 并且这个头文件被多个`.cpp`文件 (编译单元) 包含, 那么在链接阶段通常会导致**多重定义 (multiple definition)** 错误.
+
+    原因:
+
+    C++遵循单一定义规则 (One Definition Rule, ODR). 对于具有外部链接的实体 (如全局变量或非内联函数), 在整个程序中只能有一个定义.
+
+    当头文件被多个`.cpp`文件`#include`时:
+
+    1.  预处理器会将头文件的内容复制到每个包含它的`.cpp`文件中.
+    2.  如果头文件中有一个变量定义, 例如 `int myGlobalVar = 100;`, 那么每个`.cpp`文件在被编译成目标文件 (`.o`或`.obj`) 时, 都会包含`myGlobalVar`的一个定义.
+    3.  当链接器试图将这些目标文件链接成一个可执行程序时, 它会发现多个名为`myGlobalVar`的全局变量的定义, 这就违反了ODR.
+
+    示例:
+
+    `myheader.h`:
+    ```cpp
+    #ifndef MYHEADER_H
+    #define MYHEADER_H
+
+    // 没有inline关键字的全局变量定义
+    int sharedCounter = 0;
+    // 注意: 如果是 const int sharedCounter = 0; 行为会不同 (默认为内部链接)
+
+    #endif
+    ```
+
+    `file1.cpp`:
+    ```cpp
+    #include "myheader.h"
+    #include <iostream>
+
+    void incrementCounter() {
+        sharedCounter++;
+        std::cout << "File1: " << sharedCounter << std::endl;
+    }
+    ```
+
+    `file2.cpp`:
+    ```cpp
+    #include "myheader.h"
+    #include <iostream>
+
+    void printCounter() {
+        std::cout << "File2: " << sharedCounter << std::endl;
+    }
+
+    // 假设main函数也在这里或者另一个包含myheader.h的文件中
+    // int main() {
+    //     incrementCounter();
+    //     printCounter();
+    //     return 0;
+    // }
+    ```
+
+    编译和链接 (例如使用g++):
+    ```bash
+    g++ -c file1.cpp -o file1.o
+    g++ -c file2.cpp -o file2.o
+    g++ file1.o file2.o -o program
+    ```
+
+    在链接步骤 (`g++ file1.o file2.o -o program`), 你很可能会遇到类似以下的链接器错误:
+    ```
+    /usr/bin/ld: file2.o:(.data+0x0): multiple definition of `sharedCounter'; file1.o:(.data+0x0): first defined here
+    collect2: error: ld returned 1 exit status
+    ```
+    这个错误明确指出`sharedCounter`被多次定义了.
+
+    如何避免 (没有`inline`关键字的传统方法):
+
+    1.  声明在头文件: 在头文件中使用`extern`关键字声明变量, 表示这个变量在其他地方定义.
+        `myheader.h`:
+        ```cpp
+        #ifndef MYHEADER_H
+        #define MYHEADER_H
+        extern int sharedCounter; // 声明
+        #endif
+        ```
+    2.  定义在一个源文件: 在一个且仅一个`.cpp`文件中提供该变量的实际定义.
+        `file1.cpp` (或其他某个.cpp文件):
+        ```cpp
+        #include "myheader.h"
+        int sharedCounter = 0; // 定义
+        // ... rest of file1.cpp
+        ```
+
+    C++17的`inline`变量简化了这个过程, 允许你直接在头文件中定义变量, 而编译器/链接器会确保只有一个实例存在, 避免了上述的多重定义问题.
+
+    特例: `const`全局变量
+    如果全局变量在头文件中被声明为`const` (例如 `const int MAX_VALUE = 10;`), 它默认具有内部链接 (internal linkage). 这意味着每个包含该头文件的编译单元都会有它自己的独立副本, 并且不会导致链接错误. 但它们不是同一个变量实例. 如果你需要一个所有编译单元共享的`const`变量实例, 你会使用`extern const`声明并结合一个`.cpp`文件中的定义, 或者自C++17起使用`inline const`.

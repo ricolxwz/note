@@ -992,3 +992,15 @@ int main() {
 }
 ```
 现代编译器通常会自动进行内联决策, 即使没有明确使用`inline`关键字, 对于小型且简单的函数也可能进行内联. 反之, 即使使用了`inline`, 编译器也可能选择不内联.
+
+!!! note "可以使用`__attribute__((always_inline))`来强制内联"
+
+    在GCC和Clang中, 可以使用`__attribute__((always_inline))`来强制内联一个函数, 即使它的体积较大或其他条件不满足内联的标准. 例如:
+
+    ```cpp
+    inline __attribute__((always_inline)) int multiply(int a, int b) {
+        return a * b;
+    }
+    ```
+
+    这种方式可以确保编译器在所有情况下都尝试内联该函数, 但仍然不能保证100%成功, 因为编译器可能会因为其他原因而忽略这个请求.
