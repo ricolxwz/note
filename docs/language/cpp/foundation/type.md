@@ -1275,3 +1275,93 @@ void printConfig() {
 
     特例: `const`全局变量
     如果全局变量在头文件中被声明为`const` (例如 `const int MAX_VALUE = 10;`), 它默认具有内部链接 (internal linkage). 这意味着每个包含该头文件的编译单元都会有它自己的独立副本, 并且不会导致链接错误. 但它们不是同一个变量实例. 如果你需要一个所有编译单元共享的`const`变量实例, 你会使用`extern const`声明并结合一个`.cpp`文件中的定义, 或者自C++17起使用`inline const`.
+
+## `size_t`的用法
+
+`size_t`是一个无符号类型, 它的具体大小(位数)是和平台相关的, 在32位系统上, 通常是32位无符号整数而在64位系统上, 通常是64位无符号整数. 这种设计确保了`size_t`足够大, 能够存储任何理论上可能存在的对象的大小. 所以, 为什么要使用`size_t`呢?
+
+1. 避免循环中的负数和溢出
+
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <limits> // 用于检查max()
+
+    int main() {
+        std::vector<int> myVector;
+        // 假设myVector被填充了大量元素 甚至超过20亿个
+
+        // 错误示例: 使用int作为循环变量
+        // 如果myVector.size()超过INT_MAX(大约20亿) 这个循环会产生错误行为或溢出
+        // for (int i = 0; i < myVector.size(); ++i) {
+        //     // ...
+        // }
+
+        // 正确示例: 使用size_t作为循环变量
+        // size_t可以处理非常大的尺寸 即使myVector有数十亿个元素也能正常工作
+        for (size_t i = 0; i < myVector.size(); ++i) {
+            // 访问元素 myVector[i]
+        }
+
+        std::cout << "Maximum value of int: " << std::numeric_limits<int>::max() << std::endl;
+        std::cout << "Maximum value of size_t: " << std::numeric_limits<size_t>::max() << std::endl;
+        // 你会发现size_t的最大值远大于int的最大值
+        // 在64位系统上 size_t的最大值大约是1.8e19
+        // 在32位系统上 size_t的最大值大约是4.2e9 (也大于int的2.1e9)
+
+        return 0;
+    }
+    ```
+
+2. 处理`sizeof`运算符的返回值
+
+    ```cpp
+    #include <iostream>
+
+    int main() {
+        int arr[] = {1, 2, 3, 4, 5};
+        size_t arrayBytes = sizeof(arr); // arr占用的总字节数
+        size_t elementBytes = sizeof(arr[0]); // 单个元素占用的字节数
+
+        size_t numberOfElements = arrayBytes / elementBytes;
+
+        std::cout << "Array total bytes: " << arrayBytes << std::endl;
+        std::cout << "Element bytes: " << elementBytes << std::endl;
+        std::cout << "Number of elements: " << numberOfElements << std::endl; // 输出 5
+
+        return 0;
+    }
+    ```
+
+3. 在字符串和向量操作中使用
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+    #include <vector>
+
+    int main() {
+        std::string text = "Hello world";
+        // length()和size()都返回size_t
+        size_t textLength = text.length();
+        std::cout << "Text length: " << textLength << std::endl; // 输出 11
+
+        // 查找字符时 find() 返回 size_t (位置)
+        size_t pos = text.find('o');
+        if (pos != std::string::npos) { // std::string::npos 也是 size_t 类型
+            std::cout << "First 'o' found at position: " << pos << std::endl; // 输出 4
+        }
+
+        std::vector<double> scores = {90.5, 88.0, 95.5, 76.0};
+        size_t numScores = scores.size();
+        std::cout << "Number of scores: " << numScores << std::endl; // 输出 4
+
+        // 遍历向量
+        for (size_t i = 0; i < numScores; ++i) {
+            std::cout << "Score " << i << ": " << scores[i] << std::endl;
+        }
+
+        return 0;
+    }
+    ```
