@@ -134,3 +134,6 @@ int main() {
 ```
 
 对于`std::vector`也是如此.
+
+## `std::string`的用法
+
