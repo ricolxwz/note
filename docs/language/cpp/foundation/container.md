@@ -450,3 +450,25 @@ int main() {
 ```
 
 注意, 这里的拷贝是指底层字符数据的拷贝, 而不是指针和长度的拷贝, 后者的拷贝还是会发生的, 你可以将`string_view`想象为一个中介, 它其实是一个类, 成员变量为指向数组的指针和数组的长度, 并且提供了几个构造函数, 调用的时候编译器会根据实参类型选择对应构造, 如果是`const char*`或者字面量, 调用其中的一个构造; 如果是`std::string`, 则调用另一个构造, 所有的操作都是指针和长度的复制, 不进行任何字符拷贝, 因此无论是`const char*`, 字符串字面量, 还是`std::string`, 传给`string_view`都能实现零拷贝访问.  
+
+!!! warning "`std::string_view`的生命周期"
+
+    尽管std::string_view非常高效, 但在使用时必须注意一个关键点: 生命周期. std::string_view本身不拥有它所指向的字符串数据. 它仅仅是一个 "视图". 如果原始的字符串被销毁, 那么string_view就会变成一个悬空指针 (dangling pointer), 对其进行任何访问都将导致未定义行为 (Undefined Behavior).
+
+    ```cpp
+    #include <string>
+    #include <string_view>
+
+    // 错误! 返回的string_view指向一个已经销毁的局部string对象
+    std::string_view get_a_view() {
+        std::string s = "this is a local string";
+        return std::string_view(s); 
+    } // s在这里被销毁, view立即失效
+
+    int main() {
+        std::string_view sv = get_a_view();
+        // 此时sv已经悬空, 下面的打印是未定义行为
+        // std::cout << sv << std::endl;  // CRASH!
+        return 0;
+    }
+    ```
