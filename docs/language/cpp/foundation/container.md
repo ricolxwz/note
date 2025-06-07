@@ -265,6 +265,34 @@ size(): 20
 capacity(): 20
 ```
 
+### `append()`
+
+`append()`是`std::string`类的成员函数, 用于向字符串默认添加新内容. 常用的方式有:
+
+1. 追加字符串/子串: 
+   ```cpp
+   std::string s = "Hello";
+   s.append(" World");       // 结果: "Hello World"
+   s.append("abcde", 3);     // 追加前3字符: "abc" → "Helloabc"
+   ```
+
+2. 追加另一字符串的部分: 
+   ```cpp
+   std::string t = "12345";
+   s.append(t, 1, 3);       // 从t[1]开始取3字符: "234" → "Hello234"
+   ```
+
+3. 追加多个相同字符: 
+   ```cpp
+   s.append(4, '!');        // 添加4个'!' → "Hello!!!!"
+   ```
+
+4. 等效操作: 
+   可直接用 `+=` 运算符: 
+   ```cpp
+   s += " World";           // 效果等同于 append()
+   ```
+
 ### `find()`
 
 `find()`方法用于在字符串中查找子字符串或字符, 返回找到的第一个位置的索引, 如果没有找到则返回`std::string::npos`, 这是一个特殊的常量, 表示未找到, 它的值等于`size_t(-1)`, 即无符号整形的最大值, 所以在if语句里面不能直接使用`find()`的返回值进行判断, 需要使用`std::string::npos`进行比较.
@@ -290,4 +318,77 @@ int main() {
 ```
 18446744073709551615
 没有找到
+```
+
+### `c_str()`
+
+有时, 在我们的程序中可能包含C代码, 某些C语言的函数接受的字符串类型是`const char*`, 这是C风格的字符串, 而`std::string`是一个对象, 其内部含有一个字符串数组. 所以, 怎么才能提取内部的那个字符串数组呢? 可以使用`c_str`方法. 
+
+```cpp
+#include <iostream>
+#include <cstring>
+#include <string>
+
+extern "C" {
+    void c_func(const char* c_str) {
+        printf("c_func called with '%s'\n", c_str);
+    }
+}
+
+int main() {
+    std::string s("Emplary"):
+    const char* p = s.c_str();
+    c_func(s.c_str());
+    return 0;
+}
+```
+
+输出:
+
+```bash
+c_func called with 'Emplary'
+```
+
+### `data()`
+
+`data()`返回指向字符串内部数据(C风格字符数组)的指针. 
+
+`data()` 和 `c_str()` 的主要区别在于: 
+
+1.  返回类型和空终止符保证: 
+    *   `c_str()` 始终保证返回一个以空字符 (`\0`) 结尾的C风格字符串 (`const char*`). 这是一个严格的C++标准规定, 因为它主要是为了与C语言API兼容. 
+    *   `data()` 在 C++11 和 C++14 中, 返回的指针不保证指向的字符数组是以空字符结尾的. 在这些版本中, 如果你需要空终止, 你仍然必须使用 `c_str()`. 
+    *   从 C++17 开始, `data()` 也保证返回一个以空字符结尾的字符串 (`const char*`). 这意味着从C++17开始, 对于只读访问, `data()` 和 `c_str()` 的行为实际上是一致的. 
+
+2.  可变性(非`const`版本): 
+    *   `c_str()` 只有 `const` 版本, 意味着你不能通过它返回的指针修改字符串内容. 
+    *   `data()` 在 C++11 引入了一个非 `const` 版本 (`char* data()`), 允许你通过返回的指针直接修改字符串的底层缓冲区. 但是, 使用这个非 `const` 版本操作时需要非常小心, 因为你可能会破坏字符串的内部状态(例如, 改变长度而不通知 `std::string` 对象). 
+
+### 遍历
+
+我们可以使用`for`循环进行遍历:
+
+```cpp
+#include <string>
+#include <iostream>
+
+int main() {
+    std::string s("wenzexu");
+    for (auto element:s) {
+        std::cout << element << std::endl;
+    }
+    return 0;
+}
+```
+
+输出:
+
+```bash
+w
+e
+n
+z
+e
+x
+u
 ```
