@@ -264,3 +264,30 @@ capacity(): 89
 size(): 20
 capacity(): 20
 ```
+
+### `find()`
+
+`find()`方法用于在字符串中查找子字符串或字符, 返回找到的第一个位置的索引, 如果没有找到则返回`std::string::npos`, 这是一个特殊的常量, 表示未找到, 它的值等于`size_t(-1)`, 即无符号整形的最大值, 所以在if语句里面不能直接使用`find()`的返回值进行判断, 需要使用`std::string::npos`进行比较.
+
+```cpp
+#include <iostream>
+#include <string>
+
+int main() {
+    std::string s("wenzexu");
+    std::cout << s.find("a") << std::endl;
+    if (s.find("a") == std::string::npos) {
+        std::cout << "没有找到" << std::endl;
+    } else {
+        std::cout << "找到了" << std::endl;
+    }
+    return 0;
+}
+```
+
+输出:
+
+```
+18446744073709551615
+没有找到
+```
