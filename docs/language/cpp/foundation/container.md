@@ -392,3 +392,61 @@ e
 x
 u
 ```
+
+## `std::string_view`的用法
+
+来看下面这段代码:
+
+```cpp
+#include <iostream>
+#include <string>
+
+void print_string(const std::string& param) {
+    std::cout << param << std::endl;
+}
+
+int main() {
+    std::string s = "this is some really long string...";
+    print_string(s);
+    return 0;
+}
+```
+
+Ok, 我们是使用引用传递避免了`s`的拷贝. 那么如果这样呢? 
+
+```cpp
+#include <iostream>
+#include <string>
+#include <string_view>
+
+void print_string(const std::string& param) {
+    std::cout << param << std::endl;
+}
+
+int main() {
+    const char* s = "this is some really long string...";
+    print_string(s);
+    print_string("hello");
+    return 0;
+}
+```
+
+Well, 由于传递的不是`std::string`类型, 这样是会产生拷贝的. 这个时候我们就可以使用`std::string_view`来彻底避免拷贝:
+
+```cpp
+#include <iostream>
+#include <string>
+
+void print_string(std::string_view param) {
+    std::cout << param << std::endl;
+}
+
+int main() {
+    const char* s = "this is some really long string...";
+    print_string(s);
+    print_string("hello");
+    return 0;
+}
+```
+
+注意, 这里的拷贝是指底层字符数据的拷贝, 而不是指针和长度的拷贝, 后者的拷贝还是会发生的, 你可以将`string_view`想象为一个中介, 它其实是一个类, 成员变量为指向数组的指针和数组的长度, 并且提供了几个构造函数, 调用的时候编译器会根据实参类型选择对应构造, 如果是`const char*`或者字面量, 调用其中的一个构造; 如果是`std::string`, 则调用另一个构造, 所有的操作都是指针和长度的复制, 不进行任何字符拷贝, 因此无论是`const char*`, 字符串字面量, 还是`std::string`, 传给`string_view`都能实现零拷贝访问.  
