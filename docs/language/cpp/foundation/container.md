@@ -183,3 +183,84 @@ s += " World and more characters to trigger reallocate";
 std::cout << "增长后 size: " << s.size() << std::endl; // 字符串变长
 std::cout << "增长后 capacity: " << s.capacity() << std::endl; // 可能会显著增大
 ```
+
+输出:
+
+```bash
+初始 size: 5
+初始 capacity: 15
+增长后 size: 53
+增长后 capacity: 53
+```
+
+可以使用`shink_to_fit()`方法来将`capacity`缩减到与`size`相同的大小, 这会释放未使用的内存, 但通常不建议频繁使用, 因为这会导致性能下降.
+
+```cpp
+#include <iostream>
+#include <string>
+
+int main() {
+    // 1. 初始字符串
+    std::string s = "短字符串";
+    std::cout << "--- 初始状态 ---" << std::endl;
+    std::cout << "字符串: \"" << s << "\"" << std::endl;
+    std::cout << "size(): " << s.size() << std::endl;
+    std::cout << "capacity(): " << s.capacity() << std::endl; // 对于短字符串, 可能因SSO而返回固定小值
+
+    std::cout << std::endl;
+
+    // 2. 增长字符串, 触发重新分配
+    // 注意: 这里我们故意添加足够多的字符, 确保触发一次或多次重新分配
+    s += "这是一个较长的字符串, 用于测试std::string的容量增长机制.";
+    std::cout << "--- 字符串增长后 ---" << std::endl;
+    std::cout << "字符串: \"" << s << "\"" << std::endl;
+    std::cout << "size(): " << s.size() << std::endl;
+    std::cout << "capacity(): " << s.capacity() << std::endl; // capacity应该显著增大, 且 >= size()
+
+    std::cout << std::endl;
+
+    // 3. 减少字符串长度
+    // 此时 size 减小了, 但 capacity 通常不会立即减小
+    s.resize(20); // 将字符串截断为20个字符
+    std::cout << "--- 字符串截断后 ---" << std::endl;
+    std::cout << "字符串: \"" << s << "\"" << std::endl;
+    std::cout << "size(): " << s.size() << std::endl;
+    std::cout << "capacity(): " << s.capacity() << std::endl; // capacity很可能保持不变
+
+    std::cout << std::endl;
+
+    // 4. 使用 shrink_to_fit() 释放未使用的容量
+    // 尝试将 capacity 缩减到 size 的大小
+    s.shrink_to_fit();
+    std::cout << "--- 调用 shrink_to_fit() 后 ---" << std::endl;
+    std::cout << "字符串: \"" << s << "\"" << std::endl;
+    std::cout << "size(): " << s.size() << std::endl;
+    std::cout << "capacity(): " << s.capacity() << std::endl; // capacity 应该接近或等于 size() (可能加上1用于\0)
+
+    return 0;
+}
+```
+
+输出:
+
+```bash
+--- 初始状态 ---
+字符串: "短字符串"
+size(): 12
+capacity(): 15
+
+--- 字符串增长后 ---
+字符串: "短字符串这是一个较长的字符串, 用于测试std::string的容量增长机制."
+size(): 89
+capacity(): 89
+
+--- 字符串截断后 ---
+字符串: "短字符串这是�"
+size(): 20
+capacity(): 89
+
+--- 调用 shrink_to_fit() 后 ---
+字符串: "短字符串这是�"
+size(): 20
+capacity(): 20
+```
