@@ -584,8 +584,6 @@ nav:
       - 无缝切换ip: software/xray/switch-ip.md
     - Xshell:
       - 配置: software/xshell/config.md
-  - 研究:
-    - 感悟: research/feeling.md
   - 其他:
     - 个人使用的prompt: others/prompt.md
     - 科研神器: others/research-god-tool.md
