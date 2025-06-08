@@ -652,39 +652,41 @@ int main() {
 
 ```cpp
 #include <iostream>
-#include <span> // 需要包含头文件
+#include <span>      // 引入<span>头文件
 #include <vector>
 #include <array>
 
-// 一个接受span作为参数的函数, 可以打印任何连续整数序列
-void print_span(std::span<const int> data) {
-    for (int val : data) {
-        std::cout << val << " ";
+// 该函数接受一个整型span, 它可以引用任何连续的整数序列
+void print_data(std::span<const int> data) 
+{
+    for (int n : data) {
+        std::cout << n << ' ';
     }
-    std::cout << std::endl;
+    std::cout << '\n';
 }
 
-int main() {
-    // 1. 从C风格数组创建
+int main() 
+{
+    // 1. 从C风格数组创建span
     int c_array[] = {1, 2, 3, 4, 5};
-    std::span<int> span_from_c_array(c_array);
-    print_span(span_from_c_array);
+    std::cout << "From C-style array: ";
+    print_data(c_array);
 
-    // 2. 从std::vector创建
-    std::vector<int> vec = {6, 7, 8};
-    std::span<int> span_from_vector(vec);
-    print_span(span_from_vector);
+    // 2. 从std::vector创建span
+    std::vector<int> vec = {6, 7, 8, 9};
+    std::cout << "From std::vector: ";
+    print_data(vec);
 
-    // 3. 从std::array创建
-    std::array<int, 2> arr = {9, 10};
-    std::span<int> span_from_array(arr);
-    print_span(span_from_array);
+    // 3. 从std::array创建span
+    std::array<int, 3> arr = {10, 11, 12};
+    std::cout << "From std::array: ";
+    print_data(arr);
 
-    // 4. 创建子视图 (subspan)
-    // 创建一个从索引1开始, 长度为3的子视图
-    std::span<int> sub_span = span_from_c_array.subspan(1, 3); // {2, 3, 4}
-    std::cout << "Sub-span: ";
-    print_span(sub_span);
+    // 4. 从数组的一部分 (切片) 创建span
+    //    创建一个从c_array的第二个元素开始, 长度为3的span
+    std::span<const int> slice(c_array + 1, 3);
+    std::cout << "From a slice of C-style array: ";
+    print_data(slice); // 将打印 2 3 4
 
     return 0;
 }
@@ -693,15 +695,11 @@ int main() {
 输出:
 
 ```bash
-1 2 3 4 5
-6 7 8
-9 10
-Sub-span: 2 3 4
+From C-style array: 1 2 3 4 5 
+From std::vector: 6 7 8 9 
+From std::array: 10 11 12 
+From a slice of C-style array: 2 3 4
 ```
-
-!!! note "`span_from_xxx`是必须的吗"
-
-    不是必须的, 可以将`std::vector`, `std::array`等直接传给接受`std::span`的函数, C++编译器会自动为你创建一个临时的`std::span`对象. 这里使用这些`span_from_xxx`是为了增加可读性. 
 
 为什么要使用`std::span`? 其实和使用`std::string_view`的原因类似, 在`std::span`出现之前, 我们通常通过传递指针和大小来向函数传递数组数据:
 
@@ -716,3 +714,73 @@ void process_data(int* data, size_t size);
 * 接口不统一: 如果有`std::vector`, 你需要调用`vec.data()`和`vec.size()`来传递参数. 
 
 `std::span`解决了这些问题, 它将数据指针和大小封装成一个对象, 提供了更安全, 更现代, 更通用的接口来处理连续数据视图. 它是向函数传递连续序列数据的首选方式.
+
+### 动态&静态`std::span`
+
+`std::span`的第二个模板参数`Extent`是一个编译时常量, 用于指定`span`所引用的序列的长度. 它有两种形式:
+
+1.  `std::dynamic_extent` (默认值):
+
+    * 表示`span`的长度在运行时确定.
+    * 这是最常见的用法, 因为它可以引用任何长度的连续序列.
+    * `std::span<int>`等价于`std::span<int, std::dynamic_extent>`.
+
+2.  一个非负整数值:
+
+    * 表示`span`的长度在编译时就是固定的.
+    * 如果尝试从一个大小不匹配的序列创建这样一个`span`, 代码将无法编译. 这提供了一层编译时安全检查.
+    * 这种`span`的体积可能更小, 因为编译器已经知道了其长度, 无需再用一个成员变量来存储它.
+
+```cpp
+#include <iostream>
+#include <span>
+#include <vector>
+
+// 此函数只能接受一个包含3个整数的span
+void print_fixed_size_span(std::span<const int, 3> data) 
+{
+    std::cout << "Fixed-size span (extent=3): ";
+    for (int n : data) {
+        std::cout << n << ' ';
+    }
+    std::cout << '\n';
+}
+
+// 此函数可以接受任意长度的span
+void print_dynamic_size_span(std::span<const int> data) // extent is std::dynamic_extent
+{
+    std::cout << "Dynamic-size span (extent=" << data.size() << "): ";
+    for (int n : data) {
+        std::cout << n << ' ';
+    }
+    std::cout << '\n';
+}
+
+
+int main() 
+{
+    int c_array[] = {1, 2, 3};
+    std::vector<int> vec = {4, 5, 6, 7};
+
+    // --- 固定Extent的用法 ---
+    // 正确: c_array的大小正好是3
+    print_fixed_size_span(c_array);
+
+    // 错误: vec的大小是4, 不是3. 下面这行代码会导致编译失败.
+    // print_fixed_size_span(vec); 
+
+    // --- 动态Extent的用法 ---
+    print_dynamic_size_span(c_array); // OK
+    print_dynamic_size_span(vec);     // OK
+
+    return 0;
+}
+```
+
+输出:
+
+```bash
+Fixed-size span (extent=3): 1 2 3 
+Dynamic-size span (extent=3): 1 2 3 
+Dynamic-size span (extent=4): 4 5 6 7
+```
