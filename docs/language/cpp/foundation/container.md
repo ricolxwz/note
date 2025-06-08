@@ -639,4 +639,80 @@ int main() {
         * C++语言规定, `!=` 操作符两边的对象类型必须是相同的 (或者可以相互转换).  
         * 因此, 如果 `it` 是一个自定义的迭代器类的对象, 那么 `container.end()` 也必须返回一个相同类型的迭代器类的对象, 否则它们之间根本无法进行比较, 代码将无法编译.  你不能拿一个"自定义迭代器对象"去和一个"原始的节点指针"作比较, C++不知道该如何处理这两种完全不同的类型.
 
-    我们将在迭代器那部分详细讲到. 
+    我们将在迭代器那部分详细讲到.
+
+## `std::span`的用法
+
+`std::span`和`std::string_view`非常类似. 它是C++20引入的一个新特性, 用于表示一个连续内存区域的视图. 它可以看作是一个轻量级的容器, 但不拥有数据的所有权. `std::span`可以用于任何类型的数组, 包括C风格数组, `std::array`, `std::vector`等. 但是它和`std::string_view`有一个显著的区别, 就是`std::string_view`不可以修改底层数据, 但是`std::span`可以是可变视图, 也可以是只读视图, 取决于你如何声明它. 它的核心特性有:
+
+* 非拥有性: `std::span`不负责其指向的内存的生命周期. 它只是一个观察者. 这意味着当原始数据被销毁后, `std::span`会变为悬空(dangling), 使用它将导致未定义行为.
+* 轻量级: 一个`std::span`对象通常只包含一个指针和一个大小成员, 其大小与传递一个指针和size_t到函数中几乎没有区别, 因此开销极低.
+* 灵活性与统一性: 这是`std::span`最强大的地方. 它可以从多种数据源创建, 例如C风格数组, `std::vector`, `std::array`等. 这使得我们可以编写一个接受`std::span`作为参数的函数, 而这个函数可以处理任何类型的连续数据容器, 无需为每种容器编写重载版本.
+* 安全性: `std::span`提供了类似容器的接口, 例如`size()`, `front()`, `back()`以及范围for循环的支持. 它还提供了`operator[]`用于访问元素, 但与原始指针不同, 许多标准库实现会在调试模式下对访问进行边界检查, 有助于减少越界错误.
+
+```cpp
+#include <iostream>
+#include <span> // 需要包含头文件
+#include <vector>
+#include <array>
+
+// 一个接受span作为参数的函数, 可以打印任何连续整数序列
+void print_span(std::span<const int> data) {
+    for (int val : data) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    // 1. 从C风格数组创建
+    int c_array[] = {1, 2, 3, 4, 5};
+    std::span<int> span_from_c_array(c_array);
+    print_span(span_from_c_array);
+
+    // 2. 从std::vector创建
+    std::vector<int> vec = {6, 7, 8};
+    std::span<int> span_from_vector(vec);
+    print_span(span_from_vector);
+
+    // 3. 从std::array创建
+    std::array<int, 2> arr = {9, 10};
+    std::span<int> span_from_array(arr);
+    print_span(span_from_array);
+
+    // 4. 创建子视图 (subspan)
+    // 创建一个从索引1开始, 长度为3的子视图
+    std::span<int> sub_span = span_from_c_array.subspan(1, 3); // {2, 3, 4}
+    std::cout << "Sub-span: ";
+    print_span(sub_span);
+
+    return 0;
+}
+```
+
+输出:
+
+```bash
+1 2 3 4 5
+6 7 8
+9 10
+Sub-span: 2 3 4
+```
+
+!!! note "`span_from_xxx`是必须的吗"
+
+    不是必须的, 可以将`std::vector`, `std::array`等直接传给接受`std::span`的函数, C++编译器会自动为你创建一个临时的`std::span`对象. 这里使用这些`span_from_xxx`是为了增加可读性. 
+
+为什么要使用`std::span`? 其实和使用`std::string_view`的原因类似, 在`std::span`出现之前, 我们通常通过传递指针和大小来向函数传递数组数据:
+
+```cpp
+// 旧的方式
+void process_data(int* data, size_t size);
+```
+
+这种方式有几个缺点:
+
+* 容易出错: 很容易传递错误的size, 导致缓冲区溢出或数据处理不完整.
+* 接口不统一: 如果有`std::vector`, 你需要调用`vec.data()`和`vec.size()`来传递参数. 
+
+`std::span`解决了这些问题, 它将数据指针和大小封装成一个对象, 提供了更安全, 更现代, 更通用的接口来处理连续数据视图. 它是向函数传递连续序列数据的首选方式.
