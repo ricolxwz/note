@@ -59,3 +59,4 @@ comments: true
 * FastStone Image Viewer: 看图软件
 * XnView: 看图软件
 * Driver Booster 12 pro: 驱动更新, 硬件信息查看, 🌟
+* IObit Installer: 卸载软件, ⭐
