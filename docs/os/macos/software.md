@@ -38,6 +38,7 @@ comments: true
 * Nightfall: 在菜单栏一键切换深色模式
 * Latest: 保持软件最新
 * Little Snitch: 防火墙, 🌟
+* LuLu: 防火墙, 还挺好用的
 * ShareMouse: 键鼠多屏互联, 🌟, 但是好像macos有自己的
 * Transmit: SFTP客户端, 和Cyberduck类似, 🌟
 * PixPin: 到底是谁在吹这款软件? 必Snipaste差了不知道多少倍, 最基的功能都做不流畅, 做不精细, 🌟
