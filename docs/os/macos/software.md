@@ -47,3 +47,5 @@ comments: true
 * Dockdoor: 在dock栏有一个preview, 特别好用, 并且包含了Alt-tab的功能
 * Dock Expose: 和dockdoor类似, 但是好像停更了
 * PicView: 看图软件, 🌟
+* F.lux: 自动切换色温
+* Preview: 强大的看图软件, 看pdf软件
