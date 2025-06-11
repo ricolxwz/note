@@ -869,9 +869,7 @@ auto it = v.erase(v.begin() + 1, v.begin() + 3);
     #include <vector>
     int main() {
         std::vector<int> myVector{1, 2, 3};
-        std::cout << "capacity: " << myVector.capacity() << std::endl;
         myVector.push_back(4);
-        std::cout << "capacity: " << myVector.capacity() << std::endl;
         for (int i = 0; i < myVector.size(); i++) {
             std::cout << "---" << std::endl;
             std::cout << "myVector.size: " << myVector.size() << std::endl;
@@ -891,4 +889,63 @@ auto it = v.erase(v.begin() + 1, v.begin() + 3);
     ---
     myVector.size: 3
     4
+    ```
+
+    如果你使用的是range循环的话:
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    int main() {
+        std::vector<int> myVector{1, 2, 3};
+        myVector.push_back(4);
+        for (auto elem : myVector) {
+            myVector.erase(myVector.begin());
+            std::cout << elem << std::endl;
+        }
+        return 0;
+    }
+    ```
+
+    输出:
+
+    ```bash
+    1
+    3
+    4
+    4
+    ```
+
+    在range循环中, 程序首先会从`myVector`中取出第一个元素的值`1`, 将其拷贝作为一个副本赋值给`elem`, 然后, `myVector.erase`修改的是`myVector`, 删除了其中的`1`, 但是由于`elem`是一个副本, 所以第一次输出的还是`1`. **range循环的底层是由迭代器实现的**, 循环结束后, 迭代器要进行++, 由于此时的`myVector`是`{2, 3, 4}`, 所以移动了`3`上面, 将`3`拷贝作为一个副本赋值给`elem`, 第二次循环结束后, 迭代器继续++, 此时的`myVector`是`{3, 4}`, 迭代器指向的是一块未知的内存, 在上面这种情况下, 由于这块内存原先是`4`, 所以大概率没有经过修改, 所以输出还是4; 第4次循环, `myVector`是`{4}`, 同样的, 迭代器指向的也是位置的内存, 但是由于原先是`4`, 所以输出还是4.
+
+    如果上面我是按照引用赋值给`elem`的, 那么会输出:
+
+    ```bash
+    2
+    4
+    4
+    4
+    ```
+
+    这是因为, 第一次循环, `elem`是`1`的一个引用, 当你删掉`1`之后, `elem`变为引用的是`2`, `myVector`变为`{2, 3, 4}`; 第二次循环, `elem`是`3`的一个引用, 当你删掉`2`之后, `elem`变为引用的是`4`, `myVector`变为`{3, 4}`; 第三次循环, `elem`此时引用的已经是未知的内存区域, 同样的, 由于原先是`4`, 所以大概率输出还是`4`, `myVector`变为`{4}`; 第四次循环, `elem`引用的还是未知的内存区域, 由于原先是`4`, 所以输出还是`4`.    
+
+!!! note "避免拷贝"
+
+    看下面这段代码:
+
+    ```cpp
+    std::vector<long> myVector2;
+    for (size_t i = 0; i < 1000000; i++) {
+        myVector2.push_back(i);
+    }
+    ```
+
+    这里可能会发生多次拷贝, 也就是多次扩容. 解决的方法是使用`reserve()`方法: 
+
+    ```cpp
+    std::vector<long> myVector2;
+    myVector2.reserve(1000000); // 预分配空间, 避免多次拷贝
+    for (size_t i = 0; i < 1000000; i++) {
+        myVector2.push_back(i);
+    }
     ```
