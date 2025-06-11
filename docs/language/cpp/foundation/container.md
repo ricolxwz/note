@@ -144,7 +144,7 @@ char greeting[6] = {'H', 'e', 'l', 'l', 'o', '\0'}; // 明确包含空字符
 char message[] = "World"; // 编译器会自动计算大小并添加 '\0'
 ```
 
-但是, C语言字符串存在明显缺点: 
+但是, C语言字符串存在明显缺点:
 
 * 手动内存管理: 程序员需要手动确保数组足够大, 以容纳所有字符和终止符. 容易发生缓冲区溢出.
 * 不直观的操作: 拼接, 复制, 比较等操作需要调用特定的函数, 而不是像基本数据类型那样使用运算符.
@@ -153,8 +153,8 @@ char message[] = "World"; // 编译器会自动计算大小并添加 '\0'
 
 C++作为一门更高级的语言, 旨在提供更安全, 更高效, 更直观的变成方式, C风格字符串的缺点促使C++设计者寻求一种更好的字符串解决方案. 为了解决C风格字符串的局限性, C++标准库引入了`std::string`类. `std::string`是一个类, 它封装了`char`数组和相关操作逻辑, 它提供了一个面向对象的接口, 来管理和操作可变长度的字符串. 它的优点包括:
 
-* 自动内存管理: `std::string`会自动处理底层字符输出的内存分配, 扩展和释放, 你不需要担心缓冲区大小或者内存泄露. 
-* 面向对象的操作: 
+* 自动内存管理: `std::string`会自动处理底层字符输出的内存分配, 扩展和释放, 你不需要担心缓冲区大小或者内存泄露.
+* 面向对象的操作:
   * 直观的运算符重载: 可以使用`+`进行拼接`==`, `!=`, `<`, `>`进行比较, `=`进行赋值
   * 丰富的成员函数: 提供了`append`, `insert`, `replace`, `find`, `substr`等方法, 使得字符串操作更加直观和易用.
 * 安全性: 内部实现通常会进行边界检查, 减少了变成错误和安全漏洞
@@ -163,7 +163,7 @@ C++作为一门更高级的语言, 旨在提供更安全, 更高效, 更直观�
 
 ### `size()`
 
-`size()`返回字符中实际存储的字符数量, 不包括末尾的空字符`\0`. 等价于`s.length()`, 这两个函数在功能上是完全等价的, 它告诉你字符串有多少长. 
+`size()`返回字符中实际存储的字符数量, 不包括末尾的空字符`\0`. 等价于`s.length()`, 这两个函数在功能上是完全等价的, 它告诉你字符串有多少长.
 
 ```cpp
 std::string s = "Hello";
@@ -172,7 +172,7 @@ s.size(); // 返回5
 
 ### `capacity()`
 
-`capacity()`返回的是当前为其内部字符数据分配的内存空间总大小(以字符为单位), 这包括了实际存储的字符, 以及为了将来可能得增长而预留的空间, 通常也包括了末尾的空字符`\0`预留的空间, 返回值类型为`size_t`. `capacity()`总是大于或者等于`size()`, 当`size()`超过`capacity()`的时候, `std::string`会重新分配一块更大的内存区域来容纳新的字符, 并且通常会释放旧的内存, 这个过程称为重新分配, 重新分配是一个相对耗时的工作. `capacity()`可能会比`size()`大很多, 这是为了避免频繁的内存重新分配, 当字符串增长的时候, `std::string`通常会以指数级增长其容量以减少分配的次数. 对于短字符串, `capacity`可能返回一个固定的小值, 因为数据直接存储在`std::string`对象内部的预留缓冲区中. 
+`capacity()`返回的是当前为其内部字符数据分配的内存空间总大小(以字符为单位), 这包括了实际存储的字符, 以及为了将来可能得增长而预留的空间, 通常也包括了末尾的空字符`\0`预留的空间, 返回值类型为`size_t`. `capacity()`总是大于或者等于`size()`, 当`size()`超过`capacity()`的时候, `std::string`会重新分配一块更大的内存区域来容纳新的字符, 并且通常会释放旧的内存, 这个过程称为重新分配, 重新分配是一个相对耗时的工作. `capacity()`可能会比`size()`大很多, 这是为了避免频繁的内存重新分配, 当字符串增长的时候, `std::string`通常会以指数级增长其容量以减少分配的次数. 对于短字符串, `capacity`可能返回一个固定的小值, 因为数据直接存储在`std::string`对象内部的预留缓冲区中.
 
 ```cpp
 std::string s = "Hello";
@@ -269,26 +269,26 @@ capacity(): 20
 
 `append()`是`std::string`类的成员函数, 用于向字符串默认添加新内容. 常用的方式有:
 
-1. 追加字符串/子串: 
+1. 追加字符串/子串:
    ```cpp
    std::string s = "Hello";
    s.append(" World");       // 结果: "Hello World"
    s.append("abcde", 3);     // 追加前3字符: "abc" → "Helloabc"
    ```
 
-2. 追加另一字符串的部分: 
+2. 追加另一字符串的部分:
    ```cpp
    std::string t = "12345";
    s.append(t, 1, 3);       // 从t[1]开始取3字符: "234" → "Hello234"
    ```
 
-3. 追加多个相同字符: 
+3. 追加多个相同字符:
    ```cpp
    s.append(4, '!');        // 添加4个'!' → "Hello!!!!"
    ```
 
-4. 等效操作: 
-   可直接用 `+=` 运算符: 
+4. 等效操作:
+   可直接用 `+=` 运算符:
    ```cpp
    s += " World";           // 效果等同于 append()
    ```
@@ -322,7 +322,7 @@ int main() {
 
 ### `c_str()`
 
-有时, 在我们的程序中可能包含C代码, 某些C语言的函数接受的字符串类型是`const char*`, 这是C风格的字符串, 而`std::string`是一个对象, 其内部含有一个字符串数组. 所以, 怎么才能提取内部的那个字符串数组呢? 可以使用`c_str`方法. 
+有时, 在我们的程序中可能包含C代码, 某些C语言的函数接受的字符串类型是`const char*`, 这是C风格的字符串, 而`std::string`是一个对象, 其内部含有一个字符串数组. 所以, 怎么才能提取内部的那个字符串数组呢? 可以使用`c_str`方法.
 
 ```cpp
 #include <iostream>
@@ -351,18 +351,18 @@ c_func called with 'Emplary'
 
 ### `data()`
 
-`data()`返回指向字符串内部数据(C风格字符数组)的指针. 
+`data()`返回指向字符串内部数据(C风格字符数组)的指针.
 
-`data()` 和 `c_str()` 的主要区别在于: 
+`data()` 和 `c_str()` 的主要区别在于:
 
-1.  返回类型和空终止符保证: 
-    *   `c_str()` 始终保证返回一个以空字符 (`\0`) 结尾的C风格字符串 (`const char*`). 这是一个严格的C++标准规定, 因为它主要是为了与C语言API兼容. 
-    *   `data()` 在 C++11 和 C++14 中, 返回的指针不保证指向的字符数组是以空字符结尾的. 在这些版本中, 如果你需要空终止, 你仍然必须使用 `c_str()`. 
-    *   从 C++17 开始, `data()` 也保证返回一个以空字符结尾的字符串 (`const char*`). 这意味着从C++17开始, 对于只读访问, `data()` 和 `c_str()` 的行为实际上是一致的. 
+1.  返回类型和空终止符保证:
+    *   `c_str()` 始终保证返回一个以空字符 (`\0`) 结尾的C风格字符串 (`const char*`). 这是一个严格的C++标准规定, 因为它主要是为了与C语言API兼容.
+    *   `data()` 在 C++11 和 C++14 中, 返回的指针不保证指向的字符数组是以空字符结尾的. 在这些版本中, 如果你需要空终止, 你仍然必须使用 `c_str()`.
+    *   从 C++17 开始, `data()` 也保证返回一个以空字符结尾的字符串 (`const char*`). 这意味着从C++17开始, 对于只读访问, `data()` 和 `c_str()` 的行为实际上是一致的.
 
-2.  可变性(非`const`版本): 
-    *   `c_str()` 只有 `const` 版本, 意味着你不能通过它返回的指针修改字符串内容. 
-    *   `data()` 在 C++11 引入了一个非 `const` 版本 (`char* data()`), 允许你通过返回的指针直接修改字符串的底层缓冲区. 但是, 使用这个非 `const` 版本操作时需要非常小心, 因为你可能会破坏字符串的内部状态(例如, 改变长度而不通知 `std::string` 对象). 
+2.  可变性(非`const`版本):
+    *   `c_str()` 只有 `const` 版本, 意味着你不能通过它返回的指针修改字符串内容.
+    *   `data()` 在 C++11 引入了一个非 `const` 版本 (`char* data()`), 允许你通过返回的指针直接修改字符串的底层缓冲区. 但是, 使用这个非 `const` 版本操作时需要非常小心, 因为你可能会破坏字符串的内部状态(例如, 改变长度而不通知 `std::string` 对象).
 
 ### 遍历
 
@@ -412,7 +412,7 @@ int main() {
 }
 ```
 
-Ok, 我们是使用引用传递避免了`s`的拷贝. 那么如果这样呢? 
+Ok, 我们是使用引用传递避免了`s`的拷贝. 那么如果这样呢?
 
 ```cpp
 #include <iostream>
@@ -449,7 +449,7 @@ int main() {
 }
 ```
 
-注意, 这里的拷贝是指底层字符数据的拷贝, 而不是指针和长度的拷贝, 后者的拷贝还是会发生的, 你可以将`string_view`想象为一个中介, 它其实是一个类, 成员变量为指向数组的指针和数组的长度, 并且提供了几个构造函数, 调用的时候编译器会根据实参类型选择对应构造, 如果是`const char*`或者字面量, 调用其中的一个构造; 如果是`std::string`, 则调用另一个构造, 所有的操作都是指针和长度的复制, 不进行任何字符拷贝, 因此无论是`const char*`, 字符串字面量, 还是`std::string`, 传给`string_view`都能实现零拷贝访问.  
+注意, 这里的拷贝是指底层字符数据的拷贝, 而不是指针和长度的拷贝, 后者的拷贝还是会发生的, 你可以将`string_view`想象为一个中介, 它其实是一个类, 成员变量为指向数组的指针和数组的长度, 并且提供了几个构造函数, 调用的时候编译器会根据实参类型选择对应构造, 如果是`const char*`或者字面量, 调用其中的一个构造; 如果是`std::string`, 则调用另一个构造, 所有的操作都是指针和长度的复制, 不进行任何字符拷贝, 因此无论是`const char*`, 字符串字面量, 还是`std::string`, 传给`string_view`都能实现零拷贝访问.
 
 !!! warning "`std::string_view`的生命周期"
 
@@ -462,7 +462,7 @@ int main() {
     // 错误! 返回的string_view指向一个已经销毁的局部string对象
     std::string_view get_a_view() {
         std::string s = "this is a local string";
-        return std::string_view(s); 
+        return std::string_view(s);
     } // s在这里被销毁, view立即失效
 
     int main() {
@@ -522,7 +522,7 @@ int main() {
 综上, `std::array`在保留C风格数组的性能和内存优势 (栈分配) 的同时, 提供了现代C++所要求的类型安全, 易用性和强大的功能集成. 因此, 在所有需要使用固定大小数组的场景中, `std::array`都是更好的选择.
 
 !!! note "`std::array`的存储位置"
-    
+
     1. 若std::array声明为局部变量:
         * 元数据: 栈
         * 内部数组: 栈
@@ -635,14 +635,16 @@ int main() {
 !!! tip "`end()`和`begin()`"
 
 
-    `begin()`和`end()`这两个函数返回的是一个迭代器.  什么是迭代器? 指针本身就是一种最原始且高效的迭代器. 这是因为指针类型在C++语言中内建 (built-in) 就支持 `++`, `--` 等算术操作. 对于一个`T*`类型的指针, 执行`++`的内建行为就是将地址移动`sizeof(T)`个字节.  因此, 对于`std::array`和`std::vector`这类内存连续的数据结构, 它们的`begin()`和`end()`函数直接返回一个指针作为迭代器是最高效的方式. 但是, 对于`std::list`(链表)或`std::map`(树)这样内存不连续的数据结构, 它们必须返回一个自定义的迭代器类. 这个类通过重载 (overload) `operator++`, `operator--`等运算符, 来模仿指针的行为, 从而实现符合其自身复杂结构的遍历逻辑.
+    `begin()`和`end()`这两个函数返回的是一个迭代器.  什么是迭代器? 迭代器就是一个指针. 对于一个`T*`类型的指针, 执行`++`的行为就是将地址移动`sizeof(T)`个字节. 对于`std::array`和`std::vector`这类内存连续的数据结构, 它们的`begin()`和`end()`函数可以直接返回一个指针.
+
+     但是, 对于`std::list`(链表)或`std::map`(树)这样内存不连续的数据结构, 它们必须返回一个自定义的迭代器类. 其实就是一个自定义的指针类, 这个类通过重载 (overload) `operator++`, `operator--`等运算符, 从而实现符合其自身复杂结构的遍历逻辑.
 
     !!! tip "为何`end()`也要返回一个迭代器"
 
-        比较的对象类型必须相同, 这是最根本的原因.  在 `for` 循环中, 核心的判断语句是 `it != container.end()`.  
-    
-        * 我们已经知道, 对于红黑树, `begin()` 返回的 `it` 必须是一个自定义的迭代器类对象, 因为只有这个类才懂得如何在树的节点间进行复杂的前进 (`++`) 操作.  
-        * C++语言规定, `!=` 操作符两边的对象类型必须是相同的 (或者可以相互转换).  
+        比较的对象类型必须相同, 这是最根本的原因.  在 `for` 循环中, 核心的判断语句是 `it != container.end()`.
+
+        * 我们已经知道, 对于红黑树, `begin()` 返回的 `it` 必须是一个自定义的迭代器类对象, 因为只有这个类才懂得如何在树的节点间进行复杂的前进 (`++`) 操作.
+        * C++语言规定, `!=` 操作符两边的对象类型必须是相同的 (或者可以相互转换).
         * 因此, 如果 `it` 是一个自定义的迭代器类的对象, 那么 `container.end()` 也必须返回一个相同类型的迭代器类的对象, 否则它们之间根本无法进行比较, 代码将无法编译.  你不能拿一个"自定义迭代器对象"去和一个"原始的节点指针"作比较, C++不知道该如何处理这两种完全不同的类型.
 
     我们将在迭代器那部分详细讲到.
@@ -663,7 +665,7 @@ int main() {
 #include <array>
 
 // 该函数接受一个整型span, 它可以引用任何连续的整数序列
-void print_data(std::span<const int> data) 
+void print_data(std::span<const int> data)
 {
     for (int n : data) {
         std::cout << n << ' ';
@@ -671,7 +673,7 @@ void print_data(std::span<const int> data)
     std::cout << '\n';
 }
 
-int main() 
+int main()
 {
     // 1. 从C风格数组创建span
     int c_array[] = {1, 2, 3, 4, 5};
@@ -701,9 +703,9 @@ int main()
 输出:
 
 ```bash
-From C-style array: 1 2 3 4 5 
-From std::vector: 6 7 8 9 
-From std::array: 10 11 12 
+From C-style array: 1 2 3 4 5
+From std::vector: 6 7 8 9
+From std::array: 10 11 12
 From a slice of C-style array: 2 3 4
 ```
 
@@ -717,7 +719,7 @@ void process_data(int* data, size_t size);
 这种方式有几个缺点:
 
 * 容易出错: 很容易传递错误的size, 导致缓冲区溢出或数据处理不完整.
-* 接口不统一: 如果有`std::vector`, 你需要调用`vec.data()`和`vec.size()`来传递参数. 
+* 接口不统一: 如果有`std::vector`, 你需要调用`vec.data()`和`vec.size()`来传递参数.
 
 `std::span`解决了这些问题, 它将数据指针和大小封装成一个对象, 提供了更安全, 更现代, 更通用的接口来处理连续数据视图. 它是向函数传递连续序列数据的首选方式.
 
@@ -743,7 +745,7 @@ void process_data(int* data, size_t size);
 #include <vector>
 
 // 此函数只能接受一个包含3个整数的span
-void print_fixed_size_span(std::span<const int, 3> data) 
+void print_fixed_size_span(std::span<const int, 3> data)
 {
     std::cout << "Fixed-size span (extent=3): ";
     for (int n : data) {
@@ -763,7 +765,7 @@ void print_dynamic_size_span(std::span<const int> data) // extent is std::dynami
 }
 
 
-int main() 
+int main()
 {
     int c_array[] = {1, 2, 3};
     std::vector<int> vec = {4, 5, 6, 7};
@@ -773,7 +775,7 @@ int main()
     print_fixed_size_span(c_array);
 
     // 错误: vec的大小是4, 不是3. 下面这行代码会导致编译失败.
-    // print_fixed_size_span(vec); 
+    // print_fixed_size_span(vec);
 
     // --- 动态Extent的用法 ---
     print_dynamic_size_span(c_array); // OK
@@ -786,14 +788,14 @@ int main()
 输出:
 
 ```bash
-Fixed-size span (extent=3): 1 2 3 
-Dynamic-size span (extent=3): 1 2 3 
+Fixed-size span (extent=3): 1 2 3
+Dynamic-size span (extent=3): 1 2 3
 Dynamic-size span (extent=4): 4 5 6 7
 ```
 
 ## `std::vector`
 
-上面我们说到, `std::array`的存储位置取决于其定义, 那么`std::vector`呢? 它的情况和`std::array`有稍许不同: 
+上面我们说到, `std::array`的存储位置取决于其定义, 那么`std::vector`呢? 它的情况和`std::array`有稍许不同:
 
 1. 若std::vector声明为局部变量:
     * 元数据: 栈
@@ -812,7 +814,7 @@ Dynamic-size span (extent=4): 4 5 6 7
 * 高效尾部操作: 在末尾添加`push_back()`或删除`pop_back()`元素是非常高效的, 因为它们通常只涉及到指针的移动
 * 低效中间操作: 在中间插入或删除元素会导致大量元素的移动, 这可能会很慢, 因为需要移动大量数据
 
-常用的操作: 
+常用的操作:
 
 2. 添加元素
 - `v.push_back(10);` 尾部插入
@@ -841,3 +843,52 @@ Dynamic-size span (extent=4): 4 5 6 7
 8. 内存管理
 - `v.shrink_to_fit();` 释放多余容量
 - `std::vector<int>().swap(v);` 清空并释放内存
+
+### `erase()`
+
+`earse()`用于移除容器中的元素. 它和python中的移除元素的函数不太一样, 它一般接受的是迭代器.
+
+```cpp
+std::vector<int> v = {10, 20, 30, 40};
+auto it = v.erase(v.begin() + 1);
+```
+
+或者给定元素的范围:
+
+```cpp
+std::vector<int> v = {10, 20, 30, 40, 50};
+auto it = v.erase(v.begin() + 1, v.begin() + 3);
+```
+
+!!! warning "循环删除"
+
+    在循环删除的场景中, 要特别注意`erase`的正确使用方法. 例如, 下面的代码:
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    int main() {
+        std::vector<int> myVector{1, 2, 3};
+        std::cout << "capacity: " << myVector.capacity() << std::endl;
+        myVector.push_back(4);
+        std::cout << "capacity: " << myVector.capacity() << std::endl;
+        for (int i = 0; i < myVector.size(); i++) {
+            std::cout << "---" << std::endl;
+            std::cout << "myVector.size: " << myVector.size() << std::endl;
+            myVector.erase(myVector.begin());
+            std::cout << myVector[i] << std::endl;
+        }
+        return 0;
+    }
+    ```
+
+    输出是这样子的:
+
+    ```bash
+    ---
+    myVector.size: 4
+    2
+    ---
+    myVector.size: 3
+    4
+    ```

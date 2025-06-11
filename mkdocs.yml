@@ -584,6 +584,8 @@ nav:
       - 无缝切换ip: software/xray/switch-ip.md
     - Xshell:
       - 配置: software/xshell/config.md
+    - Zed:
+      - 配置: software/zed/config.md
   - 其他:
     - 个人使用的prompt: others/prompt.md
     - 科研神器: others/research-god-tool.md
