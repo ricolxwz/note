@@ -3,6 +3,8 @@ title: 随机算法: 流处理
 comments: true
 ---
 
+由于时间关系, 剩余内容以pdf注解的形式分享, 请下载: [https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%208%20-%20Streaming%20and%20Sketching%20I.pdf?download=true](https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%208%20-%20Streaming%20and%20Sketching%20I.pdf?download=true)
+
 ## 符号含义
 
 * $m$: 数据流长度
