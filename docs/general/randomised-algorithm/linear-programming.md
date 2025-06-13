@@ -3,6 +3,8 @@ title: 随机算法:线性规划
 comments: true
 ---
 
+**由于时间关系, 剩余内容以pdf注解的形式分享, 请下载: [https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%2010%20-%20Linear%20Programming%20and%20Randomised%20Rounding.pdf?download=true](https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%2010%20-%20Linear%20Programming%20and%20Randomised%20Rounding.pdf?download=true).**
+
 ## 问题
 
 LP(Linear Programming)问题即线性规划问题, 本质是在满足一组线性约束条件的前提下, 令某个线性目标函数取到最大或者最小值. 其数学表达式为$\max{c^T x}$, 当$Ax<b$, $x\geq 0$, 其中, $x\in R^n$是一切决策变量的向量, $c$是目标函的系数, $A\in R^{m\times n}, b\in R^m$用来刻画全部约束. 上面的读起来可能比较压缩... 所以写为展开式:
