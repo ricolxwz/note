@@ -3,7 +3,7 @@ title: 随机算法:哈希
 comments: true
 ---
 
-PDF: [https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%206%20-%20Hashing%20and%20Friends.pdf?download=true](https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%206%20-%20Hashing%20and%20Friends.pdf?download=true)
+PDF批注: [https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%206%20-%20Hashing%20and%20Friends.pdf?download=true](https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%206%20-%20Hashing%20and%20Friends.pdf?download=true)
 
 ## 哈希表
 
