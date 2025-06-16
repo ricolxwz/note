@@ -3,6 +3,8 @@ title: 随机算法:反随机化
 comments: true
 ---
 
+剩余的内容没来得及时间写, 见PDF批注: [https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%204%20-%20Derandomisation.pdf?download=true](https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%204%20-%20Derandomisation.pdf?download=true)
+
 这节课主要围绕去随机化展开, 虽然随机算法在某些情形下表现良好, 但是我们希望能够得到具有相同保证的确定性算法, 所以产生了一些反随机化的方法, 以Max-Cut问题为例, 首先给出了一个简单的随机算法, 其中每个顶点随机分配到两个集合之一, 并证明了在算法在期望上至少能达到最优值的一半, 随后给出了两种反随机化的方法:
 
 1. 减少随机种子位数
