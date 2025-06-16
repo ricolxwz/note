@@ -3,6 +3,8 @@ title: 随机算法:冲突问题
 comments: true
 ---
 
+PDF批注: [https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%203%20-%20Balls%20in%20Bins.pdf?download=true](https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%203%20-%20Balls%20in%20Bins.pdf?download=true)
+
 来不及写了. 大概说一下结构. 这节将的是将$m$个球投到$n$个框里面产生的一系列问题. 主要可以分为三个部分:
 
 1. 碰撞问题
