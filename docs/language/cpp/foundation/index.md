@@ -87,6 +87,8 @@
 - (容器) `std::array`的用法, 简单了解一下迭代器
 - (容器) `std::span`的用法
 - (容器) `std::vector`的用法, 特别注意`erase`的用法
+- (容器) `std::list`的用法
+- (容器) `std::forward_list`的用法
 
 ## 引用
 
