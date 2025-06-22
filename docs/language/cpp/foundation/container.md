@@ -953,3 +953,84 @@ auto it = v.erase(v.begin() + 1, v.begin() + 3);
 ## `std::list`的用法
 
 std::list是一个C++标准库中的容器类模板, 用来存储元素的双向链表实现. 双向链表每个元素都包含指向前一个和后一个元素的指针. 非连续存储元素在内存中不是连续存放的. 快速插入和删除在列表的任意位置插入或者删除元素都非常高效, 时间复杂度是$O(1)$. 不支持随机访问, 不能像数组那样通过索引直接访问元素, 例如`myList[0]`是不允许的, 访问元素需要遍历链表. 它还提供了双向的迭代器, 可以前向或者后向遍历列表. 可以在运行的时候动态的调整大小. `std::list`特别适合需要频繁在列表中间进行插入和删除操作的场景, 如果需要频繁随机访问或者内存空间使用效率极高, 那么`std::vector`或者`std::deque`可能更加适合. 
+
+### 移动指针
+
+1. 基础移动
+
+    * `++it`: 移动到下一个元素
+    * `--it`: 移动到上一个元素
+
+    ```cpp
+    #include <list>
+    #include <iostream>
+
+    int main() {
+        std::list<int> lst = {1, 2, 3, 4, 5};
+        auto it = lst.begin();
+        ++it;
+        std::cout << *it << std::endl;
+        --it;
+        std::cout << *it << std::endl;
+        return 0;
+    }
+    ```
+
+2. 使用`std::next`和`std::prev`
+
+    * `std::next(it, n)`: 从`it`向前移动`n`步, 默认`n=1`
+    * `std::prev(it, n)`: 从`it`向前移动`n`步, 默认`n=1`
+
+    ```cpp
+    #include <list>
+    #include <iostream>
+    #include <iterator> // 需包含此头文件
+
+    int main() {
+        std::list<int> lst = {1, 2, 3, 4, 5};
+        auto it = lst.begin(); // 指向 1
+
+        // 向前移动 2 步到 3
+        auto it_next = std::next(it, 2);
+        std::cout << *it_next << std::endl; // 输出 3
+
+        // 向后移动 1 步到 2
+        auto it_prev = std::prev(it_next, 1);
+        std::cout << *it_prev << std::endl; // 输出 2
+
+        return 0;
+    }
+    ```
+
+3. 使用`std::advance`
+
+    `std::advance(it, n)`: 将`it`移动`n`步, `n`可正可负.
+
+    ```cpp
+    #include <list>
+    #include <iostream>
+    #include <iterator>
+
+    int main() {
+        std::list<int> lst = {1, 2, 3, 4, 5};
+        auto it = lst.begin(); // 指向 1
+
+        // 向前移动 3 步到 4
+        std::advance(it, 3);
+        std::cout << *it << std::endl; // 输出 4
+
+        // 向后移动 2 步到 2
+        std::advance(it, -2);
+        std::cout << *it << std::endl; // 输出 2
+
+        return 0;
+    }
+    ```
+
+### 其他常用函数
+
+1. `l1.sort()`: 默认升序排列
+2. `l1.sort(std::greater<int>())`: 降序排列
+3. `l1.reverse()`: 反转
+4. `l1.merge(l2)`: 将两个已经排序的链表合并在一起
+5. `l1.splice(it, l2)`: 在`it`位置插入`l2`的所有元素
