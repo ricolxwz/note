@@ -1039,3 +1039,166 @@ std::list是一个C++标准库中的容器类模板, 用来存储元素的双向
 
 `std::forward_list`是C++标准库中引入的一个单链表容器, 定义在`<forward_list>`头文件中. 它提供高效的插入和删除操作, 但是只支持单向遍历. 每个节点存储数据和一个指向下一个节点的指针, 只能从头节点开始访问, 每个节点能节省一个指针空间. 
 
+1. 构造与赋值
+
+    ```cpp
+    std::forward_list<int> list1;             // 空链表
+    std::forward_list<int> list2(3, 100);     // 3个元素,每个值100
+    std::forward_list<int> list3 = {1, 2, 3}; // 初始化列表
+    auto list4 = list3;                       // 拷贝构造
+    ```
+
+2. 元素访问
+
+    `front()`:访问首元素(链表为空时行为未定义)
+
+    ```cpp
+    int first = list2.front(); // 100
+    ```
+
+3. 迭代器操作
+
+    - `before_begin()`:返回首元素前一个位置的迭代器(用于插入)
+    - `begin() / end()`:返回首元素和尾后迭代器
+
+    ```cpp
+    auto it_pre = list3.before_begin(); // 指向头节点(哨兵位)
+    auto it = list3.begin();            // 指向第一个元素
+    ```
+
+4. 插入操作
+
+    - `insert_after(pos, value)`:在 `pos` 后插入元素
+    - `push_front(value)`:在链表头部插入元素
+
+    ```cpp
+    list3.insert_after(list3.before_begin(), 0); // 头插:{0, 1, 2, 3}
+    list3.push_front(-1);                        // 头插:{-1, 0, 1, 2, 3}
+    ```
+
+5. 删除操作
+
+    - `erase_after(pos)`:删除 `pos` 后的元素
+    - `pop_front()`:删除首元素
+    - `remove(val)`:删除所有等于 `val` 的元素
+    - `remove_if(pred)`:删除满足谓词的元素
+
+    ```cpp
+    list3.erase_after(list3.begin()); // 删除第二个元素:{-1, 1, 2, 3}
+    list3.pop_front();                // 删除首元素:{1, 2, 3}
+    list3.remove(2);                  // 删除所有2:{1, 3}
+    ```
+
+6. 容量操作
+
+    `empty()`:检查链表是否为空
+
+    ```cpp
+    if (!list3.empty()) { /* 非空 */ }
+    ```
+
+7. 链表操作
+
+    - `splice_after(pos, other)`:将 `other` 链表内容插入到 `pos` 后
+    - `reverse()`:反转链表
+    - `sort()`:排序(可自定义比较函数)
+    - `merge(other)`:合并两个有序链表
+    - `unique()`:删除连续重复元素
+
+    ```cpp
+    std::forward_list<int> other = {4, 5};
+    list3.splice_after(list3.begin(), other); // 在第二个位置后插入:{1, 4, 5, 3}
+    list3.sort();                            // 排序:{1, 3, 4, 5}
+    list3.unique();                          // 删除连续重复(已排序可去重)
+    ```
+
+8. 特殊操作
+
+    - `resize(n)`:调整链表大小
+    - `clear()`:清空链表
+
+    ```cpp
+    list3.resize(2); // 保留前2个元素:{1, 3}
+    list3.clear();   // 清空链表
+    ```
+
+## `std::deque`的用法
+
+`std::deque`(双端队列)是 C++ 标准模板库(STL)中的动态数组容器,支持在**头部和尾部高效插入/删除元素**(时间复杂度 O(1)).与 `std::vector` 相比,它在头部操作更高效;与 `std::list` 相比,它支持随机访问.以下是核心用法和示例:
+
+1. 头文件与声明
+
+    ```cpp
+    #include <deque>
+    std::deque<T> dq; // 声明元素类型为 T 的 deque
+    ```
+
+2. 初始化
+
+    ```cpp
+    std::deque<int> dq1;                     // 空 deque
+    std::deque<int> dq2(5, 10);              // 5 个元素,每个值为 10
+    std::deque<int> dq3 = {1, 2, 3, 4};      // 初始化列表
+    std::deque<int> dq4(dq3.begin(), dq3.end()); // 迭代器范围
+    ```
+
+3. 添加元素
+
+    ```cpp
+    dq.push_back(10);   // 在尾部插入 10
+    dq.push_front(5);   // 在头部插入 5
+    dq.insert(dq.begin() + 2, 30); // 在索引2位置插入30
+    ```
+
+4. 删除元素
+
+    ```cpp
+    dq.pop_back();      // 删除尾部元素
+    dq.pop_front();     // 删除头部元素
+    dq.erase(dq.begin() + 1); // 删除索引1处的元素
+    dq.clear();         // 清空所有元素
+    ```
+
+5. 访问元素
+
+    ```cpp
+    int first = dq.front();     // 首元素
+    int last = dq.back();       // 末元素
+    int elem = dq[2];           // 索引2处的元素(无边界检查)
+    int safe_elem = dq.at(2);   // 带边界检查(越界抛异常)
+    ```
+
+6. 大小与容量
+
+    ```cpp
+    bool isEmpty = dq.empty();  
+    size_t size = dq.size();    
+    dq.resize(10);              // 调整大小为10
+    ```
+
+7. 迭代器遍历
+
+    ```cpp
+    // 顺序遍历
+    for (auto it = dq.begin(); it != dq.end(); ++it) {
+        std::cout << *it << " ";
+    }
+
+    // 逆序遍历
+    for (auto it = dq.rbegin(); it != dq.rend(); ++it) {
+        std::cout << *it << " ";
+    }
+
+    // 范围for循环 (C++11)
+    for (int val : dq) {
+        std::cout << val << " ";
+    }
+    ```
+
+⚡ 性能特点
+| 操作                 | 时间复杂度 |
+|----------------------|------------|
+| 头部/尾部插入删除    | O(1)       |
+| 随机访问 `dq[i]`     | O(1)       |
+| 中间插入/删除        | O(n)       |
+

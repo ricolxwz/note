@@ -89,6 +89,7 @@
 - (容器) `std::vector`的用法, 特别注意`erase`的用法
 - (容器) `std::list`的用法
 - (容器) `std::forward_list`的用法
+- (容器) `std::deque`的用法
 
 ## 引用
 
