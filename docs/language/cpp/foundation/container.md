@@ -1196,9 +1196,137 @@ std::list是一个C++标准库中的容器类模板, 用来存储元素的双向
     ```
 
 ⚡ 性能特点
+
 | 操作                 | 时间复杂度 |
 |----------------------|------------|
 | 头部/尾部插入删除    | O(1)       |
 | 随机访问 `dq[i]`     | O(1)       |
 | 中间插入/删除        | O(n)       |
 
+## `std::set`的用法
+
+`std::set`是STL中的关联容器, 它存储唯一元素(不允许重复值), 并自动按照特定顺序(默认升序)排列元素. 它的核心特性包括: 
+
+* 唯一性: 每个元素必须唯一(插入重复值的时候会被忽略), 使用`insert()`插入重复元素的时候, 返回`pair<iterator, bool>`, 其中, `bool=False`表示插入失败
+* 自动排序: 元素默认按照`operator<`升序排列, 可以通过自定义比较函数或者函数对象修改排序规则
+* 底层实现: 通常依赖于红黑树, 保证插入, 删除, 查找操作的时间复杂度为`O(log n)`
+* 不可修改元素值: 直接修改元素会破坏颞n内部结构(因为元素位置取决于值), 修改需要先删除旧值, 再插入新值
+
+```cpp
+#include <set>
+#include <iostream>
+
+int main() {
+    // 默认升序排列
+    std::set<int> numSet = {5, 2, 8, 2}; // 重复值 2 被忽略
+    // 输出:2 5 8
+    for (int num : numSet) std::cout << num << " ";
+
+    // 降序排列
+    std::set<int, std::greater<int>> descSet = {5, 2, 8};
+    // 输出:8 5 2
+    for (int num : descSet) std::cout << num << " ";
+
+    // 插入元素
+    auto [it, success] = numSet.insert(3); // 插入成功
+    auto [it2, success2] = numSet.insert(2); // 失败(重复)
+
+    // 查找元素
+    if (auto pos = numSet.find(5); pos != numSet.end()) {
+        std::cout << "Found: " << *pos; // 输出 5
+    }
+
+    // 删除元素
+    numSet.erase(5); // 通过值删除
+    numSet.erase(it); // 通过迭代器删除
+}
+```
+
+### 查找操作
+
+```cpp
+#include <iostream>
+#include <set>
+
+int main() {
+	std::set<int> set1{1, 2, 3, 4, 5};
+	set1.insert(1);
+	set1.insert(2);
+	set1.insert(-4);
+
+    std::cout << "4?: " << set1.count(4) << std::endl;
+    std::cout << "4?: " << set1.contains(4) << std::endl;
+
+    auto found = set1.find(4);
+    if (found != set1.end()) {
+        std::cout << "Found: " << *found << std::endl;
+    } else {
+        std::cout << "Not found" << std::endl;
+    }
+
+	return 0;
+}
+```
+
+|方法|返回值类型|最佳使用场景|
+|---|---|---|
+|`count()`|`size_t`(0 or 1)|兼容旧标准的存在性检查|
+|`contains()`|`bool`|C++20+存在性检查(最简洁方式)|
+|`find()`|迭代器|需要元素位置/引用时|
+
+## `std::unordered_set`的用法
+
+std::unordered_set是C++标准库中的无序集合容器, 基于哈希表实现, 用于存储唯一元素, 特点是插入, 删除和查找操作的平均时间复杂度为O(1).
+
+1. 头文件
+
+    ```cpp
+    #include <unordered_set>
+    ```
+
+2. 声明与初始化
+
+    ```cpp
+    std::unordered_set<int> s1; // 空集合
+    std::unordered_set<std::string> s2 = {"apple", "banana"}; // 初始化列表
+    ```
+
+3. 插入元素
+
+    ```cpp
+    s1.insert(10);  // 插入单个元素
+    s1.emplace(20); // 原地构造元素
+    s1.insert({30, 40, 50}); // 插入多个元素
+    ```
+
+4. 查找元素
+
+    ```cpp
+    if(s1.find(10) != s1.end()) {
+    // 元素存在
+    }
+    auto count = s1.count(20); // 返回1(存在)或0(不存在)
+    ```
+
+5. 删除元素
+
+    ```cpp
+    s1.erase(10);   // 删除值为10的元素
+    s1.erase(s1.find(20)); // 通过迭代器删除
+    s1.clear();     // 清空集合
+    ```
+
+6. 遍历集合
+
+    ```cpp
+    for(const auto& elem : s1) {
+    std::cout << elem << " ";
+    }
+    ```
+
+7. 容量查询
+
+    ```cpp
+    bool isEmpty = s1.empty(); 
+    size_t size = s1.size(); 
+    ```
