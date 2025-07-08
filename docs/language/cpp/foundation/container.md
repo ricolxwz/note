@@ -1330,3 +1330,300 @@ std::unordered_set是C++标准库中的无序集合容器, 基于哈希表实现
     bool isEmpty = s1.empty(); 
     size_t size = s1.size(); 
     ```
+
+## `std::multiset`的用法
+
+`std::multiset`是C++标准模板库(STL)中的一个关联容器, 其特性和`std::set`类似, 但允许存储重复的键. 元素默认按升序排序.
+
+1. 头文件
+
+    要使用`std::multiset`, 需要包含头文件`<set>`.
+
+    ```cpp
+    #include <iostream>
+    #include <set>
+    #include <string>
+    ```
+
+2. 创建`std::multiset`
+
+    可以创建一个空的`multiset`, 或者在创建时进行初始化.
+
+    ```cpp
+    // 创建一个存储int的空multiset
+    std::multiset<int> m1;
+
+    // 使用初始化列表创建multiset
+    std::multiset<int> m2 = {5, 2, 8, 2, 5};
+
+    // 创建一个降序排序的multiset
+    std::multiset<int, std::greater<int>> m3 = {5, 2, 8, 2, 5};
+    ```
+
+3. 插入元素
+
+    使用`insert()`成员函数向`multiset`中添加元素.
+
+    ```cpp
+    std::multiset<int> ms;
+
+    // 插入单个元素
+    ms.insert(10);
+    ms.insert(20);
+    ms.insert(10); // 允许重复
+
+    // 插入初始化列表 (C++11)
+    ms.insert({30, 40, 30});
+    ```
+
+4. 删除元素
+
+    使用`erase()`成员函数删除元素.
+
+    ```cpp
+    std::multiset<int> ms = {10, 20, 10, 30, 40, 30};
+
+    // 删除所有值为10的元素
+    ms.erase(10);
+
+    // 删除指向第一个元素的迭代器
+    ms.erase(ms.begin());
+
+    // 删除一个范围内的元素
+    auto it = ms.find(30);
+    if (it != ms.end()) {
+        ms.erase(it); // 只会删除一个30
+    }
+    ```
+
+5. 查找和计数
+
+    * `find()`: 返回一个指向第一个匹配元素的迭代器. 如果未找到, 返回`end()`迭代器.
+    * `count()`: 返回具有特定值的元素的数量.
+    * `lower_bound()`: 返回指向第一个不小于给定值的元素的迭代器.
+    * `upper_bound()`: 返回指向第一个大于给定值的元素的迭代器.
+    * `equal_range()`: 返回一个`std::pair`, 包含`lower_bound`和`upper_bound`的结果.
+
+    ```cpp
+    std::multiset<int> ms = {10, 20, 10, 30, 40, 30, 10};
+
+    // 查找元素
+    auto it = ms.find(20);
+    if (it != ms.end()) {
+        std::cout << "Found: " << *it << std::endl;
+    }
+
+    // 统计元素数量
+    size_t num = ms.count(10); // num 将会是 3
+
+    // 使用lower_bound和upper_bound遍历所有值为10的元素
+    for (auto it = ms.lower_bound(10); it != ms.upper_bound(10); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl; // 输出: 10 10 10
+
+    // 使用equal_range
+    auto range = ms.equal_range(30);
+    for (auto it = range.first; it != range.second; ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl; // 输出: 30 30
+    ```
+
+6. 遍历
+
+    通常使用基于范围的for循环或迭代器进行遍历.
+
+    ```cpp
+    std::multiset<int> ms = {50, 20, 80, 20, 70};
+
+    // 使用基于范围的for循环 (C++11)
+    for (int val : ms) {
+        std::cout << val << " ";
+    }
+    // 输出将是排序后的结果: 20 20 50 70 80
+    std::cout << std::endl;
+
+    // 使用迭代器
+    for (auto it = ms.begin(); it != ms.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    // 输出: 20 20 50 70 80
+    std::cout << std::endl;
+    ```
+
+| 特性 | `std::multiset` | `std::set` |
+| :--- | :--- | :--- |
+| **重复元素** | 允许 | 不允许 |
+| **`insert()`返回值** | `iterator` | `std::pair<iterator, bool>` |
+| **`erase(key)`** | 删除所有等于`key`的元素 | 删除等于`key`的唯一元素 |
+| **`count(key)`** | 返回等于`key`的元素数量 | 返回0或1 |
+
+`std::multiset::insert()`总是会插入元素并返回指向新元素的迭代器. 而`std::set::insert()`只有在元素不存在时才会插入,并通过返回的`std::pair`中的`bool`值来指示插入是否成功.
+
+## `std::unordered_multiset`的用法
+
+`std::unordered_multiset`是STL中的一个关联容器, 它存储一组元素(键), 并允许键重复, 和`std::multiset`不同, 其内部元素不是有序的, 而是使用哈希表来组织, 这使得在平均情况下查找, 插入和删除操作的复杂度为常数时间O(1).
+
+| 特性 | `std::unordered_multiset` | `std::multiset` |
+| :--- | :--- | :--- |
+| **内部实现** | 哈希表 | 红黑树 |
+| **元素顺序** | 无序 | 升序 |
+| **查找/插入/删除** | 平均$O(1)$, 最坏$O(n)$ | $O(\\log n)$ |
+| **迭代器** | 前向迭代器 | 双向迭代器 |
+| **额外开销** | 哈希表管理的开销 | 树节点指针的开销 |
+| **头文件** | `<unordered_set>` | `<set>` |o
+
+## `std::pair`的用法
+
+`std::pair`是STL中的一个模板类, 它将两个可能不同类型的值组合成一个单一的对象. 这个组合对象可以被当做一个独立的单元来处理. 它的特性包括:
+
+* 组合: 将两个值(称为`first`和`second`)打包在一起
+* 异构性: 两个值的类型可以不同, 例如`std::pair<int, std::string>`
+* 便携性: 常用于需要从函数中返回多个值, 或在关联容器(如`std::map`)中存储键值对的场景
+
+1. 头文件
+
+    ```cpp
+    #include <utility> // 主要头文件
+    #include <iostream> // 用于示例输出
+    #include <string>   // 用于示例类型
+    ```
+
+2. 声明和初始化
+
+    有多种方式可以创建`std::pair`.
+
+    * **使用构造函数**
+
+        ```cpp
+        std::pair<int, std::string> p1(1, "hello");
+        ```
+
+    * **使用`std::make_pair()`辅助函数 (C++11前常用)**
+        `std::make_pair`可以自动推断类型, 使代码更简洁.
+
+        ```cpp
+        auto p2 = std::make_pair(2, "world");
+        ```
+
+    * **使用聚合初始化 (C++11及以后)**
+        这是最现代, 最简洁的方式.
+
+        ```cpp
+        std::pair<int, double> p3 = {3, 3.14};
+        std::pair<std::string, bool> p4{"test", true};
+        ```
+
+3. 访问元素
+
+    `std::pair`的两个成员可以通过`.first`和`.second`公开访问.
+
+    ```cpp
+    std::pair<int, std::string> p(10, "apple");
+
+    // 访问第一个元素
+    int id = p.first; // id 为 10
+
+    // 访问第二个元素
+    std::string name = p.second; // name 为 "apple"
+
+    std::cout << "ID: " << p.first << ", Name: " << p.second << std::endl;
+
+    // 修改元素
+    p.first = 20;
+    p.second = "banana";
+    ```
+
+4. 结构化绑定 (C++17及以后)
+
+    C++17引入了结构化绑定, 提供了一种更优雅的方式来分解`std::pair`(以及其他类似`struct`的类型)的成员到独立的变量中.
+
+    ```cpp
+    std::pair<int, std::string> user = {101, "Alice"};
+
+    auto [userId, userName] = user; // 自动分解
+
+    std::cout << "User ID: " << userId << std::endl;   // 输出: User ID: 101
+    std::cout << "User Name: " << userName << std::endl; // 输出: User Name: Alice
+    ```
+
+5. 比较操作
+
+    `std::pair`支持比较运算符 (`==`, `!=`, `<`, `>`, `<=`, `>=`). 比较是按字典序进行的:
+
+    1.  首先比较`first`成员.
+    2.  如果`first`成员相等, 则比较`second`成员.
+
+    ```cpp
+    std::pair<int, int> p1 = {10, 20};
+    std::pair<int, int> p2 = {10, 30};
+    std::pair<int, int> p3 = {5, 40};
+
+    if (p1 < p2) { // true, 因为 p1.first == p2.first 且 p1.second < p2.second
+        std::cout << "p1 is less than p2" << std::endl;
+    }
+
+    if (p3 < p1) { // true, 因为 p3.first < p1.first
+        std::cout << "p3 is less than p1" << std::endl;
+    }
+    ```
+
+### 常见应用场景
+
+1. 从函数返回多个值
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+    #include <utility>
+
+    std::pair<int, std::string> get_user_data() {
+        // 假设这里有一些逻辑来获取数据
+        return {123, "Bob"};
+    }
+
+    int main() {
+        // C++17 结构化绑定
+        auto [id, name] = get_user_data();
+        std::cout << "ID: " << id << ", Name: " << name << std::endl;
+
+        // C++11/14 写法
+        auto user_data = get_user_data();
+        std::cout << "ID: " << user_data.first << ", Name: " << user_data.second << std::endl;
+
+        return 0;
+    }
+    ```
+
+2. 在`std::map`中使用
+
+    `std::map`的每个元素本质上就是一个`std::pair<const Key, T>`.
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+    #include <map>
+
+    int main() {
+        std::map<std::string, int> word_counts;
+
+        // 插入元素, 可以使用make_pair或聚合初始化
+        word_counts.insert(std::make_pair("hello", 1));
+        word_counts.insert({"world", 2});
+        word_counts["hello"]++; // 访问并增加 "hello" 的计数值
+
+        // 遍历map
+        for (const auto& pair : word_counts) {
+            // pair 是一个 const std::pair<const std::string, int>&
+            std::cout << pair.first << ": " << pair.second << std::endl;
+        }
+
+        // C++17 结构化绑定遍历
+        for (const auto& [word, count] : word_counts) {
+            std::cout << word << " appears " << count << " times." << std::endl;
+        }
+
+        return 0;
+    }
+    ```

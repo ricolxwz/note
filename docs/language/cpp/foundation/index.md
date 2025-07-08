@@ -92,6 +92,9 @@
 - (容器) `std::deque`的用法
 - (容器) `std::set`的用法
 - (容器) `std::unordered_set`的用法
+- (容器) `std::multiset`的用法
+- (容器) `std::unordered_multiset`的用法
+- (容器) `std::pair`的用法
 
 ## 引用
 
