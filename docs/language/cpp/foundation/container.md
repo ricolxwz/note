@@ -1629,3 +1629,173 @@ std::unordered_set是C++标准库中的无序集合容器, 基于哈希表实现
     ```
 
 ## `std::map`的用法
+
+`std::map`是C++标准库中的一个关联容器, 它存储的元素是键值对(key-value pairs), 并且会根据键(key)自动排序. 当你需要存储键值对, 并且希望能够根据键快速查找值, 同时还要求数据自动保持有序时, `std::map`是理想的选择. 例如, 存储学生ID和对应的学生信息, 或者统计单词出现的频率并按字母顺序输出.
+
+1. 头文件
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+    #include <map>
+    ```
+
+2. 声明和初始化
+
+    ```cpp
+    // 默认构造
+    std::map<std::string, int> word_counts;
+
+    // 使用初始化列表 (C++11及以后)
+    std::map<char, int> char_map = {
+        {'a', 1},
+        {'b', 2},
+        {'c', 3}
+    };
+    ```
+
+3. 访问和修改元素
+
+  * **使用`[]`操作符**
+
+    这是最常用和最方便的方式. 如果键存在, 它返回对应值的引用. 如果键不存在, 它会**自动插入**一个新元素, 键为指定的键, 值为默认构造的值(对于`int`是0, `string`是空字符串等), 然后返回这个新值的引用.
+
+    ```cpp
+    std::map<std::string, int> scores;
+
+    // 赋值 (如果"Alice"不存在, 会自动创建)
+    scores["Alice"] = 95;
+    scores["Bob"] = 88;
+
+    // 修改
+    scores["Alice"] = 98;
+
+    // 访问
+    std::cout << "Bob's score: " << scores["Bob"] << std::endl;
+
+    // 注意: 仅仅是访问一个不存在的键也会导致插入
+    std::cout << scores["Charlie"]; // 会插入"Charlie":0, 并输出0
+    ```
+
+  * **使用`at()`成员函数**
+
+    `at()`提供带边界检查的访问. 如果键存在, 它返回值的引用. 如果键不存在, 它会抛出`std::out_of_range`异常, 而不会插入新元素.
+
+    ```cpp
+    try {
+        scores.at("Alice") = 100; // 安全的修改
+        std::cout << scores.at("David"); // 会抛出异常
+    } catch (const std::out_of_range& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+    ```
+
+4. 插入元素
+
+    * **`insert()`**
+
+        `insert()`是更通用的插入方法. 它返回一个`std::pair<iterator, bool>`.
+
+        * `iterator`指向被插入的元素或已存在的具有相同键的元素.
+        * `bool`表示插入是否成功. 如果键已存在, 插入会失败, `bool`为`false`.
+
+        ```cpp
+        std::map<int, std::string> students;
+
+        // 使用std::make_pair
+        auto result1 = students.insert(std::make_pair(101, "Eve"));
+        if (result1.second) {
+            std::cout << "Inserted successfully." << std::endl;
+        }
+
+        // 使用聚合初始化 (C++11)
+        auto result2 = students.insert({102, "Frank"});
+
+        // 尝试插入一个已存在的键
+        auto result3 = students.insert({101, "Elsa"}); // 插入会失败
+        if (!result3.second) {
+            std::cout << "Key 101 already exists. Value is: " << result3.first->second << std::endl;
+        }
+        ```
+
+5. 查找元素
+
+  * **`find()`**
+
+    `find()`用于查找一个键. 如果找到, 返回指向该元素的迭代器. 如果找不到, 返回`end()`迭代器.
+
+    ```cpp
+    auto it = scores.find("Alice");
+    if (it != scores.end()) {
+        // it->first 是键, it->second 是值
+        std::cout << it->first << "'s score is " << it->second << std::endl;
+    } else {
+        std::cout << "Alice not found." << std::endl;
+    }
+    ```
+
+  * **`count()`**
+
+    由于`std::map`的键是唯一的, `count()`只会返回0或1, 可以用来检查键是否存在.
+
+    ```cpp
+    if (scores.count("Bob")) {
+        std::cout << "Bob is in the map." << std::endl;
+    }
+    ```
+
+6. 删除元素
+
+  * **`erase()`**
+
+    可以按键删除, 按迭代器删除, 或按范围删除.
+
+    ```cpp
+    // 按键删除
+    size_t num_erased = scores.erase("Charlie"); // 返回删除的元素数量 (0或1)
+
+    // 按迭代器删除
+    auto it_bob = scores.find("Bob");
+    if (it_bob != scores.end()) {
+        scores.erase(it_bob);
+    }
+    ```
+
+7. 遍历
+
+    由于`std::map`是有序的, 遍历的结果也是有序的.
+
+    * **使用范围`for`循环 (C++11及以后)**
+
+        这是最简单的方式.
+
+        ```cpp
+        std::map<std::string, int> fruit_prices = {{"banana", 3}, {"apple", 2}, {"orange", 4}};
+
+        // 使用结构化绑定 (C++17)
+        for (const auto& [fruit, price] : fruit_prices) {
+            std::cout << fruit << ": " << price << std::endl;
+        }
+        // 输出会是:
+        // apple: 2
+        // banana: 3
+        // orange: 4
+        ```
+
+    * **使用迭代器**
+
+        ```cpp
+        for (auto it = fruit_prices.begin(); it != fruit_prices.end(); ++it) {
+            std::cout << it->first << " -> " << it->second << std::endl;
+        }
+        ```
+
+| 特性 | `std::map` | `std::unordered_map` |
+| :--- | :--- | :--- |
+| **内部实现** | 红黑树 | 哈希表 |
+| **元素顺序** | 按键排序 | 无序 |
+| **查找/插入/删除** | $O(\\log n)$ | 平均$O(1)$, 最坏$O(n)$ |
+| **内存使用** | 通常更少 | 哈希表管理有额外开销 |
+| **头文件** | `<map>` | `<unordered_map>` |
+
+如果你需要有序数据, 或者对最坏情况下的性能有严格要求, 选择`std::map`. 如果你追求最快的平均性能且不关心顺序, `std::unordered_map`通常是更好的选择.

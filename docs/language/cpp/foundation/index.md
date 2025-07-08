@@ -95,6 +95,7 @@
 - (容器) `std::multiset`的用法
 - (容器) `std::unordered_multiset`的用法
 - (容器) `std::pair`的用法
+- (容器) `std::map`的用法
 
 ## 引用
 
