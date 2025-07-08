@@ -1799,3 +1799,264 @@ std::unordered_set是C++标准库中的无序集合容器, 基于哈希表实现
 | **头文件** | `<map>` | `<unordered_map>` |
 
 如果你需要有序数据, 或者对最坏情况下的性能有严格要求, 选择`std::map`. 如果你追求最快的平均性能且不关心顺序, `std::unordered_map`通常是更好的选择.
+
+## `std::multimap`的用法
+
+`std::multimap`是C++标准库中的一个关联容器, 它存储键值对(key-value pairs), 并根据键自动排序. 与`std::map`不同, `std::multimap`**允许键重复**. 当你需要存储键值对, 并希望根据键排序, 同时一个键需要对应多个值时, `std::multimap`是最佳选择. 例如, 一个字典应用中, 一个单词(键)可能有多种释义(值); 或者一个电话簿中, 一个人名(键)可能对应多个电话号码(值).
+
+`std::multimap`与`std::map`非常相似, 主要区别在于:
+
+1.  **键的唯一性**: `std::map`的键是唯一的, 而`std::multimap`允许键重复.
+2.  **访问方式**: `std::multimap`**没有`[]`操作符**和`.at()`成员函数. 因为一个键可能对应多个值, `m[key]`这种访问方式会产生歧义. 你必须使用其他方法(如`find`, `equal_range`)来访问元素.
+
+1. 头文件
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+    #include <map> // multimap也在此头文件中
+    ```
+
+2. 声明和初始化
+
+    ```cpp
+    // 默认构造
+    std::multimap<std::string, int> scores;
+
+    // 使用初始化列表 (C++11及以后)
+    std::multimap<std::string, std::string> contacts = {
+        {"Alice", "123-4567"},
+        {"Bob", "234-5678"},
+        {"Alice", "987-6543"} // "Alice"键重复
+    };
+    ```
+
+3. 插入元素
+
+    使用`insert()`成员函数. 因为键可以重复, `insert`总会成功并添加一个新元素.
+
+    ```cpp
+    std::multimap<std::string, int> student_scores;
+
+    // 插入总是会成功
+    student_scores.insert({"Eve", 90});
+    student_scores.insert(std::make_pair("Frank", 85));
+    student_scores.insert({"Eve", 95}); // 再次插入"Eve", 值不同
+    ```
+
+4. 查找和访问元素
+
+    由于键可以重复, 访问与特定键关联的所有值是`std::multimap`的核心操作.
+
+    * **`find()`**
+        `find(key)`返回一个指向**第一个**匹配该键的元素的迭代器. 如果找不到, 返回`end()`.
+
+        ```cpp
+        auto it = contacts.find("Alice");
+        if (it != contacts.end()) {
+            // it->first 是键, it->second 是值
+            std::cout << "Found one contact for Alice: " << it->second << std::endl;
+        }
+        ```
+
+    * **`count()`**
+        `count(key)`返回具有特定键的元素的数量.
+
+        ```cpp
+        size_t num_alice = contacts.count("Alice"); // 返回 2
+        std::cout << "Alice has " << num_alice << " contacts." << std::endl;
+        ```
+
+    * **`equal_range()`**
+        这是处理重复键最常用, 最强大的方法. 它返回一个`std::pair<iterator, iterator>`, 这两个迭代器构成一个半开区间`[first, second)`, 包含了所有匹配该键的元素.
+
+        ```cpp
+        std::cout << "All contacts for Alice:" << std::endl;
+        auto range = contacts.equal_range("Alice");
+        for (auto it = range.first; it != range.second; ++it) {
+            std::cout << "  - " << it->second << std::endl;
+        }
+        ```
+
+5. 删除元素
+
+  * **`erase()`**
+
+      * `erase(key)`: 删除**所有**匹配该键的元素, 并返回被删除元素的数量.
+      * `erase(iterator)`: 只删除迭代器指向的那个元素.
+
+    ```cpp
+    // 按键删除 (会删除所有 "Alice" 的条目)
+    size_t num_erased = contacts.erase("Alice");
+    std::cout << "Erased " << num_erased << " entries for Alice." << std::endl;
+
+    // 按迭代器删除 (只删除一个)
+    auto it_bob = contacts.find("Bob");
+    if (it_bob != contacts.end()) {
+        contacts.erase(it_bob);
+    }
+    ```
+
+6. 遍历
+
+    遍历`std::multimap`会按键的顺序访问所有元素.
+
+    ```cpp
+    std::multimap<std::string, int> mm = {
+        {"b", 20},
+        {"a", 10},
+        {"c", 30},
+        {"a", 15}
+    };
+
+    // 使用范围for循环 (C++11) 和结构化绑定 (C++17)
+    for (const auto& [key, value] : mm) {
+        std::cout << key << ": " << value << std::endl;
+    }
+
+    /*
+    输出 (按键排序):
+    a: 10
+    a: 15
+    b: 20
+    c: 30
+    */
+    ```
+
+## `std::unordered_map`的用法
+
+`std::unordered_map`是一个关联容器, 用于存储由"键 (Key)"和"值 (Value)"组成的元素对. 它的核心特点是**无序**和**快速**.
+
+1.  **实现方式**: `std::unordered_map`内部基于\*\*哈希表 (Hash Table)\*\*实现. 它通过一个哈希函数将键转换为一个哈希值 (一个整数), 并以此作为元素在内存中的索引, 从而实现快速访问.
+2.  **无序性**: 由于基于哈希表, `std::unordered_map`中的元素不会像`std::map`那样根据键自动排序. 遍历它时, 元素的顺序是不确定的, 并且可能在每次程序运行时发生变化.
+3.  **性能**: 它的主要优点是性能. 在平均情况下, 插入, 删除和查找操作的时间复杂度都是常数时间$O(1)$. 在最坏情况下 (所有元素都产生哈希冲突), 时间复杂度会退化到线性时间$O(N)$.
+
+1. 包含头文件
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+    #include <unordered_map>
+    ```
+
+2. 声明与初始化
+
+    ```cpp
+    // 声明一个键为string, 值为int的unordered_map
+    std::unordered_map<std::string, int> wordCount;
+
+    // 声明并使用初始化列表进行初始化
+    std::unordered_map<std::string, int> ages = {
+        {"Alice", 25},
+        {"Bob", 30},
+        {"Charlie", 22}
+    };
+    ```
+
+3. 插入与修改元素
+
+    有两种主要方法:
+
+    - **使用`[]`操作符**: 这是最简单直接的方式. 如果键不存在, 则会创建新元素; 如果键已存在, 则会更新其对应的值.
+
+        ```cpp
+        ages["Bob"] = 31; // Bob已存在, 更新值为31
+        ages["David"] = 28; // David不存在, 创建新元素
+        ```
+
+    - **使用`insert()`方法**: 这种方法更灵活. 如果键已存在, `insert`不会执行任何操作.
+
+        ```cpp
+        // 使用std::make_pair
+        ages.insert(std::make_pair("Eve", 29));
+
+        // 使用{}初始化列表 (C++11及以上)
+        ages.insert({"Frank", 40});
+
+        // insert会返回一个std::pair, .second是一个bool值, 表示是否插入成功
+        auto result = ages.insert({"Alice", 99}); // Alice已存在
+        if (!result.second) {
+            std::cout << "Insert failed, Alice already exists. " << std::endl;
+        }
+        ```
+
+4. 访问元素
+
+    - **使用`[]`操作符**: 方便, 但有风险. 如果键不存在, 它会自动插入一个具有默认值 (例如`int`的0, `string`的"") 的新元素. 这可能会引入意想不到的bug.
+
+        ```cpp
+        std::cout << "Alice's age is " << ages["Alice"] << std::endl; // 输出: 25
+        std::cout << "George's age is " << ages["George"] << std::endl; // 输出: 0, 并且"George"被添加到了map中
+        ```
+
+    - **使用`at()`方法**: 更安全的方式. 如果键存在, 它会返回值; 如果键不存在, 它会抛出`std::out_of_range`异常.
+
+        ```cpp
+        try {
+            std::cout << "Bob's age is " << ages.at("Bob") << std::endl;
+            // std::cout << ages.at("Zoe") << std::endl; // 这行会抛出异常
+        } catch (const std::out_of_range& e) {
+            std::cout << "Key not found: " << e.what() << std::endl;
+        }
+        ```
+
+5. 检查键是否存在
+
+    在访问前检查键是否存在是一个好习惯.
+
+    - **使用`contains()` (C++20)**: 这是最现代, 最清晰的方法.
+        ```cpp
+        if (ages.contains("Charlie")) {
+            std::cout << "Charlie is in the map. " << std::endl;
+        }
+        ```
+    - **使用`find()` (C++20之前)**: `find`返回一个指向元素的迭代器. 如果未找到, 则返回`end()`迭代器.
+        ```cpp
+        if (ages.find("David") != ages.end()) {
+            std::cout << "David is in the map. " << std::endl;
+        }
+        ```
+    - **使用`count()` (C++20之前)**: 由于键是唯一的, `count`只会返回0 (不存在)或1 (存在).
+        ```cpp
+        if (ages.count("Eve") > 0) {
+            std::cout << "Eve is in the map. " << std::endl;
+        }
+        ```
+
+6. 删除元素
+
+    使用`erase()`方法.
+
+    ```cpp
+    // 按键删除
+    ages.erase("Frank");
+
+    // erase会返回被删除元素的数量 (0或1)
+    if (ages.erase("NonExistentKey") == 0) {
+        std::cout << "Key was not found to be erased. " << std::endl;
+    }
+    ```
+
+7. 遍历
+
+    使用范围`for`循环是遍历`unordered_map`最简单的方式.
+
+    ```cpp
+    std::cout << "All ages:" << std::endl;
+    // 使用const auto&避免不必要的拷贝
+    for (const auto& pair : ages) {
+        // pair是一个std::pair对象
+        std::cout << " - " << pair.first << ": " << pair.second << std::endl;
+    }
+    ```
+
+    **再次强调**: 遍历的顺序是**不确定**的.
+
+| 特性 | `std::unordered_map` | `std::map` |
+| :--- | :--- | :--- |
+| **内部实现** | 哈希表 (Hash Table) | 平衡二叉搜索树 (通常是红黑树) |
+| **元素顺序** | 无序 | 按键排序 |
+| **平均性能** | $O(1)$ | $O(\log N)$ |
+| **最坏性能** | $O(N)$ | $O(\log N)$ |
+| **键的要求** | 需要哈希函数和`operator==` | 需要严格弱序比较 (如`operator<`) |
+| **适用场景** | 追求极致的查找性能, 不关心顺序 | 需要按顺序访问元素 |
