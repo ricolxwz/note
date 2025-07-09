@@ -96,6 +96,11 @@
 - (容器) `std::unordered_multiset`的用法
 - (容器) `std::pair`的用法
 - (容器) `std::map`的用法
+- (容器) `std::unordered_map`的用法
+- (容器) `std::unordered_multimap`的用法
+- (容器) `std::stack`的用法
+- (容器) `std::queue`的用法
+- (容器) `std::priority_queue`的用法
 
 ## 引用
 

@@ -2060,3 +2060,344 @@ std::unordered_set是C++标准库中的无序集合容器, 基于哈希表实现
 | **最坏性能** | $O(N)$ | $O(\log N)$ |
 | **键的要求** | 需要哈希函数和`operator==` | 需要严格弱序比较 (如`operator<`) |
 | **适用场景** | 追求极致的查找性能, 不关心顺序 | 需要按顺序访问元素 |
+
+## `std::unordered_multimap`的用法
+
+`std::unordered_multimap`是C++标准库中的一个关联容器, 它储存由键(Key)和值(Value)组成的元素对(pair). 与`std::unordered_map`不同, `std::unordered_multimap`允许存在具有相同键的多个元素.
+
+它的主要特点是:
+
+  * **关联性**: 元素通过键进行访问, 而不是通过它们在容器中的绝对位置.
+  * **无序性**: 元素在内部并不按任何特定顺序排序, 而是根据其哈希值组织到桶(bucket)中, 这使得查找, 插入和删除操作的平均时间复杂度为$O(1)$.
+  * **允许多键**: 允许插入具有相同键的多个键值对.
+
+当你需要一个字典或哈希表结构, 并且一个键可以关联多个值时, `std::unordered_multimap`是一个理想的选择. 例如, 一个储存一个单词所有定义的字典.
+
+1. 头文件
+
+    要使用`std::unordered_multimap`, 你需要包含以下头文件:
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+    #include <unordered_map> // 注意是<unordered_map>, 不是<unordered_multimap>
+    ```
+
+2. 初始化
+
+    你可以创建一个空的`std::unordered_multimap`, 或者使用初始化列表进行初始化.
+
+    ```cpp
+    // 创建一个键为std::string, 值为int的空unordered_multimap
+    std::unordered_multimap<std::string, int> umm1;
+
+    // 使用初始化列表创建
+    std::unordered_multimap<std::string, int> umm2 = {
+        {"apple", 1},
+        {"orange", 2},
+        {"apple", 3}, // 允许重复的键
+        {"banana", 2}
+    };
+    ```
+
+3. 插入元素
+
+    使用`insert()`成员函数插入元素.
+
+    ```cpp
+    std::unordered_multimap<std::string, int> umm;
+
+    // 插入std::pair
+    umm.insert(std::make_pair("apple", 10));
+    umm.insert(std::pair<std::string, int>("orange", 20));
+
+    // 使用初始化列表 (C++11)
+    umm.insert({"banana", 30});
+    umm.insert({"apple", 40});
+    ```
+
+4. 访问元素
+
+    由于`std::unordered_multimap`允许重复的键, 它没有提供`operator[]`. 你必须使用`find()`, `equal_range()`, 或`count()`来访问元素.
+
+    * **`find(key)`**: 返回一个指向第一个匹配键的元素的迭代器. 如果未找到, 则返回`end()`.
+
+        ```cpp
+        auto it = umm2.find("apple");
+        if (it != umm2.end()) {
+            std::cout << "Found an apple with value: " << it->second << std::endl;
+        }
+        ```
+
+    * **`count(key)`**: 返回具有特定键的元素的数量.
+
+        ```cpp
+        size_t apple_count = umm2.count("apple");
+        std::cout << "Number of apples: " << apple_count << std::endl; // 输出: Number of apples: 2
+        ```
+
+    * **`equal_range(key)`**: 返回一个`std::pair`, 其中包含两个迭代器, 这两个迭代器定义了所有具有特定键的元素的范围`[first, second)`. 这是遍历具有相同键的所有值的最常用方法.
+
+        ```cpp
+        // 遍历所有键为 "apple" 的元素
+        auto range = umm2.equal_range("apple");
+        for (auto it = range.first; it != range.second; ++it) {
+            std::cout << "Value for apple: " << it->second << std::endl;
+        }
+        ```
+
+5. 删除元素
+
+    * **`erase(key)`**: 删除所有具有特定键的元素.
+
+        ```cpp
+        size_t num_erased = umm2.erase("apple");
+        std::cout << "Erased " << num_erased << " elements with key 'apple'." << std::endl;
+        ```
+
+    * **`erase(iterator)`**: 删除迭代器指向的单个元素.
+
+        ```cpp
+        auto it_to_erase = umm2.find("orange");
+        if (it_to_erase != umm2.end()) {
+            umm2.erase(it_to_erase);
+        }
+        ```
+
+6. 遍历
+
+    你可以像遍历其他容器一样使用基于范围的for循环来遍历`std::unordered_multimap`.
+
+    ```cpp
+    std::unordered_multimap<std::string, int> umm = {
+        {"grape", 5},
+        {"lemon", 7},
+        {"grape", 8}
+    };
+
+    for (const auto& pair : umm) {
+        std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
+    }
+    ```
+
+## `std::stack`的用法
+
+`std::stack`是C++标准库中的一个容器适配器, 它提供后进先出(LIFO)的栈数据结构. 它不是一个独立的容器, 而是对现有容器(如`std::deque`, `std::vector`或`std::list`)的封装. 要使用`std::stack`, 需要包含头文件:
+
+```cpp
+#include <stack>
+```
+
+stack的特点有:
+
+* **LIFO**: Last-In, First-Out. 最后压入栈的元素最先被弹出.
+* **容器适配器**: 默认使用`std::deque`作为其底层容器. 你也可以指定`std::vector`或`std::list`.
+* **接口限制**: 只能访问栈顶元素, 不支持迭代器, 不能遍历整个栈.
+
+假设有一个`std::stack<T> s`:
+
+  * `s.push(element)`: 将一个元素压入栈顶.
+  * `s.pop()`: 移除栈顶元素, 但不返回该元素的值.
+  * `s.top()`: 返回对栈顶元素的引用.
+  * `s.empty()`: 检查栈是否为空. 如果为空返回`true`, 否则返回`false`.
+  * `s.size()`: 返回栈中元素的数量.
+
+下面的代码展示了`std::stack`的基本用法.
+
+```cpp
+#include <iostream>
+#include <stack>
+#include <vector>
+
+int main() {
+    // 默认使用 std::deque
+    std::stack<int> s1;
+
+    // 推入元素
+    s1.push(10);
+    s1.push(20);
+    s1.push(30);
+
+    std::cout << "Stack size: " << s1.size() << std::endl; // 输出: Stack size: 3
+    std::cout << "Top element: " << s1.top() << std::endl; // 输出: Top element: 30
+
+    // 弹出元素
+    s1.pop();
+    std::cout << "After pop, top element is: " << s1.top() << std::endl; // 输出: After pop, top element is: 20
+
+    // 遍历并清空栈
+    std::cout << "Stack elements: ";
+    while (!s1.empty()) {
+        std::cout << s1.top() << " "; // 访问栈顶
+        s1.pop();                   // 弹出
+    }
+    std::cout << std::endl; // 输出: Stack elements: 20 10
+
+    std::cout << "Final stack size: " << s1.size() << std::endl; // 输出: Final stack size: 0
+
+    // 使用 std::vector 作为底层容器
+    std::stack<std::string, std::vector<std::string>> s2;
+    s2.push("hello");
+    s2.push("world");
+    std::cout << "Top of s2: " << s2.top() << std::endl; // 输出: Top of s2: world
+
+    return 0;
+}
+```
+
+`std::stack`非常适合需要后进先出逻辑的场景. 它的接口简洁, 易于使用, 但功能也相对受限, 因为它被设计为只对栈顶进行操作.
+
+## `std::queue`的用法
+
+`std::queue`是C++标准库中的一个容器适配器, 它提供了先进先出(FIFO)的队列数据结构. 与`std::stack`类似, 它也是对现有容器的封装.
+
+要使用`std::queue`, 需要包含头文件:
+
+```cpp
+#include <queue>
+```
+
+queue的特点包括:
+
+* **FIFO**: First-In, First-Out. 最先进入队列的元素最先被移出.
+* **容器适配器**: 默认使用`std::deque`作为其底层容器. 你也可以指定`std::list`作为底层容器, 但不能使用`std::vector`, 因为`std::vector`没有高效的`pop_front()`操作.
+* **接口限制**: 只能访问队列的头部和尾部元素, 不支持迭代器, 不能遍历整个队列.
+
+假设有一个`std::queue<T> q`:
+
+* `q.push(element)`: 将一个元素添加到队列的**尾部**.
+* `q.pop()`: 移除队列的**头部**元素, 但不返回其值.
+* `q.front()`: 返回对队列**头部**元素的引用.
+* `q.back()`: 返回对队列**尾部**元素的引用.
+* `q.empty()`: 检查队列是否为空. 如果为空返回`true`, 否则返回`false`.
+* `q.size()`: 返回队列中元素的数量.
+
+下面的代码展示了`std::queue`的基本用法.
+
+```cpp
+#include <iostream>
+#include <queue>
+#include <string>
+
+int main() {
+    // 默认使用 std::deque
+    std::queue<int> q;
+
+    // 推入元素
+    q.push(10); // q 现在是 {10}
+    q.push(20); // q 现在是 {10, 20}
+    q.push(30); // q 现在是 {10, 20, 30}
+
+    std::cout << "Queue size: " << q.size() << std::endl; // 输出: Queue size: 3
+    std::cout << "Front element: " << q.front() << std::endl; // 输出: Front element: 10
+    std::cout << "Back element: " << q.back() << std::endl;   // 输出: Back element: 30
+
+    // 弹出元素
+    q.pop(); // 移出 10, q 现在是 {20, 30}
+    std::cout << "After pop, front element is: " << q.front() << std::endl; // 输出: After pop, front element is: 20
+
+    // 遍历并清空队列
+    std::cout << "Queue elements: ";
+    while (!q.empty()) {
+        std::cout << q.front() << " "; // 访问头部元素
+        q.pop();                     // 移出头部元素
+    }
+    std::cout << std::endl; // 输出: Queue elements: 20 30
+
+    std::cout << "Final queue size: " << q.size() << std::endl; // 输出: Final queue size: 0
+
+    return 0;
+}
+```
+
+`std::queue`是实现需要按顺序处理任务(如任务调度, 广度优先搜索BFS等)的理想选择. 它的接口强制执行FIFO规则, 使得代码逻辑清晰且不易出错.
+
+## `std::priority_queue`的用法
+
+`std::priority_queue`是C++标准库中的一个容器适配器, 它提供常数时间的**最大**元素查找, 以及对数时间的插入和删除操作. 它通常被实现为堆(heap).
+
+要使用`std::priority_queue`, 需要包含`<queue>`头文件.
+
+`std::priority_queue`的模板定义如下:
+
+```cpp
+template<
+    class T,
+    class Container = std::vector<T>,
+    class Compare = std::less<typename Container::value_type>
+> class priority_queue;
+```
+
+* `T`: 存储的元素类型.
+* `Container`: 用于存储元素的底层容器, 默认为`std::vector<T>`.
+* `Compare`: 比较函数对象, 用于确定元素的优先级. 默认为`std::less<T>`, 这会创建一个最大堆(max-heap), 即队首元素总是最大的.
+
+常用成员函数:
+
+  * `empty()`: 检查优先级队列是否为空.
+  * `size()`: 返回优先级队列中的元素个数.
+  * `top()`: 返回队首元素的引用(即优先级最高的元素), 但不删除它.
+  * `push(const T& value)`: 插入一个元素.
+  * `pop()`: 删除队首元素.
+
+1. 最大堆 (默认)
+
+    默认情况下, `std::priority_queue`是一个最大堆, 最大的元素拥有最高的优先级.
+
+    ```cpp
+    #include <iostream>
+    #include <queue>
+    #include <vector>
+
+    int main() {
+        std::priority_queue<int> pq; // 默认是最大堆
+
+        pq.push(30);
+        pq.push(100);
+        pq.push(25);
+        pq.push(40);
+
+        std::cout << "Top element: " << pq.top() << std::endl; // 输出 100
+
+        pq.pop();
+
+        std::cout << "Top element after pop: " << pq.top() << std::endl; // 输出 40
+
+        std::cout << "Queue elements: ";
+        while (!pq.empty()) {
+            std::cout << pq.top() << " "; // 输出: 40 30 25
+            pq.pop();
+        }
+        std::cout << std::endl;
+
+        return 0;
+    }
+    ```
+
+2. 最小堆
+
+    要创建一个最小堆(min-heap), 即最小的元素拥有最高的优先级, 你需要提供`std::greater<T>`作为比较类型.
+
+    ```cpp
+    #include <iostream>
+    #include <queue>
+    #include <vector>
+
+    int main() {
+        // 创建一个最小堆
+        std::priority_queue<int, std::vector<int>, std::greater<int>> pq;
+
+        pq.push(30);
+        pq.push(100);
+        pq.push(25);
+        pq.push(40);
+
+        std::cout << "Top element: " << pq.top() << std::endl; // 输出 25
+
+        pq.pop();
+
+        std::cout << "Top element after pop: " << pq.top() << std::endl; // 输出 30
+
+        return 0;
+    }
+    ```
