@@ -26,6 +26,8 @@ echo 'alias ll="ls -al"' >> ~/.bashrc
 source ~/.bashrc
 
 # soft links
+mkdir ${TMP}/.cache
+mkdir ${TMP}/.local 
 rm -rf ~/.cache
 rm -rf ~/.local
 ln -s  ${TMP}/.cache  ~/.cache
