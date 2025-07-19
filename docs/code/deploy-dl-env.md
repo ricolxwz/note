@@ -7,8 +7,8 @@ comments: true
 apt install tmux
 
 # tmp dir
-export TMP=${TMP} >> ~/.bashrc
-export TMP=/drive/wexu0327 >> ~/.bashrc
+echo 'export TMP=${TMP}' >> ~/.bashrc
+echo 'export TMP=/drive/wexu0327' >> ~/.bashrc
 
 # env
 echo 'export PATH="/usr/local/cuda/bin:$TMP/.local/bin:$PATH"' >> ~/.bashrc
