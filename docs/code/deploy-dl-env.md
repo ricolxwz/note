@@ -7,8 +7,8 @@ comments: true
 apt install tmux
 
 # tmp dir
-echo 'export TMP=${TMP}' >> ~/.bashrc
 echo 'export TMP=/drive/wexu0327' >> ~/.bashrc
+source ~/.bashrc
 
 # env
 echo 'export PATH="/usr/local/cuda/bin:$TMP/.local/bin:$PATH"' >> ~/.bashrc
@@ -19,11 +19,15 @@ echo 'export DATASET_RESOURCE_DIR=${TMP}/resource/dataset' >> ~/.bashrc
 echo 'export HF_HUB_DOWNLOAD_TIMEOUT=60' >> ~/.bashrc
 echo 'export HF_HUB_ETAG_TIMEOUT=60' >> ~/.bashrc
 echo 'export PYTHONBREAKPOINT=pdb.set_trace' >> ~/.bashrc
+source ~/.bashrc
 
 # alis
 echo 'alias ll="ls -al"' >> ~/.bashrc
+source ~/.bashrc
 
 # soft links
+rm -rf ~/.cache
+rm -rf ~/.local
 ln -s  ${TMP}/.cache  ~/.cache
 ln -s ${TMP}/miniconda3 ~/miniconda3
 ln -s ${TMP}/.local ~/.local
