@@ -802,3 +802,123 @@ int main() {
 | :--- | :--- | :--- |
 | `std::count` | 统计 特定值 的出现次数 | 使用 `operator==` 与一个固定值比较 |
 | `std::count_if` | 统计满足 特定条件 的元素个数 | 将元素传递给一个返回布尔值的谓词函数 |
+
+## 复制
+
+下列三个算法都用于将元素从一个序列复制到另一个序列, 但它们在"如何决定复制哪些或多少元素"上有所不同. 在使用这些函数时, 必须确保 目标容器有足够的空间 来接收被复制的元素, 否则会导致未定义行为. 通常使用`std::back_inserter`来动态扩展目标容器.
+
+### `std::copy`
+
+`std::copy`是最基础的复制算法, 它无条件地复制一个范围内的 所有 元素.
+
+* 工作原理: 它会遍历`[first, last)`范围内的每一个元素, 并按顺序将它们复制到从`d_first`开始的目标位置.
+* 用途: 用于完整地克隆一个序列或序列的一部分.
+
+函数原型
+
+```cpp
+template<class InputIt, class OutputIt>
+OutputIt copy(InputIt first, InputIt last, OutputIt d_first);
+```
+
+* `first`, `last`: 定义了 源序列 范围的输入迭代器 `[first, last)`.
+* `d_first`: 目标序列 的起始输出迭代器.
+* 返回值: 指向被复制到目标范围末尾的后一个位置的迭代器.
+
+### `std::copy_if`
+
+`std::copy_if`是一个条件复制算法, 它只复制那些满足 特定条件 的元素. 条件由一个谓词函数定义.
+
+* 工作原理: 它遍历源序列中的每个元素, 并将元素传递给谓词`p`. 如果`p(element)`返回`true`, 该元素就会被复制到目标序列.
+* 用途: 用于从一个序列中筛选元素并形成一个新的序列.
+
+函数原型
+
+```cpp
+template<class InputIt, class OutputIt, class UnaryPredicate>
+OutputIt copy_if(InputIt first, InputIt last, OutputIt d_first, UnaryPredicate p);
+```
+
+* `first`, `last`: 定义了 源序列 范围的输入迭代器.
+* `d_first`: 目标序列 的起始输出迭代器.
+* `p`: 一元谓词, 返回`true`的元素将被复制.
+* 返回值: 指向被复制到目标范围末尾的后一个位置的迭代器.
+
+### `std::copy_n`
+
+`std::copy_n`用于从一个起始点开始, 复制 指定数量 (n个) 的元素.
+
+* 工作原理: 它从`first`开始, 复制`count`个元素到从`d_first`开始的目标位置. 它不关心`first`后面的序列有多长, 只复制指定数量的元素.
+* 用途: 当你需要精确控制复制元素的个数时使用, 而不是由序列的末尾或某个条件来决定.
+
+函数原型
+
+```cpp
+template<class InputIt, class Size, class OutputIt>
+OutputIt copy_n(InputIt first, Size count, OutputIt d_first);
+```
+
+* `first`: 源序列 的起始输入迭代器.
+* `count`: 要复制的元素 数量.
+* `d_first`: 目标序列 的起始输出迭代器.
+* 返回值: 指向被复制到目标范围末尾的后一个位置的迭代器.
+
+使用示例
+
+下面的例子将演示这三个函数的用法和区别.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator> // for std::back_inserter
+
+// 辅助函数, 用于打印 vector
+void print_vector(const std::string& title, const std::vector<int>& v) {
+    std::cout << title;
+    for (int i : v) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    std::vector<int> source = {10, 25, 30, 45, 50, 65, 70};
+    print_vector("源序列:       ", source);
+    std::cout << "-------------------------------------------\n";
+
+    // 1. std::copy: 复制所有元素
+    std::vector<int> dest1;
+    std::copy(source.begin(), source.end(), std::back_inserter(dest1));
+    print_vector("std::copy 结果: ", dest1);
+
+    // 2. std::copy_if: 只复制大于40的元素
+    std::vector<int> dest2;
+    std::copy_if(source.begin(), source.end(), std::back_inserter(dest2),
+                 [](int x){ return x > 40; });
+    print_vector("std::copy_if (>40) 结果: ", dest2);
+
+    // 3. std::copy_n: 从头开始复制3个元素
+    std::vector<int> dest3;
+    std::copy_n(source.begin(), 3, std::back_inserter(dest3));
+    print_vector("std::copy_n (3个) 结果: ", dest3);
+
+    return 0;
+}
+```
+
+输出结果:
+
+```
+源序列:       10 25 30 45 50 65 70 
+-------------------------------------------
+std::copy 结果: 10 25 30 45 50 65 70 
+std::copy_if (>40) 结果: 45 50 65 70 
+std::copy_n (3个) 结果: 10 25 30 
+```
+
+| 算法 | 决定复制的依据 | 复制的元素 |
+| :--- | :--- | :--- |
+| `std::copy` | 范围 (`[first, last)`) | 该范围内的所有元素 |
+| `std::copy_if` | 范围 + 条件 | 范围中所有满足条件的元素 |
+| `std::copy_n` | 起始点 + 数量 (`n`) | 从起始点开始的`n`个元素 |
