@@ -224,7 +224,7 @@ int main() {
 | `search` | 查找一个 子序列 | 元素序列 |
 | `adjacent_find` | 查找第一对 相等的相邻元素 | 两个相邻元素 |
 
-## 比较 💮
+## 比较 ⚖️
 
 ### `std::mismatch`
 
@@ -803,7 +803,7 @@ int main() {
 | `std::count` | 统计 特定值 的出现次数 | 使用 `operator==` 与一个固定值比较 |
 | `std::count_if` | 统计满足 特定条件 的元素个数 | 将元素传递给一个返回布尔值的谓词函数 |
 
-## 复制
+## 复制 🔁
 
 下列三个算法都用于将元素从一个序列复制到另一个序列, 但它们在"如何决定复制哪些或多少元素"上有所不同. 在使用这些函数时, 必须确保 目标容器有足够的空间 来接收被复制的元素, 否则会导致未定义行为. 通常使用`std::back_inserter`来动态扩展目标容器.
 
@@ -923,7 +923,7 @@ std::copy_n (3个) 结果: 10 25 30
 | `std::copy_if` | 范围 + 条件 | 范围中所有满足条件的元素 |
 | `std::copy_n` | 起始点 + 数量 (`n`) | 从起始点开始的`n`个元素 |
 
-## 填充
+## 填充 🧱
 
 ### `std::fill`, `std::fill_n`
 
@@ -1112,3 +1112,797 @@ Lambda generate 结果:    0 1 2 3 4
 | :--- | :--- | :--- |
 | `std::generate` | 由 范围 (`[first, last)`) 控制 | 填充一个完整的, 已确定大小的范围. |
 | `std::generate_n` | 由 数量 (`count`) 控制 | 从一个起始点开始, 填充固定数量的元素. |
+
+## 翻转 🔄
+
+### `std::reverse`, `std::reverse_copy`
+
+`std::reverse`是一个在原地反转序列中元素顺序的算法. 它直接修改原始容器中的元素.
+
+函数原型:
+
+```cpp
+template<class BidirIt>
+void reverse(BidirIt first, BidirIt last);
+```
+
+参数:
+
+* `first`: 指向序列起始位置的双向迭代器.
+* `last`: 指向序列结束位置之后一位的双向迭代器.
+
+功能:
+
+这个函数会反转`[first, last)`范围内的元素. `last`指向的元素不包含在内.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> v = {1, 2, 3, 4, 5};
+
+    std::reverse(v.begin(), v.end());
+
+    for (int i : v) {
+        std::cout << i << " ";
+    }
+    // 输出: 5 4 3 2 1
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+`std::reverse_copy`创建一个序列的反转副本, 并将其存储到另一个序列中. 它不会修改原始序列.
+
+```cpp
+template<class BidirIt, class OutputIt>
+OutputIt reverse_copy(BidirIt first, BidirIt last, OutputIt d_first);
+```
+
+参数:
+
+* `first`: 指向源序列起始位置的双向迭代器.
+* `last`: 指向源序列结束位置之后一位的双向迭代器.
+* `d_first`: 指向目标序列起始位置的输出迭代器.
+
+返回值:
+
+返回一个指向目标序列中最后一个被写入元素之后一位的迭代器.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> source = {1, 2, 3, 4, 5};
+    std::vector<int> destination(source.size()); // 确保目标容器有足够空间
+
+    std::reverse_copy(source.begin(), source.end(), destination.begin());
+
+    std::cout << "Source: ";
+    for (int i : source) {
+        std::cout << i << " ";
+    }
+    // 输出: Source: 1 2 3 4 5
+    std::cout << std::endl;
+
+    std::cout << "Destination: ";
+    for (int i : destination) {
+        std::cout << i << " ";
+    }
+    // 输出: Destination: 5 4 3 2 1
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+---
+
+| 特性 | `std::reverse` | `std::reverse_copy` |
+| --- | --- | --- |
+| 操作对象 | 原地修改原始序列 | 创建一个反转后的副本到新序列 |
+| 修改原始数据 | 是 | 否 |
+| 所需容器 | 一个 | 两个 (源和目标) |
+| 返回值 | `void` | 指向目标序列末尾的迭代器 |
+
+## 移除 ❌
+
+### erase-remove范式
+
+STL中的"移除"算法并不会真正从容器中删除元素. 它们的工作方式是将所有未被移除的元素移动到序列的前端, 然后返回一个指向新的逻辑末尾位置的迭代器. 真正的删除操作需要结合容器自身的成员函数 (如erase) 来完成. 这种设计被称为erase-remove idiom.
+
+### `std::remove`, `std::remove_if`
+
+`std::remove`移除序列中所有等于特定值的元素.
+
+函数原型:
+
+```cpp
+template<class ForwardIt, class T>
+ForwardIt remove(ForwardIt first, ForwardIt last, const T& value);
+```
+
+参数:
+
+* `first`, `last`: 定义操作范围`[first, last)`的迭代器.
+* `value`: 需要被移除的值.
+
+功能:
+
+它会遍历`[first, last)`范围, 将所有不等于`value`的元素向前移动, 覆盖那些等于`value`的元素. 它返回一个迭代器, 指向这个新形成的、不包含`value`的序列的末尾. 原始容器的大小不变, 但末尾的元素处于一种未指定但有效的状态.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> v = {10, 20, 30, 30, 20, 10, 10, 20};
+
+    // 移除所有值为20的元素
+    auto new_end = std::remove(v.begin(), v.end(), 20);
+
+    // v 现在可能是 {10, 30, 30, 10, 10, ?, ?, ?}
+    // new_end 指向第五个元素之后的位置
+
+    std::cout << "Vector after std::remove: ";
+    for (auto it = v.begin(); it != new_end; ++it) {
+        std::cout << *it << " "; // 输出: 10 30 30 10 10
+    }
+    std::cout << std::endl;
+
+    // 使用erase-remove idiom真正删除元素
+    v.erase(new_end, v.end());
+
+    std::cout << "Vector after erase: ";
+    for (int i : v) {
+        std::cout << i << " "; // 输出: 10 30 30 10 10
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+---
+
+`std::remove_if`移除序列中所有满足特定条件的元素.
+
+函数原型:
+
+```cpp
+template<class ForwardIt, class UnaryPredicate>
+ForwardIt remove_if(ForwardIt first, ForwardIt last, UnaryPredicate p);
+```
+
+参数:
+
+* `first`, `last`: 定义操作范围`[first, last)`的迭代器.
+* `p`: 一个一元谓词 (返回`bool`的函数或函数对象), 如果元素应被移除, 则返回`true`.
+
+功能:
+
+它将所有不满足谓词`p` (即`p(element)`返回`false`) 的元素向前移动. 返回值和行为与`std::remove`类似.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+// 谓词: 如果数字是奇数, 返回true
+bool is_odd(int i) {
+    return (i % 2) != 0;
+}
+
+int main() {
+    std::vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+    // 移除所有奇数
+    auto new_end = std::remove_if(v.begin(), v.end(), is_odd);
+    // 或者使用lambda表达式:
+    // auto new_end = std::remove_if(v.begin(), v.end(), [](int i){ return (i % 2) != 0; });
+
+    v.erase(new_end, v.end());
+
+    std::cout << "Vector after removing odd numbers: ";
+    for (int i : v) {
+        std::cout << i << " "; // 输出: 2 4 6 8 10
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+### `std::remove_copy`, `std::remove_copy_if`
+
+这两个算法与`std::remove`和`std::remove_if`类似, 但它们不会修改原始序列. 相反, 它们将未被移除的元素复制到一个新的目标序列中.
+
+* `std::remove_copy`: 复制所有不等于给定值的元素.
+* `std::remove_copy_if`: 复制所有不满足给定谓词的元素.
+
+函数原型:
+
+```cpp
+template<class InputIt, class OutputIt, class T>
+OutputIt remove_copy(InputIt first, InputIt last, OutputIt d_first, const T& value);
+
+template<class InputIt, class OutputIt, class UnaryPredicate>
+OutputIt remove_copy_if(InputIt first, InputIt last, OutputIt d_first, UnaryPredicate p);
+```
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator> // for std::back_inserter
+
+int main() {
+    std::vector<int> source = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    std::vector<int> destination;
+
+    // 复制所有不为奇数的元素 (即偶数) 到 destination
+    std::remove_copy_if(source.begin(), source.end(),
+                        std::back_inserter(destination), // 使用back_inserter可以自动扩展容器
+                        [](int i){ return (i % 2) != 0; });
+
+    std::cout << "Source (unchanged): ";
+    for (int i : source) {
+        std::cout << i << " "; // 输出: 1 2 3 4 5 6 7 8 9 10
+    }
+    std::cout << std::endl;
+
+    std::cout << "Destination: ";
+    for (int i : destination) {
+        std::cout << i << " "; // 输出: 2 4 6 8 10
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+### 总结
+
+| 算法 | 功能 | 修改原始容器 |
+| :--- | :--- | :--- |
+| `std::remove` | 移除特定值 | 是 (逻辑上) |
+| `std::remove_if` | 移除满足特定条件的元素 | 是 (逻辑上) |
+| `std::remove_copy` | 复制不等于特定值的元素 | 否 |
+| `std::remove_copy_if` | 复制不满足特定条件的元素 | 否 |
+
+关键点是`remove`和`remove_if`需要配合容器的`erase`方法来物理删除元素, 而`remove_copy`和`remove_copy_if`则是在保留原始数据的基础上创建新的序列.
+
+## 采样 🎲
+
+### `std::sample`
+
+`std::sample`是C++17引入的一个算法, 用于从一个序列中随机选择指定数量的元素, 并将它们复制到另一个序列中, 保持它们在原序列中的相对顺序. 这个算法在需要进行随机抽样或从大数据集中选取代表性样本时非常有用.
+
+功能:
+
+从输入范围`[first, last)`中, 无需替换地随机选择`n`个元素, 并将它们写入到输出迭代器`out`中. 如果输入范围的元素数量小于`n`, 则会选择所有元素. 被选择的每个元素都有相同的概率. 算法会保留被选元素的相对顺序.
+
+函数原型:
+
+```cpp
+template<class PopulationIt, class SampleIt, class Distance, class URBG>
+SampleIt sample(PopulationIt first, PopulationIt last,
+                SampleIt out, Distance n, URBG&& g);
+```
+
+参数:
+
+* `first`, `last`: 定义输入序列范围`[first, last)`的迭代器.
+* `out`: 输出迭代器, 指向目标序列的起始位置, 用来存放抽样结果.
+* `n`: 一个整数, 表示要抽样的元素数量.
+* `g`: 一个均匀随机位生成器 (Uniform Random Bit Generator), 例如`std::mt19937`. 这是随机性的来源.
+
+返回值:
+
+一个输出迭代器, 指向被复制到目标序列的最后一个元素的下一个位置.
+
+示例:
+
+下面的例子展示了如何从一个`std::vector`中随机抽取5个元素.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <random>       // For std::mt19937 and std::random_device
+#include <iterator>     // For std::back_inserter
+
+int main() {
+    // 源数据
+    std::vector<int> population = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+
+    // 目标容器, 用于存放样本
+    std::vector<int> sample_set;
+    const int sample_size = 5;
+
+    // 1. 创建随机数设备以获取种子
+    std::random_device rd;
+
+    // 2. 使用种子初始化Mersenne Twister引擎
+    std::mt19937 gen(rd());
+
+    // 3. 调用std::sample进行抽样
+    std::sample(population.begin(),
+                population.end(),
+                std::back_inserter(sample_set),
+                sample_size,
+                gen);
+
+    std::cout << "Population: ";
+    for (int i : population) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Sample of " << sample_size << " elements: ";
+    for (int i : sample_set) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+可能的输出:
+
+每次运行的结果都可能不同, 因为它是随机的.
+
+```
+Population: 1 2 3 4 5 6 7 8 9 10 11 12
+Sample of 5 elements: 2 5 6 9 11
+```
+
+或者
+
+```
+Population: 1 2 3 4 5 6 7 8 9 10 11 12
+Sample of 5 elements: 1 4 7 8 12
+```
+
+## 旋转 🔄
+
+### `std::rotate`
+
+`std::rotate`是一个非常有用的算法, 它可以将一个范围内的元素进行循环左移, 使得范围中的某个特定元素成为新的起始元素.
+
+功能:
+
+`std::rotate` 接受一个由`[first, last)`定义的范围和一个指向该范围内某个元素`n_first`的迭代器. 它的作用是将`[first, n_first)`范围内的元素移动到序列的末尾, 而将`[n_first, last)`范围内的元素移动到序列的开头. 可以把它想象成将一个数组的元素向左"旋转", 直到`n_first`指向的元素成为第一个元素.
+
+函数原型:
+
+```cpp
+template<class ForwardIt>
+ForwardIt rotate(ForwardIt first, ForwardIt n_first, ForwardIt last);
+```
+
+参数:
+
+* `first`: 指向要旋转范围起始位置的迭代器.
+* `n_first`: 指向将成为序列新起始元素的那个元素. 这个迭代器必须在 `[first, last)` 范围内.
+* `last`: 指向要旋转范围末尾之后一位的迭代器.
+
+返回值:
+
+返回一个迭代器, 指向原始的`first`元素在旋转后的新位置.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+void print_vector(const std::string& message, const std::vector<int>& v) {
+    std::cout << message;
+    for (int i : v) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    std::vector<int> v = {10, 20, 30, 40, 50, 60};
+    print_vector("Original:   ", v);
+
+    // 目标: 将元素 30 旋转到序列的开头.
+    // first   = v.begin()      (指向 10)
+    // n_first = v.begin() + 2  (指向 30)
+    // last    = v.end()
+
+    auto new_first_pos = std::rotate(v.begin(), v.begin() + 2, v.end());
+
+    print_vector("Rotated:    ", v);
+    // 输出: Rotated:    30 40 50 60 10 20
+
+    // 返回值 new_first_pos 指向了元素 10 在新序列中的位置
+    std::cout << "Element that was originally first (10) is now at position: "
+              << std::distance(v.begin(), new_first_pos) << std::endl;
+    std::cout << "Its value is: " << *new_first_pos << std::endl;
+    // 输出:
+    // Element that was originally first (10) is now at position: 4
+    // Its value is: 10
+
+    return 0;
+}
+```
+
+## 打乱 🎲
+
+### `std::shuffle`
+
+`std::shuffle`是C++11引入的一个算法, 用于按均匀分布随机重排 (或称"洗牌") 指定范围内的元素. 它取代了旧的、有缺陷的`std::random_shuffle`.
+
+功能:
+
+`std::shuffle`接收一个范围`[first, last)`和一个随机数生成器, 然后利用这个生成器在指定的范围内对元素进行重新排序, 使得每个可能的排列组合都有相等的出现概率.
+
+函数原型:
+
+```cpp
+template<class RandomIt, class URBG>
+void shuffle(RandomIt first, RandomIt last, URBG&& g);
+```
+
+参数:
+
+* `first`: 指向要重排范围起始位置的随机访问迭代器.
+* `last`: 指向要重排范围末尾之后一位的随机访问迭代器.
+* `g`: 一个均匀随机位生成器 (Uniform Random Bit Generator), 例如`std::mt19937`. 这是随机性的来源, 算法将调用它来决定如何交换元素.
+
+返回值:
+
+该函数没有返回值 (`void`). 它直接在原地修改容器中的元素顺序.
+
+下面的例子展示了如何洗牌一个`std::vector`中的数字.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm> // for std::shuffle
+#include <random>    // for std::random_device and std::mt19937
+
+void print_vector(const std::vector<int>& v) {
+    for (int i : v) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    std::vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+    std::cout << "Original vector: ";
+    print_vector(v);
+
+    // 1. 创建随机数设备以获取一个高质量的种子
+    std::random_device rd;
+
+    // 2. 使用种子初始化一个Mersenne Twister引擎
+    //    这是推荐的随机数生成器
+    std::mt19937 gen(rd());
+
+    // 3. 使用引擎来打乱vector
+    std::shuffle(v.begin(), v.end(), gen);
+
+    std::cout << "Shuffled vector: ";
+    print_vector(v);
+
+    // 再次打乱
+    std::shuffle(v.begin(), v.end(), gen);
+    std::cout << "Shuffled again:  ";
+    print_vector(v);
+
+    return 0;
+}
+```
+
+可能的输出:
+
+每次运行的结果都可能不同.
+
+```
+Original vector: 1 2 3 4 5 6 7 8 9 10
+Shuffled vector: 3 10 4 1 8 5 2 6 7 9
+Shuffled again:  6 1 9 4 7 2 5 3 10 8
+```
+
+## 去重 🔍
+
+### `std::unique`, `std::unique_copy`
+
+`std::unique`是一个C++标准库算法, 用于就地移除范围内的连续重复元素. 它通过将不重复的元素移动到范围的起始位置来实现这一点.
+
+关键点:
+
+* 修改原始容器: `std::unique`会直接修改传入的迭代器范围内的元素顺序.
+* 不删除元素: 该函数实际上并不从容器中删除任何元素. 它只是返回一个指向新的逻辑末尾的迭代器. 通常需要配合容器的`erase`成员函数来真正删除多余的元素, 类似于之前讲到的"erase-remove idiom".
+* 要求有序: 为了移除所有重复项, 而不仅仅是连续的重复项, 容器内的元素必须预先排序.
+
+工作原理:
+
+`std::unique`遍历指定的范围, 当找到一个不等于前一个元素的元素时, 就将其复制到当前不重复序列的末尾.
+
+返回值:
+
+返回一个迭代器, 指向这个新的, 不包含连续重复元素的逻辑序列的末尾.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> v = {1, 2, 2, 3, 3, 3, 4, 1, 1};
+
+    // 为了移除所有重复项, 先排序
+    std::sort(v.begin(), v.end()); // v 现在是 {1, 1, 1, 2, 2, 3, 3, 3, 4}
+
+    auto last = std::unique(v.begin(), v.end());
+    // v 现在是 {1, 2, 3, 4, ?, ?, ?, ?, ?}, last 指向元素 4 后面的位置
+    // ? 代表未指定值的有效int
+
+    // 擦除多余的元素
+    v.erase(last, v.end());
+
+    for (int i : v) {
+        std::cout << i << " "; // 输出: 1 2 3 4
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+---
+
+`std::unique_copy`与`std::unique`功能类似, 但它不会修改原始范围. 相反, 它将原始范围中不连续重复的元素复制到一个新的目标范围中.
+
+关键点:
+
+  * 不修改原始容器: 原始数据保持不变.
+  * 复制到新容器: 结果被存储在另一个容器中.
+  * 要求有序: 与`std::unique`一样, 为了移除所有重复项, 输入范围应预先排序.
+
+工作原理:
+
+`std::unique_copy`遍历输入范围, 并将每个不与前一个复制的元素相等的元素复制到目标范围.
+
+返回值:
+
+返回一个指向复制的目标范围末尾的迭代器.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+int main() {
+    std::vector<int> src = {1, 2, 2, 3, 3, 3, 4, 1, 1};
+    std::vector<int> dest;
+
+    // 为了移除所有重复项, 先排序
+    std::sort(src.begin(), src.end()); // src 仍然是 {1, 1, 1, 2, 2, 3, 3, 3, 4}
+
+    // 使用 std::back_inserter 将结果插入到 dest 中
+    std::unique_copy(src.begin(), src.end(), std::back_inserter(dest));
+
+    // src 保持不变
+    std::cout << "Source vector: ";
+    for (int i : src) {
+        std::cout << i << " "; // 输出: 1 1 1 2 2 3 3 3 4
+    }
+    std::cout << std::endl;
+
+    std::cout << "Destination vector: ";
+    for (int i : dest) {
+        std::cout << i << " "; // 输出: 1 2 3 4
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+| 特性 | `std::unique` | `std::unique_copy` |
+| --- | --- | --- |
+| 操作对象 | 修改原始容器 | 复制到新容器 |
+| 数据修改 | 是 | 否 (仅写入目标容器) |
+| 返回值 | 指向原始容器中逻辑末尾的迭代器 | 指向目标容器末尾的迭代器 |
+| 主要用途 | 在原容器中高效移除重复元素 | 从一个容器中提取唯一元素到另一个容器 |
+
+## 映射 🔄
+
+### `std::transform`
+
+`std::transform`是一个C++标准库算法, 它可以对一个或两个范围内的元素应用一个指定的函数, 并将结果存储到另一个范围中. 它非常适合用于逐元素地处理容器数据.
+
+`std::transform`有两种主要形式:
+
+1. 一元操作
+
+    这种形式接受一个输入范围 (`[first1, last1)`) 和一个一元函数. 它会遍历输入范围, 对每个元素调用该函数, 并将返回值写入到指定的输出范围中.
+
+    语法:
+
+    ```cpp
+    template <class InputIt, class OutputIt, class UnaryOperation>
+    OutputIt transform(InputIt first1, InputIt last1, OutputIt d_first, UnaryOperation unary_op);
+    ```
+
+    * `first1`, `last1`: 定义输入范围的迭代器.
+    * `d_first`: 定义目标范围起始位置的迭代器. 目标范围必须足够大以容纳所有结果.
+    * `unary_op`: 一个接受单个参数的一元函数或函数对象, 参数类型应与输入范围的元素类型兼容.
+
+    示例: 将`vector`中每个整数乘以2.
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <algorithm>
+    #include <iterator>
+
+    int main() {
+        std::vector<int> v1 = {1, 2, 3, 4, 5};
+        std::vector<int> v2;
+
+        // 将 v1 中的每个元素乘以 2, 结果存入 v2
+        std::transform(v1.begin(), v1.end(), std::back_inserter(v2), [](int n) {
+            return n * 2;
+        });
+
+        for (int i : v2) {
+            std::cout << i << " "; // 输出: 2 4 6 8 10
+        }
+        std::cout << std::endl;
+
+        return 0;
+    }
+    ```
+
+2. 二元操作
+
+    这种形式接受两个输入范围 (`[first1, last1)`和`[first2, ...)`) 以及一个二元函数. 它会并行遍历这两个范围, 将每对对应元素作为参数传递给该函数, 并将结果写入目标范围. 第二个输入范围至少需要和第一个范围一样长.
+
+    语法:
+
+    ```cpp
+    template <class InputIt1, class InputIt2, class OutputIt, class BinaryOperation>
+    OutputIt transform(InputIt1 first1, InputIt1 last1, InputIt2 first2, OutputIt d_first, BinaryOperation binary_op);
+    ```
+
+    * `first1`, `last1`: 定义第一个输入范围的迭代器.
+    * `first2`: 定义第二个输入范围起始位置的迭代器.
+    * `d_first`: 定义目标范围起始位置的迭代器.
+    * `binary_op`: 一个接受两个参数的二元函数或函数对象, 参数类型应与两个输入范围的元素类型兼容.
+
+    示例: 将两个`vector`的对应元素相加.
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <algorithm>
+    #include <iterator>
+
+    int main() {
+        std::vector<int> v1 = {1, 2, 3, 4, 5};
+        std::vector<int> v2 = {10, 20, 30, 40, 50};
+        std::vector<int> result;
+
+        // 将 v1 和 v2 的对应元素相加, 结果存入 result
+        std::transform(v1.begin(), v1.end(), v2.begin(), std::back_inserter(result),
+                    [](int a, int b) {
+                        return a + b;
+                    });
+
+        for (int i : result) {
+            std::cout << i << " "; // 输出: 11 22 33 44 55
+        }
+        std::cout << std::endl;
+
+        return 0;
+    }
+    ```
+
+关键点:
+
+* 原地操作: `std::transform`允许输入范围和输出范围重叠. 你可以将结果写回原始容器中. 例如, `std::transform(v.begin(), v.end(), v.begin(), op);`.
+* 灵活性: 接受的函数可以是普通函数指针, 函数对象 (functors) 或lambda表达式, 这使其非常灵活和强大.
+* 效率: `std::transform`通常由编译器高度优化, 是执行逐元素操作的首选方式, 比手写循环更具表现力且不易出错.
+
+## 重排 🔄
+
+### `std::partition`, `std::stable_partition`
+
+`std::partition`是C++标准库中的一个算法, 用于根据指定的条件 (一个谓词函数) 就地重排一个范围内的元素. 它会将所有满足条件的元素移动到范围的前部, 而所有不满足条件的元素移动到后部.
+
+关键点:
+
+* 原地重排: `std::partition`直接在原始容器上进行操作, 修改其元素的顺序.
+* 不保证相对顺序: 函数执行后, 满足条件的元素之间以及不满足条件的元素之间的原始相对顺序不被保证会保留. 如果需要保留相对顺序, 应该使用`std::stable_partition`.
+* 二分分区: 它将容器内的元素有效地划分为两个组.
+
+工作原理:
+
+`std::partition`接受一个范围 `[first, last)` 和一个一元谓词 `p`. 它会遍历范围内的每个元素, 并检查该元素是否满足谓词 `p`. 如果满足, 该元素就被认为是第一组的一部分; 否则, 它是第二组的一部分. 函数通过交换元素将所有第一组的元素放在所有第二组的元素之前.
+
+语法和返回值:
+
+```cpp
+template <class BidirIt, class UnaryPredicate>
+BidirIt partition(BidirIt first, BidirIt last, UnaryPredicate p);
+```
+
+* `first`, `last`: 定义要分区的范围的双向迭代器.
+* `p`: 一个一元谓词 (返回`bool`的函数或函数对象). 如果元素应在第一部分, 则返回`true`.
+* 返回值: 返回一个迭代器, 指向第二组 (不满足条件的元素) 的第一个元素. 这个迭代器被称为"分区点".
+
+示例:
+
+假设我们想将一个`vector`中的所有偶数移动到所有奇数之前.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+// 谓词函数: 判断一个数是否是偶数
+bool is_even(int n) {
+    return n % 2 == 0;
+}
+
+int main() {
+    std::vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    // 使用 std::partition 将偶数移动到前面
+    auto partition_point = std::partition(v.begin(), v.end(), is_even);
+    // v 可能变为: {8, 2, 6, 4, 5, 3, 7, 1, 9} (注意相对顺序不保证)
+    // partition_point 指向第一个不满足条件的元素 (比如 5)
+
+    std::cout << "Partitioned vector: ";
+    for (int i : v) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Elements that are even: ";
+    for (auto it = v.begin(); it != partition_point; ++it) {
+        std::cout << *it << " "; // 输出: 8 2 6 4
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+* `std::partition`: 更快, 但不保留分区内部元素的相对顺序.
+* `std::stable_partition`: 保证分区内部元素的原始相对顺序, 但通常比`std::partition`慢.
+
+如果你只需要将元素按条件分成两组, 而不关心它们原来的顺序, `std::partition`是更高效的选择.
