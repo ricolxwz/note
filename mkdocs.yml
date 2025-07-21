@@ -281,6 +281,7 @@ nav:
           - 类型: language/cpp/foundation/type.md
           - 函数: language/cpp/foundation/function.md
           - 容器: language/cpp/foundation/container.md
+          - 算法: language/cpp/foundation/algorithm.md
           - 指针: language/cpp/foundation/pointer.md
           - 对象: language/cpp/foundation/object.md
           - 模版: language/cpp/foundation/template.md

@@ -1,0 +1,336 @@
+---
+title: 算法
+comments: true
+icon: material/cow
+---
+
+## 一些建议
+
+### 优先使用容器的成员函数
+
+某些操作既可以在通用算法库中找到, 如`std::find`, 又可以在特定容器成员函数中找到, 如`std::set::find`. 当一个算法同时有通用版本和容器成员函数版本的时候, 强烈推荐使用容器自身的版本. 因为容器的成员函数了解其内部数据结构, 所以通常经过了特别优化, 性能更好. 例如, 在`std::set`上调用`std::set::find`效率远远高于通用的`std::find`, 前者利用`std::set`的红黑树结构, 时间复杂度为`O(log n)`, 而后者需要遍历整个容器, 时间复杂度为`O(n)`.
+
+### 正交设计
+
+这是STL设计的一个关键哲学. “正交”的意思就是独立或者解耦; 算法的设计独立于容器的设计. 他们之间通过迭代器这个桥梁进行通信. 这种设计实现了泛型编程, 你可以编写一个算法, 比如`std::sort`, 然后将它作用于任何兼容迭代器的容器, 如`std::vector`, `std::deque`等, 无需为每种容器重写排序逻辑. 
+
+### 避免原生循环
+
+建议使用算法库中的函数, 如`std::for_each`, `std::transform`, `std::accumulate`等来代替手写的`for`或者`while`循环. 这样做的好处是代码意图更加清晰, 函数名直接说明了操作的目的; 更少的错误, 避免了手写循环的时候可能出现的边界错误; 更高的性能, 标准库的实现经过了高度优化, 可能比手写的循环更快. 
+
+## 搜索 🔍
+
+### 修改性序列算法/非修改性序列算法
+
+非修改性序列算法 (Non-modifying sequence algorithms) 是C++标准模板库(STL)中的一类函数, 它们用于查询或处理一个元素序列(例如, `vector`或`list`中的数据), 但绝不会改变序列中元素的值或顺序. 它们只读取数据并返回查询结果. 可以把它们想象成对数据进行 "只读" 操作的工具. 它们会遍历容器内的元素, 检查它们的属性或在其中寻找特定内容, 但会保证操作结束后, 原始容器的数据完好无损. 与之相对的是修改性序列算法, 例如 `sort` (排序), `remove` (移除元素), `copy` (复制), `reverse` (反转序列), 这些算法会直接改变容器内元素的值或它们的排列顺序.
+
+### `std::find`
+
+`find`算法用于在一个序列中查找特定值的第一次出现. 它通过逐个比较序列中的元素与给定值来实现.
+
+函数原型
+
+```cpp
+template<class InputIt, class T>
+InputIt find(InputIt first, InputIt last, const T& value);
+```
+
+* `first`, `last`: 定义了搜索范围的输入迭代器`[first, last)`.
+* `value`: 需要查找的值.
+
+返回值
+
+* 如果找到该值, 返回指向序列中第一个匹配元素的迭代器.
+* 如果没有找到, 返回`last`.
+
+示例
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> vec = {10, 20, 30, 40, 50};
+    int value_to_find = 30;
+
+    auto it = std::find(vec.begin(), vec.end(), value_to_find);
+
+    if (it != vec.end()) {
+        std::cout << "找到了值: " << *it << ", 索引是: " << std::distance(vec.begin(), it) << std::endl;
+    } else {
+        std::cout << "未找到值." << std::endl;
+    }
+    return 0;
+}
+```
+
+输出结果
+
+```
+找到了值: 30, 索引是: 2
+```
+
+### `std::find_if`
+
+`find_if`算法用于在一个序列中查找第一个满足特定条件的元素. 条件由一个一元谓词(一个返回布尔值的函数或函数对象)指定.
+
+函数原型
+
+```cpp
+template<class InputIt, class UnaryPredicate>
+InputIt find_if(InputIt first, InputIt last, UnaryPredicate p);
+```
+
+* `first`, `last`: 定义了搜索范围的输入迭代器`[first, last)`.
+* `p`: 一元谓词, 应用于序列中的每个元素. `find_if`会返回第一个使`p`返回`true`的元素.
+
+返回值
+
+* 如果找到满足条件的元素, 返回指向该元素的迭代器.
+* 如果没有找到, 返回`last`.
+
+示例
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+// 谓词函数: 检查一个数是否是偶数
+bool is_even(int i) {
+    return (i % 2) == 0;
+}
+
+int main() {
+    std::vector<int> vec = {1, 3, 5, 8, 10, 12};
+
+    auto it = std::find_if(vec.begin(), vec.end(), is_even);
+
+    if (it != vec.end()) {
+        std::cout << "找到了第一个偶数: " << *it << ", 索引是: " << std::distance(vec.begin(), it) << std::endl;
+    } else {
+        std::cout << "未找到偶数." << std::endl;
+    }
+    return 0;
+}
+```
+
+输出结果
+
+```
+找到了第一个偶数: 8, 索引是: 3
+```
+
+### `std::search`
+
+`search`算法用于在一个序列中查找另一个子序列的第一次出现.
+
+函数原型
+
+```cpp
+template<class ForwardIt1, class ForwardIt2>
+ForwardIt1 search(ForwardIt1 first1, ForwardIt1 last1,
+                  ForwardIt2 first2, ForwardIt2 last2);
+```
+
+* `first1`, `last1`: 定义了主序列的范围`[first1, last1)`.
+* `first2`, `last2`: 定义了要查找的子序列的范围`[first2, last2)`.
+
+返回值
+
+* 如果找到子序列, 返回一个指向主序列中子序列起始位置的迭代器.
+* 如果主序列中不存在该子序列, 返回`last1`.
+
+示例
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> main_vec = {1, 2, 3, 4, 5, 6, 7, 3, 4, 5, 8};
+    std::vector<int> sub_vec = {3, 4, 5};
+
+    auto it = std::search(main_vec.begin(), main_vec.end(), sub_vec.begin(), sub_vec.end());
+
+    if (it != main_vec.end()) {
+        std::cout << "子序列找到了, 起始位置索引是: " << std::distance(main_vec.begin(), it) << std::endl;
+    } else {
+        std::cout << "未找到子序列." << std::endl;
+    }
+    return 0;
+}
+```
+
+输出结果
+
+```
+子序列找到了, 起始位置索引是: 2
+```
+
+### `std::adjacent_find`
+
+`adjacent_find`算法用于在一个序列中查找第一对相等的相邻元素.
+
+函数原型
+
+```cpp
+template<class ForwardIt>
+ForwardIt adjacent_find(ForwardIt first, ForwardIt last);
+```
+
+* `first`, `last`: 定义了搜索范围的前向迭代器`[first, last)`.
+
+返回值
+
+* 如果找到这样一对相邻元素, 返回指向第一个元素的迭代器.
+* 如果没有找到, 返回`last`.
+
+示例
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> vec = {1, 2, 3, 3, 4, 5, 5};
+
+    auto it = std::adjacent_find(vec.begin(), vec.end());
+
+    if (it != vec.end()) {
+        std::cout << "找到了第一对相邻的相等元素: " << *it << ", 索引是: " << std::distance(vec.begin(), it) << std::endl;
+    } else {
+        std::cout << "未找到相邻的相等元素." << std::endl;
+    }
+    return 0;
+}
+```
+
+输出结果
+
+```
+找到了第一对相邻的相等元素: 3, 索引是: 2
+```
+
+### 总结比较
+
+| 算法 | 主要用途 | 查找目标 |
+| :--- | :--- | :--- |
+| `find` | 查找单个 特定值 | 单个元素 |
+| `find_if` | 查找满足 特定条件 的单个元素 | 单个元素 |
+| `search` | 查找一个 子序列 | 元素序列 |
+| `adjacent_find` | 查找第一对 相等的相邻元素 | 两个相邻元素 |
+
+## `std::mismatch`
+
+`std::mismatch`是C++ STL中的一个算法, 用于在两个序列中查找 第一对不匹配 的元素. 它会同时遍历两个序列, 逐一比较对应位置的元素, 直到找到第一个差异点或者其中一个序列遍历完毕. `std::mismatch`会返回一个`std::pair`, 其中包含两个迭代器, 分别指向两个序列中第一个不匹配的元素.
+
+`std::mismatch`有两个主要重载版本.
+
+1. 使用相等性比较 (`==`)
+
+    ```cpp
+    template<class InputIt1, class InputIt2>
+    std::pair<InputIt1, InputIt2>
+        mismatch(InputIt1 first1, InputIt1 last1, InputIt2 first2);
+    ```
+
+    * `first1`, `last1`: 定义了第一个序列的范围 `[first1, last1)`.
+    * `first2`: 第二个序列的起始迭代器. `mismatch`假定第二个序列至少与第一个序列一样长.
+
+2. 使用自定义谓词比较
+
+    ```cpp
+    template<class InputIt1, class InputIt2, class BinaryPredicate>
+    std::pair<InputIt1, InputIt2>
+        mismatch(InputIt1 first1, InputIt1 last1, InputIt2 first2, BinaryPredicate p);
+    ```
+
+    * `p`: 一个二元谓词 (返回布尔值的函数或函数对象), 用于比较两个序列中的元素. 如果`p(element1, element2)`返回`false`, 则认为元素不匹配.
+
+`std::mismatch`返回一个`std::pair`, 包含两个迭代器:
+
+* `pair.first`: 指向第一个序列中不匹配的元素的迭代器.
+* `pair.second`: 指向第二个序列中对应位置不匹配的元素的迭代器.
+
+如果两个序列在第一个序列的范围内完全匹配, `pair.first`将等于`last1`, `pair.second`将指向第二个序列中超出比较范围的下一个元素.
+
+使用示例:
+
+假设我们想比较两个序列, 找出它们从哪里开始不同.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+int main() {
+    std::vector<int> v1 = {1, 2, 3, 4, 5};
+    std::vector<int> v2 = {1, 2, 9, 4, 5}; // 在索引2处不同
+
+    auto p = std::mismatch(v1.begin(), v1.end(), v2.begin());
+
+    if (p.first != v1.end()) {
+        std::cout << "在索引 " << std::distance(v1.begin(), p.first) << " 处发现不匹配." << std::endl;
+        std::cout << "序列1的值是: " << *p.first << std::endl;
+        std::cout << "序列2的值是: " << *p.second << std::endl;
+    } else {
+        std::cout << "序列完全匹配." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+输出结果:
+
+```
+在索引 2 处发现不匹配.
+序列1的值是: 3
+序列2的值是: 9
+```
+
+示例2: 使用自定义谓词
+
+我们可以用一个自定义比较规则, 例如, 比较字符串的长度.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+// 谓词: 比较两个字符串的长度是否相等
+bool have_same_length(const std::string& s1, const std::string& s2) {
+    return s1.length() == s2.length();
+}
+
+int main() {
+    std::vector<std::string> words1 = {"hello", "world", "is", "great"};
+    std::vector<std::string> words2 = {"greetings", "earth", "are", "awesome"};
+
+    auto p = std::mismatch(words1.begin(), words1.end(), words2.begin(), have_same_length);
+
+    if (p.first != words1.end()) {
+        std::cout << "在索引 " << std::distance(words1.begin(), p.first) << " 处发现长度不匹配." << std::endl;
+        std::cout << "序列1的词是 '" << *p.first << "' (长度 " << (*p.first).length() << ")" << std::endl;
+        std::cout << "序列2的词是 '" << *p.second << "' (长度 " << (*p.second).length() << ")" << std::endl;
+    } else {
+        std::cout << "所有对应词的长度都匹配." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+输出结果:
+
+```
+在索引 0 处发现长度不匹配.
+序列1的词是 'hello' (长度 5)
+序列2的词是 'greetings' (长度 9)
+```
