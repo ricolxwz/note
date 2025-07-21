@@ -564,4 +564,241 @@ Default compare (<): false
 Custom compare (>): true
 ```
 
-## 统计
+## 统计 📊
+
+### `std::all_of`, `std::any_of`, `std::none_of`
+
+这三个算法都属于C++ STL中的非修改性序列算法, 它们都用于检查序列中的元素是否满足某个特定的条件 (通过谓词函数定义). 它们像是在对序列进行提问, 并返回一个布尔值 (`true`或`false`) 作为答案. 这三个函数的核心是 谓词. 谓词是一个可调用的表达式 (通常是函数指针, 函数对象或lambda表达式), 它接受一个序列中的元素作为参数, 并返回一个可以转换为`bool`的值.
+
+例如, 一个检查整数是否为偶数的谓词:
+
+```cpp
+bool is_even(int n) {
+    return n % 2 == 0;
+}
+```
+
+---
+
+`std::all_of`:
+
+`all_of` (所有都满足?) 算法检查序列中 所有 元素是否都满足谓词指定的条件.
+
+* 工作原理: 它会遍历序列, 将谓词应用于每个元素. 如果遇到任何一个元素使谓词返回`false`, 它会立即停止并返回`false`. 只有当所有元素都使谓词返回`true`时, 它才会返回`true`.
+* 对于空序列: 对一个空序列调用`all_of`会返回`true`.
+
+函数原型
+
+```cpp
+template<class InputIt, class UnaryPredicate>
+bool all_of(InputIt first, InputIt last, UnaryPredicate p);
+```
+
+-----
+
+`std::any_of`:
+
+`any_of` (任何一个满足?) 算法检查序列中是否 至少有一个 元素满足谓词指定的条件.
+
+* 工作原理: 它会遍历序列, 将谓词应用于每个元素. 如果遇到任何一个元素使谓词返回`true`, 它会立即停止并返回`true`. 只有当所有元素都使谓词返回`false`时, 它才会返回`false`.
+* 对于空序列: 对一个空序列调用`any_of`会返回`false`.
+
+函数原型
+
+```cpp
+template<class InputIt, class UnaryPredicate>
+bool any_of(InputIt first, InputIt last, UnaryPredicate p);
+```
+
+---
+
+`std::none_of`
+
+`none_of` (没有一个满足?) 算法检查序列中是否 没有任何 元素满足谓词指定的条件.
+
+* 工作原理: 它会遍历序列, 将谓词应用于每个元素. 如果遇到任何一个元素使谓词返回`true`, 它会立即停止并返回`false`. 只有当所有元素都使谓词返回`false`时, 它才会返回`true`.
+* 对于空序列: 对一个空序列调用`none_of`会返回`true`.
+* 逻辑关系: `std::none_of(..., p)` 等价于 `!std::any_of(..., p)`.
+
+函数原型
+
+```cpp
+template<class InputIt, class UnaryPredicate>
+bool none_of(InputIt first, InputIt last, UnaryPredicate p);
+```
+
+---
+
+使用示例:
+
+下面的例子将使用同一个lambda表达式作为谓词来演示这三个函数的不同之处.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iomanip> // For std::boolalpha
+
+int main() {
+    std::cout << std::boolalpha; // 将 bool 输出为 true/false
+
+    std::vector<int> v = {2, 4, 6, 8, 10};
+    auto is_odd = [](int i) { return i % 2 != 0; };
+
+    std::cout << "序列 v: {2, 4, 6, 8, 10}" << std::endl;
+    std::cout << "谓词: 是否为奇数?" << std::endl;
+    std::cout << "--------------------------------" << std::endl;
+
+    // 是否所有元素都是奇数?
+    if (std::all_of(v.cbegin(), v.cend(), is_odd)) {
+        std::cout << "all_of:  是的, 所有元素都是奇数." << std::endl;
+    } else {
+        std::cout << "all_of:  不, 不是所有元素都是奇数." << std::endl;
+    }
+
+    // 是否至少有一个元素是奇数?
+    if (std::any_of(v.cbegin(), v.cend(), is_odd)) {
+        std::cout << "any_of:  是的, 至少有一个元素是奇数." << std::endl;
+    } else {
+        std::cout << "any_of:  不, 没有任何元素是奇数." << std::endl;
+    }
+
+    // 是否没有任何元素是奇数?
+    if (std::none_of(v.cbegin(), v.cend(), is_odd)) {
+        std::cout << "none_of: 是的, 没有任何元素是奇数." << std::endl;
+    } else {
+        std::cout << "none_of: 不, 至少有一个元素是奇数." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+输出结果:
+
+```
+序列 v: {2, 4, 6, 8, 10}
+谓词: 是否为奇数?
+--------------------------------
+all_of:  不, 不是所有元素都是奇数.
+any_of:  不, 没有任何元素是奇数.
+none_of: 是的, 没有任何元素是奇数.
+```
+
+-----
+
+| 算法 | 问题 | 返回 `true` 的条件 |
+| :--- | :--- | :--- |
+| `all_of` | 所有元素都满足条件吗? | 序列中的 每个 元素都让谓词返回`true`. |
+| `any_of` | 存在满足条件的元素吗? | 序列中 至少有一个 元素让谓词返回`true`. |
+| `none_of` | 所有元素都不满足条件吗? | 序列中的 每个 元素都让谓词返回`false`. |
+
+### `std::count`, `std::count_if`
+
+这两个算法都用于统计序列中符合特定条件的元素数量. 它们遍历指定的范围并返回一个整数, 表示满足条件的元素个数.
+
+---
+
+`std::count`用于统计序列中等于 特定值 的元素数量.
+
+* 工作原理: 算法遍历`[first, last)`范围内的每个元素, 并将其与给定的`value`使用`operator==`进行比较. 每当比较结果为`true`时, 内部计数器加一.
+* 用途: 当你需要计算一个简单值 (如`int`, `char`, `std::string`) 在容器中出现了多少次时, 这个函数非常方便.
+
+函数原型
+
+```cpp
+template<class InputIt, class T>
+typename iterator_traits<InputIt>::difference_type
+    count(InputIt first, InputIt last, const T& value);
+```
+
+* `first`, `last`: 定义了搜索范围的输入迭代器 `[first, last)`.
+* `value`: 要在序列中搜索和计数的特定值.
+* 返回值: 等于`value`的元素数量, 类型通常是`std::size_t`.
+
+示例
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> v = {1, 2, 3, 4, 2, 5, 2, 6};
+    int target = 2;
+
+    auto num_items = std::count(v.begin(), v.end(), target);
+
+    std::cout << "在序列中, 数字 " << target << " 出现了 " << num_items << " 次." << std::endl;
+    return 0;
+}
+```
+
+输出结果:
+
+```
+在序列中, 数字 2 出现了 3 次.
+```
+
+---
+
+`std::count_if`用于统计序列中满足 特定条件 的元素数量. 这个 "条件" 由一个谓词函数定义.
+
+* 工作原理: 算法遍历`[first, last)`范围内的每个元素, 并将每个元素传递给谓词`p`. 如果`p(element)`返回`true`, 内部计数器加一.
+* 用途: 当你需要根据更复杂的逻辑 (例如, 大于某个值, 是偶数, 字符串长度符合要求等) 来计数时, 这个函数非常强大和灵活.
+
+函数原型
+
+```cpp
+template<class InputIt, class UnaryPredicate>
+typename iterator_traits<InputIt>::difference_type
+    count_if(InputIt first, InputIt last, UnaryPredicate p);
+```
+
+* `first`, `last`: 定义了搜索范围的输入迭代器 `[first, last)`.
+* `p`: 一元谓词, 用于判断元素是否应被计数.
+* 返回值: 使谓词`p`返回`true`的元素数量.
+
+示例
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+int main() {
+    std::vector<int> nums = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+    // 使用 lambda 表达式作为谓词, 统计偶数的数量
+    auto num_even = std::count_if(nums.begin(), nums.end(), [](int i){
+        return i % 2 == 0;
+    });
+
+    std::cout << "序列中有 " << num_even << " 个偶数." << std::endl;
+
+    std::vector<std::string> words = {"apple", "banana", "kiwi", "grapefruit", "cherry"};
+
+    // 统计长度大于5的单词数量
+    auto long_words = std::count_if(words.begin(), words.end(), [](const std::string& s){
+        return s.length() > 5;
+    });
+
+    std::cout << "序列中有 " << long_words << " 个长度大于5的单词." << std::endl;
+    return 0;
+}
+```
+
+输出结果:
+
+```
+序列中有 5 个偶数.
+序列中有 3 个长度大于5的单词.
+```
+
+---
+
+| 算法 | 用途 | 比较方式 |
+| :--- | :--- | :--- |
+| `std::count` | 统计 特定值 的出现次数 | 使用 `operator==` 与一个固定值比较 |
+| `std::count_if` | 统计满足 特定条件 的元素个数 | 将元素传递给一个返回布尔值的谓词函数 |
