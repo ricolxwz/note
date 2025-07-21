@@ -922,3 +922,93 @@ std::copy_n (3个) 结果: 10 25 30
 | `std::copy` | 范围 (`[first, last)`) | 该范围内的所有元素 |
 | `std::copy_if` | 范围 + 条件 | 范围中所有满足条件的元素 |
 | `std::copy_n` | 起始点 + 数量 (`n`) | 从起始点开始的`n`个元素 |
+
+## 填充
+
+`std::fill`和`std::fill_n`都是C++ `<algorithm>`库中的函数, 用于将一个区间内的元素替换为指定的值. `std::fill`将一个由起始迭代器和结束迭代器定义的区间`[first, last)`内的所有元素赋值为一个给定的`value`.
+
+* 语法:
+
+    ```cpp
+    template< class ForwardIt, class T >
+    void fill( ForwardIt first, ForwardIt last, const T& value );
+    ```
+
+* 参数:
+
+    * `first`: 指向要修改的区间起始位置的迭代器.
+    * `last`: 指向要修改的区间末尾位置之后一位的迭代器.
+    * `value`: 要赋给区间内每个元素的值.
+
+* 示例:
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <algorithm>
+
+    int main() {
+        std::vector<int> v = {0, 1, 2, 3, 4, 5};
+        
+        // 将整个vector填充为7
+        std::fill(v.begin(), v.end(), 7); // v 现在是 {7, 7, 7, 7, 7, 7}
+
+        for (int i : v) {
+            std::cout << i << " ";
+        }
+        std::cout << std::endl;
+
+        return 0;
+    }
+    ```
+
+`std::fill_n`从一个起始迭代器开始, 将后续指定数量(`count`)的元素赋值为一个给定的`value`.
+
+  * 语法:
+
+    ```cpp
+    template< class OutputIt, class Size, class T >
+    OutputIt fill_n( OutputIt first, Size count, const T& value );
+    ```
+
+  * 参数:
+
+      * `first`: 指向要修改的区间起始位置的迭代器.
+      * `count`: 要修改的元素的数量.
+      * `value`: 要赋给这些元素的值.
+
+  * 返回值:
+
+    返回一个指向最后被修改元素的下一位的迭代器 (即`first + count`).
+
+  * 示例:
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <algorithm>
+
+    int main() {
+        std::vector<int> v = {0, 1, 2, 3, 4, 5};
+        
+        // 从v.begin()开始, 将3个元素填充为8
+        std::fill_n(v.begin(), 3, 8); // v 现在是 {8, 8, 8, 3, 4, 5}
+
+        for (int i : v) {
+            std::cout << i << " ";
+        }
+        std::cout << std::endl;
+        
+        return 0;
+    }
+    ```
+
+---
+
+| 特性 | `std::fill` | `std::fill_n` |
+| :--- | :--- | :--- |
+| 定义范围 | 使用两个迭代器(`first`, `last`) | 使用一个起始迭代器和数量(`first`, `count`) |
+| 适用场景 | 填充整个容器或一个已知的子区间 | 从某点开始填充固定数量的元素 |
+
+  * 当你需要填充整个容器(例如`v.begin()`到`v.end()`)或者一个明确的子区间时, 使用`std::fill`.
+  * 当你只知道起始位置和需要填充的元素个数时, `std::fill_n`更方便.
