@@ -224,7 +224,9 @@ int main() {
 | `search` | 查找一个 子序列 | 元素序列 |
 | `adjacent_find` | 查找第一对 相等的相邻元素 | 两个相邻元素 |
 
-## `std::mismatch`
+## 比较 💮
+
+### `std::mismatch`
 
 `std::mismatch`是C++ STL中的一个算法, 用于在两个序列中查找 第一对不匹配 的元素. 它会同时遍历两个序列, 逐一比较对应位置的元素, 直到找到第一个差异点或者其中一个序列遍历完毕. `std::mismatch`会返回一个`std::pair`, 其中包含两个迭代器, 分别指向两个序列中第一个不匹配的元素.
 
@@ -335,7 +337,7 @@ int main() {
 序列2的词是 'greetings' (长度 9)
 ```
 
-## `std::equal`
+### `std::equal`
 
 `std::equal`是C++ STL中的一个算法, 用于比较两个序列是否相等. 它逐一比较两个序列中的对应元素, 如果所有对应元素都满足相等条件, 则返回`true`, 否则返回`false`. `std::equal`通过遍历两个序列并应用一个比较操作来工作. 如果在任何点上比较结果为`false`, 它会立即停止并返回`false`. 只有当第一个序列遍历完成且所有元素都与第二个序列的对应元素匹配时, 它才会返回`true`.
 
@@ -437,3 +439,129 @@ int main() {
 ```
 'Hello' 和 'hello' 在不区分大小写的情况下相等.
 ```
+
+### `std::lexicographical_compare`
+
+`std::lexicographical_compare`是C++ STL中的一个算法, 它以字典序(dictionary order)比较两个序列. 简单来说, 它就像在字典中比较两个单词一样, 确定一个序列是否在另一个序列之前.
+
+该算法会逐一比较两个序列`[first1, last1)`和`[first2, last2)`中的对应元素.
+
+1.  如果找到第一对不相等的元素 (例如在位置`i`), 它会比较`range1[i]`和`range2[i]`. 如果`range1[i] < range2[i]`, 则第一个序列在字典序上小于第二个, 算法返回`true`. 如果`range1[i] > range2[i]`, 则返回`false`.
+2.  如果在比较完所有元素后, 其中一个序列先耗尽 (例如, 序列1是序列2的前缀, 如 "cat" 和 "cattle"), 那么较短的序列 (序列1) 被认为在字典序上更小, 算法返回`true`.
+3.  如果两个序列完全相等且长度相同, 则第一个序列并不小于第二个, 算法返回`false`.
+
+`std::lexicographical_compare`有两个主要重载版本.
+
+1. 使用 `<` 运算符比较
+
+    ```cpp
+    template<class InputIt1, class InputIt2>
+    bool lexicographical_compare(InputIt1 first1, InputIt1 last1,
+                                InputIt2 first2, InputIt2 last2);
+    ```
+
+    * `first1`, `last1`: 定义了第一个序列的范围 `[first1, last1)`.
+    * `first2`, `last2`: 定义了第二个序列的范围 `[first2, last2)`.
+
+    此版本使用默认的 `<` 运算符来比较元素.
+
+2. 使用自定义比较函数
+
+    ```cpp
+    template<class InputIt1, class InputIt2, class Compare>
+    bool lexicographical_compare(InputIt1 first1, InputIt1 last1,
+                                InputIt2 first2, InputIt2 last2,
+                                Compare comp);
+    ```
+
+    * `comp`: 一个二元谓词 (返回布尔值的函数或函数对象), 用于代替 `<` 进行比较. 如果`comp(a, b)`返回`true`, 则认为`a`小于`b`.
+
+返回值
+
+* 如果第一个序列在字典序上 小于 第二个序列, 则返回`true`.
+* 否则返回`false`.
+
+示例1: 基本用法 (比较字符串和向量)
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip> // For std::boolalpha
+
+int main() {
+    std::cout << std::boolalpha; // 将 bool 输出为 true/false
+
+    // 示例 1: 比较字符串
+    std::string s1 = "apple";
+    std::string s2 = "apply";
+    // 'e' < 'y', 所以 s1 < s2
+    std::cout << "Is '" << s1 << "' lexicographically less than '" << s2 << "'? "
+              << std::lexicographical_compare(s1.begin(), s1.end(), s2.begin(), s2.end()) << std::endl;
+
+    // 示例 2: 比较向量 (前缀情况)
+    std::vector<int> v1 = {1, 2, 3};
+    std::vector<int> v2 = {1, 2, 3, 4};
+    // v1 是 v2 的前缀, 所以 v1 < v2
+    std::cout << "Is {1,2,3} less than {1,2,3,4}? "
+              << std::lexicographical_compare(v1.begin(), v1.end(), v2.begin(), v2.end()) << std::endl;
+
+    // 示例 3: 比较向量 (完全相同)
+    std::vector<int> v3 = {1, 2, 3};
+    // v1 和 v3 完全相同, 所以 v1 不小于 v3
+    std::cout << "Is {1,2,3} less than {1,2,3}? "
+              << std::lexicographical_compare(v1.begin(), v1.end(), v3.begin(), v3.end()) << std::endl;
+
+    return 0;
+}
+```
+
+输出结果:
+
+```
+Is 'apple' lexicographically less than 'apply'? true
+Is {1,2,3} less than {1,2,3,4}? true
+Is {1,2,3} less than {1,2,3}? false
+```
+
+示例2: 使用自定义谓词 (降序比较)
+
+如果我们想知道一个序列按降序排列是否 "小于" 另一个, 我们可以提供一个 "大于" 谓词.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional> // For std::greater
+#include <iomanip>
+
+int main() {
+    std::cout << std::boolalpha;
+
+    std::vector<int> v1 = {1, 5, 2};
+    std::vector<int> v2 = {1, 4, 9};
+
+    // 使用默认的 '<' 比较: v1 不小于 v2, 因为 5 > 4
+    bool default_comp = std::lexicographical_compare(v1.begin(), v1.end(), v2.begin(), v2.end());
+    std::cout << "Default compare (<): " << default_comp << std::endl;
+
+    // 使用 std::greater<int>() 作为比较函数
+    // 比较逻辑变为: 1==1, 5>4. 因为 comp(5, 4) 是 true, 所以 v1 "小于" v2
+    bool custom_comp = std::lexicographical_compare(v1.begin(), v1.end(),
+                                                    v2.begin(), v2.end(),
+                                                    std::greater<int>());
+    std::cout << "Custom compare (>): " << custom_comp << std::endl;
+
+    return 0;
+}
+```
+
+输出结果:
+
+```
+Default compare (<): false
+Custom compare (>): true
+```
+
+## 统计
