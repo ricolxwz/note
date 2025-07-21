@@ -334,3 +334,106 @@ int main() {
 序列1的词是 'hello' (长度 5)
 序列2的词是 'greetings' (长度 9)
 ```
+
+## `std::equal`
+
+`std::equal`是C++ STL中的一个算法, 用于比较两个序列是否相等. 它逐一比较两个序列中的对应元素, 如果所有对应元素都满足相等条件, 则返回`true`, 否则返回`false`. `std::equal`通过遍历两个序列并应用一个比较操作来工作. 如果在任何点上比较结果为`false`, 它会立即停止并返回`false`. 只有当第一个序列遍历完成且所有元素都与第二个序列的对应元素匹配时, 它才会返回`true`.
+
+`std::equal`有两个主要的重载版本.
+
+1. 使用相等性比较 (`==`)
+
+    ```cpp
+    template<class InputIt1, class InputIt2>
+    bool equal(InputIt1 first1, InputIt1 last1, InputIt2 first2);
+    ```
+
+    * `first1`, `last1`: 定义了第一个序列的范围 `[first1, last1)`.
+    * `first2`: 第二个序列的起始迭代器. `equal`假定第二个序列至少与第一个序列一样长. 它只会比较`last1 - first1`个元素.
+
+2. 使用自定义谓词比较
+
+    ```cpp
+    template<class InputIt1, class InputIt2, class BinaryPredicate>
+    bool equal(InputIt1 first1, InputIt1 last1, InputIt2 first2, BinaryPredicate p);
+    ```
+
+    * `p`: 一个二元谓词 (返回布尔值的函数或函数对象), 用于比较两个序列中的元素. 算法会检查对于每一对元素`p(element1, element2)`是否都返回`true`.
+
+返回值
+
+* 如果第一个序列中的所有元素都与第二个序列中的对应元素相等 (或满足谓词), 则返回`true`.
+* 否则返回`false`.
+
+示例1: 基本用法
+
+检查两个整数向量是否相等.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> v1 = {1, 2, 3, 4, 5};
+    std::vector<int> v2 = {1, 2, 3, 4, 5};
+    std::vector<int> v3 = {1, 2, 9, 4, 5}; // 与v1不同
+
+    if (std::equal(v1.begin(), v1.end(), v2.begin())) {
+        std::cout << "v1 和 v2 相等." << std::endl;
+    } else {
+        std::cout << "v1 和 v2 不相等." << std::endl;
+    }
+
+    if (std::equal(v1.begin(), v1.end(), v3.begin())) {
+        std::cout << "v1 和 v3 相等." << std::endl;
+    } else {
+        std::cout << "v1 和 v3 不相等." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+输出结果:
+
+```
+v1 和 v2 相等.
+v1 和 v3 不相等.
+```
+
+示例2: 使用自定义谓词
+
+假设我们想进行不区分大小写的字符串比较.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cctype>
+
+// 谓词: 不区分大小写比较两个字符
+bool case_insensitive_char_equal(char c1, char c2) {
+    return std::tolower(c1) == std::tolower(c2);
+}
+
+int main() {
+    std::string s1 = "Hello";
+    std::string s2 = "hello";
+
+    if (std::equal(s1.begin(), s1.end(), s2.begin(), case_insensitive_char_equal)) {
+        std::cout << "'" << s1 << "' 和 '" << s2 << "' 在不区分大小写的情况下相等." << std::endl;
+    } else {
+        std::cout << "'" << s1 << "' 和 '" << s2 << "' 在不区分大小写的情况下不相等." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+输出结果:
+
+```
+'Hello' 和 'hello' 在不区分大小写的情况下相等.
+```
