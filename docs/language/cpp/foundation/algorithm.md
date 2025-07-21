@@ -925,6 +925,8 @@ std::copy_n (3个) 结果: 10 25 30
 
 ## 填充
 
+### `std::fill`, `std::fill_n`
+
 `std::fill`和`std::fill_n`都是C++ `<algorithm>`库中的函数, 用于将一个区间内的元素替换为指定的值. `std::fill`将一个由起始迭代器和结束迭代器定义的区间`[first, last)`内的所有元素赋值为一个给定的`value`.
 
 * 语法:
@@ -1012,3 +1014,101 @@ std::copy_n (3个) 结果: 10 25 30
 
   * 当你需要填充整个容器(例如`v.begin()`到`v.end()`)或者一个明确的子区间时, 使用`std::fill`.
   * 当你只知道起始位置和需要填充的元素个数时, `std::fill_n`更方便.
+
+### `std::generate`, `std::generate_n`
+
+`std::fill`使用一个固定的值填充序列, `std::generate`则使用一个函数调用的结果来填充序列, 这意味着每个元素可以被赋予不同的值. 好的, 这是对`std::generate`和`std::generate_n`算法的介绍. `std::generate`为一个已存在的 范围 `[first, last)`内的所有元素赋值.
+
+* 工作原理: 它遍历由`first`和`last`迭代器定义的整个范围, 对范围内的每个位置, 调用生成器函数`g()`并将返回值赋给该位置的元素.
+* 用途: 当你需要用某种规则 (如递增序列, 随机数, 常量等) 填充一个已经确定大小的容器或范围时使用. 你必须确保 `[first, last)` 是一个有效的范围.
+
+函数原型:
+
+```cpp
+template<class ForwardIt, class Generator>
+void generate(ForwardIt first, ForwardIt last, Generator g);
+```
+
+* `first`, `last`: 定义了要填充的目标范围 `[first, last)` 的前向迭代器.
+* `g`: 生成器函数. 每次调用它时, 都应该返回一个可以赋给序列元素的值.
+* 返回值: `void`.
+
+`std::generate_n`从一个起始位置开始, 为 指定数量 (n个) 的元素赋值.
+
+* 工作原理: 它从`first`迭代器指向的位置开始, 调用生成器函数`g()`共`count`次, 并将每次调用的结果依次赋给从`first`开始的连续`count`个元素.
+* 用途: 当你想在容器的某个特定位置 (不一定是开头) 开始生成固定数量的元素时非常有用. 使用这个函数时, 必须确保从`first`开始有足够的空间来存放`count`个元素.
+
+函数原型
+
+```cpp
+template<class OutputIt, class Size, class Generator>
+OutputIt generate_n(OutputIt first, Size count, Generator g);
+```
+
+* `first`: 目标序列的起始输出迭代器.
+* `count`: 要生成的元素数量.
+* `g`: 生成器函数.
+* 返回值: 指向最后一个被生成元素之后位置的迭代器.
+
+-----
+
+下面的例子将使用一个简单的递增数生成器来演示这两个函数的区别.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+// 辅助函数, 用于打印 vector
+void print_vector(const std::string& title, const std::vector<int>& v) {
+    std::cout << title;
+    for (int i : v) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+}
+
+// 一个简单的生成器类
+class SequentialGenerator {
+private:
+    int current;
+public:
+    SequentialGenerator(int start = 0) : current(start) {}
+    int operator()() {
+        return current++;
+    }
+};
+
+int main() {
+    // 1. std::generate: 填充整个容器
+    std::vector<int> v1(5); // 必须预先分配大小
+    std::generate(v1.begin(), v1.end(), SequentialGenerator(10));
+    print_vector("std::generate 结果:     ", v1);
+
+    // 2. std::generate_n: 从头开始生成3个元素
+    std::vector<int> v2(5, 0); // 容器大小为5, 初始值为0
+    std::generate_n(v2.begin(), 3, SequentialGenerator(100));
+    print_vector("std::generate_n 结果: ", v2);
+    
+    // 使用 lambda 表达式作为生成器
+    int n = 0;
+    std::generate(v1.begin(), v1.end(), [&n]{ return n++; });
+    print_vector("Lambda generate 结果:    ", v1);
+
+    return 0;
+}
+```
+
+```
+std::generate 结果:     10 11 12 13 14 
+std::generate_n 结果: 100 101 102 0 0 
+Lambda generate 结果:    0 1 2 3 4 
+```
+
+---
+
+| 算法 | 控制方式 | 用途 |
+| :--- | :--- | :--- |
+| `std::generate` | 由 范围 (`[first, last)`) 控制 | 填充一个完整的, 已确定大小的范围. |
+| `std::generate_n` | 由 数量 (`count`) 控制 | 从一个起始点开始, 填充固定数量的元素. |
