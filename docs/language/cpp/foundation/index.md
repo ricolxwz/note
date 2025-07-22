@@ -121,6 +121,17 @@
 - (算法) 堆
 - (算法) 大小
 - (算法) 数值计算
+- (文件) `std::format`
+- (文件) `std::print`
+- (文件) 流对象
+- (文件) `std::cout`
+- (文件) `std::cerr`, `std::clog`
+- (文件) `std::cin`
+- (文件) `std::ofstream`
+- (文件) `std::ifstream`
+- (文件) 二进制文件读写
+- (文件) 序列化/反序列化
+- (文件) `std::sstream`
 
 ## 引用
 
