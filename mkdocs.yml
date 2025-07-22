@@ -286,6 +286,7 @@ nav:
           - 对象: language/cpp/foundation/object.md
           - 模版: language/cpp/foundation/template.md
           - 调试: language/cpp/foundation/debug.md
+          - 文件: language/cpp/foundation/io.md
   - 基石:
     - 数据库:
       - 数据模型: general/database/conceptual-model.md
