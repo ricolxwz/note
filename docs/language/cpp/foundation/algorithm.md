@@ -2895,3 +2895,510 @@ int main() {
     print("Symmetric Difference", result); // 输出: 1 2 6 7
 }
 ```
+
+## 堆 🔺
+
+C++标准库在`<algorithm>`头文件中提供了四个用于操作堆(heap)的函数. 这些函数可以直接在支持随机访问迭代器的容器 (如`std::vector`或`std::deque`) 上工作. 默认情况下, 这些操作都构建一个最大堆 (max-heap), 即堆顶元素是序列中的最大值. 你也可以提供一个自定义比较函数来创建最小堆 (min-heap).
+
+### `std::make_heap`
+
+`std::make_heap`函数可以将一个任意序列转换成一个堆. 它会重排`[first, last)`区间内的元素, 使其满足堆的性质.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+void print_heap(const std::vector<int>& v) {
+    std::cout << "Heap: ";
+    for (int x : v) {
+        std::cout << x << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    std::vector<int> v = {3, 1, 4, 1, 5, 9, 2, 6};
+
+    // 将整个 vector 转换成一个最大堆
+    std::make_heap(v.begin(), v.end());
+
+    print_heap(v); // 输出: Heap: 9 6 4 1 5 1 2 3 (输出可能因实现而异, 但 v[0] 始终是最大值9)
+}
+```
+
+### `std::push_heap`
+
+`std::push_heap`用于向一个已存在的堆中添加新元素. 这个操作有一个前提: 新元素必须已经通过`push_back`等方法被添加到了容器的末尾. `std::push_heap`的作用是将这个新加入的元素上浮 (sift-up) 到堆中的正确位置.
+
+添加元素的步骤:
+
+1.  在容器末尾添加新元素 (例如`v.push_back(value)`).
+2.  调用`std::push_heap(v.begin(), v.end())`来修复堆的结构.
+
+```cpp
+// 接着上面的 main 函数
+int main() {
+    std::vector<int> v = {3, 1, 4, 1, 5, 9, 2, 6};
+    std::make_heap(v.begin(), v.end());
+    print_heap(v); // Heap: 9 6 4 1 5 1 2 3
+
+    // 步骤 1: 在末尾添加新元素
+    v.push_back(7);
+    std::cout << "After push_back(7): ";
+    for(int x : v) std::cout << x << " "; // 此刻还不是一个合法的堆
+    std::cout << std::endl;
+
+    // 步骤 2: 调用 push_heap 调整堆
+    std::push_heap(v.begin(), v.end());
+
+    print_heap(v); // Heap: 9 7 4 6 5 1 2 3 1 (v[0] 仍然是最大值)
+}
+```
+
+输出:
+
+```
+Heap: 9 6 4 1 5 3 2 1
+After push_back(7): 9 6 4 1 5 3 2 1 7
+Heap: 9 7 4 6 5 3 2 1 1
+```
+
+### `std::pop_heap`
+
+`std::pop_heap`用于从堆中移除堆顶元素 (即最大值). 它并不会真正删除元素, 而是将堆顶元素与堆的最后一个元素交换, 然后将除最后一个元素外的范围`[first, last-1)`重新调整为合法的堆.
+
+移除元素的步骤:
+
+1.  调用`std::pop_heap(v.begin(), v.end())`. 此操作后, 最大元素被移动到容器末尾.
+2.  从容器中移除末尾的元素 (例如`v.pop_back()`).
+
+```cpp
+// 接着上面的 main 函数
+int main() {
+    std::vector<int> v = {9, 7, 4, 6, 5, 1, 2, 3, 1}; // 一个合法的堆
+    print_heap(v);
+
+    // 步骤 1: 将堆顶元素(9)移动到末尾
+    std::pop_heap(v.begin(), v.end());
+    std::cout << "After pop_heap: ";
+    for(int x : v) std::cout << x << " "; // 输出中 9 已在末尾
+    std::cout << std::endl;
+
+    // 步骤 2: 移除末尾的元素
+    int max_val = v.back();
+    v.pop_back();
+
+    std::cout << "Removed max value: " << max_val << std::endl; // Removed max value: 9
+    print_heap(v); // 剩余元素组成一个新堆, Heap: 7 6 4 3 5 1 2 1
+}
+```
+
+输出:
+
+```
+Heap: 9 7 4 6 5 1 2 3 1
+After pop_heap: 7 6 4 3 5 1 2 1 9
+Removed max value: 9
+Heap: 7 6 4 3 5 1 2 1
+```
+
+### `std::sort_heap`
+
+`std::sort_heap`可以将一个合法的堆转换成一个有序序列. 它通过反复执行类似`pop_heap`的操作, 将堆顶元素依次放到序列的末尾, 最终得到一个升序排列的序列. 操作完成后, 这个序列就不再是堆了.
+
+```cpp
+// 接着上面的 main 函数
+int main() {
+    std::vector<int> v = {7, 6, 4, 3, 5, 1, 2, 1}; // 一个合法的堆
+    print_heap(v);
+
+    // 将堆排序
+    std::sort_heap(v.begin(), v.end());
+
+    std::cout << "Sorted vector: ";
+    for (int x : v) {
+        std::cout << x << " ";
+    }
+    std::cout << std::endl; // 输出: Sorted vector: 1 1 2 3 4 5 6 7
+}
+```
+
+输出:
+
+```
+Heap: 7 6 4 3 5 1 2 1
+Sorted vector: 1 1 2 3 4 5 6 7
+```
+
+## 大小 😶‍🌫️
+
+### `std::min`, `std::max`
+
+在C++标准库的`<algorithm>`头文件中, 提供了两个非常实用的模板函数: `std::min`和`std::max`. 它们分别用于返回两个或多个值中的最小值和最大值.
+
+最常见的用法是比较两个值.
+
+```cpp
+#include <iostream>
+#include <algorithm>
+
+int main() {
+    int a = 10;
+    int b = 20;
+    std::cout << "The minimum of a and b is: " << std::min(a, b) << std::endl; // 输出 10
+    std::cout << "The maximum of a and b is: " << std::max(a, b) << std::endl; // 输出 20
+
+    double x = 3.14;
+    double y = 2.71;
+    std::cout << "The minimum of x and y is: " << std::min(x, y) << std::endl; // 输出 2.71
+    std::cout << "The maximum of x and y is: " << std::max(x, y) << std::endl; // 输出 3.14
+
+    return 0;
+}
+```
+
+默认情况下, `std::min`和`std::max`使用小于号`<`运算符来比较两个值. 如果两个值相等, `std::min`返回第一个值, `std::max`返回第一个值.
+
+initializer\_list重载 (C++11):
+
+自C++11起, `std::min`和`std::max`可以通过`std::initializer_list`来接收多个值, 并返回其中的最小或最大值.
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+    std::cout << "The minimum of {1, 5, 2, 8, 3} is: " << std::min({1, 5, 2, 8, 3}) << std::endl; // 输出 1
+    std::cout << "The maximum of {1, 5, 2, 8, 3} is: " << std::max({1, 5, 2, 8, 3}) << std::endl; // 输出 8
+
+    return 0;
+}
+```
+
+自定义比较函数:
+
+`std::min`和`std::max`还提供了重载版本, 允许用户提供一个自定义的二元比较函数 (通常是lambda表达式, 函数指针或函数对象). 这在处理没有默认`<`运算符的自定义类型, 或需要基于特定条件进行比较时非常有用.
+
+该比较函数接收两个参数, 如果第一个参数小于第二个参数, 则返回`true`, 否则返回`false`.
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <string>
+
+struct Person {
+    std::string name;
+    int age;
+};
+
+int main() {
+    Person p1 = {"Alice", 30};
+    Person p2 = {"Bob", 25};
+
+    // 使用lambda表达式根据年龄比较
+    auto min_age_person = std::min(p1, p2, [](const Person& a, const Person& b) {
+        return a.age < b.age;
+    });
+
+    auto max_age_person = std::max(p1, p2, [](const Person& a, const Person& b) {
+        return a.age < b.age;
+    });
+
+    std::cout << "The person with the minimum age is: " << min_age_person.name << std::endl; // 输出 Bob
+    std::cout << "The person with the maximum age is: " << max_age_person.name << std::endl; // 输出 Alice
+
+    return 0;
+}
+```
+
+注意事项:
+
+* 返回类型: `std::min`和`std::max`返回对两个输入参数中较小或较大者的常量引用 (`const T&`).
+* 临时对象: 当参数为临时对象 (右值) 时要小心. 获取返回值的引用可能会导致悬垂引用.
+* `std::minmax` (C++11): 如果需要同时找到最小值和最大值, 使用`std::minmax`会更高效, 因为它只需要进行一次遍历 (对于`initializer_list`). `std::minmax`返回一个`std::pair`, `pair.first`是最小值, `pair.second`是最大值.
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+    auto result = std::minmax({1, 5, 2, 8, 3});
+    std::cout << "Minimum: " << result.first << ", Maximum: " << result.second << std::endl; // 输出 Minimum: 1, Maximum: 8
+
+    return 0;
+}
+```
+
+### `std::min_element`, `std::max_element`
+
+`std::min_element`和`std::max_element`是C++标准库`<algorithm>`头文件中的函数, 用于在指定范围内查找最小和最大的元素. 与`std::min`和`std::max`不同, 它们不直接返回值, 而是返回指向范围内最小或最大元素的迭代器.
+
+基本用法:
+
+这两个函数最常见的形式接收两个迭代器参数, `first`和`last`, 定义了一个前闭后开的范围`[first, last)`.
+
+* `std::min_element(first, last)`: 返回指向`[first, last)`范围内最小元素的迭代器.
+* `std::max_element(first, last)`: 返回指向`[first, last)`范围内最大元素的迭代器.
+
+如果找到多个相等的最小或最大元素, 函数会返回指向第一个出现的该元素的迭代器. 如果范围为空, 函数返回`last`.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> v = {3, 1, 4, 1, 5, 9, 2, 6};
+
+    // 查找最小元素
+    auto min_it = std::min_element(v.begin(), v.end());
+    // 查找最大元素
+    auto max_it = std::max_element(v.begin(), v.end());
+
+    // 要获取值, 需要解引用返回的迭代器
+    if (min_it != v.end()) {
+        std::cout << "The minimum element is: " << *min_it << std::endl; // 输出: 1
+        std::cout << "Its index is: " << std::distance(v.begin(), min_it) << std::endl; // 输出: 1
+    }
+
+    if (max_it != v.end()) {
+        std::cout << "The maximum element is: " << *max_it << std::endl; // 输出: 9
+        std::cout << "Its index is: " << std::distance(v.begin(), max_it) << std::endl; // 输出: 5
+    }
+
+    return 0;
+}
+```
+
+自定义比较函数:
+
+与`std::min`和`std::max`类似, `std::min_element`和`std::max_element`也有一个重载版本, 允许你提供一个自定义的二元比较函数. 这对于根据对象的特定属性进行比较非常有用.
+
+比较函数接收两个参数, 如果第一个参数被认为小于第二个参数, 则返回`true`.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+struct Person {
+    std::string name;
+    int age;
+};
+
+int main() {
+    std::vector<Person> people = {
+        {"Alice", 30},
+        {"Bob", 25},
+        {"Charlie", 35}
+    };
+
+    // 使用lambda表达式定义比较规则 (按年龄比较)
+    auto compare_age = [](const Person& a, const Person& b) {
+        return a.age < b.age;
+    };
+
+    // 查找年龄最小的人
+    auto youngest_it = std::min_element(people.begin(), people.end(), compare_age);
+    // 查找年龄最大的人
+    auto oldest_it = std::max_element(people.begin(), people.end(), compare_age);
+
+    if (youngest_it != people.end()) {
+        std::cout << "The youngest person is: " << youngest_it->name << " (" << youngest_it->age << ")" << std::endl; // 输出: Bob (25)
+    }
+
+    if (oldest_it != people.end()) {
+        std::cout << "The oldest person is: " << oldest_it->name << " (" << oldest_it->age << ")" << std::endl; // 输出: Charlie (35)
+    }
+
+    return 0;
+}
+```
+
+### `std::minmax`, `std::minmax_element`
+
+
+`std::minmax`用于比较两个值或一个初值列 (initializer\_list), 并同时返回其中的最小值和最大值. 它返回一个`std::pair`, 其中`pair.first`是最小值, `pair.second`是最大值. 如果两个输入值相等, 则`first`和`second`都是第一个值的副本.
+
+基本用法 (比较两个值):
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <utility>
+
+int main() {
+    int a = 10;
+    int b = 20;
+
+    std::pair<int, int> result = std::minmax(a, b);
+
+    std::cout << "Min: " << result.first << ", Max: " << result.second << std::endl; // 输出: Min: 10, Max: 20
+}
+```
+
+* 返回值: 对于`std::minmax(a, b)`, 返回类型是`std::pair<const T&, const T&>`, 即对输入参数的常量引用.
+
+`initializer_list`重载 (C++11):
+
+这是`std::minmax`更常见的用途, 可以在一组数中高效地找出最小和最大值.
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <vector>
+
+int main() {
+    auto result = std::minmax({3, 1, 4, 1, 5, 9, 2, 6});
+
+    std::cout << "Min: " << result.first << ", Max: " << result.second << std::endl; // 输出: Min: 1, Max: 9
+}
+```
+
+* 返回值: 对于`std::minmax(initializer_list)`, 返回类型是`std::pair<T, T>`, 其中`T`是列表中的元素类型. 这里返回的是值而非引用.
+
+---
+
+`std::minmax_element`用于在指定迭代器范围`[first, last)`内查找最小和最大的元素. 它返回一个`std::pair`, 其中`pair.first`是指向最小元素的迭代器, `pair.second`是指向最大元素的迭代器.
+
+* 如果存在多个相等的最小元素, `first`会指向第一个.
+* 如果存在多个相等的最大元素, `second`会指向最后一个.
+* 如果范围为空, 返回`std::make_pair(last, last)`.
+
+基本用法:
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <utility>
+
+int main() {
+    std::vector<int> v = {3, 1, 4, 1, 5, 9, 2, 6, 9};
+
+    auto result_iters = std::minmax_element(v.begin(), v.end());
+
+    // 需要解引用迭代器来获取值
+    if (result_iters.first != v.end()) {
+        std::cout << "Min element is: " << *result_iters.first << " at index "
+                  << std::distance(v.begin(), result_iters.first) << std::endl; // 输出: Min element is: 1 at index 1
+    }
+
+    if (result_iters.second != v.end()) {
+        std::cout << "Max element is: " << *result_iters.second << " at index "
+                  << std::distance(v.begin(), result_iters.second) << std::endl; // 输出: Max element is: 9 at index 8
+    }
+}
+```
+
+自定义比较函数:
+
+这两个函数都有重载版本, 允许提供自定义的二元比较函数, 用法与`std::max_element`等类似.
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+
+struct Person { std::string name; int age; };
+
+int main() {
+    std::vector<Person> people = {{"Alice", 30}, {"Bob", 25}, {"Charlie", 35}};
+
+    auto compare_age = [](const Person& a, const Person& b) { return a.age < b.age; };
+
+    auto result = std::minmax_element(people.begin(), people.end(), compare_age);
+
+    std::cout << "Youngest: " << result.first->name << ", Oldest: " << result.second->name << std::endl; // 输出: Youngest: Bob, Oldest: Charlie
+}
+```
+
+### `std::clamp`
+
+`std::clamp`接收三个参数: 一个待检查的值`v`, 一个下界`lo`(low), 以及一个上界`hi`(high). 它的逻辑非常直观:
+
+1.  如果值`v`小于下界`lo`, 则返回`lo`.
+2.  如果值`v`大于上界`hi`, 则返回`hi`.
+3.  如果值`v`在`lo`和`hi`之间 (包含边界), 则返回`v`本身.
+
+可以把它看作是`std::max(lo, std::min(v, hi))`的简化写法, 但`std::clamp`的意图更清晰, 且可能由编译器进行优化.
+
+语法:
+
+```cpp
+template<class T>
+constexpr const T& clamp(const T& v, const T& lo, const T& hi);
+
+template<class T, class Compare>
+constexpr const T& clamp(const T& v, const T& lo, const T& hi, Compare comp);
+```
+
+* `v`: 要被限制的值.
+* `lo`: 范围的下界 (最小值).
+* `hi`: 范围的上界 (最大值).
+* `comp` (可选): 一个自定义的比较函数. 默认使用`<`运算符.
+
+重要前提: 函数假设下界`lo`不大于上界`hi`. 如果`lo > hi`, 行为是未定义的 (undefined behavior).
+
+返回值:
+
+函数返回对`lo`, `hi`或`v`三者之一的常量引用 (`const T&`).
+
+示例:
+
+```cpp
+#include <iostream>
+#include <algorithm>
+
+int main() {
+    int value = 50;
+    int min_val = 0;
+    int max_val = 100;
+
+    // value在[0, 100]之间, 返回value本身
+    std::cout << "Clamping 50 between 0 and 100: " << std::clamp(value, min_val, max_val) << std::endl; // 输出: 50
+
+    value = -10;
+    // value < 0, 返回下界0
+    std::cout << "Clamping -10 between 0 and 100: " << std::clamp(value, min_val, max_val) << std::endl; // 输出: 0
+
+    value = 120;
+    // value > 100, 返回上界100
+    std::cout << "Clamping 120 between 0 and 100: " << std::clamp(value, min_val, max_val) << std::endl; // 输出: 100
+
+    // 也适用于浮点数
+    double d_val = 1.23;
+    double d_min = 3.14;
+    double d_max = 4.56;
+    std::cout << "Clamping 1.23 between 3.14 and 4.56: " << std::clamp(d_val, d_min, d_max) << std::endl; // 输出: 3.14
+}
+```
+
+实际应用场景:
+
+`std::clamp`在很多领域都非常有用, 例如:
+
+  * 图形学: 颜色值通常被限制在`[0, 255]` (对于8位颜色通道) 或`[0.0, 1.0]` (对于浮点颜色) 范围内.
+  * 游戏开发: 限制角色的生命值不能低于0, 或者限制其在地图上的坐标.
+  * 物理模拟: 确保物理量 (如速度或位置) 保持在有效或安全的范围内.
+  * 用户输入处理: 确保用户输入滑块或文本框的数值在允许的区间内.
+
+例如, 控制一个对象的音量:
+
+```cpp
+void set_volume(float volume) {
+    // 确保音量总是在0.0 (静音) 到 1.0 (最大) 之间
+    float clamped_volume = std::clamp(volume, 0.0f, 1.0f);
+    // ... 应用clamped_volume
+}
+```
