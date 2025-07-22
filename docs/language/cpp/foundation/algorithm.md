@@ -12,11 +12,11 @@ icon: material/cow
 
 ### 正交设计
 
-这是STL设计的一个关键哲学. “正交”的意思就是独立或者解耦; 算法的设计独立于容器的设计. 他们之间通过迭代器这个桥梁进行通信. 这种设计实现了泛型编程, 你可以编写一个算法, 比如`std::sort`, 然后将它作用于任何兼容迭代器的容器, 如`std::vector`, `std::deque`等, 无需为每种容器重写排序逻辑. 
+这是STL设计的一个关键哲学. “正交”的意思就是独立或者解耦; 算法的设计独立于容器的设计. 他们之间通过迭代器这个桥梁进行通信. 这种设计实现了泛型编程, 你可以编写一个算法, 比如`std::sort`, 然后将它作用于任何兼容迭代器的容器, 如`std::vector`, `std::deque`等, 无需为每种容器重写排序逻辑.
 
 ### 避免原生循环
 
-建议使用算法库中的函数, 如`std::for_each`, `std::transform`, `std::accumulate`等来代替手写的`for`或者`while`循环. 这样做的好处是代码意图更加清晰, 函数名直接说明了操作的目的; 更少的错误, 避免了手写循环的时候可能出现的边界错误; 更高的性能, 标准库的实现经过了高度优化, 可能比手写的循环更快. 
+建议使用算法库中的函数, 如`std::for_each`, `std::transform`, `std::accumulate`等来代替手写的`for`或者`while`循环. 这样做的好处是代码意图更加清晰, 函数名直接说明了操作的目的; 更少的错误, 避免了手写循环的时候可能出现的边界错误; 更高的性能, 标准库的实现经过了高度优化, 可能比手写的循环更快.
 
 ## 搜索 🔍
 
@@ -223,6 +223,192 @@ int main() {
 | `find_if` | 查找满足 特定条件 的单个元素 | 单个元素 |
 | `search` | 查找一个 子序列 | 元素序列 |
 | `adjacent_find` | 查找第一对 相等的相邻元素 | 两个相邻元素 |
+
+### `std::lower_bound`, `std::upper_bound`
+
+`std::lower_bound`返回一个迭代器, 指向序列中第一个不小于 (not less than) 给定值的元素. 换句话说, 它是第一个大于或等于给定值的元素的位置.
+
+函数原型:
+
+```cpp
+// 1. 使用 operator<
+template< class ForwardIt, class T >
+ForwardIt lower_bound( ForwardIt first, ForwardIt last, const T& value );
+
+// 2. 使用自定义比较函数
+template< class ForwardIt, class T, class Compare >
+ForwardIt lower_bound( ForwardIt first, ForwardIt last, const T& value, Compare comp );
+```
+
+关键特性:
+
+* 返回值:
+    * 如果找到一个或多个等于`value`的元素, 返回指向第一个`value`的迭代器.
+    * 如果没有等于`value`的元素, 返回指向第一个大于`value`的元素的迭代器.
+    * 如果`value`大于序列中所有元素, 返回`last`迭代器.
+* 记忆技巧: 把它想成在寻找`value`可以插入的最低 (最左侧) 的边界, 而不破坏排序.
+
+---
+
+`std::upper_bound`返回一个迭代器, 指向序列中第一个大于 (greater than) 给定值的元素.
+
+函数原型:
+
+```cpp
+// 1. 使用 operator<
+template< class ForwardIt, class T >
+ForwardIt upper_bound( ForwardIt first, ForwardIt last, const T& value );
+
+// 2. 使用自定义比较函数
+template< class ForwardIt, class T, class Compare >
+ForwardIt upper_bound( ForwardIt first, ForwardIt last, const T& value, Compare comp );
+```
+
+关键特性:
+
+* 返回值:
+    * 无论是否存在等于`value`的元素, 都返回指向第一个严格大于`value`的元素的迭代器.
+    * 如果`value`大于或等于序列中所有元素, 返回`last`迭代器.
+* 记忆技巧: 把它想成在寻找`value`可以插入的最高 (最右侧) 的边界, 而不破坏排序.
+
+### `std::binary_search`
+
+`std::binary_search`是一个C++标准库算法, 用于高效地检查一个已排序的序列中是否存在某个特定的值. 🕵️ 它的工作方式类似于在字典中查词: 从中间开始, 如果目标值更大, 就查找后半部分; 如果更小, 就查找前半部分, 依此类推, 直到找到或确定不存在.
+
+核心要点:
+
+* 前提条件: 序列必须已经根据所用的比较标准排好序. 如果序列未排序, 其行为是未定义的.
+* 返回值: 这是一个简单的谓词函数, 只返回一个布尔值 (`bool`).
+    * `true`: 找到了该元素.
+    * `false`: 未找到该元素.
+* 功能: 它只告诉你元素存不存在, 并不会返回元素的位置 (迭代器). 如果你需要找到元素的位置, 应该使用 `std::lower_bound`.
+* 性能: 非常高效, 时间复杂度为对数时间, 即$O(\\log N)$.
+
+函数原型:
+
+```cpp
+// 1. 使用 operator< 进行比较
+template<class ForwardIt, class T>
+bool binary_search(ForwardIt first, ForwardIt last, const T& value);
+
+// 2. 使用自定义比较函数
+template<class ForwardIt, class T, class Compare>
+bool binary_search(ForwardIt first, ForwardIt last, const T& value, Compare comp);
+```
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> v = {10, 20, 30, 40, 50}; // 必须是已排序的
+
+    // 检查存在的元素
+    int value_to_find = 30;
+    if (std::binary_search(v.begin(), v.end(), value_to_find)) {
+        std::cout << "Found " << value_to_find << " in the vector." << std::endl;
+    } else {
+        std::cout << value_to_find << " is not in the vector." << std::endl;
+    }
+
+    // 检查不存在的元素
+    value_to_find = 25;
+    if (std::binary_search(v.begin(), v.end(), value_to_find)) {
+        std::cout << "Found " << value_to_find << " in the vector." << std::endl;
+    } else {
+        std::cout << value_to_find << " is not in the vector." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+输出
+
+```
+Found 30 in the vector.
+25 is not in the vector.
+```
+
+### `std::includes`
+
+`std::includes`是C++标准库`<algorithm>`头文件中的一个函数模板, 用于检查一个有序序列中的所有元素是否都存在于另一个有序序列中. 换言之, 它可以判断一个集合是否是另一个集合的子集.
+
+定义:
+
+`std::includes`会检查序列`[first2, last2)`中的每个元素是否都存在于序列`[first1, last1)`中.
+
+```cpp
+template<class InputIt1, class InputIt2>
+bool includes(InputIt1 first1, InputIt1 last1,
+              InputIt2 first2, InputIt2 last2);
+
+template<class InputIt1, class InputIt2, class Compare>
+bool includes(InputIt1 first1, InputIt1 last1,
+              InputIt2 first2, InputIt2 last2, Compare comp);
+```
+
+参数:
+
+* `first1`, `last1`: 定义第一个有序序列的输入迭代器.
+* `first2`, `last2`: 定义第二个有序序列的输入迭代ator.
+* `comp`: 一个可选的二元谓词 (binary predicate), 用于比较两个元素. 如果不提供, 则默认使用`<`运算符.
+
+返回值:
+
+* 如果序列`[first2, last2)`中的所有元素都在序列`[first1, last1)`中找到, 则返回`true`.
+* 否则返回`false`.
+
+前提条件:
+
+* 两个序列`[first1, last1)`和`[first2, last2)`都必须已经按照相同的标准排好序 (默认是升序).
+* 如果提供了自定义比较函数`comp`, 那么两个序列都必须是根据该函数排好序的.
+
+复杂度:
+
+该算法的时间复杂度是线性的, 最多进行$2 \\cdot (\\text{N1} + \\text{N2}) - 1$次比较, 其中`N1`和`N2`分别是两个序列的长度.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> v1 = {1, 2, 3, 4, 5, 6, 7};
+    std::vector<int> v2 = {3, 5, 7};
+    std::vector<int> v3 = {3, 5, 8};
+
+    // 检查 v2 是否是 v1 的子集
+    if (std::includes(v1.begin(), v1.end(), v2.begin(), v2.end())) {
+        std::cout << "v1 includes v2" << std::endl;
+    } else {
+        std::cout << "v1 does not include v2" << std::endl;
+    }
+
+    // 检查 v3 是否是 v1 的子集
+    if (std::includes(v1.begin(), v1.end(), v3.begin(), v3.end())) {
+        std::cout << "v1 includes v3" << std::endl;
+    } else {
+        std::cout << "v1 does not include v3" << std::endl;
+    }
+
+    return 0;
+}
+```
+
+输出:
+
+```
+v1 includes v2
+v1 does not include v3
+```
+
+在这个例子中, 因为`v2`的所有元素 (`3`, `5`, `7`) 都存在于`v1`中, 所以第一次调用`std::includes`返回`true`. 而`v3`中的元素`8`不在`v1`中, 因此第二次调用返回`false`.
 
 ## 比较 ⚖️
 
@@ -910,11 +1096,11 @@ int main() {
 输出结果:
 
 ```
-源序列:       10 25 30 45 50 65 70 
+源序列:       10 25 30 45 50 65 70
 -------------------------------------------
-std::copy 结果: 10 25 30 45 50 65 70 
-std::copy_if (>40) 结果: 45 50 65 70 
-std::copy_n (3个) 结果: 10 25 30 
+std::copy 结果: 10 25 30 45 50 65 70
+std::copy_if (>40) 结果: 45 50 65 70
+std::copy_n (3个) 结果: 10 25 30
 ```
 
 | 算法 | 决定复制的依据 | 复制的元素 |
@@ -951,7 +1137,7 @@ std::copy_n (3个) 结果: 10 25 30
 
     int main() {
         std::vector<int> v = {0, 1, 2, 3, 4, 5};
-        
+
         // 将整个vector填充为7
         std::fill(v.begin(), v.end(), 7); // v 现在是 {7, 7, 7, 7, 7, 7}
 
@@ -992,7 +1178,7 @@ std::copy_n (3个) 结果: 10 25 30
 
     int main() {
         std::vector<int> v = {0, 1, 2, 3, 4, 5};
-        
+
         // 从v.begin()开始, 将3个元素填充为8
         std::fill_n(v.begin(), 3, 8); // v 现在是 {8, 8, 8, 3, 4, 5}
 
@@ -1000,7 +1186,7 @@ std::copy_n (3个) 结果: 10 25 30
             std::cout << i << " ";
         }
         std::cout << std::endl;
-        
+
         return 0;
     }
     ```
@@ -1090,7 +1276,7 @@ int main() {
     std::vector<int> v2(5, 0); // 容器大小为5, 初始值为0
     std::generate_n(v2.begin(), 3, SequentialGenerator(100));
     print_vector("std::generate_n 结果: ", v2);
-    
+
     // 使用 lambda 表达式作为生成器
     int n = 0;
     std::generate(v1.begin(), v1.end(), [&n]{ return n++; });
@@ -1101,9 +1287,9 @@ int main() {
 ```
 
 ```
-std::generate 结果:     10 11 12 13 14 
-std::generate_n 结果: 100 101 102 0 0 
-Lambda generate 结果:    0 1 2 3 4 
+std::generate 结果:     10 11 12 13 14
+std::generate_n 结果: 100 101 102 0 0
+Lambda generate 结果:    0 1 2 3 4
 ```
 
 ---
@@ -1906,3 +2092,684 @@ int main() {
 * `std::stable_partition`: 保证分区内部元素的原始相对顺序, 但通常比`std::partition`慢.
 
 如果你只需要将元素按条件分成两组, 而不关心它们原来的顺序, `std::partition`是更高效的选择.
+
+### `std::partition_copy`
+
+`std::partition_copy`是一个C++标准库算法, 用于根据给定的谓词 (predicate) 将一个范围内的元素复制到两个不同的目标范围中. 满足谓词的元素被复制到第一个目标范围, 不满足的则被复制到第二个目标范围. 原始范围内的元素顺序保持不变.
+
+函数原型:
+
+```cpp
+template< class InputIt, class OutputIt1, class OutputIt2, class UnaryPredicate >
+std::pair<OutputIt1, OutputIt2> partition_copy( InputIt first, InputIt last,
+                                               OutputIt1 d_first_true, OutputIt2 d_first_false,
+                                               UnaryPredicate p );
+```
+
+参数:
+
+* `first`, `last`: 定义要处理的源范围的输入迭代器.
+* `d_first_true`: 指向第一个目标范围起始位置的输出迭代器, 用于存放满足谓词`p`的元素.
+* `d_first_false`: 指向第二个目标范围起始位置的输出迭代器, 用于存放不满足谓词`p`的元素.
+* `p`: 一元谓词, 如果元素应被放入第一个目标范围, 则返回`true`, 否则返回`false`.
+
+返回值:
+
+返回一个`std::pair`, 其中包含两个迭代器. 第一个迭代器指向第一个目标范围中最后一个被复制元素的下一个位置, 第二个迭代器指向第二个目标范围中最后一个被复制元素的下一个位置.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+int main() {
+    std::vector<int> source = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    std::vector<int> evens;
+    std::vector<int> odds;
+
+    // 使用lambda表达式作为谓词, 判断是否为偶数
+    auto is_even = [](int i){ return i % 2 == 0; };
+
+    // 将偶数复制到evens, 奇数复制到odds
+    std::partition_copy(source.begin(), source.end(),
+                        std::back_inserter(evens),
+                        std::back_inserter(odds),
+                        is_even);
+
+    std::cout << "Even numbers: ";
+    for (int n : evens) {
+        std::cout << n << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Odd numbers: ";
+    for (int n : odds) {
+        std::cout << n << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+输出
+
+```
+Even numbers: 2 4 6 8
+Odd numbers: 1 3 5 7 9
+```
+
+### `std::partition_point`
+
+`std::partition_point`用于在一个已经分区的范围 (`[first, last)`) 中查找分区点. 分区点是指向第二个分区起始位置的迭代器, 即第一个不满足谓词的元素. 范围必须已经根据谓词`p`进行了分区, 意味着所有满足`p`的元素都在不满足`p`的元素之前.
+
+函数原型:
+
+```cpp
+template< class ForwardIt, class UnaryPredicate >
+ForwardIt partition_point( ForwardIt first, ForwardIt last, UnaryPredicate p );
+```
+
+参数:
+
+* `first`, `last`: 定义已分区范围的正向迭代器.
+* `p`: 一元谓词, 与用于分区的谓词相同.
+
+返回值:
+
+返回一个迭代器, 指向第二个分区的第一个元素. 如果所有元素都满足谓词, 则返回`last`.
+
+示例:
+
+`std::partition_point`通常与`std::partition`结合使用.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+int main() {
+    std::vector<int> v = {9, 2, 7, 4, 5, 6, 3, 8, 1};
+
+    // 使用std::partition对向量进行分区
+    auto is_even = [](int i){ return i % 2 == 0; };
+    std::partition(v.begin(), v.end(), is_even);
+
+    // 此时v可能为: {8, 2, 6, 4, 5, 7, 3, 9, 1} (分区后顺序不保证)
+    std::cout << "Partitioned vector: ";
+    for (int n : v) {
+        std::cout << n << " ";
+    }
+    std::cout << std::endl;
+
+    // 查找分区点
+    auto pp = std::partition_point(v.begin(), v.end(), is_even);
+
+    std::cout << "Elements before partition point (evens): ";
+    std::copy(v.begin(), pp, std::ostream_iterator<int>(std::cout, " "));
+    std::cout << std::endl;
+
+    std::cout << "Elements after partition point (odds): ";
+    std::copy(pp, v.end(), std::ostream_iterator<int>(std::cout, " "));
+    std::cout << std::endl;
+
+    // 输出分区点指向的元素值
+    if (pp != v.end()) {
+        std::cout << "Partition point is at element: " << *pp << std::endl;
+    }
+
+    return 0;
+}
+```
+
+输出
+
+```
+Partitioned vector: 8 2 6 4 5 7 3 9 1
+Elements before partition point (evens): 8 2 6 4
+Elements after partition point (odds): 5 7 3 9 1
+Partition point is at element: 5
+```
+
+## 排序 🔢
+
+### `std::sort`, `std::stable_sort`
+
+`std::sort`是一个高效但不稳定的排序算法. "不稳定"意味着如果序列中有两个或多个等价的元素 (根据排序标准), 它们在排序后的相对顺序不保证与排序前相同.
+
+函数原型:
+
+```cpp
+// 1. 使用 operator<
+template< class RandomIt >
+void sort( RandomIt first, RandomIt last );
+
+// 2. 使用自定义比较函数
+template< class RandomIt, class Compare >
+void sort( RandomIt first, RandomIt last, Compare comp );
+```
+
+关键特性:
+
+* 性能: 通常比`std::stable_sort`更快. 在大多数实现中, 它采用内省排序 (Introsort), 这是一种混合排序算法, 结合了快速排序, 堆排序和插入排序的优点, 平均时间复杂度为$O(N \\log N)$, 最坏情况下也是$O(N \\log N)$.
+* 稳定性: 不稳定. 等价元素的相对顺序可能会改变.
+* 使用场景: 当你不需要保留等价元素的原始相对顺序, 并且追求最快的排序速度时, `std::sort`是首选.
+
+---
+
+`std::stable_sort`是一个稳定的排序算法. "稳定"意味着如果序列中有两个或多个等价的元素, 它们在排序后的相对顺序保证与排序前完全相同.
+
+函数原型:
+
+```cpp
+// 1. 使用 operator<
+template< class RandomIt >
+void stable_sort( RandomIt first, RandomIt last );
+
+// 2. 使用自定义比较函数
+template< class RandomIt, class Compare >
+void stable_sort( RandomIt first, RandomIt last, Compare comp );
+```
+
+关键特性:
+
+* 性能: 时间复杂度通常是$O(N \\log^2 N)$. 如果有足够的额外内存可用, 它可以执行归并排序 (Merge Sort), 此时时间复杂度为$O(N \\log N)$. 总体而言, 它通常比`std::sort`慢, 并且可能需要额外的内存.
+* 稳定性: 稳定. 保证保留等价元素的相对顺序.
+* 使用场景: 当你需要保持等价元素的原始相对顺序时, `std::stable_sort`是必需的. 例如, 对一个已经按姓名排序的列表再按城市排序, 你希望相同城市的条目仍然保持按姓名排序.
+
+示例比较:
+
+假设我们有一个包含学生姓名和分数的结构体, 我们只想按分数对他们进行降序排序.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+struct Student {
+    std::string name;
+    int score;
+};
+
+// 比较函数, 按分数降序
+bool compareByScore(const Student& a, const Student& b) {
+    return a.score > b.score;
+}
+
+void printStudents(const std::string& title, const std::vector<Student>& students) {
+    std::cout << title << std::endl;
+    for (const auto& s : students) {
+        std::cout << "  Name: " << s.name << ", Score: " << s.score << std::endl;
+    }
+}
+
+int main() {
+    std::vector<Student> students = {
+        {"Alice", 90},
+        {"Bob", 85},
+        {"Charlie", 90}, // 与Alice分数相同
+        {"David", 75},
+        {"Eve", 85}      // 与Bob分数相同
+    };
+
+    std::vector<Student> studentsForSort = students;
+    std::vector<Student> studentsForStableSort = students;
+
+    printStudents("Original:", students);
+
+    // 使用 std::sort
+    std::sort(studentsForSort.begin(), studentsForSort.end(), compareByScore);
+    printStudents("\nAfter std::sort (unstable):", studentsForSort);
+
+    // 使用 std::stable_sort
+    std::stable_sort(studentsForStableSort.begin(), studentsForStableSort.end(), compareByScore);
+    printStudents("\nAfter std::stable_sort (stable):", studentsForStableSort);
+
+    return 0;
+}
+```
+
+可能的输出:
+
+```
+Original:
+  Name: Alice, Score: 90
+  Name: Bob, Score: 85
+  Name: Charlie, Score: 90
+  Name: David, Score: 75
+  Name: Eve, Score: 85
+
+After std::sort (unstable):
+  Name: Charlie, Score: 90   // Charlie和Alice的顺序可能改变
+  Name: Alice, Score: 90
+  Name: Eve, Score: 85       // Eve和Bob的顺序可能改变
+  Name: Bob, Score: 85
+  Name: David, Score: 75
+
+After std::stable_sort (stable):
+  Name: Alice, Score: 90     // Alice和Charlie的顺序保持不变
+  Name: Charlie, Score: 90
+  Name: Bob, Score: 85       // Bob和Eve的顺序保持不变
+  Name: Eve, Score: 85
+  Name: David, Score: 75
+```
+
+在`std::sort`的输出中, 分数同为90的`Charlie`和`Alice`的相对顺序可能与原始顺序相反. `std::stable_sort`则保证`Alice`仍然在`Charlie`之前, 因为在原始列表中就是如此.
+
+总结:
+
+| 特性 | `std::sort` | `std::stable_sort` |
+| --- | --- | --- |
+| 稳定性 | 不稳定 | 稳定 |
+| 性能 | 更快, $O(N \\log N)$ | 可能更慢, $O(N \\log^2 N)$ 或 $O(N \\log N)$ |
+| 内存使用 | 在位 (In-place) | 可能需要额外内存 |
+| 选择依据 | 速度优先, 不关心等价元素顺序 | 必须保持等价元素的相对顺序 |
+
+### `std::is_sorted`, `std::is_sorted_until`
+
+`std::is_sorted`是一个简单的谓词函数, 用于检查给定范围 `[first, last)` 内的所有元素是否已经完全排序. 📝
+
+函数原型:
+
+```cpp
+// 1. 使用 operator<
+template<class ForwardIt>
+bool is_sorted(ForwardIt first, ForwardIt last);
+
+// 2. 使用自定义比较函数
+template<class ForwardIt, class Compare>
+bool is_sorted(ForwardIt first, ForwardIt last, Compare comp);
+```
+
+关键特性:
+
+* 返回值: 返回一个布尔值 (`bool`).
+    * 如果整个范围是升序的 (或根据`comp`是无序的), 返回 `true`.
+    * 否则, 返回 `false`.
+    * 空范围或只有一个元素的范围被认为是已排序的.
+* 功能: 对整个范围进行 "是" 或 "否" 的判断.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> v1 = {1, 2, 3, 4, 5};
+    std::vector<int> v2 = {1, 2, 5, 4, 3};
+    std::vector<int> v3 = {5, 4, 3, 2, 1};
+
+    // 检查v1是否升序排序
+    std::cout << "v1 is sorted: " << std::boolalpha << std::is_sorted(v1.begin(), v1.end()) << std::endl;
+
+    // 检查v2是否升序排序
+    std::cout << "v2 is sorted: " << std::boolalpha << std::is_sorted(v2.begin(), v2.end()) << std::endl;
+
+    // 检查v3是否降序排序 (使用自定义比较器)
+    std::cout << "v3 is sorted in descending order: "
+              << std::boolalpha << std::is_sorted(v3.begin(), v3.end(), std::greater<int>())
+              << std::endl;
+
+    return 0;
+}
+```
+
+输出
+
+```
+v1 is sorted: true
+v2 is sorted: false
+v3 is sorted in descending order: true
+```
+
+---
+
+`std::is_sorted_until`更为强大, 它不仅能判断序列是否排序, 还能定位到第一个破坏排序规则的元素. 🔍
+
+函数原型:
+
+```cpp
+// 1. 使用 operator<
+template<class ForwardIt>
+ForwardIt is_sorted_until(ForwardIt first, ForwardIt last);
+
+// 2. 使用自定义比较函数
+template<class ForwardIt, class Compare>
+ForwardIt is_sorted_until(ForwardIt first, ForwardIt last, Compare comp);
+```
+
+关键特性:
+
+* 返回值: 返回一个迭代器.
+    * 该迭代器指向范围 `[first, last)` 中第一个不满足排序顺序的元素.
+    * 如果整个范围都是排序好的, 它会返回迭代器 `last`.
+* 功能: 查找已排序子范围的末尾.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> v = {1, 2, 5, 4, 3, 6};
+
+    // 查找第一个未排序的元素
+    auto it = std::is_sorted_until(v.begin(), v.end());
+
+    // 计算已排序部分的长度
+    auto sorted_len = std::distance(v.begin(), it);
+    std::cout << "The first " << sorted_len << " elements are sorted." << std::endl;
+
+    // 如果it不是指向末尾, 说明序列未完全排序
+    if (it != v.end()) {
+        std::cout << "The first unsorted element is: " << *it << std::endl;
+    } else {
+        std::cout << "The entire vector is sorted." << std::endl;
+    }
+
+    // 对于一个完全排序的向量
+    std::vector<int> sorted_v = {10, 20, 30};
+    auto it2 = std::is_sorted_until(sorted_v.begin(), sorted_v.end());
+    if (it2 == sorted_v.end()) {
+        std::cout << "The vector {10, 20, 30} is fully sorted." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+输出:
+
+```
+The first 3 elements are sorted.
+The first unsorted element is: 4
+The vector {10, 20, 30} is fully sorted.
+```
+
+| 特性 | `std::is_sorted` | `std::is_sorted_until` |
+| --- | --- | --- |
+| 目的 | 检查整个范围是否已排序. | 查找从头开始的最长已排序子范围. |
+| 返回值 | `bool` (是/否). | `iterator` (指向第一个乱序元素或 `last`). |
+| 信息量 | 较低, 只告诉你整体情况. | 较高, 告诉你排序在哪里中断. |
+| 使用场景 | 当你只需要一个快速的整体检查时. | 当你需要知道序列中已排序部分的边界时. |
+
+### `std::nth_element`, `std::partial_sort`
+
+
+`std::nth_element`是一个非常有用的算法, 它的核心功能是将第n个位置的元素放置在它在完全排序后应该在的位置. 🎯
+
+函数原型:
+
+```cpp
+// 1. 使用 operator<
+template<class RandomIt>
+void nth_element(RandomIt first, RandomIt nth, RandomIt last);
+
+// 2. 使用自定义比较函数
+template<class RandomIt, class Compare>
+void nth_element(RandomIt first, RandomIt nth, RandomIt last, Compare comp);
+```
+
+关键特性:
+
+* 保证:
+1.  位于`nth`位置的元素就是如果整个序列被完全排序后, 应该出现在该位置的那个元素.
+2.  `[first, nth)`范围内的所有元素都小于或等于`nth`位置的元素.
+3.  `[nth, last)`范围内的所有元素都大于或等于`nth`位置的元素.
+* 不保证: `[first, nth)`和`[nth, last)`这两个子范围内部是无序的.
+* 性能: 平均线性时间复杂度$O(N)$, 这使得它在查找中位数或百分位点等场景下非常高效.
+* 使用场景: 快速查找第k大/小的元素, 例如查找中位数, 百分位数等, 而不关心其他元素的顺序.
+
+示例: 查找中位数
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+
+void print_vector(const std::vector<int>& v) {
+    for (int i : v) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    std::vector<int> v = {5, 10, 2, 8, 3, 9, 4, 7, 6, 1};
+
+    // 找到中位数
+    // 对于10个元素, 中位数是第5个元素 (索引为4)
+    auto median_it = v.begin() + v.size() / 2;
+    std::nth_element(v.begin(), median_it, v.end());
+
+    std::cout << "The median is: " << *median_it << std::endl;
+
+    std::cout << "Vector after nth_element: ";
+    print_vector(v);
+
+    std::cout << "Elements before median are all less than or equal to it: ";
+    for (auto it = v.begin(); it != median_it; ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+输出
+
+```
+The median is: 6
+Vector after nth_element: 3 1 2 4 5 6 9 7 8 10
+Elements before median are all less than or equal to it: 3 1 2 4 5
+```
+
+可以看到, `6`被正确地放在了它的排序位置上. `6`左边的元素 (`3, 1, 2, 4, 5`) 都小于等于`6`, 但它们之间是无序的. `6`右边的元素也都大于等于`6`.
+
+---
+
+`std::partial_sort`用于对序列的一部分进行排序. 它会将序列中最小的N个元素 (或根据比较函数确定的前N个元素) 排序后放置在序列的开头. 🏆
+
+函数原型:
+
+```cpp
+// 1. 使用 operator<
+template<class RandomIt>
+void partial_sort(RandomIt first, RandomIt middle, RandomIt last);
+
+// 2. 使用自定义比较函数
+template<class RandomIt, class Compare>
+void partial_sort(RandomIt first, RandomIt middle, RandomIt last, Compare comp);
+```
+
+关键特性:
+
+* 保证:
+1.  `[first, middle)`范围内的元素是整个序列中最小的 `middle - first` 个元素.
+2.  `[first, middle)`范围内部是完全排序的.
+* 不保证: `[middle, last)`范围内的元素是无序的.
+* 性能: 时间复杂度约为$O(N \\log M)$, 其中$N$是`last - first`的距离, $M$是`middle - first`的距离.
+* 使用场景: 需要获取前N个最小/最大的元素, 并且要求这N个元素是有序的. 例如, 查找排行榜的前10名.
+
+示例: 查找最小的3个元素
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+
+int main() {
+    std::vector<int> v = {5, 10, 2, 8, 3, 9, 4, 7, 6, 1};
+
+    // 找到并排序最小的3个元素
+    std::partial_sort(v.begin(), v.begin() + 3, v.end());
+
+    std::cout << "The 3 smallest elements are: ";
+    for (int i = 0; i < 3; ++i) {
+        std::cout << v[i] << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Vector after partial_sort: ";
+    for (int i : v) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+输出
+
+```
+The 3 smallest elements are: 1 2 3
+Vector after partial_sort: 1 2 3 10 8 9 5 7 6 4
+```
+
+如输出所示, 前3个元素是整个向量中最小的三个 (`1, 2, 3`), 并且它们自身是排好序的. 向量的其余部分是无序的.
+
+| 特性 | `std::nth_element` | `std::partial_sort` |
+| --- | --- | --- |
+| 主要目的 | 定位第n个元素. | 排序前M个元素. |
+| 排序保证 | 仅`nth`位置的元素保证正确, 其余元素只保证在其两侧. | `[first, middle)`范围内的元素是全局最小的M个, 且已排序. |
+| 复杂度 | 平均$O(N)$ | $O(N \\log M)$ |
+| 核心问题 | "找到第k大的数是多少?" | "找到最小的k个数是哪些, 并且排好序?" |
+
+### `std::merge`, `std::inplace_merge`
+
+`std::merge`将两个已排序的序列`[first1, last1)`和`[first2, last2)`合并到一个独立的目标范围`[d_first, d_last)`中.
+
+函数原型:
+
+```cpp
+// 1. 使用 operator<
+template<class InputIt1, class InputIt2, class OutputIt>
+OutputIt merge(InputIt1 first1, InputIt1 last1,
+               InputIt2 first2, InputIt2 last2,
+               OutputIt d_first);
+
+// 2. 使用自定义比较函数
+template<class InputIt1, class InputIt2, class OutputIt, class Compare>
+OutputIt merge(InputIt1 first1, InputIt1 last1,
+               InputIt2 first2, InputIt2 last2,
+               OutputIt d_first, Compare comp);
+```
+
+关键特性:
+
+* 输入: 两个独立的已排序序列.
+* 输出: 一个新的目标序列. 你必须提前为这个目标序列分配足够的空间.
+* 内存: 需要额外的内存来存储合并后的结果.
+* 源序列: 源序列在操作后保持不变.
+* 返回值: 返回一个指向输出序列中最后一个被复制元素之后位置的迭代器.
+* 稳定性: 合并是稳定的. 如果两个序列中存在等价元素, 来自第一个序列的元素会排在来自第二个序列的元素之前.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+int main() {
+    std::vector<int> v1 = {1, 3, 5, 7};
+    std::vector<int> v2 = {2, 4, 6, 8};
+    std::vector<int> dest(v1.size() + v2.size()); // 必须预先分配空间
+
+    std::merge(v1.begin(), v1.end(),
+               v2.begin(), v2.end(),
+               dest.begin());
+
+    std::cout << "Merged vector: ";
+    for (int n : dest) {
+        std::cout << n << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+输出:
+
+```
+Merged vector: 1 2 3 4 5 6 7 8
+```
+
+---
+
+`std::inplace_merge`用于合并一个连续内存块中相邻的两个已排序序列. 它直接在原始序列上进行操作, 不需要额外的输出容器.
+
+函数原型:
+
+```cpp
+// 1. 使用 operator<
+template<class BidirIt>
+void inplace_merge(BidirIt first, BidirIt middle, BidirIt last);
+
+// 2. 使用自定义比较函数
+template<class BidirIt, class Compare>
+void inplace_merge(BidirIt first, BidirIt middle, BidirIt last, Compare comp);
+```
+
+关键特性:
+
+* 输入: 一个序列`[first, last)`, 这个序列被`middle`迭代器分为两个相邻且已排序的子序列: `[first, middle)`和`[middle, last)`.
+* 输出: 直接在原始序列`[first, last)`上完成合并.
+* 内存: "原地" (in-place) 操作. 如果有足够的额外内存, 它会使用临时缓冲区以获得更好的性能 (接近线性时间). 如果内存不足, 它会执行一个真正的原地合并, 性能会降低 (最坏情况$O(N \\log N)$).
+* 返回值: `void`.
+* 稳定性: 合并是稳定的.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> v = {1, 3, 5, 2, 4, 6};
+    // v中包含两个相邻的已排序序列: {1, 3, 5} 和 {2, 4, 6}
+    // middle指向第二个序列的开头
+    auto middle_it = v.begin() + 3;
+
+    std::inplace_merge(v.begin(), middle_it, v.end());
+
+    std::cout << "Vector after inplace_merge: ";
+    for (int n : v) {
+        std::cout << n << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+输出
+
+```
+Vector after inplace_merge: 1 2 3 4 5 6
+```
+
+| 特性 | `std::merge` | `std::inplace_merge` |
+| :--- | :--- | :--- |
+| 输入 | 两个任意位置的已排序序列. | 一个连续内存块中的两个相邻已排序序列. |
+| 输出 | 需要一个独立的目标容器. | 在原始容器上直接修改. |
+| 内存使用 | 需要额外的输出缓冲区. | 原地操作, 可能会临时分配内存以提高性能. |
+| 主要用途 | 将不同容器或不相邻的数据合并. | 合并一个容器内相邻的两个已排序部分, 是归并排序算法的核心步骤. |
+
+## 集合 🔗
