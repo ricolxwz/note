@@ -3402,3 +3402,907 @@ void set_volume(float volume) {
     // ... 应用clamped_volume
 }
 ```
+
+## 数值计算 🔢
+
+### `std::midpoint`
+
+`std::midpoint`是C++20中引入的一个非常实用的数学函数, 位于`<numeric>`头文件中. 它的主要功能是安全地计算两个数的中间值. 为什么需要`std::midpoint`? 在`std::midpoint`出现之前, 计算`a`和`b`的中间值通常会用以下方式:
+
+```cpp
+auto mid = (a + b) / 2;
+```
+
+这种看似简单的方法存在两个主要问题:
+
+1.  整数溢出: 如果`a`和`b`都是很大的正整数 (例如`INT_MAX`), 它们的和`a + b`可能会超出该类型所能表示的最大范围, 导致整数溢出 (integer overflow). 溢出后的结果是未定义的 (undefined behavior), 计算出的中间值自然也是错误的.
+2.  浮点数精度: 对于浮点数, `(a + b)`可能会损失精度.
+
+`std::midpoint`的出现就是为了以一种安全, 高效且无溢出的方式解决这个问题.
+
+`std::midpoint`可以用于整数类型和指针类型. 对于整数类型: 它计算`a`和`b`的中间值, 并在结果为非整数时向`a`的方向舍入. 换句话说, 它计算的是$\lfloor \frac{a+b}{2} \rfloor$. 其实现方式可以等价于:
+
+```cpp
+if (a > b) std::midpoint(b, a); // 保证 a <= b
+return a + (b - a) / 2;
+```
+
+通过计算`a`与两者差值的一半之和, 巧妙地避免了`a+b`可能导致的溢出.
+
+示例 (整数):
+
+```cpp
+#include <iostream>
+#include <numeric>
+#include <limits>
+
+int main() {
+    // 基本用法
+    std::cout << "Midpoint of 7 and 10 is " << std::midpoint(7, 10) << std::endl;   // 输出: 8 ( (7+10)/2 = 8.5, 向7舍入)
+    std::cout << "Midpoint of 7 and 11 is " << std::midpoint(7, 11) << std::endl;   // 输出: 9 ( (7+11)/2 = 9 )
+    std::cout << "Midpoint of 10 and 7 is " << std::midpoint(10, 7) << std::endl;   // 输出: 8 (向7舍入)
+
+    // 避免溢出
+    int a = std::numeric_limits<int>::max() - 2;
+    int b = std::numeric_limits<int>::max();
+
+    // (a + b) / 2 会导致溢出, 结果错误
+    // std::midpoint 计算正确
+    std::cout << "Safe midpoint: " << std::midpoint(a, b) << std::endl; // 输出: 2147483646 (正确结果)
+}
+```
+
+对于指针类型: `std::midpoint`也可以用于计算两个指向同一个数组元素的指针的中间位置. 这在二分查找等算法中非常有用.
+
+示例 (指针):
+
+```cpp
+#include <iostream>
+#include <numeric>
+#include <vector>
+
+int main() {
+    std::vector<int> v = {0, 10, 20, 30, 40, 50, 60};
+
+    auto* start = v.data();         // 指向第一个元素 (0)
+    auto* end = v.data() + v.size(); // 指向末尾之后的位置
+
+    auto* mid_ptr = std::midpoint(start, end);
+
+    // mid_ptr 指向元素30
+    std::cout << "Midpoint element is " << *mid_ptr << std::endl; // 输出: 30
+    std::cout << "Its index is " << std::distance(start, mid_ptr) << std::endl; // 输出: 3
+}
+```
+
+使用`std::midpoint(p, q)`比传统的`p + (q - p) / 2`写法更简洁, 意图更清晰.
+
+### `std::lerp`
+
+`std::lerp`是C++20中引入的一个非常有用的浮点数函数, 位于`<cmath>`头文件中. `lerp`是Linear Interpolation (线性插值) 的缩写. `std::lerp`的功能是计算两个点`a`和`b`之间的线性插值. 简单来说, 就是在`a`和`b`之间, 根据一个比例因子`t`, 找出一个点.
+
+它的数学公式为:
+
+$$\text{lerp}(a, b, t) = a + t \cdot (b - a)$$
+
+语法:
+
+```cpp
+float lerp(float a, float b, float t);
+double lerp(double a, double b, double t);
+long double lerp(long double a, long double b, long double t);
+```
+
+`std::lerp`仅为浮点类型 (`float`, `double`, `long double`) 定义.
+
+* `a`: 起点值.
+* `b`: 终点值.
+* `t`: 插值因子或比例.
+
+参数`t`的含义:
+
+* 当`t = 0.0`, `lerp`返回`a`. (移动0倍距离)
+* 当`t = 1.0`, `lerp`返回`b`. (移动1倍距离)
+* 当`t = 0.5`, `lerp`返回`a`和`b`的正中间值. (移动一半距离)
+* 当`0.0 < t < 1.0`, `lerp`返回`a`和`b`之间的某个点.
+
+超出范围的`t` (外插):
+
+`std::lerp`的一个强大之处在于`t`的值不一定需要限制在`[0.0, 1.0]`范围内.
+
+* 当`t < 0.0`, 函数会进行外插 (Extrapolation), 返回在`a`点 "另一侧" 的点.
+* 当`t > 1.0`, 函数同样会进行外插, 返回超过`b`点的点.
+
+示例:
+
+```cpp
+#include <iostream>
+#include <cmath> // 必须包含此头文件
+
+int main() {
+    double a = 10.0;
+    double b = 20.0;
+
+    // 在[0, 1]范围内插值
+    std::cout << "t = 0.0: " << std::lerp(a, b, 0.0) << std::endl;  // 输出: 10
+    std::cout << "t = 0.25: " << std::lerp(a, b, 0.25) << std::endl; // 输出: 12.5 (10 + 0.25 * 10)
+    std::cout << "t = 0.5: " << std::lerp(a, b, 0.5) << std::endl;  // 输出: 15
+    std::cout << "t = 1.0: " << std::lerp(a, b, 1.0) << std::endl;  // 输出: 20
+
+    std::cout << "--------------------" << std::endl;
+\\
+    // 在[0, 1]范围外插值
+    std::cout << "t = -0.5: " << std::lerp(a, b, -0.5) << std::endl; // 输出: 5 (10 - 0.5 * 10)
+    std::cout << "t = 2.0: " << std::lerp(a, b, 2.0) << std::endl;   // 输出: 30 (10 + 2.0 * 10)
+}
+```
+
+为什么需要`std::lerp`? 你可能会问, `a + t * (b - a)`这个表达式很简单, 为什么还需要一个专门的函数?
+
+1.  精度: `std::lerp`的实现经过特殊设计, 可以在`t`接近0或1时, 或者`a`和`b`非常接近时, 提供比直接计算`a + t * (b - a)`更高的精度. 它能更好地处理浮点数的舍入误差.
+2.  清晰性: `std::lerp(a, b, t)`的意图非常明确, 就是进行线性插值. 这使得代码更易读, 更易于维护.
+3.  标准化: 提供了一个标准的方式来执行这个常用操作, 增强了代码的可移植性.
+
+线性插值在许多领域都是基础操作:
+
+* 动画和游戏: 平滑地移动一个物体从位置A到位置B. `t`可以代表动画完成的百分比.
+* 图形学: 在两种颜色之间创建渐变. `a`和`b`是颜色值, `t`是渐变的位置.
+* 音频处理: 改变音高或实现淡入淡出效果.
+* 数据分析: 在离散的数据点之间估算值.
+
+### `std::iota`
+
+`std::iota`是C++11中引入的一个非常有用的函数, 位于`<numeric>`头文件中. 它的名字来源于APL语言, 意为生成一个整数序列.  `std::iota`的功能非常简单直接: 用一个从指定初始值开始连续递增的序列来填充一个范围 (range).  具体来说, 它会为你指定的范围内的第一个元素赋初始值, 然后为第二个元素赋`初始值 + 1`, 第三个元素赋`初始值 + 2`, 依此类推.
+
+语法:
+
+```cpp
+#include <numeric> // 必须包含此头文件
+
+template<class ForwardIt, class T>
+void iota(ForwardIt first, ForwardIt last, T value);
+```
+
+* `first`: 指向要填充范围的起始位置的迭代器.
+* `last`: 指向要填充范围的末尾之后位置的迭代器 (即前闭后开`[first, last)`) .
+* `value`: 序列的初始值. `first`指向的元素将被赋予这个值.
+
+这个函数没有返回值 (`void`). 它会直接修改传入的迭代器范围内的元素.
+
+为什么需要`std::iota`? 在`std::iota`出现之前, 如果你想创建一个包含`0, 1, 2, 3, 4`的`vector`, 你可能需要手写一个循环:
+
+```cpp
+std::vector<int> v(5);
+for (int i = 0; i < v.size(); ++i) {
+    v[i] = i;
+}
+```
+
+使用`std::iota`, 你可以用一行代码完成同样的事情, 代码意图更清晰, 也更简洁.
+
+示例:
+
+这是最常见的用法.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <numeric>
+#include <list>
+
+int main() {
+    std::vector<int> v(5);
+
+    // 用 0, 1, 2, 3, 4 填充vector
+    std::iota(v.begin(), v.end(), 0);
+
+    std::cout << "Vector contains: ";
+    for (int i : v) {
+        std::cout << i << " "; // 输出: 0 1 2 3 4
+    }
+    std::cout << std::endl;
+
+    std::list<int> l(4);
+
+    // 用 -2, -1, 0, 1 填充list
+    std::iota(l.begin(), l.end(), -2);
+
+    std::cout << "List contains: ";
+    for (int i : l) {
+        std::cout << i << " "; // 输出: -2 -1 0 1
+    }
+    std::cout << std::endl;
+}
+```
+
+用于其他可递增类型:
+
+`std::iota`不仅限于`int`, 它可以用于任何支持前缀自增运算符 (`++operator`) 的类型.
+
+示例 (填充字符)
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <numeric>
+
+int main() {
+    std::vector<char> alphabet(5);
+
+    // 用 'a', 'b', 'c', 'd', 'e' 填充
+    std::iota(alphabet.begin(), alphabet.end(), 'a');
+
+    std::cout << "The first 5 letters are: ";
+    for (char c : alphabet) {
+        std::cout << c << " "; // 输出: a b c d e
+    }
+    std::cout << std::endl;
+}
+```
+
+实际应用场景:
+
+* 生成测试数据: 快速创建有序的数据集进行算法测试.
+* 创建索引数组: 有时需要一个代表其他容器索引的数组, 例如 `std::vector<int> indices(N); std::iota(indices.begin(), indices.end(), 0);`. 这在排序或需要间接访问时非常有用.
+* 初始化: 作为一种比循环更简洁的初始化序列的方式.
+
+### `std::adjacent_difference`
+
+`std::adjacent_difference`是C++标准库`<numeric>`头文件中的一个算法, 用于计算一个序列中相邻元素之间的差. 简单来说, 它会遍历一个输入序列, 并生成一个新的序列. 在新序列中, 除了第一个元素被直接复制外, 其他每个元素都是输入序列中当前元素与前一个元素的差值.
+
+`std::adjacent_difference`有两个版本: 一个使用默认的减法操作, 另一个允许你提供自定义的二元操作.
+
+1. 默认行为 (减法)
+
+    它会执行以下计算:
+
+    * `result[0] = input[0]`
+    * `result[1] = input[1] - input[0]`
+    * `result[2] = input[2] - input[1]`
+    * `result[3] = input[3] - input[2]`
+    * ...
+
+    示例:
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric> // 必须包含此头文件
+
+    int main() {
+        std::vector<int> v = {2, 5, 1, 8, 3};
+        std::vector<int> diff(v.size());
+
+        std::adjacent_difference(v.begin(), v.end(), diff.begin());
+
+        std::cout << "Input: ";
+        for (int x : v) std::cout << x << " "; // 输出: 2 5 1 8 3
+        std::cout << std::endl;
+
+        std::cout << "Differences: ";
+        for (int x : diff) std::cout << x << " "; // 输出: 2 3 -4 7 -5
+        std::cout << std::endl;
+    }
+    ```
+
+    结果分析:
+
+    * `diff[0]` = `v[0]` = `2`
+    * `diff[1]` = `v[1] - v[0]` = `5 - 2` = `3`
+    * `diff[2]` = `v[2] - v[1]` = `1 - 5` = `-4`
+    * `diff[3]` = `v[3] - v[2]` = `8 - 1` = `7`
+    * `diff[4]` = `v[4] - v[3]` = `3 - 8` = `-5`
+
+
+2. 自定义二元操作
+
+    你可以提供一个自定义函数来替代默认的减法. 例如,你可以用它来计算相邻元素的和, 乘积, 甚至是生成一个斐波那契数列.
+
+    示例: 生成斐波那契数列
+    斐波那契数列的规则是`F(n) = F(n-1) + F(n-2)`. 这与`adjacent_difference`的模式不完全匹配. 但如果我们反向思考, `std::partial_sum`的自定义版本可以生成斐波那契数列. `adjacent_difference`的自定义版本则更适合计算相邻元素的特定关系.
+
+    让我们看一个计算相邻元素乘积的例子:
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric>
+    #include <functional> // for std::multiplies
+
+    int main() {
+        std::vector<int> v = {1, 2, 3, 5, 8};
+        std::vector<int> result(v.size());
+
+        // 使用乘法操作替代减法
+        std::adjacent_difference(v.begin(), v.end(), result.begin(), std::multiplies<int>());
+
+        std::cout << "Adjacent products: ";
+        for (int x : result) std::cout << x << " "; // 输出: 1 2 6 15 40
+        std::cout << std::endl;
+    }
+    ```
+
+    结果分析:
+
+    * `result[0]` = `v[0]` = `1`
+    * `result[1]` = `v[1] * v[0]` = `2 * 1` = `2`
+    * `result[2]` = `v[2] * v[1]` = `3 * 2` = `6`
+    * `result[3]` = `v[3] * v[2]` = `5 * 3` = `15`
+    * `result[4]` = `v[4] * v[3]` = `8 * 5` = `40`
+
+### `std::partial_sum`
+
+`std::partial_sum`是C++标准库`<numeric>`头文件中的一个经典算法, 用于计算一个序列的部分和 (Partial Sums), 也常被称为前缀和 (Prefix Sums). `std::partial_sum`会遍历一个输入序列, 并生成一个新的序列. 新序列中的每个元素都是输入序列中从开始到当前位置所有元素的总和.
+
+1. 默认行为 (加法)
+
+    它会执行以下计算:
+
+    * `result[0] = input[0]`
+    * `result[1] = input[0] + input[1]`
+    * `result[2] = input[0] + input[1] + input[2]`
+    * `result[3] = input[0] + input[1] + input[2] + input[3]`
+    * ...
+
+    或者可以更高效地描述为:
+
+    * `result[0] = input[0]`
+    * `result[n] = result[n-1] + input[n]`
+
+    示例:
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric> // 必须包含此头文件
+
+    int main() {
+        std::vector<int> v = {1, 2, 3, 4, 5};
+        std::vector<int> sums(v.size());
+
+        // 计算v的部分和, 结果存入sums
+        std::partial_sum(v.begin(), v.end(), sums.begin());
+
+        std::cout << "Input: ";
+        for (int x : v) std::cout << x << " ";    // 输出: 1 2 3 4 5
+        std::cout << std::endl;
+
+        std::cout << "Partial sums: ";
+        for (int x : sums) std::cout << x << " "; // 输出: 1 3 6 10 15
+        std::cout << std::endl;
+    }
+    ```
+
+    结果分析:
+
+    * `sums[0]` = `v[0]` = `1`
+    * `sums[1]` = `sums[0] + v[1]` = `1 + 2` = `3`
+    * `sums[2]` = `sums[1] + v[2]` = `3 + 3` = `6`
+    * `sums[3]` = `sums[2] + v[3]` = `6 + 4` = `10`
+    * `sums[4]` = `sums[3] + v[4]` = `10 + 5` = `15`
+
+2. 自定义二元操作
+
+    与`<numeric>`中的许多其他算法一样, `std::partial_sum`也有一个重载版本, 允许你提供一个自定义的二元函数来替代默认的加法. 这极大地扩展了它的用途.
+
+    示例: 计算部分积 (Running Product)
+    我们可以提供一个乘法函数来计算一个序列的 "部分积".
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric>
+    #include <functional> // for std::multiplies
+
+    int main() {
+        std::vector<int> v = {1, 2, 3, 4, 5};
+        std::vector<int> products(v.size());
+
+        // 使用乘法操作替代加法
+        std::partial_sum(v.begin(), v.end(), products.begin(), std::multiplies<int>());
+
+        std::cout << "Input: ";
+        for (int x : v) std::cout << x << " ";       // 输出: 1 2 3 4 5
+        std::cout << std::endl;
+
+        std::cout << "Partial products: ";
+        for (int x : products) std::cout << x << " "; // 输出: 1 2 6 24 120
+        std::cout << std::endl;
+    }
+    ```
+
+    结果分析:
+
+    * `products[0]` = `v[0]` = `1`
+    * `products[1]` = `products[0] * v[1]` = `1 * 2` = `2`
+    * `products[2]` = `products[1] * v[2]` = `2 * 3` = `6`
+    * `products[3]` = `products[2] * v[3]` = `6 * 4` = `24`
+    * `products[4]` = `products[3] * v[4]` = `24 * 5` = `120`
+
+`std::partial_sum`允许输出迭代器与输入迭代器相同, 从而实现就地 (in-place)计算, 直接修改原始容器.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <numeric>
+
+int main() {
+    std::vector<int> v = {1, 2, 3, 4, 5};
+
+    // 就地计算, 结果会覆盖v本身
+    std::partial_sum(v.begin(), v.end(), v.begin());
+
+    std::cout << "In-place partial sums: ";
+    for (int x : v) std::cout << x << " "; // 输出: 1 3 6 10 15
+    std::cout << std::endl;
+}
+```
+
+### `std::inner_product`
+
+`std::inner_product`是C++标准库`<numeric>`头文件中的一个强大算法, 主要用于计算两个序列的内积 (Inner Product), 通常也称为点积 (Dot Product).  `std::inner_product`的核心思想是: 它接收两个序列 (范围) 和一个初始值, 然后执行成对的 "乘法" 和 "加法" 操作.
+
+1. 默认行为 (经典点积)
+
+    最常用的版本接收两个范围的起始迭代器和一个初始值.
+    `std::inner_product(first1, last1, first2, init)`
+
+    它执行以下计算:
+    `init + (v1[0] * v2[0]) + (v1[1] * v2[1]) + (v1[2] * v2[2]) + ...`
+
+    其中`v1`是第一个序列, `v2`是第二个序列.
+
+    步骤分解:
+
+    1.  取第一个序列的元素`*first1`和第二个序列的元素`*first2`.
+    2.  将它们相乘.
+    3.  将乘积加到初始值`init`上.
+    4.  移动到下一个元素, 重复此过程, 直到第一个序列结束.
+
+    示例:
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric> // 必须包含此头文件
+
+    int main() {
+        std::vector<int> v1 = {1, 2, 3};
+        std::vector<int> v2 = {4, 5, 6};
+
+        // 初始值为0
+        // 计算: 0 + (1*4) + (2*5) + (3*6)
+        int result = std::inner_product(v1.begin(), v1.end(), v2.begin(), 0);
+
+        std::cout << "The inner product is: " << result << std::endl; // 输出: 32 (4 + 10 + 18)
+    }
+    ```
+
+    注意: 第二个序列只需要提供起始迭代器. 函数假定它至少与第一个序列一样长.
+
+2. 自定义操作 (通用版本)
+
+    `std::inner_product`的真正威力在于其更通用的重载版本, 它允许你为 "加法" 和 "乘法" 操作提供自定义的二元函数.
+
+    `std::inner_product(first1, last1, first2, init, op1, op2)`
+
+    它执行的计算变为:
+    `op1( init, op2(v1[0], v2[0]) )`
+    `op1( ... , op2(v1[1], v2[1]) )`
+    ...
+
+    * `op1`: 替代默认加法的操作 (累积操作).
+    * `op2`: 替代默认乘法的操作 (转换操作).
+
+    示例: 检查两个序列是否相等
+
+    我们可以利用这个通用版本来高效地比较两个序列是否完全相同, 而无需直接比较.
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric>
+    #include <functional> // For std::equal_to, std::logical_and
+
+    int main() {
+        std::vector<int> v1 = {1, 2, 3, 4};
+        std::vector<int> v2 = {1, 2, 9, 4}; // 第三个元素不同
+
+        // op1 (累加): 使用逻辑与 (logical_and)
+        // op2 (转换): 使用等于 (equal_to)
+        // 初始值: true
+        // 计算逻辑: true && (1==1) && (2==2) && (3==9) && (4==4)
+        bool are_equal = std::inner_product(
+            v1.begin(),
+            v1.end(),
+            v2.begin(),
+            true,            // 初始值为true
+            std::logical_and<bool>(), // 替代加法
+            std::equal_to<int>()      // 替代乘法
+        );
+
+        if (are_equal) {
+            std::cout << "The vectors are equal." << std::endl;
+        } else {
+            std::cout << "The vectors are NOT equal." << std::endl; // 输出此行
+        }
+    }
+    ```
+
+    这个例子展示了`inner_product`如何被用于完全非数值的逻辑运算.
+
+### `std::accumulate`
+
+`std::accumulate`是C++标准库`<numeric>`头文件中的一个核心算法, 用于将一个范围内的元素累积或规约 (reduce) 成一个单一的值. 它是替代手写循环进行求和, 求积等聚合操作的首选方案. 🎯
+
+1. 默认用法 (累加求和)
+
+    `std::accumulate`最常见的用法是计算一个序列的总和. 它需要三个参数:
+
+    1.  `first`: 指向序列起始位置的迭代器.
+    2.  `last`: 指向序列末尾之后位置的迭代器.
+    3.  `init`: 累加的初始值. 计算将从这个值开始.
+
+    它的计算过程是 `init + v[0] + v[1] + ...`.
+
+    示例:
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric> // 必须包含此头文件
+
+    int main() {
+        std::vector<int> v = {1, 2, 3, 4, 5};
+
+        // 1. 计算总和, 初始值为0
+        // 计算过程: 0 + 1 + 2 + 3 + 4 + 5
+        int sum = std::accumulate(v.begin(), v.end(), 0);
+        std::cout << "Sum: " << sum << std::endl; // 输出: 15
+
+        // 2. 初始值可以是任意值
+        // 计算过程: 100 + 1 + 2 + 3 + 4 + 5
+        int sum_with_offset = std::accumulate(v.begin(), v.end(), 100);
+        std::cout << "Sum with offset: " << sum_with_offset << std::endl; // 输出: 115
+    }
+    ```
+
+2. 自定义操作
+
+    `std::accumulate`的强大之处在于它允许你提供第四个参数: 一个二元操作函数 (binary operation), 用来替代默认的加法.
+
+    这个函数接收两个参数: 第一个是到目前为止的累积值, 第二个是序列中的下一个元素.
+
+    示例 1: 计算乘积
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric>
+    #include <functional> // for std::multiplies
+
+    int main() {
+        std::vector<int> v = {1, 2, 3, 4, 5};
+
+        // 计算乘积, 初始值必须是1
+        // 第四个参数也可以是lambda表达式: [](int a, int b) { return a * b; }
+        int product = std::accumulate(v.begin(), v.end(), 1, std::multiplies<int>());
+        std::cout << "Product: " << product << std::endl; // 输出: 120
+    }
+    ```
+
+    示例 2: 连接字符串
+    `std::accumulate`同样适用于非数值类型. 只要为该类型定义了 `+` 运算符, 默认的`accumulate`就能工作.
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <string>
+    #include <numeric>
+
+    int main() {
+        std::vector<std::string> words = {"C++", " is", " powerful"};
+
+        // 使用一个空的std::string作为初始值
+        std::string sentence = std::accumulate(words.begin(), words.end(), std::string(""));
+        std::cout << "Sentence: " << sentence << std::endl; // 输出: C++ is powerful
+    }
+    ```
+
+### `std::reduce`
+
+`std::reduce`是C++17中引入的一个强大的数值算法, 位于`<numeric>`头文件中. 它可以被看作是其前辈`std::accumulate`的现代化且可并行化的版本.
+
+虽然`std::reduce`和`std::accumulate`都用于将一个序列规约 (reduce) 为单个值, 但它们之间存在一个关键区别:
+
+* `std::accumulate`: 严格按顺序执行. 它总是从左到右, 依次将序列中的每个元素应用到累加值上. 计算顺序是固定的: `((init + v[0]) + v[1]) + v[2]...`.
+* `std::reduce`: 不保证执行顺序. 它可以乱序 (out-of-order) 执行, 甚至并行 (in parallel) 执行. 这意味着它可以将序列分成多个块, 在不同线程上同时计算每个块的部分和, 最后再将这些部分和合并起来.
+
+这个区别带来了以下重要的推论:
+
+1.  性能: 因为可以并行计算, `std::reduce`在处理大规模数据时通常比`std::accumulate`快得多.
+2.  操作限制: `std::accumulate`的操作只需要满足左结合 (left-associative) 即可. 而`std::reduce`所使用的二元操作必须同时满足结合律 (associative)和交换律 (commutative), 否则乱序执行会产生不确定的结果. 对于常见的加法和乘法, 这是成立的.
+
+`std::reduce`的接口与`std::accumulate`非常相似, 但增加了一个可选的执行策略 (Execution Policy)参数.
+
+1. 顺序执行 (与`accumulate`类似)
+
+    如果不提供执行策略, `std::reduce`的行为类似于`std::accumulate`, 但仍不保证顺序.
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric>
+
+    int main() {
+        std::vector<long long> v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        // 用法1: 只提供范围 (C++20), 初始值为0
+        // long long sum1 = std::reduce(v.begin(), v.end());
+
+        // 用法2: 提供初始值 (C++17)
+        long long sum2 = std::reduce(v.begin(), v.end(), 0LL); // 使用0LL表示long long类型的0
+
+        std::cout << "Sum: " << sum2 << std::endl; // 输出: 55
+    }
+    ```
+
+2. 并行执行 (发挥真正威力)
+
+    要启用并行计算, 你需要在第一个参数位置提供一个执行策略. 这需要包含`<execution>`头文件.
+
+    * `std::execution::seq`: 顺序执行.
+    * `std::execution::par`: 并行执行.
+    * `std::execution::par_unseq`: 并行且非顺序执行 (允许向量化).
+
+    示例:
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric>
+    #include <execution> // 必须包含此头文件
+    #include <chrono>
+
+    int main() {
+        // 创建一个非常大的vector来体现并行计算的优势
+        std::vector<long long> large_vec(100'000'000, 1);
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        // 使用并行策略执行reduce
+        long long sum = std::reduce(std::execution::par, large_vec.begin(), large_vec.end(), 0LL);
+
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> duration = end - start;
+
+        std::cout << "Sum: " << sum << std::endl; // 输出: 100000000
+        std::cout << "Parallel execution took: " << duration.count() << " ms" << std::endl;
+    }
+    ```
+
+    注意: 编译支持并行算法的程序通常需要特定的编译器标志, 例如GCC/Clang的`-ltbb`或MSVC的`/EHsc`.
+
+### `std::transform_reduce`
+
+`std::transform_reduce`是C++17中引入的一个非常强大且高效的算法, 位于`<numeric>`头文件中. 从它的名字就可以看出它的功能: 它是transform (转换)和reduce (规约)两个操作的结合体. 它可以在一个步骤内对序列中的元素进行转换, 然后将转换后的结果聚合起来, 并且整个过程是可并行化的. `std::transform_reduce`基本上是`std::inner_product`的可并行化、更通用的版本, 并且在某些情况下可以替代`std::accumulate`.
+
+`std::transform_reduce`有两个主要的重载版本.
+
+1. 单序列版本 (Transform then Reduce)
+
+    这个版本处理一个序列. 它首先对序列中的每个元素应用一个一元转换函数 (unary operation), 然后用一个二元规约函数 (binary operation)将所有转换结果聚合起来.
+
+    逻辑过程:
+    `reduce( transform(v[0]), transform(v[1]), transform(v[2]), ... )`
+
+    示例: 计算一个vector中所有整数的平方和
+
+    在C++17之前, 你可能需要两步:
+
+    1.  创建一个新vector来存储每个元素的平方.
+    2.  使用`std::accumulate`对新vector求和.
+
+    使用`std::transform_reduce`, 你可以一步完成, 无需额外内存, 并且可以并行.
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric>
+    #include <execution> // For parallel execution
+
+    int main() {
+        std::vector<int> v = {1, 2, 3, 4, 5};
+
+        // 参数分解:
+        // 1. (可选) 执行策略: std::execution::par
+        // 2. 范围: v.begin(), v.end()
+        // 3. 初始值: 0
+        // 4. 规约操作 (Reduce): std::plus<>{} (加法)
+        // 5. 转换操作 (Transform): [](int n){ return n * n; } (平方)
+        int sum_of_squares = std::transform_reduce(
+            std::execution::par, // 开启并行
+            v.begin(),
+            v.end(),
+            0,                 // 初始值
+            std::plus<>{},     // 规约操作: +
+            [](int n){ return n * n; } // 转换操作: x -> x*x
+        );
+
+        // 计算过程: 0 + (1*1) + (2*2) + (3*3) + (4*4) + (5*5)
+        std::cout << "Sum of squares: " << sum_of_squares << std::endl; // 输出: 55
+    }
+    ```
+
+2. 双序列版本 (类似`inner_product`)
+
+    这个版本处理两个序列. 它首先对来自两个序列的成对元素应用一个二元转换函数, 然后用另一个二元规约函数将所有转换结果聚合起来.
+
+    这个版本的功能与`std::inner_product`几乎完全相同, 但关键区别在于`std::transform_reduce`可以并行执行.
+
+    逻辑过程:
+    `reduce( transform(v1[0], v2[0]), transform(v1[1], v2[1]), ... )`
+
+    示例: 计算两个向量的点积 (Dot Product)
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric>
+    #include <execution>
+
+    int main() {
+        std::vector<int> v1 = {1, 2, 3};
+        std::vector<int> v2 = {4, 5, 6};
+
+        // 参数分解:
+        // 1. (可选) 执行策略: std::execution::par
+        // 2. 范围1: v1.begin(), v1.end()
+        // 3. 范围2起始: v2.begin()
+        // 4. 初始值: 0
+        // 5. 规约操作 (Reduce): std::plus<>{} (加法)
+        // 6. 转换操作 (Transform): std::multiplies<>{} (乘法)
+        int dot_product = std::transform_reduce(
+            std::execution::par,
+            v1.begin(),
+            v1.end(),
+            v2.begin(),
+            0,
+            std::plus<>{},          // 规约: +
+            std::multiplies<>{}     // 转换: *
+        );
+
+        // 计算过程: 0 + (1*4) + (2*5) + (3*6)
+        std::cout << "Dot product: " << dot_product << std::endl; // 输出: 32
+    }
+    ```
+
+为什么要使用`std::transform_reduce`?
+
+1.  性能: 它是为并行计算而设计的. 对于大数据集, 使用`std::execution::par`策略可以极大地提升性能, 因为它将工作分配给多个CPU核心.
+2.  效率: 它将转换和规约两个操作融合在一起, 避免了创建中间容器的需要, 减少了内存分配和数据拷贝的开销.
+3.  表达力: 函数名`transform_reduce`清晰地表达了其意图, 使代码更易于理解和维护. 它将一个复杂的循环操作封装成了一行声明式的代码.
+
+### `std::exclusive_scan`, `std::inclusive_scan`
+
+`std::exclusive_scan`和`std::inclusive_scan`这两个C++17的算法都位于`<numeric>`头文件, 它们是执行前缀和 (Prefix Sum)或扫描 (Scan)操作的现代化、可并行化的工具. 它们最大的区别就在于名字中的 "exclusive" (排除性) 和 "inclusive" (包含性).
+
+核心概念: 包含还是排除? 理解这两个函数的关键在于, 计算输出序列的第`i`个元素时, 是否包含了输入序列的第`i`个元素.
+
+`std::inclusive_scan` (包含性扫描): 第`i`个输出是前`i`个输入元素的总和 (从第0个到第`i`个). 它的行为与经典的`std::partial_sum`完全相同.
+
+* 公式: `result[i] = op(v[0], v[1], ..., v[i])`
+* 记忆法: "Inclusive" -\> 包含我自己.
+
+`std::exclusive_scan` (排除性扫描): 第`i`个输出是前`i-1`个输入元素的总和 (从第0个到第`i-1`个). 它排除了当前位置`i`的输入元素.
+
+* 公式: `result[i] = op(init, v[0], v[1], ..., v[i-1])`
+* 记忆法: "Exclusive" -\> 排除我自己.
+
+---
+
+* 对比示例 (默认加法)
+
+    下面这个例子最能直观地展示它们的区别.
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <numeric>
+
+    int main() {
+        std::vector<int> v = {1, 2, 3, 4, 5};
+        std::vector<int> inclusive_result(v.size());
+        std::vector<int> exclusive_result(v.size());
+
+        int init_val = 100;
+
+        // --- 包含性扫描 ---
+        std::inclusive_scan(v.begin(), v.end(), inclusive_result.begin());
+
+        // --- 排除性扫描 ---
+        // 注意: exclusive_scan必须提供一个初始值
+        std::exclusive_scan(v.begin(), v.end(), exclusive_result.begin(), init_val);
+
+        // --- 打印结果 ---
+        std::cout << "Input:             ";
+        for(int n : v) std::cout << n << "  ";
+        std::cout << "\n\n";
+
+        std::cout << "Inclusive Scan:    ";
+        for(int n : inclusive_result) std::cout << n << "  ";
+        std::cout << "  (与partial_sum相同)\n";
+        // 计算过程:
+        // 1
+        // 1+2 = 3
+        // 1+2+3 = 6
+        // ...
+
+        std::cout << "Exclusive Scan:    ";
+        for(int n : exclusive_result) std::cout << n << "  ";
+        std::cout << "  (初始值: " << init_val << ")\n";
+        // 计算过程:
+        // 100
+        // 100+1 = 101
+        // 100+1+2 = 103
+        // ...
+    }
+    ```
+
+    输出结果:
+
+    ```
+    Input:             1  2  3  4  5
+
+    Inclusive Scan:    1  3  6  10 15   (与partial_sum相同)
+    Exclusive Scan:    100  101  103  106  110   (初始值: 100)
+    ```
+
+    结果分析:
+
+    * `inclusive_scan`的结果就像一个标准的累加过程. `result[i]`包含了`v[i]`.
+    * `exclusive_scan`的结果总是"慢一拍". `result[i]`的值取决于`v[i]`之前的所有元素. 它的第一个值总是你提供的`init_val`.
+
+    可以观察到, `exclusive_scan`的结果像是`inclusive_scan`的结果向右平移了一位, 并且在开头插入了初始值.
+
+* 共同特性: 自定义与并行
+
+    这两个函数都是现代C++算法, 因此它们共享以下强大特性:
+
+    1.  自定义操作: 可以提供一个二元函数来替代默认的加法 (如乘法, `std::max`等).
+    2.  并行执行: 可以在第一个参数位置提供一个执行策略 (如`std::execution::par`) 来启用并行计算, 大大提升在大数据集上的性能.
+
+    <!-- end list -->
+
+    ```cpp
+    #include <vector>
+    #include <numeric>
+    #include <execution>
+    #include <functional>
+
+    void parallel_custom_scans() {
+        std::vector<int> v = {1, 2, 3, 4, 5};
+        std::vector<int> inc_prod(v.size());
+        std::vector<int> exc_prod(v.size());
+
+        // 并行计算包含性部分积
+        std::inclusive_scan(std::execution::par, v.begin(), v.end(), inc_prod.begin(), std::multiplies<int>());
+        // inc_prod -> {1, 2, 6, 24, 120}
+
+        // 并行计算排除性部分积
+        std::exclusive_scan(std::execution::par, v.begin(), v.end(), exc_prod.begin(), 1, std::multiplies<int>());
+        // exc_prod -> {1, 1, 2, 6, 24}
+    }
+    ```
+
+| 特性 | `std::inclusive_scan` | `std::exclusive_scan` |
+| :--- | :--- | :--- |
+| 别名 | `partial_sum`的现代版 | - |
+| 计算`result[i]` | 包含`input[i]` | 排除`input[i]` |
+| 初始值`init` | 不直接使用`init`参数 | 必须提供`init`参数, 作为`result[0]` |
+| 常见用途 | 计算标准前缀和, 数据分析中的累积分布 | 并行算法中的数据依赖问题, 如计算每个元素在其分区内的偏移量 |
+
+如何选择?
+
+* 如果你需要一个标准的累积和数组, 其中每个位置的值代表到该位置为止的总和, 使用`std::inclusive_scan`.
+* 如果你需要计算一个值序列, 其中每个位置的值取决于它前面所有元素的总和, 而非其自身, 使用`std::exclusive_scan`. 这个场景在并行计算中更为常见.
