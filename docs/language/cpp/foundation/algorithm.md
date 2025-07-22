@@ -282,7 +282,7 @@ ForwardIt upper_bound( ForwardIt first, ForwardIt last, const T& value, Compare 
     * `true`: 找到了该元素.
     * `false`: 未找到该元素.
 * 功能: 它只告诉你元素存不存在, 并不会返回元素的位置 (迭代器). 如果你需要找到元素的位置, 应该使用 `std::lower_bound`.
-* 性能: 非常高效, 时间复杂度为对数时间, 即$O(\\log N)$.
+* 性能: 非常高效, 时间复杂度为对数时间, 即$O(\log N)$.
 
 函数原型:
 
@@ -369,7 +369,7 @@ bool includes(InputIt1 first1, InputIt1 last1,
 
 复杂度:
 
-该算法的时间复杂度是线性的, 最多进行$2 \\cdot (\\text{N1} + \\text{N2}) - 1$次比较, 其中`N1`和`N2`分别是两个序列的长度.
+该算法的时间复杂度是线性的, 最多进行$2 \cdot (\text{N1} + \text{N2}) - 1$次比较, 其中`N1`和`N2`分别是两个序列的长度.
 
 示例:
 
@@ -2255,7 +2255,7 @@ void sort( RandomIt first, RandomIt last, Compare comp );
 
 关键特性:
 
-* 性能: 通常比`std::stable_sort`更快. 在大多数实现中, 它采用内省排序 (Introsort), 这是一种混合排序算法, 结合了快速排序, 堆排序和插入排序的优点, 平均时间复杂度为$O(N \\log N)$, 最坏情况下也是$O(N \\log N)$.
+* 性能: 通常比`std::stable_sort`更快. 在大多数实现中, 它采用内省排序 (Introsort), 这是一种混合排序算法, 结合了快速排序, 堆排序和插入排序的优点, 平均时间复杂度为$O(N \log N)$, 最坏情况下也是$O(N \log N)$.
 * 稳定性: 不稳定. 等价元素的相对顺序可能会改变.
 * 使用场景: 当你不需要保留等价元素的原始相对顺序, 并且追求最快的排序速度时, `std::sort`是首选.
 
@@ -2277,7 +2277,7 @@ void stable_sort( RandomIt first, RandomIt last, Compare comp );
 
 关键特性:
 
-* 性能: 时间复杂度通常是$O(N \\log^2 N)$. 如果有足够的额外内存可用, 它可以执行归并排序 (Merge Sort), 此时时间复杂度为$O(N \\log N)$. 总体而言, 它通常比`std::sort`慢, 并且可能需要额外的内存.
+* 性能: 时间复杂度通常是$O(N \log^2 N)$. 如果有足够的额外内存可用, 它可以执行归并排序 (Merge Sort), 此时时间复杂度为$O(N \log N)$. 总体而言, 它通常比`std::sort`慢, 并且可能需要额外的内存.
 * 稳定性: 稳定. 保证保留等价元素的相对顺序.
 * 使用场景: 当你需要保持等价元素的原始相对顺序时, `std::stable_sort`是必需的. 例如, 对一个已经按姓名排序的列表再按城市排序, 你希望相同城市的条目仍然保持按姓名排序.
 
@@ -2366,7 +2366,7 @@ After std::stable_sort (stable):
 | 特性 | `std::sort` | `std::stable_sort` |
 | --- | --- | --- |
 | 稳定性 | 不稳定 | 稳定 |
-| 性能 | 更快, $O(N \\log N)$ | 可能更慢, $O(N \\log^2 N)$ 或 $O(N \\log N)$ |
+| 性能 | 更快, $O(N \log N)$ | 可能更慢, $O(N \log^2 N)$ 或 $O(N \log N)$ |
 | 内存使用 | 在位 (In-place) | 可能需要额外内存 |
 | 选择依据 | 速度优先, 不关心等价元素顺序 | 必须保持等价元素的相对顺序 |
 
@@ -2599,7 +2599,7 @@ void partial_sort(RandomIt first, RandomIt middle, RandomIt last, Compare comp);
 1.  `[first, middle)`范围内的元素是整个序列中最小的 `middle - first` 个元素.
 2.  `[first, middle)`范围内部是完全排序的.
 * 不保证: `[middle, last)`范围内的元素是无序的.
-* 性能: 时间复杂度约为$O(N \\log M)$, 其中$N$是`last - first`的距离, $M$是`middle - first`的距离.
+* 性能: 时间复杂度约为$O(N \log M)$, 其中$N$是`last - first`的距离, $M$是`middle - first`的距离.
 * 使用场景: 需要获取前N个最小/最大的元素, 并且要求这N个元素是有序的. 例如, 查找排行榜的前10名.
 
 示例: 查找最小的3个元素
@@ -2645,7 +2645,7 @@ Vector after partial_sort: 1 2 3 10 8 9 5 7 6 4
 | --- | --- | --- |
 | 主要目的 | 定位第n个元素. | 排序前M个元素. |
 | 排序保证 | 仅`nth`位置的元素保证正确, 其余元素只保证在其两侧. | `[first, middle)`范围内的元素是全局最小的M个, 且已排序. |
-| 复杂度 | 平均$O(N)$ | $O(N \\log M)$ |
+| 复杂度 | 平均$O(N)$ | $O(N \log M)$ |
 | 核心问题 | "找到第k大的数是多少?" | "找到最小的k个数是哪些, 并且排好序?" |
 
 ### `std::merge`, `std::inplace_merge`
@@ -2730,7 +2730,7 @@ void inplace_merge(BidirIt first, BidirIt middle, BidirIt last, Compare comp);
 
 * 输入: 一个序列`[first, last)`, 这个序列被`middle`迭代器分为两个相邻且已排序的子序列: `[first, middle)`和`[middle, last)`.
 * 输出: 直接在原始序列`[first, last)`上完成合并.
-* 内存: "原地" (in-place) 操作. 如果有足够的额外内存, 它会使用临时缓冲区以获得更好的性能 (接近线性时间). 如果内存不足, 它会执行一个真正的原地合并, 性能会降低 (最坏情况$O(N \\log N)$).
+* 内存: "原地" (in-place) 操作. 如果有足够的额外内存, 它会使用临时缓冲区以获得更好的性能 (接近线性时间). 如果内存不足, 它会执行一个真正的原地合并, 性能会降低 (最坏情况$O(N \log N)$).
 * 返回值: `void`.
 * 稳定性: 合并是稳定的.
 
@@ -2773,3 +2773,125 @@ Vector after inplace_merge: 1 2 3 4 5 6
 | 主要用途 | 将不同容器或不相邻的数据合并. | 合并一个容器内相邻的两个已排序部分, 是归并排序算法的核心步骤. |
 
 ## 集合 🔗
+
+### `std::set_union`
+
+`std::set_union`计算两个已排序序列的并集. 结果序列包含所有在第一个序列, 第二个序列或同时在两个序列中都出现的元素. 如果某个元素在两个序列中都出现, 结果中只会包含一个该元素的副本.
+
+数学上, 这相当于$A \cup B$.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+void print(const std::string& name, const std::vector<int>& v) {
+    std::cout << name << ": ";
+    for (int x : v) {
+        std::cout << x << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    std::vector<int> v1 = {1, 2, 3, 4, 5};
+    std::vector<int> v2 = {3, 4, 5, 6, 7};
+    std::vector<int> result;
+
+    std::set_union(v1.begin(), v1.end(),
+                   v2.begin(), v2.end(),
+                   std::back_inserter(result));
+
+    print("v1", v1);
+    print("v2", v2);
+    print("Union", result); // 输出: 1 2 3 4 5 6 7
+}
+```
+
+### `std::set_intersection`
+
+`std::set_intersection`计算两个已排序序列的交集. 结果序列仅包含同时存在于两个输入序列中的元素.
+
+数学上, 这相当于$A \cap B$.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+// print函数同上
+
+int main() {
+    std::vector<int> v1 = {1, 2, 3, 4, 5};
+    std::vector<int> v2 = {3, 4, 5, 6, 7};
+    std::vector<int> result;
+
+    std::set_intersection(v1.begin(), v1.end(),
+                          v2.begin(), v2.end(),
+                          std::back_inserter(result));
+
+    print("v1", v1);
+    print("v2", v2);
+    print("Intersection", result); // 输出: 3 4 5
+}
+```
+
+### `std::set_difference`
+
+`std::set_difference`计算两个已排序序列的差集. 结果序列包含所有存在于第一个序列但不存在于第二个序列中的元素.
+
+数学上, 这相当于$A - B$或$A \setminus B$.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+// print函数同上
+
+int main() {
+    std::vector<int> v1 = {1, 2, 3, 4, 5};
+    std::vector<int> v2 = {3, 4, 5, 6, 7};
+    std::vector<int> result;
+
+    std::set_difference(v1.begin(), v1.end(),
+                        v2.begin(), v2.end(),
+                        std::back_inserter(result));
+
+    print("v1", v1);
+    print("v2", v2);
+    print("Difference (v1 - v2)", result); // 输出: 1 2
+}
+```
+
+### `std::set_symmetric_difference`
+
+`std::set_symmetric_difference`计算两个已排序序列的对称差. 结果序列包含所有只存在于其中一个序列但不同时存在于两个序列中的元素.
+
+数学上, 这相当于$(A \cup B) \setminus (A \cap B)$或$A \Delta B$.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+// print函数同上
+
+int main() {
+    std::vector<int> v1 = {1, 2, 3, 4, 5};
+    std::vector<int> v2 = {3, 4, 5, 6, 7};
+    std::vector<int> result;
+
+    std::set_symmetric_difference(v1.begin(), v1.end(),
+                                  v2.begin(), v2.end(),
+                                  std::back_inserter(result));
+
+    print("v1", v1);
+    print("v2", v2);
+    print("Symmetric Difference", result); // 输出: 1 2 6 7
+}
+```
