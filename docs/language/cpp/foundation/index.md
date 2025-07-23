@@ -140,6 +140,7 @@
 - (类型) `constinit`的用法
 - (类型) 定宽整数类型
 - (其他) 位运算
+- (模板) SFINAE, `std::enable_if`, `std::void_t`, `concept`
 
 ## 引用
 
