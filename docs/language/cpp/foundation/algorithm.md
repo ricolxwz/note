@@ -4306,3 +4306,153 @@ int main() {
 
 * 如果你需要一个标准的累积和数组, 其中每个位置的值代表到该位置为止的总和, 使用`std::inclusive_scan`.
 * 如果你需要计算一个值序列, 其中每个位置的值取决于它前面所有元素的总和, 而非其自身, 使用`std::exclusive_scan`. 这个场景在并行计算中更为常见.
+
+## 交换 💱
+
+### `std::swap`, `std::iter_swap`
+
+`std::swap`是一个基础工具函数, 用于交换两个对象的值. `std::swap`定义在头文件`<utility>`中.
+
+```cpp
+#include <utility>
+```
+
+函数原型:
+
+```cpp
+template<class T>
+void swap(T& a, T& b) noexcept(/* see below */);
+```
+
+- 模板参数`T`: 要交换的对象的类型.
+- 参数`T& a`, `T& b`: 对要交换的两个对象的左值引用.
+- `noexcept`: 自C++11起, `std::swap`是条件`noexcept`的. 这意味着如果`T`的移动构造函数和移动赋值运算符都是`noexcept`的, 那么`swap`本身也不会抛出异常.
+
+工作原理:
+
+在C++11之前, `std::swap`通常通过一个临时变量和拷贝操作实现. 自C++11起, `std::swap`被高度优化, 默认使用移动语义(Move Semantics)而非拷贝, 这对于管理动态资源(如`std::vector`, `std::string`)的对象来说效率极高. 其典型实现等价于:
+
+```cpp
+T temp = std::move(a);
+a = std::move(b);
+b = std::move(temp);
+```
+
+这种方式避免了深拷贝, 只是交换了资源的"所有权", 因此性能非常好.
+
+使用示例:
+
+```cpp
+#include <iostream>
+#include <utility> // std::swap
+#include <vector>
+#include <string>
+
+void print_vector(const std::string& name, const std::vector<int>& v) {
+    std::cout << name << ": ";
+    for (int i : v) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    // 示例1: 交换基本类型
+    int x = 10;
+    int y = 20;
+    std::cout << "Before swap: x = " << x << ", y = " << y << std::endl;
+    std::swap(x, y);
+    std::cout << "After swap:  x = " << x << ", y = " << y << std::endl;
+
+    std::cout << "--------------------" << std::endl;
+
+    // 示例2: 交换复杂类型 (高效的移动操作)
+    std::vector<int> vec1 = {1, 2, 3};
+    std::vector<int> vec2 = {9, 8, 7, 6};
+
+    print_vector("Before swap vec1", vec1);
+    print_vector("Before swap vec2", vec2);
+
+    std::swap(vec1, vec2); // 非常高效, 只交换了内部指针和大小等成员
+
+    print_vector("After swap vec1", vec1);
+    print_vector("After swap vec2", vec2);
+
+    return 0;
+}
+```
+
+---
+
+`std::iter_swap`是一个算法, 用于交换两个迭代器所指向的元素的值. `std::iter_swap`定义在头文件`<algorithm>`中.
+
+```cpp
+#include <algorithm>
+```
+
+函数原型:
+
+```cpp
+template<class ForwardIt1, class ForwardIt2>
+void iter_swap(ForwardIt1 a, ForwardIt2 b);
+```
+
+- 模板参数`ForwardIt1`, `ForwardIt2`: 迭代器的类型. 至少要求是前向迭代器(Forward Iterator).
+- 参数`a`, `b`: 两个迭代器. 函数会交换`*a`和`*b`的值.
+
+工作原理:
+
+`std::iter_swap`的核心是解引用(dereference)迭代器, 然后调用`swap`来交换它们指向的值. 其典型实现等价于:
+
+```cpp
+swap(*a, *b);
+```
+
+这意味着`std::iter_swap`最终依赖`std::swap`(或用户为特定类型定义的`swap`重载)来完成实际的交换工作. 它本身只负责处理迭代器.
+
+使用示例:
+
+`std::iter_swap`常用于在容器内或跨容器交换元素, 是许多排序和分区算法的构建模块.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm> // std::iter_swap
+
+void print_vector(const std::vector<int>& v) {
+    for (int i : v) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    std::vector<int> numbers = {0, 1, 2, 3, 4, 5};
+
+    std::cout << "Original vector: ";
+    print_vector(numbers);
+
+    // 获取指向第一个元素 (0) 和第四个元素 (3) 的迭代器
+    auto it1 = numbers.begin();
+    auto it2 = numbers.begin() + 3;
+
+    std::cout << "Swapping element " << *it1 << " and " << *it2 << std::endl;
+
+    std::iter_swap(it1, it2);
+
+    std::cout << "Vector after iter_swap: ";
+    print_vector(numbers);
+
+    return 0;
+}
+```
+
+---
+
+| 特性 | `std::swap` | `std::iter_swap` |
+| :--- | :--- | :--- |
+| 操作对象 | 变量本身 (对象) | 迭代器所指向的元素 |
+| 参数类型 | 对对象的引用 (`T&`) | 迭代器 (`ForwardIt`) |
+| 头文件 | `<utility>` | `<algorithm>` |
+| 核心作用 | 交换两个具名变量的内容 | 交换两个位置上元素的内容, 通常用于算法中 |
+| 使用场景 | 当你有两个明确的变量`a`和`b`需要交换时 | 当你通过迭代器访问容器中的元素并需要交换它们时 |
