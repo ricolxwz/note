@@ -287,6 +287,7 @@ nav:
           - 模版: language/cpp/foundation/template.md
           - 调试: language/cpp/foundation/debug.md
           - 文件: language/cpp/foundation/io.md
+          - 异步: language/cpp/foundation/sync.md
           - 其他: language/cpp/foundation/others.md
   - 基石:
     - 数据库:

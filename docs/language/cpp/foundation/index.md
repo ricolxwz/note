@@ -141,6 +141,12 @@
 - (类型) 定宽整数类型
 - (其他) 位运算
 - (模板) SFINAE, `std::enable_if`, `std::void_t`, `concept`
+- (异步) `std::thread`
+- (异步) `std::jthread`
+- (异步) `std::mutex`
+- (异步) `std::atomic`
+- (异步) `std::async`
+- (异步) `std::future`
 
 ## 引用
 
