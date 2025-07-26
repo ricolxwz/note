@@ -139,7 +139,7 @@ comments: true
 
 ## 键盘配置
 
-## macOS
+### macOS
 
 ```json
 {
@@ -188,7 +188,7 @@ comments: true
 },
 ```
 
-## Windows
+### Windows
 
 ```json
 {
@@ -511,7 +511,6 @@ comments: true
         // 远程开发
         "ms-vscode-remote.remote-ssh",
         "ms-vscode-remote.remote-ssh-edit",
-        "ms-vscode.remote-explprint()orer",
 
         // 编辑
         "vscodevim.vim",
