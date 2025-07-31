@@ -62,8 +62,10 @@ function fig() {
         if [[ "$upload_choice" =~ ^[Yy]$ || -z "$upload_choice" ]]; then
             echo "Starting upload operation..."
             # 上传操作：调用 wrangler 工具上传到 R2 对象存储
-            wrangler r2 object put "ricolxwz-image/$new_name" --file "$new_path"
-            wrangler r2 object put "ricolxwz-image/$inverted_name" --file "$inverted_path"
+            # wrangler r2 object put "ricolxwz-image/$new_name" --file "$new_path"
+            # wrangler r2 object put "ricolxwz-image/$inverted_name" --file "$inverted_path"
+            ossutil cp "$new_path" "oss://ricolxwz-pic/$new_name"
+            ossutil cp "$inverted_path" "oss://ricolxwz-pic/$inverted_name"
             echo "All upload operations completed."
 
             local figid="fig${id}"

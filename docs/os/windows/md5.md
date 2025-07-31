@@ -51,8 +51,10 @@ function fig {
             try {
                 # aws s3 cp "$new_path" "s3://ricolxwz-image/" --profile image
                 # aws s3 cp "$inverted_path" "s3://ricolxwz-image/" --profile image
-                wrangler r2 object put "ricolxwz-image/$new_name" --file "$new_path" --remote
-                wrangler r2 object put "ricolxwz-image/$inverted_name" --file "$inverted_path" --remote
+                # wrangler r2 object put "ricolxwz-image/$new_name" --file "$new_path" --remote
+                # wrangler r2 object put "ricolxwz-image/$inverted_name" --file "$inverted_path" --remote
+                ossutil cp "$new_path" "oss://ricolxwz-pic/$new_name"
+                ossutil cp "$inverted_path" "oss://ricolxwz-pic/$inverted_name"
                 Write-Output "All upload operations completed."
 $figid = "fig$id"
 $capid = "图${id}: "
@@ -77,7 +79,8 @@ $text = @"
                 function Rollback($file_name) {
                     try {
                         # aws s3 rm "s3://ricolxwz-image/$file_name" --profile image
-                        wrangler r2 object delete "ricolxwz-image/$file_name"
+                        # wrangler r2 object delete "ricolxwz-image/$file_name"
+                        ossutil rm "oss://ricolxwz-image/$file_name"
                     }
                     catch {
                         Write-Error "An error occurred while rolling back ${file_name}: $_"
