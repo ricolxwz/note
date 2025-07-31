@@ -17,7 +17,7 @@ comments: true
 
 ### 语言增强的视觉模型
 
-为此, 业界开始关注开发语言增强的基础视觉模型. 这些模型在开放世界的视觉理解任务方面具有强大的能力, 如分类, 检测, 分割和图像描述生成, 此外, 这些模型还具有图像生成和编辑的能力. 作者建议参考*Computer Vision in the Wild*阅读列表, 已获取更加全面和最新的参考文献. 
+为此, 业界开始关注开发语言增强的基础视觉模型. 这些模型在开放世界的视觉理解任务方面具有强大的能力, 如分类, 检测, 分割和图像描述生成, 此外, 这些模型还具有图像生成和编辑的能力. 作者建议参考*Computer Vision in the Wild*阅读列表, 已获取更加全面和最新的参考文献.
 
 在这一研究方向中, 现有的方法往往为每个任务设计一个独立的模型, 并且任务的具体目标(比如"检测目标", "生成描述")通常是通过模型架构, 训练目标等隐式定义, 而不是直接通过用户的语言指令灵活指定的. 再者, 语言在现有方法中通常仅限于描述图像的内容. 虽然这种方法能够让语言在视觉信号映射到语言语义上发挥了重要作用, 但是导致了模型无法通过自然语言动态响应用户的需求, 它的接口通常是固定的, 交互性和适应性不足.
 
@@ -38,15 +38,15 @@ comments: true
 
 ### 多模态[指令跟随代理](/dicts/instruction-following-agent)
 
-在计算机视觉领域, 现存的构建指令跟随代理的工作可以大致上分为两类: (i) 端到端训练的模型, 这些模型通常针对特定研究任务进行独立探索, 比如, 在视觉-语言导航(VLN)和Habitat等任务中, 代理需要根据自然语言指令在视觉环境中执行一系列动作以完成目标. 在图像编辑场景中, InstructPix2Pix根据输入图像和文字指令, 直接编辑图像以实现用户的目标; (ii) 通过LangChain/LLMs协调多个模型的系统, 如Visual ChatGPT, X-GPT, MM-REACT, VisProg和ViperGPT. 这些系统用大模型或者LangChain来调用和组合不同的子模型, 从而实现多模态的指令跟随能力. 作者指出, 他们希望在(i)的基础上更进一步, **端到端地**训练一个**多任务的**, 语言-视觉**多模态大模型**. 
+在计算机视觉领域, 现存的构建指令跟随代理的工作可以大致上分为两类: (i) 端到端训练的模型, 这些模型通常针对特定研究任务进行独立探索, 比如, 在视觉-语言导航(VLN)和Habitat等任务中, 代理需要根据自然语言指令在视觉环境中执行一系列动作以完成目标. 在图像编辑场景中, InstructPix2Pix根据输入图像和文字指令, 直接编辑图像以实现用户的目标; (ii) 通过LangChain/LLMs协调多个模型的系统, 如Visual ChatGPT, X-GPT, MM-REACT, VisProg和ViperGPT. 这些系统用大模型或者LangChain来调用和组合不同的子模型, 从而实现多模态的指令跟随能力. 作者指出, 他们希望在(i)的基础上更进一步, **端到端地**训练一个**多任务的**, 语言-视觉**多模态大模型**.
 
 ### 指令调优
 
-在NLP大家庭中, 为了使得LLM例如GPT-3, T5, PaLM和OPT遵循自然语言指令并完成现实世界中的任务, 研究者探索了各种LLM指令调优的方法, 例如InstructGPT/ChatGPT, FLAN-T5, FLAN-PaLM和OPT-IML. 事实证明, 这种简单的方法可以有效提高LLM的zero-和few-shot泛化能力. 因此, 将这种理念从NLP借鉴到计算机视觉上是很自然的. 更加广泛的来说, 一些和视觉相关的工作包括原本NLP相关的教师-学生蒸馏已经在一些topic例如图像分类领域得到研究. 
+在NLP大家庭中, 为了使得LLM例如GPT-3, T5, PaLM和OPT遵循自然语言指令并完成现实世界中的任务, 研究者探索了各种LLM指令调优的方法, 例如InstructGPT/ChatGPT, FLAN-T5, FLAN-PaLM和OPT-IML. 事实证明, 这种简单的方法可以有效提高LLM的zero-和few-shot泛化能力. 因此, 将这种理念从NLP借鉴到计算机视觉上是很自然的. 更加广泛的来说, 一些和视觉相关的工作包括原本NLP相关的教师-学生蒸馏已经在一些topic例如图像分类领域得到研究.
 
 由于其强大的零样本任务迁移能力和在上下文学习上的表现, Flamingo可以被视为多模态领域的GPT-3时刻. 其他一些在文本-图像对上训练的LLMs有BLIP-2, FROMAGe, 和KOSMOS-1. PaLM-E是一种用于具身AI场景的模型. 随后, 在开源的LLaMA模型的基础上, OpenFlamingo和LLaMA-Adapter等项目也尝试让LLaMA处理图像输入.
 
-不过, 上述的这些多模态模型虽然在一些方面展现了较好的泛化性能, 但是它们并没有显式地使用视觉-语言指令跟随数据来进行微调, 因此在多模态任务上往往无法像在语言任务上那样取得同等水平的效果. 
+不过, 上述的这些多模态模型虽然在一些方面展现了较好的泛化性能, 但是它们并没有显式地使用视觉-语言指令跟随数据来进行微调, 因此在多模态任务上往往无法像在语言任务上那样取得同等水平的效果.
 
 作者提到, "视觉指令调优"和"视觉提示调优"的区别是, 欠着的目的是让模型能够更好地理解和执行指令, 提升它在多模态场景下的指令跟随能力; 而后者则主要关注的是如何以更少的参数代价来适应不同的任务.
 
@@ -88,7 +88,7 @@ comments: true
 
 对于一张图片$\mathbf{X}_v$和它对应的描述$\mathbf{X}_c$, 创建一组问题$\mathbf{X}_q$来引导助手描述图片内容是很自然的做法. 作者通过GPT-4来生成这样一组问题, 因此, 将图片-文本对扩展成指令跟随数据的一种简单的方法是`Human: Xq Xv<STOP> Assistant: Xc<STOP>`. 这种扩展方式构建的成本较低, 但是它缺乏指令和回答中的多样性和推理, 他只回答一个单一的图像描述问题`Xc`, 注意, 标题不等于`Xc`, `Xc`是GPT-4生成的, 标题是GPT-4, LLaVA之外的模型生成的, 数据集中本来就有的东西.
 
-为了解决这个问题, 他们使用纯语言的GPT-4或者ChatGPT(只接受文本作为输入)创建包含视觉内容的指令跟随数据. 具体来说, 为了将图像转为视觉特征, 以输入到纯文本GPT中, 他们使用了 ^^两种符号表示^^. (i) 标题, 通常从不同的角度描述视觉场景; (ii) 边框, 通常用于定位场景中的物体, 每个边框表示的是物体的"概念"以及它的空间位置. 
+为了解决这个问题, 他们使用纯语言的GPT-4或者ChatGPT(只接受文本作为输入)创建包含视觉内容的指令跟随数据. 具体来说, 为了将图像转为视觉特征, 以输入到纯文本GPT中, 他们使用了 ^^两种符号表示^^. (i) 标题, 通常从不同的角度描述视觉场景; (ii) 边框, 通常用于定位场景中的物体, 每个边框表示的是物体的"概念"以及它的空间位置.
 
 ???+ tip "从单一到多样"
 
@@ -113,14 +113,14 @@ comments: true
 * 复杂推理. 上述的两种类型的问题主要集中在视觉内容本身. 再次基础上, 他们进一步制作了深度推理问题, 答案通常需要按照严密的逻辑逐步推理
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/4fe9d333253f301574047f72d9992da8.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.download/4fe9d333253f301574047f72d9992da8_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/4fe9d333253f301574047f72d9992da8.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/4fe9d333253f301574047f72d9992da8_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>指令跟随数据的一个例子. 最上面的标题/边框是GPT-4的prompt中的一部分. 最下面的问题/回答和图片是LLaVA的prompt中的一部分</figcaption>
 </figure>
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/55e367bc05d73ed1bc1a1c60ffc2a9d5.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.download/55e367bc05d73ed1bc1a1c60ffc2a9d5_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/55e367bc05d73ed1bc1a1c60ffc2a9d5.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/55e367bc05d73ed1bc1a1c60ffc2a9d5_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>GPT-4的输入</figcaption>
 </figure>
 
@@ -131,12 +131,12 @@ comments: true
 主要目标是有效利用现有的预训练的LLM和视觉模型的功能. 网格架构如下图所示. 他们选择的是Vicuna作为以$\phi$作为参数的LLM $f_{\phi}(\cdot)$, 因为Vicuna在公开的checkpoints中具有最佳的指令跟踪能力.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/20310f3fdd5c88bb694fe2d8a6956fcf.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.download/20310f3fdd5c88bb694fe2d8a6956fcf_inverted.webp#only-dark){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/20310f3fdd5c88bb694fe2d8a6956fcf.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/20310f3fdd5c88bb694fe2d8a6956fcf_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>LLaVA网络架构</figcaption>
 </figure>
 
-对于输入图像$\mathbf{X}_v$, 他们考虑使用预训练好的CLIP视觉编码器ViT-L/14, 他能提供视觉特征$\mathbf{Z}_v=g(\mathbf{X}_v)$. 他们在实验中考虑在使用CLIP视觉编码器的最后一个Transformer层之前和之后的特征, 来进行分析或实验. 他们考虑用简单的线性层将图像特征链接到word的嵌入空间. 具体来说, 他们使用可训练的投影矩阵$\mathbf{W}$将$\mathbf{Z}_v$转换为语言嵌token$\mathbf{H}_v$, 其维度应该和语言模型中的单词嵌入空间的维度相同: $\mathbf{H}_v=\mathbf{W}\cdot \mathbf{Z}_v$, 其中, $\mathbf{Z}_v=g(\mathbf{X}_v)$. 
+对于输入图像$\mathbf{X}_v$, 他们考虑使用预训练好的CLIP视觉编码器ViT-L/14, 他能提供视觉特征$\mathbf{Z}_v=g(\mathbf{X}_v)$. 他们在实验中考虑在使用CLIP视觉编码器的最后一个Transformer层之前和之后的特征, 来进行分析或实验. 他们考虑用简单的线性层将图像特征链接到word的嵌入空间. 具体来说, 他们使用可训练的投影矩阵$\mathbf{W}$将$\mathbf{Z}_v$转换为语言嵌token$\mathbf{H}_v$, 其维度应该和语言模型中的单词嵌入空间的维度相同: $\mathbf{H}_v=\mathbf{W}\cdot \mathbf{Z}_v$, 其中, $\mathbf{Z}_v=g(\mathbf{X}_v)$.
 
 这样, 我们就得到了视觉tokens序列$\mathbf{H}_v$. 注意, 他们的简单投影方案是轻量级的, 这使得我们能够快速迭代以数据为中心的实验. 他们还考虑使用更加复杂的方案来链接图像和语言特征, 例如Flamingo中的门控交叉注意和BLIP-2中的Q-former. 他们将在今后的工作中探索更加有效, 更加复杂的LLaVA架构设计.
 
@@ -144,13 +144,13 @@ comments: true
 
 对于每张图$\mathbf{X}_v$, 他们会使用GPT-4生成多轮对话数据$(\mathbf{X}_q^1, \mathbf{X}_a^1,..., \mathbf{X}_q^T, \mathbf{X}_a^T)$, $T$是对话的轮数. 第$t$轮对话的$\mathbf{X}^t_{\text{instruct}}$可以被表示为:
 
-$$\mathbf{X}_\text{instruct}^t = 
-\begin{cases} 
-\text{Randomly choose } [\mathbf{X}_q^1, \mathbf{X}_v] \text{ or } [\mathbf{X}_v, \mathbf{X}_q^1], & \text{the first turn } t = 1 \\ 
+$$\mathbf{X}_\text{instruct}^t =
+\begin{cases}
+\text{Randomly choose } [\mathbf{X}_q^1, \mathbf{X}_v] \text{ or } [\mathbf{X}_v, \mathbf{X}_q^1], & \text{the first turn } t = 1 \\
 \mathbf{X}_q^t, & \text{the remaining turns } t > 1
 \end{cases}$$
 
-这就形成了如下面这个例子所示的形式. 他们利用自回归训练目标对预测的token计算损失. 具体来说, 对于长度为$L$的序列, 他们通过以下方法计算目标答案$\mathbf{X}_a$的概率. 
+这就形成了如下面这个例子所示的形式. 他们利用自回归训练目标对预测的token计算损失. 具体来说, 对于长度为$L$的序列, 他们通过以下方法计算目标答案$\mathbf{X}_a$的概率.
 
 $$p(\mathbf{X}_a \mid \mathbf{X}_v, \mathbf{X}_{\text{instruct}}) = \prod_{i=1}^L p_{\mathbf{\theta}}(x_i \mid \mathbf{X}_v, \mathbf{X}_{\text{instruct}, <i}, \mathbf{X}_{a, <i})$$
 
@@ -167,8 +167,8 @@ $$p(\mathbf{X}_a \mid \mathbf{X}_v, \mathbf{X}_{\text{instruct}}) = \prod_{i=1}^
     都是连成一个串输入进去的.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/50f5a8dd0bd9e1fb341480878a7643fe.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.download/50f5a8dd0bd9e1fb341480878a7643fe_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/50f5a8dd0bd9e1fb341480878a7643fe.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/50f5a8dd0bd9e1fb341480878a7643fe_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>用于训练模型的序列. 注意上图中的序列都是串行的, 都是并行的, 是因为表示清晰所以并排列出; 这里只举例说明了两个对话回合, 在实际操作中, 回合的数量会根据指令跟随数据的不同而变化. 在他们的实现中, 按照Vicuna-v0设置了一个系统信息$\mathbf{X}_{\text{system}}$并设置STOP=###. 该模型经过训练, 用于预测assistant的答案$\mathbf{X}_a$和停止的位置, 所以只有颜色不同的哪些序列/tokens会被用于在自回归模型中计算损失</figcaption>
 </figure>
 

@@ -44,14 +44,14 @@ Li和Liang提出的前缀调优在生成任务上展现出了很好的效果[^7]
     提示调优中的token和提示设计中的token不同, 前者往往可以看作只是一个"占位符", 模型只需要知道这个占位符对应embedding层中的某个嵌入向量就可以了, 不是人类可以理解的自然语言. 提示设计中的token对应的是某个自然语言片段. ^^正是因为上述的原因, 提示调优中的提示又被称为"软提示".^^ 特别注意[token和embedding的区别](/dicts/token-embedding-encoding).
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/0c186e6eed6547498ac06b65886f1654.webp#only-light){ loading=lazy width='400' }
-![](https://img.ricolxwz.download/0c186e6eed6547498ac06b65886f1654_inverted.webp#only-dark){ loading=lazy width='400' }
+![](https://img.ricolxwz.asia/0c186e6eed6547498ac06b65886f1654.webp#only-light){ loading=lazy width='400' }
+![](https://img.ricolxwz.asia/0c186e6eed6547498ac06b65886f1654_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>图一: T5模型的微调性能优异, 但是对每个任务都要一个副本. 作者提出的提示调优的质量和微调模型随着预训练模型参数增长保持一致并保证对于所有的任务都只用一个冻结的模型. 他们的方法远远超过了对GPT-3进行提示设计的效果</figcaption>
 </figure>
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/e9b27a28a8f0281d5d2c098340067bb1.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.download/e9b27a28a8f0281d5d2c098340067bb1_inverted.webp#only-dark){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/e9b27a28a8f0281d5d2c098340067bb1.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/e9b27a28a8f0281d5d2c098340067bb1_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>图二: 模型微调需要对每个下游任务都训练一个专门的副本, 并且不同任务的数据必须在不同的批次中进行训练. 相比之下, 提示调优只需要为每个任务存储一个小型的任务相关的提示, 并且不同任务的数据可以混合在同一个批次中, 只需要在前面拼接一个可训练的提示(如图中的A, B, C被分别拼接到a1, a2; b1; c1, c2上). 当使用T2 XXL模型的时候, 每个微调后的模型副本需要110亿个参数, 而作者的提示调优, 假设提示长度为5个虚拟token, 那么每个任务只需要2048个参数, 缩减了5个数量级以上</figcaption>
 </figure>
 
@@ -78,8 +78,8 @@ T5模型采用"text-to-text", 即文本到文本的范式来代表所有的NLP�
 🌟提示调优移除了提示$P$使用和$\theta$相关的嵌入表嵌入的限制, 转而使用自己的专用嵌入表, 这个嵌入表由参数$\theta_p$定义. 提示设计涉及从冻结嵌入表中选择一个固定词汇, 而提示调优可以被认为是使用了一种特殊的token, 即虚拟tokens来表示prompt. 模型会在输入序列中, 在真实输入$X$的前面加上若干个可以学习的虚拟tokens表示prompt, 和$X$拼接在一起作为输入, $X$的嵌入使用的是$\theta$定义的嵌入矩阵, 这个矩阵是被冻结的, 所以产生的嵌入在训练中不会发生改变, 而虚拟token序列即prompt使用的是$\theta_p$定义的嵌入矩阵, 这个矩阵是随着训练发生变化的, 即在训练的过程中, prompt的嵌入会发生改变, $X$的嵌入不会发生改变. 现在, 模型需要最大化的是$Pr_{\theta; \theta_p}(Y|[P; X])$🌟.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/ed81b6af774b9d639bb6c2bdfc6f04d6.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.download/ed81b6af774b9d639bb6c2bdfc6f04d6_inverted.webp#only-dark){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/ed81b6af774b9d639bb6c2bdfc6f04d6.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/ed81b6af774b9d639bb6c2bdfc6f04d6_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>如图, 左侧的Tunable Soft Prompt是可以随模型训练的, 它们的嵌入是由θp管辖的, 这个参数是可变的; 右侧的Engineered Prompt是无法随模型训练的, 是要手动或者通过繁琐方法搜索的, 因为它们的嵌入规则在训练中是被定义死的(θ是预训练模型的参数, 被冻结)</figcaption>
 </figure>
 

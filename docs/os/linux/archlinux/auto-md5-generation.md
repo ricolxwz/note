@@ -44,7 +44,7 @@ md5p() {
         fi
         mv /home/wenzexu/Pictures/屏幕截图/"$latest_file" /home/wenzexu/Pictures/屏幕截图/"$new_name"
         wrangler r2 object put ricolxwz-image/"$new_name" --file=/home/wenzexu/Pictures/屏幕截图/"$new_name"
-        echo -n "https://img.ricolxwz.download/$new_name" | xclip -selection clipboard
+        echo -n "https://img.ricolxwz.asia/$new_name" | xclip -selection clipboard
         cd /home/wenzexu/image
         git pull
         mv /home/wenzexu/Pictures/屏幕截图/"$new_name" /home/wenzexu/image/

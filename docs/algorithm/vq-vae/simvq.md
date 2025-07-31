@@ -14,8 +14,8 @@ comments: true
 基本上和VQGAN-LC那篇的动机是一样的. 想要提高码本的大小, 因为提高码本的大小能够显著提高性能(参见LLaMA3的词表). 但是码本的利用率比较低, 增大码本也不会带来额外的收益. 作者argue这是因为码本是disjoint optimization, 就是只优化了一部分的码字, 但是其他的码字是dead状态, 见下[图1](#fig1)左. 近期, 也有一些工作, 例如FSQ, LFQ和ViTVQGAN, 将潜空间的维度缩小到很小, 但是这样会导致模型的表示能力下降. VQGAN-LC使用CLIP的视觉编码器初始化, 但是限制了模型泛化到其他数据集的能力.
 
 <figure markdown='1' id='fig1'>
-![](https://img.ricolxwz.download/8e38bbdfbb3ed43d04a415ee7aaef5d5.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.download/8e38bbdfbb3ed43d04a415ee7aaef5d5_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/8e38bbdfbb3ed43d04a415ee7aaef5d5.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/8e38bbdfbb3ed43d04a415ee7aaef5d5_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图1: Vanilla VQ与SimVQ的比较. (a): (左)Vanilla VQ中的分离式优化. 仅更新最近邻的代码向量, 导致大量"dead codes"未被更新. (b): (右)SimVQ中的联合优化. 通过潜在基更新整个代码本, 确保所有代码向量保持激活状态.
 </figcaption>
 </figure>

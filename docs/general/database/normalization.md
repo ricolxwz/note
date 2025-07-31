@@ -17,7 +17,7 @@ comments: true
 
 #### 异常
 
-以[学生选课表为例](https://img.ricolxwz.download/9284796b69eedeeebe319e75c18049a9.png), 数据冗余可能会导致三种异常:
+以[学生选课表为例](https://img.ricolxwz.asia/9284796b69eedeeebe319e75c18049a9.png), 数据冗余可能会导致三种异常:
 
 - 更新异常: 如果该门课程的房间号发生了变化, 例如从"R101"改为"R203", 那么所有与此房间关联的记录都要进行更新, 如果遗漏了某条记录, 会导致数据不一致的情况, 即更新异常
 - 删除异常: 如果所有的学生都退选了这个课程, 那么该课程的房间信息就会被删除, 因为它是和学生记录一起存储的, 这样就会导致丢失该课程的房间信息, 即删除异常
@@ -45,14 +45,14 @@ comments: true
 
 ### 确定函数依赖
 
-那么, 我们如何确定该函数依赖呢? 或者说, 如何发现函数依赖呢? 
+那么, 我们如何确定该函数依赖呢? 或者说, 如何发现函数依赖呢?
 
 主要通过两种方式:
 
 - 考虑属性的语义
 - 分析表中的实际数据
 
-在大多数情况下, 我们使用语义来判断函数依赖. 当使用数据来确定函数依赖的过程又被称为知识挖掘, knowledge mining. 如[图](https://img.ricolxwz.download/be0f5b8161ff4bbd9b178cead0c599ac.png). 从数据可以大致判断, 分行的名称和城市之间有一个函数依赖, 贷款编号和客户名称/数量之间有一个函数依赖, 贷款编号和分行名称之间有一个函数依赖, 城市和资产之间有一个函数依赖, 但是, 这样确定依赖不是特别靠谱, 请见下方注意.
+在大多数情况下, 我们使用语义来判断函数依赖. 当使用数据来确定函数依赖的过程又被称为知识挖掘, knowledge mining. 如[图](https://img.ricolxwz.asia/be0f5b8161ff4bbd9b178cead0c599ac.png). 从数据可以大致判断, 分行的名称和城市之间有一个函数依赖, 贷款编号和客户名称/数量之间有一个函数依赖, 贷款编号和分行名称之间有一个函数依赖, 城市和资产之间有一个函数依赖, 但是, 这样确定依赖不是特别靠谱, 请见下方注意.
 
 ???+ warning "注意"
 
@@ -101,14 +101,14 @@ Armstrong公理是函数依赖推理规则的基础, 它主要包含三个公理
 
 ???+ example "例子"
 
-    假设我们在关系R中有三个属性A, B, C. 已知的函数依赖集F为F={A → B, B → C}. 可以计算出F+如[图](https://img.ricolxwz.download/b21b9f5c8611d9361bbd42a5902009a8.png)所示.
+    假设我们在关系R中有三个属性A, B, C. 已知的函数依赖集F为F={A → B, B → C}. 可以计算出F+如[图](https://img.ricolxwz.asia/b21b9f5c8611d9361bbd42a5902009a8.png)所示.
 
 Armstrong公理具有:
 
 - 健全性: 当将其应用于函数依赖集F的时候, 只会生成在F+中的有效函数依赖
 - 完备性: 通过反复应用公理, 可以生成闭包F+中的所有函数依赖
-    
-基于Armstrong公理还能导出一些附加规则. 
+
+基于Armstrong公理还能导出一些附加规则.
 
 - 分解: decomposition, 如果A → BC, 那么可以推导出A → B和A → C
 - 联合: union, 如果A → B且A → C, 则可以推导出A → BC
@@ -132,13 +132,13 @@ Armstrong公理具有:
 4. 重复步骤2, 直到没有更多的属性能够加入到result
 5. 集合result就是X+
 
-???+ example "例子" 
+???+ example "例子"
 
-    找到下列关系中的候选键: 
+    找到下列关系中的候选键:
 
     PhD(sid, first, last, dept, advisor, award, description)
 
-    已知下列函数依赖: 
+    已知下列函数依赖:
 
     - sid → first, last
     - advisor → dept
@@ -147,7 +147,7 @@ Armstrong公理具有:
 
     设X=(sid, dept)我们来看一下X是不是候选键.
 
-    不断地迭代查找依赖项: (sid, dept)+ = 
+    不断地迭代查找依赖项: (sid, dept)+ =
 
     1. ---> sid, dept
     2. ---> sid, dept, first, last
@@ -171,7 +171,7 @@ Armstrong公理具有:
 #### 完全/部分函数依赖 {#完全部分依赖}
 
 - 完全函数依赖: 设X, Y是关系R的两个属性集合, X'是X的真子集, 存在X → Y, 但对于每一个X', 都有X' !→ Y
-- 部分函数依赖: 设X, Y是关系R的两个属性集合, 存在X → Y, 若X'是X的真子集, 存在X' → Y, 如[图](https://img.ricolxwz.download/3f6628e1effaa6ad0a07f37bea85de93.png)
+- 部分函数依赖: 设X, Y是关系R的两个属性集合, 存在X → Y, 若X'是X的真子集, 存在X' → Y, 如[图](https://img.ricolxwz.asia/3f6628e1effaa6ad0a07f37bea85de93.png)
 
 #### 传递函数依赖 {#传递函数依赖}
 
@@ -179,34 +179,34 @@ Armstrong公理具有:
 
 ### 非主属性/主属性 {#非主属性主属性}
 
-- 非主属性: non-prime attribute, 是关系数据库中的一种属性, 它不属于候选键的一部分 
+- 非主属性: non-prime attribute, 是关系数据库中的一种属性, 它不属于候选键的一部分
 - 主属性: prime attribute, 属于候选键的一部分
 
 ## 范式
 
-范式, normal form是关系型数据库设计中的一种结构化标准, 用于组织数据以减少冗余, 提高数据一致性和查询效率. 范式的目的是通过满足一系列规则和限制, 确保数据库设计的合理性, 并避免数据冗余和数据异常. 
+范式, normal form是关系型数据库设计中的一种结构化标准, 用于组织数据以减少冗余, 提高数据一致性和查询效率. 范式的目的是通过满足一系列规则和限制, 确保数据库设计的合理性, 并避免数据冗余和数据异常.
 
 ### 第一范式 {#第一范式}
 
-第一范式, 1NF, 要求数据表中的每个字段都必须是不可再分的原子值. 其目的是确保数据的基本结构化, 使表中单元格只能存储一个数据项. 
+第一范式, 1NF, 要求数据表中的每个字段都必须是不可再分的原子值. 其目的是确保数据的基本结构化, 使表中单元格只能存储一个数据项.
 
 ???+ example "例子"
 
-    如假设一个学生表中有一列"联系方式", 其中既存储了学生的手机号码, 也存储了电子邮件地址, 这不符合第一范式. 要符合第一范式, 应该将手机号和电子邮件分成两个独立的字段, 如[图](https://img.ricolxwz.download/c74a86751954e772ea874b35a64fcf75.png).
+    如假设一个学生表中有一列"联系方式", 其中既存储了学生的手机号码, 也存储了电子邮件地址, 这不符合第一范式. 要符合第一范式, 应该将手机号和电子邮件分成两个独立的字段, 如[图](https://img.ricolxwz.asia/c74a86751954e772ea874b35a64fcf75.png).
 
 ### 第二范式
 
-第二范式, 2NF, 是在1NF的基础上, 没有[部分依赖](#完全部分依赖), 要求[非主属性](#非主属性主属性)[完全依赖](#完全部分依赖)于主键. 
+第二范式, 2NF, 是在1NF的基础上, 没有[部分依赖](#完全部分依赖), 要求[非主属性](#非主属性主属性)[完全依赖](#完全部分依赖)于主键.
 
 ???+ example "例子"
 
     === "例子1"
 
-        例如假设有一个成绩表有三个字段(学生ID, 课程) → 成绩, 并且还有学生姓名字段, 因为学生姓名只依赖于学生ID, 而与课程无关, 所以它违反了2NF. 解决的方法是将学生信息分离到另一个表中. 
+        例如假设有一个成绩表有三个字段(学生ID, 课程) → 成绩, 并且还有学生姓名字段, 因为学生姓名只依赖于学生ID, 而与课程无关, 所以它违反了2NF. 解决的方法是将学生信息分离到另一个表中.
 
     === "例子2"
 
-        假设有[表](https://img.ricolxwz.download/74915bbea717584c16c54c9d8388e614.png), 这样就会造成重复, 这个老师所教的所有的UoS中, Teacher_position这个信息都会被重复. 解决的方法是将拆分为两个关系, 然后检查拆分后的关系是否符合2NF. 可以拆为R1(Teacher_name, Teacher_position)和R2(Teacher_name, UnitOfStudy).
+        假设有[表](https://img.ricolxwz.asia/74915bbea717584c16c54c9d8388e614.png), 这样就会造成重复, 这个老师所教的所有的UoS中, Teacher_position这个信息都会被重复. 解决的方法是将拆分为两个关系, 然后检查拆分后的关系是否符合2NF. 可以拆为R1(Teacher_name, Teacher_position)和R2(Teacher_name, UnitOfStudy).
 
 ### 第三范式
 
@@ -220,15 +220,15 @@ Armstrong公理具有:
 
     === "例子2"
 
-        如[图](https://img.ricolxwz.download/e4f6930f8f21ed69fca87639b886f79c.png). 需要将其拆分为R1(Employee, Department), R2(Department, Location).
+        如[图](https://img.ricolxwz.asia/e4f6930f8f21ed69fca87639b886f79c.png). 需要将其拆分为R1(Employee, Department), R2(Department, Location).
 
 ### Boyce-Codd范式 {#BCNF}
 
-Boyce-Codd范式, BCNF, 是3NF的增强版. 一个关系R满足BCNF当且仅当所有的[非平凡函数依赖](#平凡非平凡函数依赖)中的左侧必须是R的超键. 换句话说, 表中所有的属性必须完全依赖于超键. 更加正式地说, 对于所有的非平凡依赖X → Y, X必须是R的超键, 如[图](https://img.ricolxwz.download/88db93437b3a505a3f91d3048755edff.png)所示.
+Boyce-Codd范式, BCNF, 是3NF的增强版. 一个关系R满足BCNF当且仅当所有的[非平凡函数依赖](#平凡非平凡函数依赖)中的左侧必须是R的超键. 换句话说, 表中所有的属性必须完全依赖于超键. 更加正式地说, 对于所有的非平凡依赖X → Y, X必须是R的超键, 如[图](https://img.ricolxwz.asia/88db93437b3a505a3f91d3048755edff.png)所示.
 
 ???+ example "例子"
 
-    假设有[表](https://img.ricolxwz.download/e75a079e0516a4d4a7e4c7d4c05457d4.png), 其中Address → Teacher_name违反了BCNF. 需要分开为两个表R1(Address, Teacher_name), R2(Address, UnitofStudy).
+    假设有[表](https://img.ricolxwz.asia/e75a079e0516a4d4a7e4c7d4c05457d4.png), 其中Address → Teacher_name违反了BCNF. 需要分开为两个表R1(Address, Teacher_name), R2(Address, UnitofStudy).
 
 ???+ tip "Tip"
 
@@ -238,7 +238,7 @@ Boyce-Codd范式, BCNF, 是3NF的增强版. 一个关系R满足BCNF当且仅当�
 
 #### 多值依赖
 
-在[第一范式](#第一范式)中, 我们提到了每个字段都必须是不可分割的原子值, 现在来考虑一下以下的情况. 
+在[第一范式](#第一范式)中, 我们提到了每个字段都必须是不可分割的原子值, 现在来考虑一下以下的情况.
 
 ???+ example "例子"
 
@@ -269,11 +269,11 @@ Boyce-Codd范式, BCNF, 是3NF的增强版. 一个关系R满足BCNF当且仅当�
     |Mary|Author|Spanish|
     |Mary|Author|Chinese|
 
-多值依赖MVD的非正式定义为, X和Y之间存在多值依赖, 如果无法从X和Z之间的关系推出X和Y之间的关系. 在我们的例子中, John有多个专业和多个语言, 但是X名字和Y专业之间的依赖和X名字和Z语言之间的依赖没有关系, 是独立的. 也就是说, John的名字决定了它的专业, 同时也决定了它的语言, 但是专业和语言之间是彼此独立的. 
+多值依赖MVD的非正式定义为, X和Y之间存在多值依赖, 如果无法从X和Z之间的关系推出X和Y之间的关系. 在我们的例子中, John有多个专业和多个语言, 但是X名字和Y专业之间的依赖和X名字和Z语言之间的依赖没有关系, 是独立的. 也就是说, John的名字决定了它的专业, 同时也决定了它的语言, 但是专业和语言之间是彼此独立的.
 
 ???+ example "例子"
 
-    假设我们有一组元组, t1, t2, t3, t4. 
+    假设我们有一组元组, t1, t2, t3, t4.
 
     - t1: John - Electron - French
     - t2: John - Plumber - Korean
@@ -289,11 +289,11 @@ Boyce-Codd范式, BCNF, 是3NF的增强版. 一个关系R满足BCNF当且仅当�
     - 名字 ↠ 专业
     - 名字 ↠ 语言
 
-    但是, 这样会引发极大的冗余问题, 解决方法见下. 
+    但是, 这样会引发极大的冗余问题, 解决方法见下.
 
 ---
 
-第四范式, 4NF, 用于处理由于多值依赖, MVD导致的数据冗余问题. 
+第四范式, 4NF, 用于处理由于多值依赖, MVD导致的数据冗余问题.
 
 在上面的例子中, 对于每个人来说, 如果它们有多个专业和会多种语言, 那么需要列出这个人会的每种语言对于每一个专业的组合, 这种重复信息会导致冗余.
 
@@ -323,7 +323,7 @@ Boyce-Codd范式, BCNF, 是3NF的增强版. 一个关系R满足BCNF当且仅当�
 
     === "例子2"
 
-        这个[表格](https://img.ricolxwz.download/6b4a8749c4a62f3cae138d95a3a2e8e1.png)是否符合4NF?
+        这个[表格](https://img.ricolxwz.asia/6b4a8749c4a62f3cae138d95a3a2e8e1.png)是否符合4NF?
 
         答案是不符合, 因为employee_name不是一个超键, 而且employee_name ↠ project_id是非平凡的多值依赖. 解决方法是将上述表一分为二. R1(employee_name, project_id), R2(employee_name, personal_phone_number).
 
@@ -341,13 +341,13 @@ Boyce-Codd范式, BCNF, 是3NF的增强版. 一个关系R满足BCNF当且仅当�
 
 ### 检查无损连接
 
-无损连接指的是当我们将一个关系分解为多个子关系后, 通过自然连接重新组合这些子关系的时候, 不会丢失任何信息, 能够恢复出原始的关系. 如[图](https://img.ricolxwz.download/6bf4db7c2ae6f36e6ff200f2c15ecaf5.png).
+无损连接指的是当我们将一个关系分解为多个子关系后, 通过自然连接重新组合这些子关系的时候, 不会丢失任何信息, 能够恢复出原始的关系. 如[图](https://img.ricolxwz.asia/6bf4db7c2ae6f36e6ff200f2c15ecaf5.png).
 
 对于两个关系R1, R2, 它们具有无损连接的条件是: (R1 ​∩ R2​) → R1​或(R1 ​∩ R2​) → R2.
 
 ???+ example "例子"
 
-    假设我们两个关系R1, R2. R1(A, B), R2(B, C). 由于R1 ​∩ R2​ = {B}, 而B是R2(B, C)的候选键, 因此满足无损连接的条件, 当通过自然连接R1, R2的时候, 能够恢复原始R(A, B, C)的关系.  
+    假设我们两个关系R1, R2. R1(A, B), R2(B, C). 由于R1 ​∩ R2​ = {B}, 而B是R2(B, C)的候选键, 因此满足无损连接的条件, 当通过自然连接R1, R2的时候, 能够恢复原始R(A, B, C)的关系.
 
 ### 分解BCNF
 

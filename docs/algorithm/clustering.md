@@ -17,7 +17,7 @@ comments: true
 
 举几个例子把...
 
-1. 根据购买历史, 浏览历史将顾客分为不同特征的群体, 利用这些信息开发针对性的营销活动 
+1. 根据购买历史, 浏览历史将顾客分为不同特征的群体, 利用这些信息开发针对性的营销活动
 2. 分析客户的行为, 找到可能丢失的客户群体, 例如转移到其他医疗保险, 电力或者电话公司
 3. 找到具有相似结构和功能的基因, 使用微阵列从数千个基因🧬中同时分析
 4. 基于文件的内容找到相似的其他文件, 如专利查询, 个性化新闻推荐
@@ -35,7 +35,7 @@ comments: true
 
 ### 质心和中心
 
-考虑一个含有$N$个点的簇$\{p_1, ..., p_N\}$. 质心, Centroid, 是簇的几何中心, 通常不是簇中的一个数据点. 而中心点, Medoid, 是簇中一个具有代表性的数据点, 其选取方式是: 找到簇中所有点到该点的距离和最小的那个点, 如[图](https://img.ricolxwz.download/e6cedeff0f7b2b51aa22fd01709d7a34.png)所示.
+考虑一个含有$N$个点的簇$\{p_1, ..., p_N\}$. 质心, Centroid, 是簇的几何中心, 通常不是簇中的一个数据点. 而中心点, Medoid, 是簇中一个具有代表性的数据点, 其选取方式是: 找到簇中所有点到该点的距离和最小的那个点, 如[图](https://img.ricolxwz.asia/e6cedeff0f7b2b51aa22fd01709d7a34.png)所示.
 
 ---
 
@@ -71,7 +71,7 @@ K均值聚类, K-means式一种非常流行且广泛使用的划分式聚类算�
 3. 检查停止条件: 当质心不再发生变化, 则算法终止; 否则, 重复第2步, 用新的质心重新进行样本分配和质心计算
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/fd9096289dd73f230d6b032b260d8949.png){ loading=lazy width='600' }
+![](https://img.ricolxwz.asia/fd9096289dd73f230d6b032b260d8949.png){ loading=lazy width='600' }
 </figure>
 
 ???+ note "细节"
@@ -108,13 +108,13 @@ K均值聚类, K-means式一种非常流行且广泛使用的划分式聚类算�
 === "好的初始质心"
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/713548f4d06b34edda13ffe7aaaddd66.png){ loading=lazy width='500' }
+    ![](https://img.ricolxwz.asia/713548f4d06b34edda13ffe7aaaddd66.png){ loading=lazy width='500' }
     </figure>
 
 === "差的初始质心"
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/c74b14d48e7e9e679ee96535450ff907.png){ loading=lazy width='500' }
+    ![](https://img.ricolxwz.asia/c74b14d48e7e9e679ee96535450ff907.png){ loading=lazy width='500' }
     </figure>
 
 选取初始质心的方法大致有两种:
@@ -124,9 +124,9 @@ K均值聚类, K-means式一种非常流行且广泛使用的划分式聚类算�
 
 ##### K-means++ {#kmeans++}
 
-K-means++是一种K-means算法的变种, 它使用不同的方法选取初始质心. 剩余的和标准的K-means算法是相同的. 它的初始质心选取方法为: 
+K-means++是一种K-means算法的变种, 它使用不同的方法选取初始质心. 剩余的和标准的K-means算法是相同的. 它的初始质心选取方法为:
 
-质心是逐个选择的, 直到选出$k$个质心为止. 每一步中, 每个数据点都有一定的概率被选为质心, 该概率与该点到当前与其最近的质心的距离平方成正比, 这意味着离现有质心最远的点更有可能被选中, 这样能够确保质心分布良好, 互相分隔. 
+质心是逐个选择的, 直到选出$k$个质心为止. 每一步中, 每个数据点都有一定的概率被选为质心, 该概率与该点到当前与其最近的质心的距离平方成正比, 这意味着离现有质心最远的点更有可能被选中, 这样能够确保质心分布良好, 互相分隔.
 
 该方法在实际使用中能够显著改进初始质心的选择, 从而提高K-means算法的整体效果. BTW, 在COMP5045(Computational Geometry)中, 其中第11周讲到的Approximation Algorithms使用的也是这个思想, 那里叫"K-Clustering"算法, 过程是一样的.
 
@@ -136,7 +136,7 @@ K-means++是一种K-means算法的变种, 它使用不同的方法选取初始�
 
 K-means会产生空簇, 也就是没有点会被分配到一个簇中, 只包含一个初始质心. 解决方法有:
 
-- 选取离当前质心最远的点 
+- 选取离当前质心最远的点
 - 使用[K-means++算法](#kmeans++)
 - 从具有最高SSE的簇中选取一个新的质心来分裂该簇
 
@@ -146,13 +146,13 @@ K-means会产生空簇, 也就是没有点会被分配到一个簇中, 只包含
 
 离群点, Outliers, 是指在数据集中明显偏离其他数据点的样本点. 它们与大多数数据点的分布有很大的差异, 可能在空间中距离其他数据点较远. 当数据集中存在离群点的时候, 计算得到的质心往往不够代表性, 并且会导致SSE增加. 尤其是在多次聚类运行过程中, 离群点的影响会比较明显.
 
-一种常见的解决方法是在进行聚类之前移除掉离群点. 但是对于某些应用场景, 离群点非常重要, 移除它们可能导致信息丢失. 例如, 数据压缩, 金融分析. 另一种方法是在聚类完成之后再移除这些离群点: 通过跟踪每个点对SSE的贡献, 特别是对贡献异常高的数据点, 可以移除. 
+一种常见的解决方法是在进行聚类之前移除掉离群点. 但是对于某些应用场景, 离群点非常重要, 移除它们可能导致信息丢失. 例如, 数据压缩, 金融分析. 另一种方法是在聚类完成之后再移除这些离群点: 通过跟踪每个点对SSE的贡献, 特别是对贡献异常高的数据点, 可以移除.
 
 #### 其他扩展算法
 
 ##### 二分K-means
 
-二分K-means, Bisecting K-means, 是对标准K-means算法的一种扩展. 它会讲数据集分成两个簇, 然后选择其中的一个簇进一步拆分, 如此重复, 直到获得$k$个簇为止. 
+二分K-means, Bisecting K-means, 是对标准K-means算法的一种扩展. 它会讲数据集分成两个簇, 然后选择其中的一个簇进一步拆分, 如此重复, 直到获得$k$个簇为止.
 
 1. 开始时所有的点都放在一个簇中
 2. 重复以下过程
@@ -171,7 +171,7 @@ K-means会产生空簇, 也就是没有点会被分配到一个簇中, 只包含
 如图所示, 是一个使用二分K-means算法聚类的过程.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/2acfb8b14da20e49c79e2c88bfc5fe28.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/2acfb8b14da20e49c79e2c88bfc5fe28.png){ loading=lazy width='500' }
 </figure>
 
 #### 缺陷
@@ -181,7 +181,7 @@ K-means算法在以球形分类, 同等大小, 分裂明显的原始数据上的
 === "非球形分类的原始数据"
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/678f1837a8e2d8c0a18d30fd615ce1a6.png){ loading=lazy width='500' }
+    ![](https://img.ricolxwz.asia/678f1837a8e2d8c0a18d30fd615ce1a6.png){ loading=lazy width='500' }
     </figure>
 
 === "大小不一致的原始数据"
@@ -189,7 +189,7 @@ K-means算法在以球形分类, 同等大小, 分裂明显的原始数据上的
     K-means算法只会讲最大的原始簇分开.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/813c5603544934b740c39a96095e238c.png){ loading=lazy width='500' }
+    ![](https://img.ricolxwz.asia/813c5603544934b740c39a96095e238c.png){ loading=lazy width='500' }
     </figure>
 
 === "密度不一致的原始数据"
@@ -197,14 +197,14 @@ K-means算法在以球形分类, 同等大小, 分裂明显的原始数据上的
     K-means算法只会分裂最大的原始簇.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/8cc3ff2b958c8b9fac726eeed41c80fa.png){ loading=lazy width='500' }
+    ![](https://img.ricolxwz.asia/8cc3ff2b958c8b9fac726eeed41c80fa.png){ loading=lazy width='500' }
     </figure>
 
 ## 模型式
 
 ### GMM {#gmm}
 
-高斯混合模型, Gaussian Mixture Model, 可以看作是对单一高斯分布的扩展, 它假设数据是由多个高斯分布混合而成的, 每个分布在模型中具有一定的权重. 
+高斯混合模型, Gaussian Mixture Model, 可以看作是对单一高斯分布的扩展, 它假设数据是由多个高斯分布混合而成的, 每个分布在模型中具有一定的权重.
 
 对于一个单一的高斯分布, 它的概率密度函数为$f(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$, 其中$\mu$是均值, $\sigma$是标准差. 我们假设数据是由$k$个高斯分布混合而成的, 每一个分布都有自己的均值和标准差, 一个高斯分布对应的是一个簇. 我们并不知道这些高斯分布的均值和标准差, 我们的目标是通过观察到的数据来估计这些参数. 在每一轮的估计结束后, 我们会重新计算每个数据点属于每个簇的概率, 然后重新估计参数, 如此循环直至收敛. 算法可以表示为:
 
@@ -219,9 +219,9 @@ K-means算法在以球形分类, 同等大小, 分裂明显的原始数据上的
 ???+ example "例子"
 
     假设有$20000$个数据点, 从两个高斯分布构成, 分布1和分布2.
-   
+
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/44e79b3181b5e130d898eac1dea29026.png){ loading=lazy width='500' }
+    ![](https://img.ricolxwz.asia/44e79b3181b5e130d898eac1dea29026.png){ loading=lazy width='500' }
     </figure>
 
     为了简化起见, 假设我们已经知道了它们的标准差$\sigma_1$和$\sigma_2$, $\sigma_1=\sigma_2=2$.
@@ -233,10 +233,10 @@ K-means算法在以球形分类, 同等大小, 分裂明显的原始数据上的
 
 #### GMM vs. K-means
 
-GMM其实是K-means算法的推广. K-means算法假设每个簇是圆形的, 而GMM则放宽了这个假设, 允许簇的形状为椭圆形, 因此更加灵活. 
+GMM其实是K-means算法的推广. K-means算法假设每个簇是圆形的, 而GMM则放宽了这个假设, 允许簇的形状为椭圆形, 因此更加灵活.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/9927e4cc93c42ff8a27e38e94dee29f7.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/9927e4cc93c42ff8a27e38e94dee29f7.png){ loading=lazy width='500' }
 </figure>
 
 ## 层次式
@@ -244,7 +244,7 @@ GMM其实是K-means算法的推广. K-means算法假设每个簇是圆形的, �
 层次式会产生一个嵌套的簇状结构, 这些簇会组成一棵具有层次的树, 这可以用树状图表示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/0eee368bd98d0ffe70ddd197c3261992.png){ loading=lazy width='400' }
+![](https://img.ricolxwz.asia/0eee368bd98d0ffe70ddd197c3261992.png){ loading=lazy width='400' }
 </figure>
 
 ???+ example "例子"
@@ -252,12 +252,12 @@ GMM其实是K-means算法的推广. K-means算法假设每个簇是圆形的, �
     可以通过层次聚类对多个时间序列进行分组, 每条线代表一个时间序列, 图中右侧的柱状图展示了这些时间序列之间的相似性和聚类过程.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/95e3ffe4afc2c2a24487a4a81847ea99.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.asia/95e3ffe4afc2c2a24487a4a81847ea99.png){ loading=lazy width='300' }
     </figure>
 
 ### 优势
 
-使用层次式聚类无需在开始之前就明确簇的数量, 可以通过在树状图的不同层级进行"切割"得到所需的簇数量. 
+使用层次式聚类无需在开始之前就明确簇的数量, 可以通过在树状图的不同层级进行"切割"得到所需的簇数量.
 
 树状图提供了一种可视化过程, 帮助理解不同的数据点如何逐步合并为簇. 通过观察树状图, 有时可以发现数据的有意义的层次结构或分类规则.
 
@@ -273,19 +273,19 @@ GMM其实是K-means算法的推广. K-means算法假设每个簇是圆形的, �
 
 ### 分类
 
-层次式聚合主要分为两种: 
+层次式聚合主要分为两种:
 
 - 聚合式, Agglomerative, bottom-up. 是一个自下往上构建树状图的过程. 即从各自的簇开始, 慢慢合并簇直到所有的数据点都属于一个簇
 - 分裂式, Divisive, top-down. 是一个自上而下构建树状图的过程. 即将所有的数据点都放到一个簇里面, 然后将这个簇慢慢分类直到所有的数据点都在自己的簇里面
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/abdba99a1719ad8e2525efdb0673aa4a.png){ loading=lazy width='400' }
+![](https://img.ricolxwz.asia/abdba99a1719ad8e2525efdb0673aa4a.png){ loading=lazy width='400' }
 </figure>
 
 更直观的图:
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/4accd298e44978a6fb715d72c1693c60.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/4accd298e44978a6fb715d72c1693c60.png){ loading=lazy width='500' }
 </figure>
 
 由于分裂式比聚合式的热度更低, 所以我们会注重讲解聚合式.
@@ -298,7 +298,7 @@ GMM其实是K-means算法的推广. K-means算法假设每个簇是圆形的, �
 2. 将每个数据点都视为一个簇
 3. 重复过程:
     1. 合并两个最近的簇
-    2. 更新邻近矩阵 
+    2. 更新邻近矩阵
 4. 结束条件: 直到只有一个剩余的簇
 
 如何测量簇的距离? 我们在[这里](#簇的距离)讲过.
@@ -310,33 +310,33 @@ GMM其实是K-means算法的推广. K-means算法假设每个簇是圆形的, �
         给出$6$个数据点, 利用聚合式聚类, 距离计算方法是单链接, 曼哈顿距离.
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/b4d217b54c6aa11263371424fda25cd7.png){ loading=lazy width='200' }
+        ![](https://img.ricolxwz.asia/b4d217b54c6aa11263371424fda25cd7.png){ loading=lazy width='200' }
         </figure>
 
     === "1. 利用曼哈顿距离计算邻近矩阵--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/2a4f4cec8727f5f7bfca4a77f6a72a2e.png){ loading=lazy width='400' }
+        ![](https://img.ricolxwz.asia/2a4f4cec8727f5f7bfca4a77f6a72a2e.png){ loading=lazy width='400' }
         </figure>
 
     === "2. 让每一个点都成为一个簇--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/ac7f825898f7380755ffea8d0a303829.png){ loading=lazy width='400' }
+        ![](https://img.ricolxwz.asia/ac7f825898f7380755ffea8d0a303829.png){ loading=lazy width='400' }
         </figure>
-    
+
     === "3. 合并两个最近的簇--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/67073e7d64f9208896455f2d9e103819.png){ loading=lazy width='400' }
+        ![](https://img.ricolxwz.asia/67073e7d64f9208896455f2d9e103819.png){ loading=lazy width='400' }
         </figure>
-        
+
         这里, 我们合并的是B-C, E-F, 因为它们的距离是最近的, 都是$1$, 所以两个都合并.
 
     === "4. 更新邻近矩阵--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/655d35594bf061310efc089b7b4ab50f.png){ loading=lazy width='400' }
+        ![](https://img.ricolxwz.asia/655d35594bf061310efc089b7b4ab50f.png){ loading=lazy width='400' }
         </figure>
 
         注意, 邻近矩阵是根据单链接距离更新的.
@@ -344,15 +344,15 @@ GMM其实是K-means算法的推广. K-means算法假设每个簇是圆形的, �
     === "5. 重复上述过程--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/7ebde1191b78b3e72ea3cdaf3ed73711.png){ loading=lazy width='400' }
+        ![](https://img.ricolxwz.asia/7ebde1191b78b3e72ea3cdaf3ed73711.png){ loading=lazy width='400' }
         </figure>
 
-        由于A和B, C距离最小, 所以合并. 
+        由于A和B, C距离最小, 所以合并.
 
     === "6. 重复上述过程--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/c34411061761479a207ee0f8c70503c2.png){ loading=lazy width='400' }
+        ![](https://img.ricolxwz.asia/c34411061761479a207ee0f8c70503c2.png){ loading=lazy width='400' }
         </figure>
 
         注意, ⚠️, 这个时候出现了两组距离都是最短距离的簇, 分别是A, B, C和E, F; D和E, F. 都有E, F这个簇, 那么我们到底先合并哪一组好呢? 我们可以随机选取一组, 譬如这里合并的是D和E, F这两个簇.
@@ -360,13 +360,13 @@ GMM其实是K-means算法的推广. K-means算法假设每个簇是圆形的, �
     === "7. 合并为一个簇"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/6d339a579b337368bc35ed9c9275a591.png){ loading=lazy width='400' }
+        ![](https://img.ricolxwz.asia/6d339a579b337368bc35ed9c9275a591.png){ loading=lazy width='400' }
         </figure>
 
         最终, 合并为一个簇. 树状图可以表示为:
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/0f5a766f61a7e1416f00f7ccec1a3335.png){ loading=lazy width='250' }
+        ![](https://img.ricolxwz.asia/0f5a766f61a7e1416f00f7ccec1a3335.png){ loading=lazy width='250' }
         </figure>
 
 ### 分裂式
@@ -379,7 +379,7 @@ GMM其实是K-means算法的推广. K-means算法假设每个簇是圆形的, �
 3. 结束条件: 直到所有的点都被分割为单独的簇
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/7853562a1ce61712453679f9547630c3.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/7853562a1ce61712453679f9547630c3.png){ loading=lazy width='500' }
 </figure>
 
 ## 密度式
@@ -389,13 +389,13 @@ GMM其实是K-means算法的推广. K-means算法假设每个簇是圆形的, �
 带有噪声处理的基于密度的空间聚类算法, Density-Based Spatial Clustering of Applications with Noise, DBSCAN, 是一种基于密度的聚类方法, 特别适合处理带有噪声的复杂数据集. DBSCAN将高密度区域识别为一个簇, 并把低密度区域视为簇和簇之间的分割. 噪声点通常位于低密度区域, 被排除在簇之外.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/63eda41b125787211ac30a0e3a6836a5.png){ loading=lazy width='300' }
+![](https://img.ricolxwz.asia/63eda41b125787211ac30a0e3a6836a5.png){ loading=lazy width='300' }
 </figure>
 
 不同于K-means只能找圆形的簇, DBSCAN能找任意复杂形状的簇, 如S形, 半圆形...
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/c5306dba12bcc732151af1e8be634d85.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/c5306dba12bcc732151af1e8be634d85.png){ loading=lazy width='500' }
 </figure>
 
 DBSCAN的主要思想是, 如果A是一个簇, 那么它的密度应该高于一个阈值. 点A的领域是指在一个给定半径(成为Eps)的范围内, 围绕点A的区域. 密度是指在A的领域内点的数量, 包括A本身. 所以, A的密度就是在这个Eps半径内点的总数. 密度的阈值MinPts是密度的最低要求, 如果A的领域中的点数达到或者超过这个阈值, 即A的密度超过这个阈值, 则点A被认为是高密度点; 如果低于这个阈值, A可能被视为边界点或者噪声点.
@@ -416,18 +416,18 @@ DBSCAN中有三种点:
 若MinPts = $7$:
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/6135b5f3f955d0c60f60a27007a57275.png){ loading=lazy width='300' }
+![](https://img.ricolxwz.asia/6135b5f3f955d0c60f60a27007a57275.png){ loading=lazy width='300' }
 </figure>
 
 若MinPts = $4$:
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/cae80e834b70837364d7afdbc8d07362.png){ loading=lazy width='300' }
+![](https://img.ricolxwz.asia/cae80e834b70837364d7afdbc8d07362.png){ loading=lazy width='300' }
 </figure>
 
 ---
 
-DBSCAN的算法步骤为: 
+DBSCAN的算法步骤为:
 
 1. 将数据点标注为核心点, 边界点, 噪声点
 2. 抛弃噪声点
@@ -442,7 +442,7 @@ DBSCAN的算法步骤为:
         给出原始数据(邻接矩阵).
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/714fabd7f1a6ae4d9577a2b69f32aff0.png){ loading=lazy width='300' }
+        ![](https://img.ricolxwz.asia/714fabd7f1a6ae4d9577a2b69f32aff0.png){ loading=lazy width='300' }
         </figure>
 
         - Eps = $2$
@@ -469,7 +469,7 @@ DBSCAN的算法步骤为:
         给出原始数据(邻接矩阵).
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/5a288f9877c7a1f5771995e176046ca2.png){ loading=lazy width='300' }
+        ![](https://img.ricolxwz.asia/5a288f9877c7a1f5771995e176046ca2.png){ loading=lazy width='300' }
         </figure>
 
         - Eps = $1$
@@ -493,13 +493,13 @@ DBSCAN的算法步骤为:
 
             - A, B
             - D, E
- 
+
 #### 选取Eps和MinPts {#select-eps-minpts}
 
 不同的Eps和MinPts可能会对结果产生很大影响.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/baa3b7f497ca64173309b9cc5ad73a1f.png){ loading=lazy width='600' }
+![](https://img.ricolxwz.asia/baa3b7f497ca64173309b9cc5ad73a1f.png){ loading=lazy width='600' }
 </figure>
 
 - 如果Eps太大的话, 那么所有的点都会变成核心点
@@ -510,7 +510,7 @@ DBSCAN的算法步骤为:
 k-距离是指从一个点到其第$k$个最近邻居的距离. 对于属于某个簇的点, k-距离会比较小; 对于不属于任何簇的点, 如噪声点, k-距离会比较大. 我们可以为数据集中的所有点计算其k-距离, 然后将这些距离按照升序排列并绘制成图表. 在图中, k-距离的突然上升表示在这个位置对应的Eps和MinPts是合适的.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/f3724bfa6246c2d1b2b3697b0f990f9f.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/f3724bfa6246c2d1b2b3697b0f990f9f.png){ loading=lazy width='500' }
 </figure>
 
 #### 变化密度
@@ -518,7 +518,7 @@ k-距离是指从一个点到其第$k$个最近邻居的距离. 对于属于某�
 DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和MinPts.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/8da85a2173051ffa91b70729aa2cc5ce.png){ loading=lazy width='600' }
+![](https://img.ricolxwz.asia/8da85a2173051ffa91b70729aa2cc5ce.png){ loading=lazy width='600' }
 </figure>
 
 ???+ example "例子"
@@ -526,7 +526,7 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
     有四个簇, A, B, C, D. 都被噪声包围. 颜色越深, 表示密度越高. A和B周围噪音的密度和C, D的密度是一样的, 那么DBSCAN会找到多少个簇?
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/dc19153a09c1e9f59362d0d6266345be.png){ loading=lazy width='500' }
+    ![](https://img.ricolxwz.asia/dc19153a09c1e9f59362d0d6266345be.png){ loading=lazy width='500' }
     </figure>
 
     === "若Eps较大"
@@ -534,7 +534,7 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
         若Eps大到恰好能让C和D能够被分为不同的簇且其周围的点被视为噪声. 则A和B及它们周围的点会被视为一个簇.
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/454cc151e9067d5fe46759af30f8ed7b.png){ loading=lazy width='500' }
+        ![](https://img.ricolxwz.asia/454cc151e9067d5fe46759af30f8ed7b.png){ loading=lazy width='500' }
         </figure>
 
         你可以仔细品品, 这是怎么回事.
@@ -544,7 +544,7 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
         若Eps小到A和B被分为不同的簇, 并且它们周围的点被视为噪声. 则C和D及其周围的点会被视为噪音.
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.download/d37cf7124df9a51c46410026df0caca0.png){ loading=lazy width='500' }
+        ![](https://img.ricolxwz.asia/d37cf7124df9a51c46410026df0caca0.png){ loading=lazy width='500' }
         </figure>
 
         你可以仔细品品, 这是怎么回事.
@@ -571,16 +571,16 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
 
 ## 评估
 
-给出$1000$个随机生成的数据点, 这些点没有任何明显的自然聚类结构, 只是纯粹的噪声数据. K-means算法和聚合式算法被设置为寻找$3$个簇, 即使数据是随机的, 没有明显的聚类结构. 
+给出$1000$个随机生成的数据点, 这些点没有任何明显的自然聚类结构, 只是纯粹的噪声数据. K-means算法和聚合式算法被设置为寻找$3$个簇, 即使数据是随机的, 没有明显的聚类结构.
 
 ???+ tip "Tip"
 
-    理论上聚合式聚类不需要指定簇的数量, 但是有时候, 为了方便或者对比结果, 人们会提前指定提取的簇的数量. 
+    理论上聚合式聚类不需要指定簇的数量, 但是有时候, 为了方便或者对比结果, 人们会提前指定提取的簇的数量.
 
 这提示我们, 即使数据是完全随机的, 聚类算法仍然能够划分出簇. 因此, 在使用聚类算法的时候, 需要对结果进行评估, 以确保我们没有在噪声中"发现"不存在的模式的可能性.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/dd3e986b080ac523658d640c12f53635.png){ loading=lazy width='400' }
+![](https://img.ricolxwz.asia/dd3e986b080ac523658d640c12f53635.png){ loading=lazy width='400' }
 </figure>
 
 有两种方式评估聚类的质量:
@@ -597,7 +597,7 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
 一个好的聚类会产生高凝聚度和高分离度的簇.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/fae31b619ceba5cd790a22a12106e818.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/fae31b619ceba5cd790a22a12106e818.png){ loading=lazy width='500' }
 </figure>
 
 一个簇$k_i$的凝聚度计算公式为$cohesion(k_i)=\sum_{x\in k_i} dist(x, c_i)$. 其中, $c_i$是簇的质心, $x$是簇中所有的数据点. 总的凝聚度为所有簇的凝聚度之和.
@@ -607,7 +607,7 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
     如簇1和簇2的凝聚度.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/453d31029f49420825a92fe6edca5ccd.png){ loading=lazy width='500' }
+    ![](https://img.ricolxwz.asia/453d31029f49420825a92fe6edca5ccd.png){ loading=lazy width='500' }
     </figure>
 
     这里的距离采用的是[曼哈顿距离](/algorithm/preprocessing/#曼哈顿距离). 得到$cohesion(k_1)=1$, $cohesion(k_2)=1$. 总的凝聚度为两者之和$cohesion = 2$.
@@ -619,7 +619,7 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
     如簇1和簇2的分离度.
 
     <figure markdown='œ1'>
-    ![](https://img.ricolxwz.download/60703076c2e2e08db9a3662858f251db.png){ loading=lazy width='500' }
+    ![](https://img.ricolxwz.asia/60703076c2e2e08db9a3662858f251db.png){ loading=lazy width='500' }
     </figure>
 
     所有点的质心坐标为$3$, 计算得到$separation(k_1)=1.5$, $separation(k_2)=1.5$. 总的分离度是所有簇的加权和, 权重是簇内点的数量, $sparation=2*1.5+2*1.5=6$.
@@ -636,7 +636,7 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
     计算簇1和簇2的凝聚度和分离度.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/596183cd721dec4cf07deaeaf71709bb.png){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.asia/596183cd721dec4cf07deaeaf71709bb.png){ loading=lazy width='400' }
     </figure>
 
     - $SSE=(1-1.5)^2+(2-1.5)^2+(4-4.5)^2+(5-4.5)^2=1$
@@ -663,7 +663,7 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
 
 #### 相似度矩阵的相关性 {#correlation-similarity-matrix}
 
-使用相似度矩阵的相关性来评估聚类质量的原理是找到相似的数据点(即彼此距离较近的数据点)是否被分配到相同的簇中. 
+使用相似度矩阵的相关性来评估聚类质量的原理是找到相似的数据点(即彼此距离较近的数据点)是否被分配到相同的簇中.
 
 - 第一个相似度矩阵从距离得出
 - 第二个相似度矩阵从聚类结果得出
@@ -671,7 +671,7 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
 计算这两个相似度矩阵的相关性.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/95d386981583dd623f16f7c177b8f877.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/95d386981583dd623f16f7c177b8f877.png){ loading=lazy width='500' }
 </figure>
 
 ???+ example "例子"
@@ -681,15 +681,15 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
     其相似度矩阵为:
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/4ab78bb8e74fec45c35227a40a4876fb.png){ loading=lazy width='200' }
+    ![](https://img.ricolxwz.asia/4ab78bb8e74fec45c35227a40a4876fb.png){ loading=lazy width='200' }
     </figure>
 
-    该相似度矩阵是基于点之间的距离生成的. 
+    该相似度矩阵是基于点之间的距离生成的.
 
     基于聚类结果, 可以得到另一个相似度矩阵, 叫做聚类相似度矩阵:
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/44b8c7c4856be6985fa0f5dd4540388e.png){ loading=lazy width='200' }
+    ![](https://img.ricolxwz.asia/44b8c7c4856be6985fa0f5dd4540388e.png){ loading=lazy width='200' }
     </figure>
 
     这个相似度矩阵表示哪些数据点被分到了同一个簇中. 值为$1$表示两个数据点在同一个簇中, 值为$0$表示两个数据点不在同一个簇中.
@@ -698,10 +698,10 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
 
 #### 相似度矩阵的可视化
 
-可视化一个相似度矩阵. 
+可视化一个相似度矩阵.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/6559e44882de330d90545c95a2358f3f.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/6559e44882de330d90545c95a2358f3f.png){ loading=lazy width='500' }
 </figure>
 
 右侧的可视化的相似度矩阵用颜色表示不同点的相似性. 颜色越红, 表示相似度越高, 点之间的距离越近; 颜色越蓝, 表示相似度越低, 点之间的距离越远. 如果主对角线有清晰的块状结构, 则表示同一簇中的点彼此相似, 且不同簇之间的点不太相似, 表示聚类的效果较好.
@@ -709,7 +709,7 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
 下图是一个随机的数据的可视化相似度矩阵.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/cb4cdc1bb438804956337090b97c20b9.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/cb4cdc1bb438804956337090b97c20b9.png){ loading=lazy width='500' }
 </figure>
 
 可以看到, 主对角线的块状结构是不太清晰的.
@@ -719,5 +719,5 @@ DBSCAN无法很好的处理密度不同的簇, 结果会取决于不同的Eps和
 可以参考PCA中的[肘方法](/algorithm/dimensional-reduction/#确定PC的数量). 对于不同的$k$运行聚类算法, 使用无监督评估评估聚类结果, 如SSE, 轮廓系数. 然后, 找到SSE, 轮廓系数骤然下降对应的簇的数量.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/eda3b8fa93926f79476591ff1adb01b1.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/eda3b8fa93926f79476591ff1adb01b1.png){ loading=lazy width='500' }
 </figure>

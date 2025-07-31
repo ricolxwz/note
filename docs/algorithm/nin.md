@@ -52,7 +52,7 @@ Maxout运用在仿射特征图上的表现就是, 假设有$96$个通道, 然后
 NiN, Network in Network通过一个称为"微网络"(micro network)的结构来替代传统的GLM. 在这个工作中, 作者采用的是MLP作为这个非线性函数逼近器, 该结构又被称为mlpconv.
 
 <figure markdown='1'>
-  ![](https://img.ricolxwz.download/0ede5e8e0112ff9b4584ad3a4187afe3.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.asia/0ede5e8e0112ff9b4584ad3a4187afe3.png){ loading=lazy width='500' }
 </figure>
 
 这个夹在卷积层之间的MLP对于所有的感受野都是共享权重的, 它会随着卷积核一起滑动(就是接受卷积核的输出, sliding a micro network). 具体来说, 对input进行卷积, 然后将卷积得到的特征图放到MLP中. 这个和之前的SMLP(Structured Multilayer Perceptron)[^5]不太一样, 那个是不会滑动的, 也就是输入的不同区域输入一个共享的MLP.
@@ -60,7 +60,7 @@ NiN, Network in Network通过一个称为"微网络"(micro network)的结构来�
 总体的架构如图所示, 使用三个mlpconv层和一个全局平均池化层.
 
 <figure markdown='1'>
-  ![](https://img.ricolxwz.download/eff083e2de846c303cca9ce7090a2b77.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.asia/eff083e2de846c303cca9ce7090a2b77.png){ loading=lazy width='500' }
 </figure>
 
 mlpconv层进行的数学运算如下:

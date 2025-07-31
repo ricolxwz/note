@@ -7,7 +7,7 @@ comments: true
 
 ???+ example "例子"
 
-    如[图](https://img.ricolxwz.download/056fd74701e82526e4b043f255c469ee.png)是一张学生表和参与课程表, 现在要你找到同时参加COMP5138和ISYS3207的学生的名字, 下列查询是否正确?
+    如[图](https://img.ricolxwz.asia/056fd74701e82526e4b043f255c469ee.png)是一张学生表和参与课程表, 现在要你找到同时参加COMP5138和ISYS3207的学生的名字, 下列查询是否正确?
 
     ```sql
     SELECT name FROM Student NATURAL JOIN Enrolled WHERE uos_code='COMP5138'
@@ -73,7 +73,7 @@ SQL中用于子查询的集合比较操作有四种:
     CREATE VIEW student_enrollment AS
             SELECT sid, name, title, semester
             FROM student NATURAL JOIN Enrolled NATURAL JOIN unitofstudy
-    ``` 
+    ```
 
 ## 聚合操作
 
@@ -83,15 +83,15 @@ SQL支持数种聚合操作. 包括`COUNT`, `SUM`, `AVG`, `MAX`, `MIN`, 除了`C
 
     === "例子1"
 
-        如[图](https://img.ricolxwz.download/b1d7089b238fb3a10cd0a4710cb3ed80.png).
+        如[图](https://img.ricolxwz.asia/b1d7089b238fb3a10cd0a4710cb3ed80.png).
 
     === "例子2"
 
-        如[图](https://img.ricolxwz.download/e30cc90ccbccf965e719d51600e99369.png).
+        如[图](https://img.ricolxwz.asia/e30cc90ccbccf965e719d51600e99369.png).
 
     === "例子3"
 
-        如[图](https://img.ricolxwz.download/9d439950a11be954151f5ffcc2212d27.png).
+        如[图](https://img.ricolxwz.asia/9d439950a11be954151f5ffcc2212d27.png).
 
 ### 分组
 
@@ -99,23 +99,23 @@ SQL支持数种聚合操作. 包括`COUNT`, `SUM`, `AVG`, `MAX`, `MIN`, 除了`C
 
 ???+ example "例子"
 
-    如[图](https://img.ricolxwz.download/b1a1edec3f4d45f040fc471d6858c7e9.png). 这里, Sales表格可以分为IBM和DELL, 我们对company进行分组, 用`GROUP BY`关键字, 然后会对IBM的amount, DELL的amount分别进行聚合, 而不是整一个属性amount进行聚合.
+    如[图](https://img.ricolxwz.asia/b1a1edec3f4d45f040fc471d6858c7e9.png). 这里, Sales表格可以分为IBM和DELL, 我们对company进行分组, 用`GROUP BY`关键字, 然后会对IBM的amount, DELL的amount分别进行聚合, 而不是整一个属性amount进行聚合.
 
 #### 过滤
 
-我们可以对`HAVING`子句对分组的结果进行过滤, 如`HAVING SUM(amount) > 10000`来筛选出销售总额大于`10000`的公司. 需要注意的是, 在`SELECT`或者`HAVING`子句中的字段必须是聚合函数的结果或是出现在`GROUP BY`子句中的字段. 
+我们可以对`HAVING`子句对分组的结果进行过滤, 如`HAVING SUM(amount) > 10000`来筛选出销售总额大于`10000`的公司. 需要注意的是, 在`SELECT`或者`HAVING`子句中的字段必须是聚合函数的结果或是出现在`GROUP BY`子句中的字段.
 
 ## 评估流程
 
-评估流程如[图](https://img.ricolxwz.download/549b2dcf48909f15ac8c06a30396c35f.png)所示.
+评估流程如[图](https://img.ricolxwz.asia/549b2dcf48909f15ac8c06a30396c35f.png)所示.
 
 ???+ example "例子"
 
-    如[图](https://img.ricolxwz.download/91083d1329e274f2bb2ae9ad93942e52.png)--->[图](https://img.ricolxwz.download/c0f6aab1c5ef2e998cb5a7f64e7133b1.png).
+    如[图](https://img.ricolxwz.asia/91083d1329e274f2bb2ae9ad93942e52.png)--->[图](https://img.ricolxwz.asia/c0f6aab1c5ef2e998cb5a7f64e7133b1.png).
 
 ## 空值
 
-一个元组可能有空值, 用`NULL`表示. `NULL`表示一个值不存在或者不可表示, 并不意味着值是`0`或者`blank`. `IS NULL`和`IS NOT NULL`可用于检测空值. 
+一个元组可能有空值, 用`NULL`表示. `NULL`表示一个值不存在或者不可表示, 并不意味着值是`0`或者`blank`. `IS NULL`和`IS NOT NULL`可用于检测空值.
 
 ???+ example "例子"
 

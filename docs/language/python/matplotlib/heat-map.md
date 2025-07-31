@@ -49,8 +49,8 @@ imshow(X, cmap, norm, aspect, interpolation, alpha, vmin, vmax, origin, extent, 
 
     输出:
 
-    ![](https://img.ricolxwz.download/d2b79fcbc9582093ec2cf314e076d0ff.png){:style="width:400px"}
-    
+    ![](https://img.ricolxwz.asia/d2b79fcbc9582093ec2cf314e076d0ff.png){:style="width:400px"}
+
 ### 显示彩色图像
 
 ???+ example "例子"
@@ -65,7 +65,7 @@ imshow(X, cmap, norm, aspect, interpolation, alpha, vmin, vmax, origin, extent, 
 
     输出:
 
-    ![](https://img.ricolxwz.download/40f626ccaa12d9326a2886d1283e95b8.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/40f626ccaa12d9326a2886d1283e95b8.png){:style="width:400px"}
 
 ### 显示热力图
 
@@ -82,6 +82,6 @@ imshow(X, cmap, norm, aspect, interpolation, alpha, vmin, vmax, origin, extent, 
 
     输出:
 
-    ![](https://img.ricolxwz.download/2d679f19bfbf426005d0bd4768da85cc.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/2d679f19bfbf426005d0bd4768da85cc.png){:style="width:400px"}
 
 [^1]: Matplotlib imshow() 方法 | 菜鸟教程. (n.d.). From https://www.runoob.com/matplotlib/matplotlib-imshow.html

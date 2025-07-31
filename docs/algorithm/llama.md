@@ -11,7 +11,7 @@ comments: true
 
 ## 背景
 
-在海量文本语料库中训练的大型语言模型(LLMs)已经证明, 它们有能力根据文本指令或者少量示例执行新任务. 当模型扩展大足够大的规模的时候, 首次出现了这些few-shot特性. 由此产生了如何进一步扩展这些模型的研究方向. 这些努力基于参数越多性能越好的假设. 然而, Hoffmann等人的最新研究表明, 最佳性能不是由最大的模型实现的, 而是由在更多数据上训练较小的模型实现的. 
+在海量文本语料库中训练的大型语言模型(LLMs)已经证明, 它们有能力根据文本指令或者少量示例执行新任务. 当模型扩展大足够大的规模的时候, 首次出现了这些few-shot特性. 由此产生了如何进一步扩展这些模型的研究方向. 这些努力基于参数越多性能越好的假设. 然而, Hoffmann等人的最新研究表明, 最佳性能不是由最大的模型实现的, 而是由在更多数据上训练较小的模型实现的.
 
 Hoffman等人提出的缩放定律的目的是如何在特定的 ^^训练预算^^ 下以最佳的方式缩放数据集和模型大小. 然而, 这一目标忽略了 ^^推理预算^^, 而推理预算在大规模使用语言模型的时候变得至关重要. 虽然为了达到某个性能水平, 有时训练一个更大的模型在总训练的花费上会更加偏移(可能更快达到目标性能), 但是真正上线使用的时候, 推理成本(包括速度, 显存占用, 计算资源等)才是长期的主要花费. 例如, Hoffmann等人在他们的研究中建议在200B的tokens上训练一个10B参数的模型, 但是作者发现, 即使是7B参数的模型, 在训练到1T(1万亿tokens)的时候, 性能依旧能够持续提高. 这说明小模型可以通过更长时间的训练来缩小和大模型的性能差距, 并且推理的时候会更加划算.
 
@@ -27,11 +27,11 @@ Hoffman等人提出的缩放定律的目的是如何在特定的 ^^训练预算^
 
 ### 预训练数据
 
-他们的训练集由下表所列的多个数据源混合而成, 涵盖了多个领域, 在大多数情况下, 他们重复使用已经被用于训练其他LLM的数据源, 但是仅限于公开可用的数据, 和开源精神兼容. 
+他们的训练集由下表所列的多个数据源混合而成, 涵盖了多个领域, 在大多数情况下, 他们重复使用已经被用于训练其他LLM的数据源, 但是仅限于公开可用的数据, 和开源精神兼容.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/3e169dccaffce4ffabc1af2afccdb536.webp#only-light){ loading=lazy width='300' }
-![](https://img.ricolxwz.download/3e169dccaffce4ffabc1af2afccdb536_inverted.webp#only-dark){ loading=lazy width='300' }
+![](https://img.ricolxwz.asia/3e169dccaffce4ffabc1af2afccdb536.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.asia/3e169dccaffce4ffabc1af2afccdb536_inverted.webp#only-dark){ loading=lazy width='300' }
 <figcaption>预训练数据. 列出了每个子集的采样占总体的比例. 当训练数据量为1.4T Tokens的时候, 每个子集的epochs数量, 以及每个子集的磁盘大小. 对于1T Tokens的预训练, 采样的比例是不变的.</figcaption>
 </figure>
 
@@ -63,17 +63,17 @@ Hoffman等人提出的缩放定律的目的是如何在特定的 ^^训练预算^
 
 根据最近关于大语言模型的研究, 作者的网络基于Transformer架构. 他们利用了随后提出的各种改进, 并将其应用到了PaLM等许多不同的模型中. 以下是和原始架构的主要区别, 以及他们从哪些方面获得了这种改进的灵感(在括号内).
 
-**预归一化(GPT-3).** 在标准的Transformer架构中, 每个子层(例如Self-Attention子层和Feed-Forward子层)往往遵循"子层+残差链接+LN"的顺序, 即对子层的输出进行归一化(Post-Norm). 而Pre-Norm则是在输入子层之前(而不是子层的输出之后)进行归一化, 它最早可以在一些改进型Transformer以及GPT-3等模型中看到. 在这里, 作者使用的是Zhang和Sennrich等人提出的RMSNorm. 
+**预归一化(GPT-3).** 在标准的Transformer架构中, 每个子层(例如Self-Attention子层和Feed-Forward子层)往往遵循"子层+残差链接+LN"的顺序, 即对子层的输出进行归一化(Post-Norm). 而Pre-Norm则是在输入子层之前(而不是子层的输出之后)进行归一化, 它最早可以在一些改进型Transformer以及GPT-3等模型中看到. 在这里, 作者使用的是Zhang和Sennrich等人提出的RMSNorm.
 
 **SwiGLU激活函数(PaLM).** 传统的Transformer通常使用的是ReLU或者GELU等激活函数. 而PaLM模型中的一种改进就是将激活函数替换为SwiGLU. SwiGLU是由Shazeer引入的一种激活函数变体, 结合了Swish和GLU的思路. 并且, 作者还提到了他们使用的Feed-Forward层的隐藏维度不再是4d, 而是2/3*4d, 这是为了在不显著损失性能的前提下减少参数量和计算量.
 
-**RoPE(GPTNeo).** 在原始的Transformer, 我们通常使用的是绝对位置编码, 比如对序列中的第i个token加入固定的正弦/余弦位置编码, 或者直接学习到一个可训练的向量来表示位置. Retary嵌入(RoPE)是由Su等人引入的一种相对位置编码思想, 它通过对注意力计算中的queries和keys分量施加旋转变换, 来编码位置信息. 
+**RoPE(GPTNeo).** 在原始的Transformer, 我们通常使用的是绝对位置编码, 比如对序列中的第i个token加入固定的正弦/余弦位置编码, 或者直接学习到一个可训练的向量来表示位置. Retary嵌入(RoPE)是由Su等人引入的一种相对位置编码思想, 它通过对注意力计算中的queries和keys分量施加旋转变换, 来编码位置信息.
 
 ### 优化器
 
-该模型使用的是AdamW优化器优化. Adam类型的优化器会有一个一阶动量和二阶动量的知识点, 一阶动量解决了往哪走的问题, 二阶动量解决的是走多快的问题, 参数的更新量会参考$\frac{m_t}{\sqrt{v_t}+\epsilon}$. 作者采用的一阶, 二阶矩估计的指数衰减系数为$\beta_1=0.9$, $\beta_2=0.95$, 常见的$\beta_2$默认值是$0.999$, 这里的设置意味着二阶动量的衰减更快, 减少对历史梯度的过渡平滑, 能够加快收敛. 
+该模型使用的是AdamW优化器优化. Adam类型的优化器会有一个一阶动量和二阶动量的知识点, 一阶动量解决了往哪走的问题, 二阶动量解决的是走多快的问题, 参数的更新量会参考$\frac{m_t}{\sqrt{v_t}+\epsilon}$. 作者采用的一阶, 二阶矩估计的指数衰减系数为$\beta_1=0.9$, $\beta_2=0.95$, 常见的$\beta_2$默认值是$0.999$, 这里的设置意味着二阶动量的衰减更快, 减少对历史梯度的过渡平滑, 能够加快收敛.
 
-AdamW和传统Adam优化器的区别在于, 他是"先更新, 再衰减". 传统Adam优化器实现权重衰减/正则化的方法是在损失函数中加入L2项$\mathcal{L}_{\text{new}}(\mathbf{w})=\mathcal{L}(\mathbf{w})+\lambda||\mathbf{w}||^2$, 这种权重的衰减/正则化是随着梯度一起根据一阶动量/二阶动量的结果进行调度放大或者缩小的, 这种耦合可能导致正则化的效果变得不可控, 影响模型的收敛. AdamW解决这个问题的方式是将这两个过程解耦, 先更新, 再衰减/正则. 具体做法是, 不在损失函数中添加L2项, 而是先用Adam正常更新, 然后对参数做一次额外的衰减: 第一步, 先更新$\mathbf{w}\leftarrow\mathbf{w}-\eta\cdot \hat{g}(\mathbf{w})$, 第二步, 额外的衰减/正则, $\mathbf{w}\leftarrow \mathbf{w}\cdot (1-\eta\cdot \lambda_{\text{decay}})$. 这个$\lambda_{\text{decay}}$被设置为$0.1$. 
+AdamW和传统Adam优化器的区别在于, 他是"先更新, 再衰减". 传统Adam优化器实现权重衰减/正则化的方法是在损失函数中加入L2项$\mathcal{L}_{\text{new}}(\mathbf{w})=\mathcal{L}(\mathbf{w})+\lambda||\mathbf{w}||^2$, 这种权重的衰减/正则化是随着梯度一起根据一阶动量/二阶动量的结果进行调度放大或者缩小的, 这种耦合可能导致正则化的效果变得不可控, 影响模型的收敛. AdamW解决这个问题的方式是将这两个过程解耦, 先更新, 再衰减/正则. 具体做法是, 不在损失函数中添加L2项, 而是先用Adam正常更新, 然后对参数做一次额外的衰减: 第一步, 先更新$\mathbf{w}\leftarrow\mathbf{w}-\eta\cdot \hat{g}(\mathbf{w})$, 第二步, 额外的衰减/正则, $\mathbf{w}\leftarrow \mathbf{w}\cdot (1-\eta\cdot \lambda_{\text{decay}})$. 这个$\lambda_{\text{decay}}$被设置为$0.1$.
 
 此外, 他们使用"余弦退火"策略来控制学习率随训练进程的变化, 初始学习率逐渐下降, 直到最终达到最大学习率的10%. 也就是说, 如果最大学习率是$\eta_{\text{max}}$, 则在训练的末期会衰减到$0.1\times \eta_{\text{max}}$. 余弦退火的曲线较为平滑, 可以在训练后期保持一个相对较小, 但不是过低的学习率, 帮助模型逐渐收敛到更优解.
 
@@ -84,8 +84,8 @@ AdamW和传统Adam优化器的区别在于, 他是"先更新, 再衰减". 传统
 他们还根据模型的大小调整了学习率和batch大小, 如下表所示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/068ac6308f10745cfa53681208671f28.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.download/068ac6308f10745cfa53681208671f28_inverted.webp#only-dark){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/068ac6308f10745cfa53681208671f28.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/068ac6308f10745cfa53681208671f28_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>模型大小, 架构和优化器的超参数</figcaption>
 </figure>
 

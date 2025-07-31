@@ -7,7 +7,7 @@ comments: true
 
 查询处理流程可以简单的分为:
 
-1. 语义检查和查询重写: 检查查询语句是否有语法错误或者语义问题. 然后将SQL查询转换为[关系代数表达式](/general/database/relational-algebra), 可以被表示为一颗表达式树(expression tree), 如[图](https://img.ricolxwz.download/a99283244cfa79f7c7629924cc0cff5d.png)所示. 最后将[视图](/general/database/advanced-sql/#view)替换为实际的子查询, 以便进一步处理
+1. 语义检查和查询重写: 检查查询语句是否有语法错误或者语义问题. 然后将SQL查询转换为[关系代数表达式](/general/database/relational-algebra), 可以被表示为一颗表达式树(expression tree), 如[图](https://img.ricolxwz.asia/a99283244cfa79f7c7629924cc0cff5d.png)所示. 最后将[视图](/general/database/advanced-sql/#view)替换为实际的子查询, 以便进一步处理
 2. 查询优化: 在所有等价的查询计划中, 选择成本最低的计划:
     1. 逻辑查询计划优化: 在关系代数层面使用启发式方法(对表达式树进行重新排列操作, 以减少中间结果的大小, 减少临时数据的存储和计算量)进行优化
     2. 物理查询计划优化: 基于成本估算(最小化磁盘IO次数)选择合适的查询执行策略
@@ -33,7 +33,7 @@ comments: true
 
         如上述的表达式可以修改为π~Branchname,Assets~((σ~Customercity=Sydney~(Customer))⋈Deposit⋈Branch).
 
-        此外, 应该尽早丢弃不必要的属性, 即尽早执行投影. 一个启发是我们应该移除掉所有的不在剩余操作中起作用的属性. 
+        此外, 应该尽早丢弃不必要的属性, 即尽早执行投影. 一个启发是我们应该移除掉所有的不在剩余操作中起作用的属性.
 
         如上面的表达式中, σ~Customercity=Sydney~(Customer)⋈Deposit这个操作产生的属性中, 只有`branchname`是有用的属性, 所以应该提前进行投影, 修改后的代数表达式是Π~Branchname,Assets~(Π~Branchname~(σ~Customercity=Sydney~(Customer)⋈Deposit)⋈Branch)
 
@@ -45,17 +45,17 @@ comments: true
         - `Customer`: 包含`customername`, `street`和`customercity`
         - `Branch`: 包含`branchname`, `assets`, `branchcity`
 
-		考虑以下的查询: "找到在悉尼有客户存款找过$500的银行的资产和名称". 对于这个查询, 最初给出的表达式是Π~Branchname,Assets~ (σ~Customercity=Sydney∧Balance>500~(Customer⋈Deposit⋈Branch)). 注意, 我们无法仅对`Customer`表进行筛选操作, 因为`Balance`是`Deposit`表的属性. 
+		考虑以下的查询: "找到在悉尼有客户存款找过$500的银行的资产和名称". 对于这个查询, 最初给出的表达式是Π~Branchname,Assets~ (σ~Customercity=Sydney∧Balance>500~(Customer⋈Deposit⋈Branch)). 注意, 我们无法仅对`Customer`表进行筛选操作, 因为`Balance`是`Deposit`表的属性.
 
         需要在`Customer`表和`Deposit`表进行连接之后, 再进行选择操作. 因此, 正确的表达式应该是: Π~Branchname,Assets~(σ~Customercity=Sydney∧Balance>500~((Customer⋈Deposit)⋈Branch)).
-        
-        我们可以做得更好吗? 答案是肯定的. 
+
+        我们可以做得更好吗? 答案是肯定的.
 
         首先, 我们能把选择语句拆分成两个部分: Π~Branchname,Assets~(σ~Customercity=Sydney~(σ~Balance>500~(Customer⋈Deposit))⋈Branch)
 
         然后, 可以在连接之前先应用筛选条件: Π~Branchname,Assets~(σ~Customercity=Sydney~(Customer)⋈σ~Balance>500~(Deposit)⋈Branch)
 
-        这样能够进一步减少中间的数据规模. 
+        这样能够进一步减少中间的数据规模.
 
 #### 等价代数表达式转化规则
 
@@ -67,13 +67,13 @@ comments: true
 
 ???+ example "例子"
 
-    考虑如下的关系: 
+    考虑如下的关系:
 
     - `Deposit`: 包含`branchname`, `account#`, `customername`和`balance`
     - `Customer`: 包含`customername`, `street`和`customercity`
     - `Branch`: 包含`branchname`, `assets`, `branchcity `
 
-    考虑以下的查询: "找到在悉尼有客户存款找过$500的银行的资产和名称". 对于这个查询, 最初给出的表达式是Π~Branchname,Assets~ (σ~Customercity=Sydney∧Balance>500~(Customer⋈Deposit⋈Branch)). 注意, 我们无法仅对`Customer`表进行筛选操作, 因为`Balance`是`Deposit`表的属性. 
+    考虑以下的查询: "找到在悉尼有客户存款找过$500的银行的资产和名称". 对于这个查询, 最初给出的表达式是Π~Branchname,Assets~ (σ~Customercity=Sydney∧Balance>500~(Customer⋈Deposit⋈Branch)). 注意, 我们无法仅对`Customer`表进行筛选操作, 因为`Balance`是`Deposit`表的属性.
 
     根据选择对连接的分配性, 有Π~Branchname,Assets~(σ~Customercity=Sydney∧Balance>500~((Customer⋈Deposit)⋈Branch)).
 
@@ -83,13 +83,13 @@ comments: true
 
 ### 物理查询计划优化
 
-物理查询计划读取上一步产生的逻辑查询计划树然后产生一个查询计划. 该计划会为逻辑查询计划中的每一个操作符选择一个算法. 最终, 在所有等价的查询计划中找到一个最优计划, 选择IO次数最少的物理查询计划. 如[图](https://img.ricolxwz.download/1d09130ce83e4a5cd350b1e3a7a973ac.png), 会产生一些不同的物理查询计划树.
+物理查询计划读取上一步产生的逻辑查询计划树然后产生一个查询计划. 该计划会为逻辑查询计划中的每一个操作符选择一个算法. 最终, 在所有等价的查询计划中找到一个最优计划, 选择IO次数最少的物理查询计划. 如[图](https://img.ricolxwz.asia/1d09130ce83e4a5cd350b1e3a7a973ac.png), 会产生一些不同的物理查询计划树.
 
-与逻辑查询计划树类似, 一个带有物理操作符的查询计划树称为物理查询计划, 如[图](https://img.ricolxwz.download/9dc039f22f74584a5dffeb865e233b5d.png)o
+与逻辑查询计划树类似, 一个带有物理操作符的查询计划树称为物理查询计划, 如[图](https://img.ricolxwz.asia/9dc039f22f74584a5dffeb865e233b5d.png)o
 
 #### 计算成本
 
-可以通过以下信息计算一个物理查询计划的成本: 
+可以通过以下信息计算一个物理查询计划的成本:
 
 - 访问方法: 使用不同的[访问方法](/general/database/storage-indexing/#access-path)会影响IO成本
 - 物理组织: 包括数据的物理存储结构, 例如blocking factor, stored table?
@@ -147,7 +147,7 @@ for each page BR of R do
 
 ???+ example "例子"
 
-    上述的例子中, 如果`Student`位于外层, 则复杂度为100+1000\*400=400100次IO. 如果`Enrolled`位于外层, 则复杂度为400+10000\*100h=10004000次IO. 
+    上述的例子中, 如果`Student`位于外层, 则复杂度为100+1000\*400=400100次IO. 如果`Enrolled`位于外层, 则复杂度为400+10000\*100h=10004000次IO.
 
 ##### 块嵌套循环连接 {#block-nested-loop-join}
 
@@ -159,9 +159,9 @@ for each page BR of R do
         for each tuple r in BR do
             for each tuple s in BS do
                 if θ(r,s)=true then add <r,s> to the result
-``` 
+```
 
-可以看到, 只是两条语句对换了一下位置. 对于每一个R页面, 遍历S中的每一个页面, 在内存中读取R中每一个元组, 和S中的每一个元组匹配. 
+可以看到, 只是两条语句对换了一下位置. 对于每一个R页面, 遍历S中的每一个页面, 在内存中读取R中每一个元组, 和S中的每一个元组匹配.
 
 - 来自于`R`的IO: `b_R`, 即`R`表的每个页面只需要读取一次
 - 来自于`S`的IO: `b_R*b_S`, 因为每个`R`的页面都要读取`S`的所有页面
@@ -188,7 +188,7 @@ for each page BR of R do
 - 连接必须是等值连接或者自然连接
 - 内表的连接属性上有索引
 
-假设S表的连接属性, 如`sid`有索引`idx(sid)`. 对于R表的每个页面, 对于页面的每个元组, 使用索引`idx(sid)`查找满足连接条件的元组, 加入结果. 
+假设S表的连接属性, 如`sid`有索引`idx(sid)`. 对于R表的每个页面, 对于页面的每个元组, 使用索引`idx(sid)`查找满足连接条件的元组, 加入结果.
 
 - 来自于`R`的IO: `b_R`
 - 来自于`S`的IO: `|R|*c`, `c`是对`S`表的索引进行遍历和查找的平均成本(包含索引访问和匹配元组读取)
@@ -204,13 +204,13 @@ for each page BR of R do
 
 #### 优化排序操作
 
-在SQL查询中, 可以通过`ORDER BY`关键字得到经过排序的输出. 一些SQL操作如`JOIN`, `GROUP BY`, `DISTINCT`, `UNION`, `DIFFERENCE`等在输入是排序的情况下执行效率更高. 
+在SQL查询中, 可以通过`ORDER BY`关键字得到经过排序的输出. 一些SQL操作如`JOIN`, `GROUP BY`, `DISTINCT`, `UNION`, `DIFFERENCE`等在输入是排序的情况下执行效率更高.
 
 ???+ example "例子"
 
     例如, 投影操作, 考虑以下的SQL操作`SELECT DISTINCT sid, bid FROM Reserves`. 在默认情况下, 为了确保返回的结果中每个`sid, bid`组合都是唯一的, 如果文件未排序, 则去重操作可能需要将每个记录与文件中的所有其他值逐一比较, 从而增加了时间和资源消耗o
 
-Sort-Merge Join是实现连接操作的又一种方法, 在进行连接操作的时候, 将两张表按照连接属性排序, 然后通过线性扫描匹配对应的值. 在这种Join算法中, 最昂贵的部分是对输入的两张表进行排序. 
+Sort-Merge Join是实现连接操作的又一种方法, 在进行连接操作的时候, 将两张表按照连接属性排序, 然后通过线性扫描匹配对应的值. 在这种Join算法中, 最昂贵的部分是对输入的两张表进行排序.
 
 对于小的, 能够装入内存的表, 可以使用QuickSort等排序算法, 这种算法在内存中排序时效率较高. 但是对于大型数据库, 这种方法不可行. 例如, 在4GB内存中对10GB的数据无法进行排序. 这个使用, 我们通常采用的是External Merge-Sort算法, 即外部合并排序.
 

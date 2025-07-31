@@ -124,7 +124,7 @@ x = x.to_dense()  # 将其转换为一个稠密的张量
 
 ## in-place操作
 
-in-place操作, 又叫做原位操作, "就地"操作, 即完成运算后不使用另一个变量来存储. 可以使用在操作符之后加一个下划线实现. 
+in-place操作, 又叫做原位操作, "就地"操作, 即完成运算后不使用另一个变量来存储. 可以使用在操作符之后加一个下划线实现.
 
 ## 广播机制
 
@@ -280,11 +280,11 @@ torch.bincount(c)  # tensor([3, 1, 1, 0, 1, 0, 3, 0, 1]), 可以同济某一类�
 
 ## Tensor的`torch.distributions`
 
-`torch.distribution`包含可参数化的概率分布和采样函数, 方便在深度学习中进行概率计算和采样. 例如, 该模块中实现了Normal, Bernouli, Categorical, Multinomial等概率分类, 每个分布都提供了sample, log_prob, entropy等常用方法. 此外, torch.distributions还支持了分布之间的组合和变换, 这使得构建复杂的概率模型变得更加容易. 此外, 它还提供了`kl_divergence(p, q)`函数, 可用于计算两个分布之间的KL散度. 
+`torch.distribution`包含可参数化的概率分布和采样函数, 方便在深度学习中进行概率计算和采样. 例如, 该模块中实现了Normal, Bernouli, Categorical, Multinomial等概率分类, 每个分布都提供了sample, log_prob, entropy等常用方法. 此外, torch.distributions还支持了分布之间的组合和变换, 这使得构建复杂的概率模型变得更加容易. 此外, 它还提供了`kl_divergence(p, q)`函数, 可用于计算两个分布之间的KL散度.
 
 ## Tensor中的随机抽样
 
-定义随机种子: `torch.manual_seed(seed)`.  它用于设置随机数生成器的种子值, 确保随机操作(如随机抽样, 权重初始化等)在每次运行的时候生成相同的随机数序列, 从而使实验结果具有可重复性. 例如, 对tensor进行随机抽样的时候, 如果先调用`torch.manual_seed(seed)`并传入相同的seed值, 则每次抽样得到的结果都是一致的, 这对于调试和验证模型表现非常有用. 可以进一步的定义随机数满足的分布. 比如`torch.normal()`是用于生成符合正态分布(高斯分布)随机数的函数. 其核心思想是根据给定的均值和标准差, 在指定的张量形状上生成元素值服从N(mean, std^2)分布的随机数. 
+定义随机种子: `torch.manual_seed(seed)`.  它用于设置随机数生成器的种子值, 确保随机操作(如随机抽样, 权重初始化等)在每次运行的时候生成相同的随机数序列, 从而使实验结果具有可重复性. 例如, 对tensor进行随机抽样的时候, 如果先调用`torch.manual_seed(seed)`并传入相同的seed值, 则每次抽样得到的结果都是一致的, 这对于调试和验证模型表现非常有用. 可以进一步的定义随机数满足的分布. 比如`torch.normal()`是用于生成符合正态分布(高斯分布)随机数的函数. 其核心思想是根据给定的均值和标准差, 在指定的张量形状上生成元素值服从N(mean, std^2)分布的随机数.
 
 ```py
 torch.manual_seed(1)
@@ -314,7 +314,7 @@ torch.dist(a, b, p=2)  # 计算 L^2 距离
 
 * LU分解: 将一个矩阵$\textbf{A}$分解为一个下三角矩阵$\textbf{L}$和一个上三角矩阵$\textbf{U}$的乘积.
 * QR分解: 将一个矩阵$\textbf{A}$分解为一个正交矩阵$\textbf{Q}$和一个上三角矩阵$\textbf{R}$的乘积.
-* EVD分解: 也称为特征值分解, 将一个可对角化的矩阵$\textbf{A}$分解为$\textbf{A}=\textbf{P}\times \bm{\Lambda}\times \textbf{P}^{-1}$, 其中, $\bm{\Lambda}$是对角矩阵, $\textbf{P}$的列向量为特征向量, 和这个相关的机器学习算法是PCA, PCA请参考[这里](/algorithm/dimensional-reduction). PCA算法的优化目标是降维之后同一维度的方差最大, 不同维度之间的相关性是0. 
+* EVD分解: 也称为特征值分解, 将一个可对角化的矩阵$\textbf{A}$分解为$\textbf{A}=\textbf{P}\times \bm{\Lambda}\times \textbf{P}^{-1}$, 其中, $\bm{\Lambda}$是对角矩阵, $\textbf{P}$的列向量为特征向量, 和这个相关的机器学习算法是PCA, PCA请参考[这里](/algorithm/dimensional-reduction). PCA算法的优化目标是降维之后同一维度的方差最大, 不同维度之间的相关性是0.
 
     特征值分解就是将矩阵分解为由其特征值和特征向量表示的矩阵之积的方法, $\textbf{A} \bm{v}=\lambda \bm{v}$, 其中, $\bm{v}$是特征向量, $\lambda$是特征值.
 
@@ -332,14 +332,14 @@ torch.dist(a, b, p=2)  # 计算 L^2 距离
         4. 选择具有最大特征值的特征向量, 作为数据的主成分, 从而确定数据中方差最大的方向
         5. 将原始数据投影到这些主成分上, 实现降维和数据重构
 
-* SVD分解: 将任意$m\times n$矩阵$\textbf{A}$分解为$\textbf{A}=\textbf{U}\times \bm{\Sigma}\times \textbf{V}^T$, 其中$\textbf{U}$和$\textbf{V}$分别是正交矩阵, $\bm{\Sigma}$是非负的对角矩阵(奇异值均在对角线), 和这个相关的机器学习算法是LDA. 
+* SVD分解: 将任意$m\times n$矩阵$\textbf{A}$分解为$\textbf{A}=\textbf{U}\times \bm{\Sigma}\times \textbf{V}^T$, 其中$\textbf{U}$和$\textbf{V}$分别是正交矩阵, $\bm{\Sigma}$是非负的对角矩阵(奇异值均在对角线), 和这个相关的机器学习算法是LDA.
 
     LDA的基本思想是利用类别信息, 通过构造类内散度矩阵和类间散度矩阵, 寻找最佳的线性变换, 使得数据投影到低维空间后, 不同类别之间的距离尽可能大, 同一类别内的样本尽可能紧凑. 具体来说, LDA的目标是最大化类间散度和类内散度的比值, 从而得到最优的投影向量. 这种方法在降维的同时保留了判别信息, 有助于提高后续分类器的性能.
 
 ???+ note "PCA和LDA的区别图例"
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/0b2064409573b415daa687b04e429fcf.webp#only-light){ loading=lazy width='800' }
-    ![](https://img.ricolxwz.download/0b2064409573b415daa687b04e429fcf_inverted.webp#only-dark){ loading=lazy width='800' }
+    ![](https://img.ricolxwz.asia/0b2064409573b415daa687b04e429fcf.webp#only-light){ loading=lazy width='800' }
+    ![](https://img.ricolxwz.asia/0b2064409573b415daa687b04e429fcf_inverted.webp#only-dark){ loading=lazy width='800' }
     <figcaption></figcaption>
     </figure>

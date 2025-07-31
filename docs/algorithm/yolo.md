@@ -7,15 +7,15 @@ comments: true
 
 ## 概要
 
-YOLO, You Only Look Once, 是一种全新的目标检测方法. 与以往将分类器改造用于检测的方式不同, YOLO将目标检测问题视为一个回归问题, 直接预测图像中空间上分离的边界框及其对应的类别. 具体来说, YOLO使用一个单一的神经网络从完整的图像中直接预测边界框和类别概率, 只需要一次前向传播就可以完成任务. 由于整个检测流程被整合成一个统一的网络, YOLO能够端到端地优化检测性能, 这不仅提高了检测的效率, 还优化了训练过程. 
+YOLO, You Only Look Once, 是一种全新的目标检测方法. 与以往将分类器改造用于检测的方式不同, YOLO将目标检测问题视为一个回归问题, 直接预测图像中空间上分离的边界框及其对应的类别. 具体来说, YOLO使用一个单一的神经网络从完整的图像中直接预测边界框和类别概率, 只需要一次前向传播就可以完成任务. 由于整个检测流程被整合成一个统一的网络, YOLO能够端到端地优化检测性能, 这不仅提高了检测的效率, 还优化了训练过程.
 
-YOLO的架构非常高效, 其基础模型能够实时处理每秒45帧的图像, 而一个更小的版本, Fast YOLO, 甚至可以达到每秒155帧, 同时在实时检测器上实现了其他方法两倍的平均精度(mAP). 和当前SOTA的检测系统相比, YOLO在定位精度上可能会有一些误差, 但是它在减少背景中的FP(False Positives), 即误报方面表现得很好. 此外, YOLO能够学习到非常通用得目标表示能力, 在从自然图像推广到其他领域(比如艺术作品)的应用中, YOLO的表现优于包括DPM和R-CNN在内的其他检测方法. 
+YOLO的架构非常高效, 其基础模型能够实时处理每秒45帧的图像, 而一个更小的版本, Fast YOLO, 甚至可以达到每秒155帧, 同时在实时检测器上实现了其他方法两倍的平均精度(mAP). 和当前SOTA的检测系统相比, YOLO在定位精度上可能会有一些误差, 但是它在减少背景中的FP(False Positives), 即误报方面表现得很好. 此外, YOLO能够学习到非常通用得目标表示能力, 在从自然图像推广到其他领域(比如艺术作品)的应用中, YOLO的表现优于包括DPM和R-CNN在内的其他检测方法.
 
 ## 背景
 
 ### 识别速度的重要性
 
-人类瞥一眼图像, 就能立即知道图像中有哪些物体, 它们在哪里, 以及它们是如何相互作用的. 人类的视觉系统快速而准确, 使我们几乎不需要有意识地思考就能完成驾驶等复杂任务. 快速, 准确的物体检测算法可以让计算机在没有专门传感器的情况下驾驶汽车, 让辅助设备向人类用户传递实时场景信息, 并释放打造通用, 反应灵敏的机器人系统的潜力. 
+人类瞥一眼图像, 就能立即知道图像中有哪些物体, 它们在哪里, 以及它们是如何相互作用的. 人类的视觉系统快速而准确, 使我们几乎不需要有意识地思考就能完成驾驶等复杂任务. 快速, 准确的物体检测算法可以让计算机在没有专门传感器的情况下驾驶汽车, 让辅助设备向人类用户传递实时场景信息, 并释放打造通用, 反应灵敏的机器人系统的潜力.
 
 ### DPM
 
@@ -30,8 +30,8 @@ YOLO的架构非常高效, 其基础模型能够实时处理每秒45帧的图像
 作者将物体检测重构为一个单一的回归问题, 直接从图像像素到边界框坐标和类别概率. 使用他们的系统, 您只需要观察一次图像(YOLO), 就能预测出哪些物体存在以及它们在哪里.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/4993fc849506765959eeb72b2227be45.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.download/4993fc849506765959eeb72b2227be45_inverted.webp#only-dark){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/4993fc849506765959eeb72b2227be45.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/4993fc849506765959eeb72b2227be45_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>YOLO检测系统. 使用YOLO处理图像是一个简单又直接的过程. 他们的系统 (1) 将图像resize到448*448, (2) 在图像上跑一个卷积网络, (3) 根据模型的置信度对检测结果进行阈值化处理</figcaption>
 </figure>
 
@@ -49,7 +49,7 @@ YOLO简单地令人耳目一新: 见上图. 一个卷积网络可以同时预测
 
 ## 方法论
 
-作者将物体检测的各个组成部分统一到一个神经网络中. 他们的神经网络使用整个图像的特征来来预测每个边界框. 它还能同时预测图像中所有类别的所有边框. 这意味着网络可以对整个图像和图像中的所有物体进行全局推理. YOLO设计可以实现端到端的训练和实时推理, 同时保持较高的平均精度. 
+作者将物体检测的各个组成部分统一到一个神经网络中. 他们的神经网络使用整个图像的特征来来预测每个边界框. 它还能同时预测图像中所有类别的所有边框. 这意味着网络可以对整个图像和图像中的所有物体进行全局推理. YOLO设计可以实现端到端的训练和实时推理, 同时保持较高的平均精度.
 
 ### 图像划分与类别概率计算
 
@@ -59,9 +59,9 @@ $$IOU=\frac{\text{预测框和真实框的交集面积}}{\text{预测框和真�
 
 $$confidence=Pr(Object)\times IOU^{truth}_{pred}$$
 
-每个box由$5$个预测值组成, $x, y, w, h$和置信度. $(x, y)$坐标表示相对于cell边界的box中心, 宽度和高度是相对于整个图像的预测值. 置信度表示的是模型对该box内包含一个物体的确定程度, 以及模型认为其预测的box边框的准确度. 
+每个box由$5$个预测值组成, $x, y, w, h$和置信度. $(x, y)$坐标表示相对于cell边界的box中心, 宽度和高度是相对于整个图像的预测值. 置信度表示的是模型对该box内包含一个物体的确定程度, 以及模型认为其预测的box边框的准确度.
 
-每个cell还预测$C$个条件概率, 即$Pr(Class_i|Object)$, 这些概率以包含物体的cell作为条件. 他们只预测每个cell内的一组类别的概率, 和box的数量$B$无关, 或者说, 对于所有的box都是这个条件概率都适用. 
+每个cell还预测$C$个条件概率, 即$Pr(Class_i|Object)$, 这些概率以包含物体的cell作为条件. 他们只预测每个cell内的一组类别的概率, 和box的数量$B$无关, 或者说, 对于所有的box都是这个条件概率都适用.
 
 在预测阶段, 某个cell内的某个box内包含$Class_i$的概率为:
 
@@ -70,8 +70,8 @@ $$\Pr(Class_i | Object) \cdot \Pr(Object) \cdot IOU_{\text{pred}}^{\text{truth}}
 这些分数表示该类出现在box中的概率, 也表示预测的box和物体的匹配程度.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/5f16e80bdc5fa40de5eb234682e85b72.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.download/5f16e80bdc5fa40de5eb234682e85b72_inverted.webp#only-dark){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/5f16e80bdc5fa40de5eb234682e85b72.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/5f16e80bdc5fa40de5eb234682e85b72_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>YOLO模型. 他们的模型是一个回归问题. 它将一张图片分成$S\times S$的cell, 对于每个cell预测$B$个box, 这些box的置信度, 和$C$个类别概率. 这些预测被编码为一个$S\times S\times (B*5+C)$的tensor</figcaption>
 </figure>
 
@@ -90,13 +90,13 @@ $$\Pr(Class_i | Object) \cdot \Pr(Object) \cdot IOU_{\text{pred}}^{\text{truth}}
 
 ### 网络设计
 
-作者以卷积神经网络的形式实现了这个模型, 并在PASCAL VOC检测数据集上对其进行了评估. 网络的初始卷基层从图像中提取特征, 而全连接层预测输出的概率和坐标. 
+作者以卷积神经网络的形式实现了这个模型, 并在PASCAL VOC检测数据集上对其进行了评估. 网络的初始卷基层从图像中提取特征, 而全连接层预测输出的概率和坐标.
 
 他们的网络架构受到了GoogLeNet图像分类模型的启发. 网络共有24个卷积层, 然后是2个全连接层. 他们并没有使用GoogLeNet的Inception模块. 取代Inception模块的方式是使用1\*1卷积层然后再使用3\*3卷积层进行特征提取. 网络架构如图所示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/53aa7365ab6527d87e23f321c3e7a237.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.download/53aa7365ab6527d87e23f321c3e7a237_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/53aa7365ab6527d87e23f321c3e7a237.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/53aa7365ab6527d87e23f321c3e7a237_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>YOLO网络架构. 使用了24层卷积层和2层全连接层. 交替使用的1*1卷积层缩小了前几层的特征空间. 他们在ImageNet分类任务中以一半的分辨率(224*224)输入对卷积层进行预训练, 然后以两倍的分辨率用于检测.</figcaption>
 </figure>
 
@@ -122,16 +122,16 @@ $$\Pr(Class_i | Object) \cdot \Pr(Object) \cdot IOU_{\text{pred}}^{\text{truth}}
 
 他们在最后一层使用了线性激活函数, 其他的所有层使用了以下Leaky ReLU激活函数.
 
-$$\phi(x) = \begin{cases} 
+$$\phi(x) = \begin{cases}
 x, & \text{if } x > 0 \\
-0.1x, & \text{otherwise} 
+0.1x, & \text{otherwise}
 \end{cases}$$
 
 #### 误差
 
 ???+ note "误差种类"
 
-    误差由以下几部分组成: 边界框回归损失(Localization Loss), 衡量预测的box坐标, 尺寸和真实box坐标, 尺寸之间的差异; 物体置信度损失(Objectiveness Loss), 衡量预测的box中存在物体的置信度和实际是否存在目标之间的差异; 分类预测损失(Classification Loss), 衡量预测类别概率分布和真实类别分布之间的差异. 
+    误差由以下几部分组成: 边界框回归损失(Localization Loss), 衡量预测的box坐标, 尺寸和真实box坐标, 尺寸之间的差异; 物体置信度损失(Objectiveness Loss), 衡量预测的box中存在物体的置信度和实际是否存在目标之间的差异; 分类预测损失(Classification Loss), 衡量预测类别概率分布和真实类别分布之间的差异.
 
 ##### 损失加权
 
@@ -154,7 +154,7 @@ $$\begin{aligned}
 &+ \lambda_{coord} \sum_{i=0}^{S^2} \sum_{j=0}^{B} \mathbb{I}_{ij}^{\text{obj}} \left[ (\sqrt{w_i} - \sqrt{\hat{w}_i})^2 + (\sqrt{h_i} - \sqrt{\hat{h}_i})^2 \right] \\
 &+ \sum_{i=0}^{S^2} \sum_{j=0}^{B} \mathbb{I}_{ij}^{\text{obj}} \left( C_i - \hat{C}_i \right)^2 \\
 &+ \lambda_{noobj} \sum_{i=0}^{S^2} \sum_{j=0}^{B} \mathbb{I}_{ij}^{\text{noobj}} \left( C_i - \hat{C}_i \right)^2 \\
-&+ \sum_{i=0}^{S^2} \mathbb{I}_{i}^{\text{obj}} \sum_{c \in \text{classes}} \left( p_i(c) - \hat{p}_i(c) \right)^2 
+&+ \sum_{i=0}^{S^2} \mathbb{I}_{i}^{\text{obj}} \sum_{c \in \text{classes}} \left( p_i(c) - \hat{p}_i(c) \right)^2
 \end{aligned}$$
 
 $\mathbb{I}_i^{\text{obj}}$表示的是物体是否出现在第$i$个cell中. $\mathbb{I}_{ij}^{\text{obj}}$表示的是第$i$个cell中的第$j$个box对该预测负责.
@@ -171,11 +171,11 @@ $\mathbb{I}_i^{\text{obj}}$表示的是物体是否出现在第$i$个cell中. $\
 
 ### 推理
 
-和训练一样, 预测测试图像只需要一次正向传播. 在PASCAL VOC上, 网络可以预测每幅图像的98个box以及各个边框的类别概率. 和基于分类器的方法不同, YOLO只需要一次网络传播, 所以在测试的时候速度极快. 
+和训练一样, 预测测试图像只需要一次正向传播. 在PASCAL VOC上, 网络可以预测每幅图像的98个box以及各个边框的类别概率. 和基于分类器的方法不同, YOLO只需要一次网络传播, 所以在测试的时候速度极快.
 
 #### 非最大抑制
 
-YOLO采用网格设计. 如果图像中的物体较小或者和某个特定区域紧密相关, 很容易判断这个物体属于哪个cell. 然而, 对于一些较大的物体或者靠近多个cell边界的物体, 情况就会复杂一些. 这些物体可能会被多个cell检测到. 
+YOLO采用网格设计. 如果图像中的物体较小或者和某个特定区域紧密相关, 很容易判断这个物体属于哪个cell. 然而, 对于一些较大的物体或者靠近多个cell边界的物体, 情况就会复杂一些. 这些物体可能会被多个cell检测到.
 
 为了解决多个cell对同一个物体的重复检测问题, YOLO使用了非最大抑制(NMS)技术, NMS是一种后处理方法, 作用是删除冗余的box, 保留最好的一个. 虽然NMS在YOLO中不是必须的, 因为YOLO的cell设计已经在一定程度上减少了冗余预测的情况, 但是它仍然能够显著提升模型的精度. 具体来说, NMS增加了23%的mAP(平均精度).
 
@@ -183,7 +183,7 @@ YOLO采用网格设计. 如果图像中的物体较小或者和某个特定区�
 
 YOLO对box的预测施加了很强的空间约束, 因为每个cell只有两个box, 并且每个cell中只能拥有一个类别. 这种空间约束限制了模型能够预测的靠的比较近的物体的数量. 他们的模型在处理小物体, 尤其是出现在群体中的小物体(例如鸟群)时候的表现较差.
 
-由于他们的额模型是通过数据学习来预测边框的, 因此它在面对新的或者不寻常的纵横比或者configurations时表现不佳. 他们的模型在预测box的时候使用的特征也相对比较粗糙, 因为他们的架构会对输入图像多次下采样. 
+由于他们的额模型是通过数据学习来预测边框的, 因此它在面对新的或者不寻常的纵横比或者configurations时表现不佳. 他们的模型在预测box的时候使用的特征也相对比较粗糙, 因为他们的架构会对输入图像多次下采样.
 
 最后, 金团他们在训练的时候使用了一个近似于检测性能的损失函数, 但是他们的损失函数对于小box和大box的误差处理是近乎相同的, 正如在损失加权中所说, 在大box中, 小误差通常是无害的, 但是在小box中, 小误差的影响更大. 主要误差来源是边界框回归损失.
 

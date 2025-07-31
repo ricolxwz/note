@@ -12,7 +12,7 @@ comments: true
 上述只是一阶马尔可夫假设, 即假定当前的状态仅依赖于前面一个状态. 由此衍生出$k$阶马尔可夫假设, 即假设当前状态依赖于最近的$k$个状态, 即$p(X)=\prod_{i=1}^n p(S_t|S_{t-1}, ..., S_{t-k})$. 这个概率又叫作状态转移概率.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/7b64c88a1a92c1805aecf02b76d5c679.png){ loading=lazy width='400' }
+![](https://img.ricolxwz.asia/7b64c88a1a92c1805aecf02b76d5c679.png){ loading=lazy width='400' }
 </figure>
 
 ???+ example "例子"
@@ -20,7 +20,7 @@ comments: true
     通过今天的天气预测明天的天气. 假设今天是雨天☔️, 预测明天的天气, 符合(一阶)马尔可夫假设. 下面是形象的概率图.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/06853a90f88f172bc0e710a6f551656d.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.asia/06853a90f88f172bc0e710a6f551656d.png){ loading=lazy width='300' }
     </figure>
 
     我们可以看到, 从雨天到晴天的概率是$0.3$, 从雨天到阴天的概率是$0.3$, 从雨天到雨天的概率是$0.4$, 所以明天大概率还是雨天. 我们可以将上图用一个矩阵来表示.
@@ -35,10 +35,10 @@ comments: true
     \end{bmatrix}
     $$
 
-    其中$S_{ij}=p(S_t=j|S_{t-1}=i)$, 表示从$i$到$j$的转移概率. 那么, 我们可不可以从任意的初始状态开始, 推导出后面的所有状态呢? 假设起始概率为$\pi_i$, 表示马尔可夫链从状态$i$开始. 
+    其中$S_{ij}=p(S_t=j|S_{t-1}=i)$, 表示从$i$到$j$的转移概率. 那么, 我们可不可以从任意的初始状态开始, 推导出后面的所有状态呢? 假设起始概率为$\pi_i$, 表示马尔可夫链从状态$i$开始.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/89db496511dfb7d4cedd80c50aad8a05.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.asia/89db496511dfb7d4cedd80c50aad8a05.png){ loading=lazy width='300' }
     </figure>
 
     给你一个小小的练习, 计算下列天气变化的可能性:
@@ -57,19 +57,19 @@ comments: true
     再举一个例子, 如下图所示是一个普通马尔可夫模型.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/2e166902b66dc31881b927e274c403a4.png){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.asia/2e166902b66dc31881b927e274c403a4.png){ loading=lazy width='400' }
     </figure>
 
     HMM就是在这个基础上, 加入了一个隐藏状态和观测状态的概念.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/015f83e68047ff2b374f6a36781a7bd6.png){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.asia/015f83e68047ff2b374f6a36781a7bd6.png){ loading=lazy width='400' }
     </figure>
 
     图中, X的状态是不可见的, 而Y的状态是可见的. 我们可以将X看成是天气情况, 而Y看成是某个人穿的衣物类型, 如下图所示.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/5ad9c697155c00ebf6ee8e4f8fd611b4.png){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.asia/5ad9c697155c00ebf6ee8e4f8fd611b4.png){ loading=lazy width='400' }
     </figure>
 
     我们的任务就是从这个人穿的衣物类型预测天气变化. 在这里, 有两种类型的概率:
@@ -78,7 +78,7 @@ comments: true
     - 观测概率: emission probabilities, 从一个隐藏状态到一个观测变量的过程
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/3faef5ee59ce156c08236dbc928ce456.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.asia/3faef5ee59ce156c08236dbc928ce456.png){ loading=lazy width='300' }
     </figure>
 
     注意⚠️, HMM模型做了两个很重要的假设:
@@ -89,18 +89,18 @@ comments: true
     下图给出了一个可能的观测状态和隐藏状态之间的关系, 这个就是HMM所要达到的最终效果.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/1150eb0fe6c7bfe1390438827e567784.png){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.asia/1150eb0fe6c7bfe1390438827e567784.png){ loading=lazy width='400' }
     </figure>
 
-    可视化表达: 
+    可视化表达:
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/e4556d9676b6bd8bb2ee73554008d8d1.png){ loading=lazy width='400' }
+    ![](https://img.ricolxwz.asia/e4556d9676b6bd8bb2ee73554008d8d1.png){ loading=lazy width='400' }
     </figure>
 
 ### 参数
 
-HMM的参数可以表示为$\lambda = (\bm{A}, \bm{B}, \bm{\pi})$, 定义隐状态的可能的取值的数量为$N$, 如雨天, 阴天, 晴天, $N=3$. 观测变量的可能的取值的数量为$M$, 如穿夹克, 穿棉袄, $M=2$. 
+HMM的参数可以表示为$\lambda = (\bm{A}, \bm{B}, \bm{\pi})$, 定义隐状态的可能的取值的数量为$N$, 如雨天, 阴天, 晴天, $N=3$. 观测变量的可能的取值的数量为$M$, 如穿夹克, 穿棉袄, $M=2$.
 
 - 初始状态概率向量$\bm{\pi}$. 它是一个长度为$N$的向量, 其中$\pi_i$表示在初始时刻$t=1$时处于隐状态$i$的概率, 所有的初始状态满足$\sum_{i=1}^N \pi_i=1$
 - 状态转移概率矩阵$\bm{A}$, $\bm{A}=[a_{ij}]$, 它是一个$N\times M$的矩阵. $a_{ij}$表示在时刻$t$处于隐状态$i$时, 下一时刻$t+1$转移到隐状态$j$的概率, 所有的转移概率满足$\sum_{j=1}^N a_{ij}=1$
@@ -134,10 +134,10 @@ HMM的三个基本问题:
 	给定一个HMM模型如下(包含初始状态向量, 状态转移概率矩阵, 观测概率矩阵):
 
 	<figure markdown='1'>
-	![](https://img.ricolxwz.download/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
+	![](https://img.ricolxwz.asia/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
 	</figure>
 
-	计算观测序列$X=$ Shirt, Hoodie出现的概率. 
+	计算观测序列$X=$ Shirt, Hoodie出现的概率.
 
 	我们可以使用枚举法: 首先, 列举出所有可能的状态序列, 由于我们的观测序列长度是$2$, 所以长度为$2$的状态序列有$3^2=9$种组合, 如, Rainy, Rainy; Rainy, Cloudy; Rainy, Sunny; ... 对于每一种状态序列, 计算其对应的观察序列$X=$ Shirt, Hoodie的条件概率, 例如, 对于状态序列Rainy, Cloudy, 计算观测序列条件概率$p(X, \{Rainy, Cloudy\})$的步骤为:
 
@@ -147,7 +147,7 @@ HMM的三个基本问题:
 		- 在第一个时刻Rainy观察到Shirt的概率参考观测概率矩阵, 是$0.8$
 		- 在第二个时刻Cloudy观测到Hoodie的概率参考观测概率矩阵, 是$0.1$
 
-	所以, 结果为$0.6\times 0.3\times 0.8\times 0.1=0.0144$. 对于所有的状态序列, 如上所示计算观测序列的条件概率. 相加这$9$个条件概率, 得到最终的观测序列概率. 
+	所以, 结果为$0.6\times 0.3\times 0.8\times 0.1=0.0144$. 对于所有的状态序列, 如上所示计算观测序列的条件概率. 相加这$9$个条件概率, 得到最终的观测序列概率.
 
 	可以看到, 计算一个简单的观测序列Short, Hoodie的过程就进行了$4\times 9=36$次乘法. 令$N$为可能的状态的数量, 在这里有三个可能的状态, Rainy, Cloudy, Sunny. 令$T$为观测序列的长度, 在这里是$2$. 那么复杂度就是$2TN^T$. 在实际中, 观测序列$T$往往很大, 而状态数$N$相对来说较小, 导致该算法的复杂度异常高. 解决这种问题的方法是使用前向算法.
 
@@ -180,8 +180,8 @@ HMM的三个基本问题:
 	$1$的初始状态向量 + $2$个矩阵:
 
 	<figure markdown='1'>
-	![](https://img.ricolxwz.download/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
-	</figure>	
+	![](https://img.ricolxwz.asia/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
+	</figure>
 
 	1. 初始化
 
@@ -213,13 +213,13 @@ Viterbi算法是一种动态规划算法, 用于计算每个状态的最优路�
 
 Viterbi得分$V_k(i)$可以递归地基于上一时间步的得分$V_j(i-1)$计算, 因此, 不需要重复计算所有路径, 而是逐步优化路径选择.
 
-Viterbi得分可以给出最终状态结束的最佳路径的概率, 但是仅仅只靠得分本身, 我们无法确定从起始状态到最终状态的整个路径. 为了确定完整的路径, 需要从最终状态回溯到其实状态, 为了实现回溯, 在计算Viterbi得分的过程中, 需要为每个状态保存一个指针, 这个指针记录了每一步使得Viterbi得分最大的前一状态. 数学表达为$Ptr_k(i)=argmax_j V_j(i-1)a_{jk}$, 指向时间$i-1$时能提供最高得分的状态$j$. 
+Viterbi得分可以给出最终状态结束的最佳路径的概率, 但是仅仅只靠得分本身, 我们无法确定从起始状态到最终状态的整个路径. 为了确定完整的路径, 需要从最终状态回溯到其实状态, 为了实现回溯, 在计算Viterbi得分的过程中, 需要为每个状态保存一个指针, 这个指针记录了每一步使得Viterbi得分最大的前一状态. 数学表达为$Ptr_k(i)=argmax_j V_j(i-1)a_{jk}$, 指向时间$i-1$时能提供最高得分的状态$j$.
 
 与前向算法类似, Viterbi算法也分为三步:
 
 1. 初始化
 
-	在初始时间步$t=1$的时候, 计算每个状态的Viterbi得分, 公式为$V_k(1)=A_0(k)e_k(x_1)$. 其中$A_0(k)$是初始时刻状态$k$的概率, 参考初始状态向量; $e_k(x_1)=p(x_1|\pi_1=k)$是在状态$k$下观察到第一个观测值$x_1$的概率. 
+	在初始时间步$t=1$的时候, 计算每个状态的Viterbi得分, 公式为$V_k(1)=A_0(k)e_k(x_1)$. 其中$A_0(k)$是初始时刻状态$k$的概率, 参考初始状态向量; $e_k(x_1)=p(x_1|\pi_1=k)$是在状态$k$下观察到第一个观测值$x_1$的概率.
 
 2. 迭代
 
@@ -227,7 +227,7 @@ Viterbi得分可以给出最终状态结束的最佳路径的概率, 但是仅�
 
 	1. Viterbi得分: 计算状态$k$在时间$i$的得分$V_k(i)=e_k(x_i)max_j V_j(i-1)a_{jk}$
 
-	2. 回溯指针: 记录状态$k$在时间$i$的回溯路径, 用于后续的路径回溯$Ptr_k(i)=argmax_j V_j(i-1)a_{jk}$  
+	2. 回溯指针: 记录状态$k$在时间$i$的回溯路径, 用于后续的路径回溯$Ptr_k(i)=argmax_j V_j(i-1)a_{jk}$
 
 3. 终止
 
@@ -240,8 +240,8 @@ Viterbi得分可以给出最终状态结束的最佳路径的概率, 但是仅�
 	还是上面的例子. 给定一个模型:
 
 	<figure markdown='1'>
-	![](https://img.ricolxwz.download/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
-	</figure>	
+	![](https://img.ricolxwz.asia/73629b7b37cb523a56c45c42c1a30fc4.png){ loading=lazy width='400' }
+	</figure>
 
 	和观测序列$X=$ Shirt, Hoodie.
 
@@ -255,13 +255,13 @@ Viterbi得分可以给出最终状态结束的最佳路径的概率, 但是仅�
 
 		这里要计算Viterbi得分和获取回溯指针.
 
-		- Rainy: 
+		- Rainy:
 			- $V_{Rainy}(2)=e_{Rainy}(Hoodie)\times max(V_{Rainy}(1)a_{Rainy, Rainy}, V_{Cloudy}(1)a_{Cloudy, Rainy}, V_{Sunny}(1)a_{Sunny, Rainy})=0.01\times max(0.48\times 0.6, 0.15\times 0.4 , 0.001\times 0.1)=0.01\times 0.48\times0.6=0.0029$
 			- $Ptr_{Rainy}(2)=argmax(0.48\times 0.6, 0.15\times 0.4, 0.001\times 0.1)=1$, 如$1$是Rainy
-		- Cloudy: 
+		- Cloudy:
 			- $V_{Cloudy}(2)=e_{Cloudy}(Hoodie)\times max(V_{Rainy}(1)a_{Rainy, Cloudy}, V_{Cloudy}(1)a_{Cloudy, Cloudy}, V_{Sunny}(1)a_{Sunny, Cloudy})=0.1\times max(0.48\times 0.3, 0.15\times 0.3 , 0.001\times 0.4)=0.1\times 0.48\times0.3=0.0144$
 			- $Ptr_{Cloudy}(2)=argmax(0.48\times 0.3, 0.15\times 0.3, 0.001\times 0.4)=1$, 如$1$是Rainy
-		- Sunny: 
+		- Sunny:
 			- $V_{Sunny}(2)=e_{Sunny}(Hoodie)\times max(V_{Rainy}(1)a_{Rainy, Sunny}, V_{Cloudy}(1)a_{Cloudy, Sunny}, V_{Sunny}(1)a_{Sunny, Sunny})=0.01\times max(0.48\times 0.1, 0.15\times 0.3 , 0.001\times 0.5)=0.79\times 0.48\times0.1=0.0379$
 			- $Ptr_{Sunny}(2)=argmax(0.48\times 0.1, 0.15\times 0.3, 0.001\times 0.5)=1$, 如$1$是Rainy
 
@@ -279,7 +279,7 @@ Viterbi得分可以给出最终状态结束的最佳路径的概率, 但是仅�
 
 1. 初始化
 
-	将模型参数$\lambda = (\bm{\pi}, \bm{A}, \bm{A_0})$随机初始化. 
+	将模型参数$\lambda = (\bm{\pi}, \bm{A}, \bm{A_0})$随机初始化.
 
 2. 期望步骤
 

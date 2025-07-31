@@ -147,7 +147,7 @@ $f(x)=\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2}(-\inft
 
 其中$-\infty<\mu<+\infty, \sigma>0$, 则称$X$服从参数为$(\mu, \sigma^2)$的正态分布或称$X$为正态变量, 记为$X\sim N(\mu, \sigma^2)$. 此时, $f(x)$的图形关于直线$x=\mu$对称, 并在$x=\mu$有唯一最大值$f(\mu)=\frac{1}{\sqrt{2\pi}\sigma}$, 如下图所示.
 
-![](https://img.ricolxwz.download/6d3d4be8b41e0ba51c9f09c7af3e4988.png){:style="width:300px"}
+![](https://img.ricolxwz.asia/6d3d4be8b41e0ba51c9f09c7af3e4988.png){:style="width:300px"}
 
 ##### 标准正态分布
 
@@ -160,7 +160,7 @@ $f(x)=\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2}(-\inft
 
 $\varphi(x)$如下图所示:
 
-![](https://img.ricolxwz.download/b0296862698495281f20c7440fc49899.png){:style="width:300px"}
+![](https://img.ricolxwz.asia/b0296862698495281f20c7440fc49899.png){:style="width:300px"}
 
 若$X\sim N(0, 1), P\{X>\mu_0\}=a$, 则称$\mu_0$为标准正态分布的上侧$a$分位数(上$a$分位点).
 
@@ -183,7 +183,7 @@ $\varphi(x)$如下图所示:
 
 #### 离散型 -> 离散型
 
-设$X$为离散型随机变量, 其概率分布为$p_i=P\{X=x_i\}(i=1, 2, ...)$, 则$X$作为自变量的函数$Y=g(X)$也是离散型随机变量, 其概率分布为$P\{Y=g(x_i)\}=p_i(i=1, 2, ...)$. 
+设$X$为离散型随机变量, 其概率分布为$p_i=P\{X=x_i\}(i=1, 2, ...)$, 则$X$作为自变量的函数$Y=g(X)$也是离散型随机变量, 其概率分布为$P\{Y=g(x_i)\}=p_i(i=1, 2, ...)$.
 
 若有若干个$g(x_i)$值相同, 则合并诸项为一项$g(x_k)$, 并将相应的概率相加作为$Y$取$g(x_k)$值的概率(1).
 {.annotate}

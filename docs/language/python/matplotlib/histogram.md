@@ -61,7 +61,7 @@ matplotlib.pyplot.hist(x, bins, range, density, weights, cumulative, bottom, his
 
     输出:
 
-    ![](https://img.ricolxwz.download/1d10ff65b389307a3472e916660216e2.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/1d10ff65b389307a3472e916660216e2.png){:style="width:400px"}
 
 ### 多批数据
 
@@ -88,7 +88,7 @@ matplotlib.pyplot.hist(x, bins, range, density, weights, cumulative, bottom, his
 
     输出:
 
-    ![](https://img.ricolxwz.download/3268de41cdc8eeb2093b53eed95ce055.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/3268de41cdc8eeb2093b53eed95ce055.png){:style="width:400px"}
 
 ### 结合Pandas
 
@@ -104,11 +104,11 @@ matplotlib.pyplot.hist(x, bins, range, density, weights, cumulative, bottom, his
     plt.title('hist() Test')
     plt.xlabel('X-Value')
     plt.ylabel('Y-Value')
-    plt.show()  
+    plt.show()
     ```
 
     输出:
 
-    ![](https://img.ricolxwz.download/65b38de07b39e5431bec2cbcff9f1290.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/65b38de07b39e5431bec2cbcff9f1290.png){:style="width:400px"}
 
 [^1]: Matplotlib 直方图 | 菜鸟教程. (n.d.). From https://www.runoob.com/matplotlib/matplotlib-hist.html

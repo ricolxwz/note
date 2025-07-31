@@ -15,9 +15,9 @@ comments: true
 ???+ example "例子"
 
     数值`0x12345678`, 其中`0x12`这一端是高位字节, `0x78`这一端是低位字节. 在内存中的存储顺序是:
-    
-    ![](https://img.ricolxwz.download/38b14a7655726af5c50df0f845021c13.webp)
-    
+
+    ![](https://img.ricolxwz.asia/38b14a7655726af5c50df0f845021c13.webp)
+
 ### 小端模式
 
 小端模式, Little-Endian. 由于大多数计算机内部处理使用的是小端模式, 所以也叫做主机序.
@@ -27,8 +27,8 @@ comments: true
 ???+ example "例子"
 
     数值`0x12345678`, 其中`0x12`这一端是高位字节, `0x78`这一端是低位字节. 在内存中的存储顺序是:
-    
-    ![](https://img.ricolxwz.download/0814295ce29b920f73e0d1fdbd3327b1.webp)
+
+    ![](https://img.ricolxwz.asia/0814295ce29b920f73e0d1fdbd3327b1.webp)
 
 ### 为何有大小端
 
@@ -151,11 +151,11 @@ Python即不属于AOT也不属于JIT. 它的执行方式可以概括为"字节�
     ```
 
     这个多行字符串会被转换为`\ntest\n`.
-    
+
 
 ### `input`函数
 
-`input`函数返回的是字符串, 而不是数字. 可以提供一个字符串作为提示. 
+`input`函数返回的是字符串, 而不是数字. 可以提供一个字符串作为提示.
 
 ### 格式化输出
 
@@ -269,7 +269,7 @@ Python即不属于AOT也不属于JIT. 它的执行方式可以概括为"字节�
 
 #### `isnumeric`函数
 
-`isnumeric`函数能够验证一个字符串仅包含数字字符. 
+`isnumeric`函数能够验证一个字符串仅包含数字字符.
 
 ???+ example "例子"
 

@@ -12,13 +12,13 @@ comments: true
         - `import numpy as np`
         - `import pandas as pd`
 
-    - Cheat Sheet: 
+    - Cheat Sheet:
 
         - [Datacamp版本](https://python-graph-gallery.com/static/27348055d276e6f73426b199e1c033dd/103f7/matplotlib_cheat_sheet.webp)
         - [官网版本-页面1](https://python-graph-gallery.com/static/c3ae28e67938b12bbcd4b6e871459248/95bd9/matplotlib-python-official-cheatsheet1.webp)
         - [官网版本-页面2](https://python-graph-gallery.com/static/305d2e2ff9a1ce8248ebef6ec1a9aedb/95bd9/matplotlib-python-official-cheatsheet2.webp)
 
-`pyplot`是`matplotlib`的子模块, 提供了和MATLAB类似的绘图API. 
+`pyplot`是`matplotlib`的子模块, 提供了和MATLAB类似的绘图API.
 
 ## 图的类型
 
@@ -34,7 +34,7 @@ comments: true
 
 ???+ example "例子"
 
-    定义: 
+    定义:
 
     ```
     xpoints = np.array([0, 6])
@@ -45,7 +45,7 @@ comments: true
 
     输出:
 
-    ![](https://img.ricolxwz.download/f67bb426834f040b2c1d9515ec132b6b.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/f67bb426834f040b2c1d9515ec132b6b.png){:style="width:400px"}
 
 ???+ tip "Tip"
 
@@ -111,7 +111,7 @@ comments: true
 
     输出:
 
-    ![](https://img.ricolxwz.download/11db262d654d6511228672773eb88c1a.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/11db262d654d6511228672773eb88c1a.png){:style="width:400px"}
 
 ### `linestyle`参数 {#linestyle参数}
 
@@ -137,7 +137,7 @@ comments: true
 
     输出:
 
-    ![](https://img.ricolxwz.download/d713be22652429a188247aed9f270633.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/d713be22652429a188247aed9f270633.png){:style="width:400px"}
 
 ### `color`参数 {#color参数}
 
@@ -172,7 +172,7 @@ comments: true
 
             输出:
 
-            ![](https://img.ricolxwz.download/efe22c1098063cc89495bb75fc467a4d.png){:style="width:400px"}
+            ![](https://img.ricolxwz.asia/efe22c1098063cc89495bb75fc467a4d.png){:style="width:400px"}
 
         === "名称表示"
 
@@ -186,7 +186,7 @@ comments: true
 
             输出:
 
-            ![](https://img.ricolxwz.download/ddd55f93699929baccb59a490609d15a.png){:style="width:400px"}
+            ![](https://img.ricolxwz.asia/ddd55f93699929baccb59a490609d15a.png){:style="width:400px"}
 
 ### `linewidth`参数 {#linewidth参数}
 
@@ -204,7 +204,7 @@ comments: true
 
     输出:
 
-    ![](https://img.ricolxwz.download/e1a4c83b7917f23d11890cba3cdb34e9.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/e1a4c83b7917f23d11890cba3cdb34e9.png){:style="width:400px"}
 
 ### `fmt`参数
 
@@ -232,7 +232,7 @@ fmt = '<marker><linestyle><color>'
 
     输出:
 
-    ![](https://img.ricolxwz.download/9719ff42ceeabe6ac5fdf231c4a9afa1.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/9719ff42ceeabe6ac5fdf231c4a9afa1.png){:style="width:400px"}
 
 ### `ms`/`mfc`/`mec`参数
 
@@ -244,7 +244,7 @@ fmt = '<marker><linestyle><color>'
 
 ???+ example "例子"
 
-    === "设置标记大小" 
+    === "设置标记大小"
 
         定义:
 
@@ -256,7 +256,7 @@ fmt = '<marker><linestyle><color>'
 
         输出:
 
-        ![](https://img.ricolxwz.download/ffd861fb8ac9967cfa11376a679f0240.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/ffd861fb8ac9967cfa11376a679f0240.png){:style="width:400px"}
 
     === "设置标记内部颜色"
 
@@ -270,7 +270,7 @@ fmt = '<marker><linestyle><color>'
 
         输出:
 
-        ![](https://img.ricolxwz.download/3e165ef0d8edff27cfb3fb8b86eb685a.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/3e165ef0d8edff27cfb3fb8b86eb685a.png){:style="width:400px"}
 
     === "设置标记外边框颜色"
 
@@ -284,7 +284,7 @@ fmt = '<marker><linestyle><color>'
 
         输出:
 
-        ![](https://img.ricolxwz.download/65aeaa5dd25808601a8eec99158a8d1f.png){:style="width:400px"}       
+        ![](https://img.ricolxwz.asia/65aeaa5dd25808601a8eec99158a8d1f.png){:style="width:400px"}
 
 ## 绘制多条线
 
@@ -308,10 +308,10 @@ fmt = '<marker><linestyle><color>'
 
         输出:
 
-        ![](https://img.ricolxwz.download/d25107b5e9b966db223b2e225e23722a.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/d25107b5e9b966db223b2e225e23722a.png){:style="width:400px"}
 
     === "传入多组数据"
-        
+
         定义:
 
         ```
@@ -327,7 +327,7 @@ fmt = '<marker><linestyle><color>'
 
         输出:
 
-        ![](https://img.ricolxwz.download/d25107b5e9b966db223b2e225e23722a.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/d25107b5e9b966db223b2e225e23722a.png){:style="width:400px"}
 
 ## 轴标签和标题
 
@@ -352,7 +352,7 @@ fmt = '<marker><linestyle><color>'
 
     输出:
 
-    ![](https://img.ricolxwz.download/ee38ebfaab09fb4a24e167eb3895d7ea.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/ee38ebfaab09fb4a24e167eb3895d7ea.png){:style="width:400px"}
 
 ### 标题
 
@@ -376,7 +376,7 @@ fmt = '<marker><linestyle><color>'
 
     输出:
 
-    ![](https://img.ricolxwz.download/bd81521408e628aa77142f716b6e6aae.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/bd81521408e628aa77142f716b6e6aae.png){:style="width:400px"}
 
 ## 网格线
 
@@ -409,7 +409,7 @@ matplotlib.pyplot.grid(<b>, <which>, <axis>, <**kwargs>)
 
             输出:
 
-            ![](https://img.ricolxwz.download/2bf12a515837e780a9688f23e984c844.png){:style="width:400px"}
+            ![](https://img.ricolxwz.asia/2bf12a515837e780a9688f23e984c844.png){:style="width:400px"}
 
         === "只开启副刻度"
 
@@ -425,7 +425,7 @@ matplotlib.pyplot.grid(<b>, <which>, <axis>, <**kwargs>)
 
             输出:
 
-            ![](https://img.ricolxwz.download/4d2da490fb92e3c6d63e250b421d07c7.png){:style="width:400px"}
+            ![](https://img.ricolxwz.asia/4d2da490fb92e3c6d63e250b421d07c7.png){:style="width:400px"}
 
         === "开启所有刻度"
 
@@ -441,7 +441,7 @@ matplotlib.pyplot.grid(<b>, <which>, <axis>, <**kwargs>)
 
             输出:
 
-            ![](https://img.ricolxwz.download/9ccf579064b452539f92793e20df152a.png){:style="width:400px"}
+            ![](https://img.ricolxwz.asia/9ccf579064b452539f92793e20df152a.png){:style="width:400px"}
 
 - `<axis>`: 可选, 设置显示哪个方向的网格线, 可选值有`both`, `x`或`y`
 - `<**kwargs>`: 可选, 设置网格样式
@@ -473,18 +473,18 @@ matplotlib.pyplot.grid(<b>, <which>, <axis>, <**kwargs>)
 
     输出:
 
-    ![](https://img.ricolxwz.download/fd0c1150609821a5984372d9f2e6aca3.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/fd0c1150609821a5984372d9f2e6aca3.png){:style="width:400px"}
 
 ## 绘制多图
 
 可以使用`subplot`和`subplots`函数来绘制多个子图.
 
-区别是: 
+区别是:
 
 - `subplot()`: 用于逐个创建子图, 只存在一个图形对象
 - `subplots()`: 用于一次性创建整个子图的网格, 并返回一个包含图形对象和子图数组的元组, 多次调用创建多个图形对象
 
-### `subplot`函数 
+### `subplot`函数
 
 该函数将区域分成`<nrows>`行和`<ncols>`列, 从左到右, 从上到下对每个子区域进行编号`1...N`, 编号可以通过`<index>`来设置.
 
@@ -517,7 +517,7 @@ matplotlib.pyplot.grid(<b>, <which>, <axis>, <**kwargs>)
 
         输出:
 
-        ![](https://img.ricolxwz.download/72d9c30756c00e1e8d94687b4148215f.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/72d9c30756c00e1e8d94687b4148215f.png){:style="width:400px"}
 
     === "例子2"
 
@@ -562,11 +562,11 @@ matplotlib.pyplot.grid(<b>, <which>, <axis>, <**kwargs>)
 
         输出:
 
-        ![](https://img.ricolxwz.download/6db8ef5393eafe38777627d50d58b2c9.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/6db8ef5393eafe38777627d50d58b2c9.png){:style="width:400px"}
 
 ### `subplots`函数
 
-该函数会一次性生成多个子图并返回一个图形对象+由子图对象构成的元组. 
+该函数会一次性生成多个子图并返回一个图形对象+由子图对象构成的元组.
 
 ???+ example "例子"
 
@@ -600,15 +600,15 @@ matplotlib.pyplot.grid(<b>, <which>, <axis>, <**kwargs>)
 
     - 图1
 
-        ![](https://img.ricolxwz.download/c78a5526ecbb97496c7d2c1c991ad42a.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/c78a5526ecbb97496c7d2c1c991ad42a.png){:style="width:400px"}
 
     - 图2
 
-        ![](https://img.ricolxwz.download/544302a4aadff87376d1d47a13ff1e47.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/544302a4aadff87376d1d47a13ff1e47.png){:style="width:400px"}
 
     - 图3
 
-        ![](https://img.ricolxwz.download/4ba1d151e7fc6eab6de8e4c6a5ef694c.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/4ba1d151e7fc6eab6de8e4c6a5ef694c.png){:style="width:400px"}
 
 [^1]: Matplotlib Pyplot | 菜鸟教程. (n.d.). From https://www.runoob.com/matplotlib/matplotlib-pyplot.html
 [^2]: Matplotlib 绘图标记 | 菜鸟教程. (n.d.). From https://www.runoob.com/matplotlib/matplotlib-marker.html

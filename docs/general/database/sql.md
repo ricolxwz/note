@@ -7,7 +7,7 @@ comments: true
 
 ## SQL构成
 
-数据库管理系统(DBMS)中的操作通常分为三大类: 
+数据库管理系统(DBMS)中的操作通常分为三大类:
 
 - 数据定义语言, DDL, 主要用于定义和管理数据库结构, 常见的操作包括`CREATE`, `ALTER`, `DROP`等等...
 - 数据操作语言, DML, 主要用于查询和修改数据库中的数据, 常见的操作包括`SELECT`, `INSERT`等等...
@@ -62,11 +62,11 @@ SFW查询语句背后执行的是下列关系代数表达式: `πA1,A2,...,An(σ
 
 ## 连接查询
 
-连接在SQL语句中分为隐式连接和显式连接. 
+连接在SQL语句中分为隐式连接和显式连接.
 
 ### 隐式连接
 
-隐式连接使用到的是`FROM`和`WHERE`语句, `FROM`语句用于列出参与到查询中的表, 对应的是笛卡尔积中的表, 连接的条件在`WHERE`语句中列出. 如选出Student表和UnitOfStudy的笛卡尔积: `SELECT * FROM Student, UnitOfStudy`. 如[图](https://img.ricolxwz.download/109682364bd058e45fc66e1c06fa8291.png).
+隐式连接使用到的是`FROM`和`WHERE`语句, `FROM`语句用于列出参与到查询中的表, 对应的是笛卡尔积中的表, 连接的条件在`WHERE`语句中列出. 如选出Student表和UnitOfStudy的笛卡尔积: `SELECT * FROM Student, UnitOfStudy`. 如[图](https://img.ricolxwz.asia/109682364bd058e45fc66e1c06fa8291.png).
 
 ### 显式连接
 
@@ -74,7 +74,7 @@ SFW查询语句背后执行的是下列关系代数表达式: `πA1,A2,...,An(σ
 
 ## 集合操作 {#set-operations}
 
-SQL语句中, `UNION`, `INTERSECT`, `EXCEPT`对应的是集合操作中的∪, ∩和−. 
+SQL语句中, `UNION`, `INTERSECT`, `EXCEPT`对应的是集合操作中的∪, ∩和−.
 
 ???+ tip "Tip"
 
@@ -84,7 +84,7 @@ SQL语句中, `UNION`, `INTERSECT`, `EXCEPT`对应的是集合操作中的∪, �
     - 在`R INTERSECT ALL S`的结果中会出现min(m, n)次
     - 在`R EXCEPT ALL S`的结果中会出现max(0, m-n)次
 
-例子如[图1](https://img.ricolxwz.download/4ed0a2e07f06c175ee79d5858f3bca9a.png), [图2](https://img.ricolxwz.download/ffa4171300b7c1ba9b17000bf4a96476.png).
+例子如[图1](https://img.ricolxwz.asia/4ed0a2e07f06c175ee79d5858f3bca9a.png), [图2](https://img.ricolxwz.asia/ffa4171300b7c1ba9b17000bf4a96476.png).
 
 ## ED-Lessons专题
 

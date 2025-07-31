@@ -5,14 +5,14 @@ comments: true
 
 ## 贝叶斯理论
 
-给定一个假设Hypothesis, H和证据Evidence, E. 那么在出现了证据E的情况下, H的概率为$P(H|E)=\frac{P(E|H)P(H)}{P(E)}$. 
+给定一个假设Hypothesis, H和证据Evidence, E. 那么在出现了证据E的情况下, H的概率为$P(H|E)=\frac{P(E|H)P(H)}{P(E)}$.
 
 如给出一捆花🌷, 🌹, 🌸的一些特征即证据E, 如颜色, 茎长. 推测假设H是一朵玫瑰🌹的可能性:
 
 - $P(H|E)$: 后验概率, 又叫作条件概率, 是我们知道证据后某一事件的可能性, 如给出颜色, 茎长后, 是玫瑰的概率
 - $P(H)$: 先验概率, 是我们知道证据前某一事件的可能性, 如不给出任何颜色, 茎长, 是玫瑰的概率
 - $P(E|H)$: 后验概率, 又叫作条件概率, 是我们知道证据后某一事件的可能性, 如玫瑰之后, 是红色, 长茎的概率
-- $P(E)$: 先验概率, 是我们知道证据前某一事件的可能性, 如不给出是不是玫瑰, 是红色, 长茎的概率 
+- $P(E)$: 先验概率, 是我们知道证据前某一事件的可能性, 如不给出是不是玫瑰, 是红色, 长茎的概率
 
 ## 朴素贝叶斯算法 {#nb-algorithm}
 
@@ -44,21 +44,21 @@ comments: true
 
 首先, 需要计算在已知特征的情况下, 假设新的一天的天气为sunny, cool, high, true, 分别对应$E_1, E_2, E_3, E_4$, 对于每一个类(假设)都要计算他们的后验概率, 如在这个例子中, 是$P(yes|E)$和$P(no|E)$. 根据贝叶斯理论, $P(yes|E)=\frac{P(E|yes)P(yes)}{P(E)}, P(no|E)=\frac{P(E|no)P(no)}{P(E)}$. 那么, 我们如何计算$P(E|yes)$和$P(E|no)$呢? 这里, 我们就用到了假设1, 即$P(E|yes)=P(E_1|yes)P(E_2|yes)P(E_3|yes)P(E_4|yes)$, $P(E|no)=P(E_1|no)P(E_2|no)P(E_3|no)P(E_4|no)$. 代入上面的式子, 可以得到$P(yes|E)=\frac{P(E_1|yes)P(E_2|yes)P(E_3|yes)P(E_4|yes)P(yes)}{P(E)}, P(no|E)=\frac{P(E_1|no)P(E_2|no)P(E_3|no)P(E_4|no)P(no)}{P(E)}$. 分子的部分可以直接从训练数据中得到, 分母的部分都是$P(E)$, 由于我们只是要比较$P(yes|E)$和$P(no|E)$, 所以没有必要算出分母, 具体的计算过程就不在这里写了, 得到的结果是$P(yes|E)=\frac{0.0053}{P(E)}, P(no|E)=\frac{0.0206}{P(E)}$. 由于$P(no|E)>P(yes|E)$, 所以朴素贝叶斯预测的sunny, cool, high, true的play选项为no.
 
-另一个例子见[图](https://img.ricolxwz.download/df558f7e1e5c65c1e36402b2b41bfa7e.png).
+另一个例子见[图](https://img.ricolxwz.asia/df558f7e1e5c65c1e36402b2b41bfa7e.png).
 
 ### 零频问题 {#zero-frequency}
 
-在上述分类问题中, 对于一个属性值(特征值)至少在每一个类别(play=yes, play=no)中都出现过一次. 如果sunny只出现在play=no中, 从未出现在play=yes中, 那么, 就会有$P(yes|E)=\frac{P(E_1|yes)P(E_2|yes)P(E_3|yes)P(E_4|yes)P(yes)}{P(E)}=0$, 因为$P(E_1|yes)=0$. 这意味着任何含有属性值为sunny的天气情况都会被归类到play=no, 完全忽略其他值的影响. 
+在上述分类问题中, 对于一个属性值(特征值)至少在每一个类别(play=yes, play=no)中都出现过一次. 如果sunny只出现在play=no中, 从未出现在play=yes中, 那么, 就会有$P(yes|E)=\frac{P(E_1|yes)P(E_2|yes)P(E_3|yes)P(E_4|yes)P(yes)}{P(E)}=0$, 因为$P(E_1|yes)=0$. 这意味着任何含有属性值为sunny的天气情况都会被归类到play=no, 完全忽略其他值的影响.
 
 为了解决这个问题, 需要用到拉普拉斯平滑技术: 在计算$P(E_i|yes)$的时候, 用到以下公式, $P(E_i|yes)=(count(E_i)+1)/(count(yes)+m)$, 对于$P(E_i|no)$也是同样的, 其中$m$为该属性$E_i$可能取值的数量, 如对于outlook, 可能的取值有$3$种, 当零频的时候, $count(E_i)$等于$0$.
 
 ### 缺失值问题 {#missing-values}
 
-两种情况, 新样本中某些属性缺失, 不要在计算p(E|yes)**和**计算p(E|no)的时候包括那个缺失值的属性, 如没有outlook则不要包含$p(outlook|yes)$和$p(outlook|no)$; 表中的某些属性值缺失, 则不要将缺失值纳入计数, 如在yes下, outlook列中有一个缺失值, 则直接跳过, 不用管. 
+两种情况, 新样本中某些属性缺失, 不要在计算p(E|yes)**和**计算p(E|no)的时候包括那个缺失值的属性, 如没有outlook则不要包含$p(outlook|yes)$和$p(outlook|no)$; 表中的某些属性值缺失, 则不要将缺失值纳入计数, 如在yes下, outlook列中有一个缺失值, 则直接跳过, 不用管.
 
 ### 数值属性朴素贝叶斯 {#numeric-nb}
 
-现在, 试想如果温度和湿度是数值的话, 如何对play的结果做出分类呢? 
+现在, 试想如果温度和湿度是数值的话, 如何对play的结果做出分类呢?
 
 即我们如何计算$P(E_1|yes)$, $P(E_2|yes)$, $P(E_1|no)$, ...? 我们假设数值符合正态分布或者高斯分布, 以正态分布为例, 使用概率函数, 参数为期望$\mu$和标准差, standard deviation $\sigma$: $f(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$. 其中期望$\mu=\frac{\sum_{i=1}^n x_i}{n}$, 标准差$\sigma=\sqrt{\frac{\sum_{i=1}^n(x_i-\mu)^2}{n-1}}$.
 

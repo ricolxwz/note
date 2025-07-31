@@ -10,7 +10,7 @@ level: chg
 - **特别注意在线性回归和神经网络中, ==不要忘记截距, 特别容易忘==**
 - 不要忘记计算器
 
-重要程度: 
+重要程度:
 
 - 超级重要: ☢️
 - 重要: ⚠️
@@ -71,7 +71,7 @@ level: chg
 - [神经网络](/algorithm)
     - ☢️[感知机学习过程](/algorithm/#learning-algorithm), 权重更新公式$\bm{w}^{new}=\bm{w}^{old}+e\bm{x}^T$, $e=t-a$, $t$为目标输出($0$或$1$), $a$为实际输出($0$或$1$), $\bm{x}$为输入向量; 同时还要调整截距, $b^{new}=b^{old}+e$. 一般来说, 便于计算, 顶多一个Epoch. 结束条件是所有的样本都被正确分类or训练达到最大次数. 特别提醒, 计算一定要按照课件上的框架来, 很容易算错
     - ♻️[为什么神经网络往往有多层](/algorithm/#logic-gates): 在现实世界中, 问题往往不是线性可分的, 通过感知机可以实现与门, 或门, 与非门, 通过这些门的组合能够得到更加复杂的边界
-    - ☢️[前向传播](/algorithm/fnn/#backpropagation-algorithm), 给出一张网络的[图](https://img.ricolxwz.download/58a62f5af6cb3f0dcd287eb696e918a8.png), 计算最后的输出. 使用的是sigmoid函数, $y=1/(1+e^{-x})$, 这个函数记住
+    - ☢️[前向传播](/algorithm/fnn/#backpropagation-algorithm), 给出一张网络的[图](https://img.ricolxwz.asia/58a62f5af6cb3f0dcd287eb696e918a8.png), 计算最后的输出. 使用的是sigmoid函数, $y=1/(1+e^{-x})$, 这个函数记住
     - ☢️[反向传播](/algorithm/fnn/#backpropagation-algorithm), $w_{pq}(t+1)=w_{pq}(t)+\Delta w_{pq}$, 其中$\Delta w_{pq}=\eta\cdot \delta_q\cdot o_p$. 根据$q$的不同, 有两个版本的反向传播公式, 若$q$是输出层神经元, 则$\delta_q=(t_q-o_q)f'(z_q)$, 若$q$是隐藏层神经元, 则$\delta_q=f'(z_q)\sum_i w_{qi}\delta_i$, 其中$f'(z_q)=o_q(1-o_q)$, $\eta$是学习率, $z_q$是$q$神经元激活函数处理前的输出, $f(z_q)=o_q$. 此外, 截距的更新公式为$\theta_q(t+1)=\theta_q(t)+\eta\cdot \delta_q$, 注意, *在计算前面神经元新权重的时候, 使用的$w_qi$是旧的权重, 不是新的权重*
     - ♻️训练方式: 标准的方法是每轮都会一个接一个把所有的样本过一遍神经网络. 其他方法有: a. 每一轮都对样本进行随机排序; b. 增大错误率高的样本出现的几率; c. 小批量轮次, 以N为单位输入样本, 取得它们的累积错误率, 然后一梭子反向传播
     - ♻️[感知机能够实现什么门](/algorithm/#logic-gates), 感知机能够实现与门, 或门, 与非门, 但是不能实现异或门
@@ -83,7 +83,7 @@ level: chg
     - ♻️[Softmax](/algorithm/#softmax): 假设输出为独热编码, 则输出向量的值$(o_1, ..., o_n)$可以通过softmax函数转换为概率, $p_i=\frac{e^{o_i}}{\sum_j e^{o_i}}$, 例子简单看下
     - ⚠️[梯度消失](/algorithm/#vanishing-gradient), 记得之前计算错误率$\delta_q$的时候, $f(z_q)'=o_q(1-o_q)$, $o_q=f(z_q)$, 经过激活函数激活后, $o_q$可能会非常接近$0$或者$1$, 导致计算出来的$\Delta w_{pq}$很小, 导致传播过程中梯度消失, 收敛变慢, 解决的方法是使用残差
     - ⚠️[计算卷积结果](/algorithm/cnn/#convolutional-layer), 给你一个3*3的卷积核, 计算卷积结果, 特征图中为零的部分说明是没有特征, 明显大于0的部分说明有特征
-    - ♻️[CNN的超参数](/algorithm/cnn/#stride): CNN的超参数主要有两个, 一个是stride, 步长, 可用来控制特征图的大小; 一个是padding, 用来处理图像的边缘区域, 防止边缘的特征丢失. receptive field输入图像上的某个区域, 这个区域能够影响特征图中的某个元素. 
+    - ♻️[CNN的超参数](/algorithm/cnn/#stride): CNN的超参数主要有两个, 一个是stride, 步长, 可用来控制特征图的大小; 一个是padding, 用来处理图像的边缘区域, 防止边缘的特征丢失. receptive field输入图像上的某个区域, 这个区域能够影响特征图中的某个元素.
     - ⚠️[池化](/algorithm/cnn/#subsampling-layer): 主要有两种方式, 一种是最大池化, 选择区域中的最大值, 一种是平均池化. 一般来说, 如果图像是白底黑字, 则使用平均池化, 如果是黑底白字, 则使用最大池化
     - 🗑️其他神经网络: 大概率不会考很多, 大题不可能考CNN, RNN, Transformer. 所以, 可以随便翻一下, 过一眼结束了, 还有CNN注意一下卷积怎么算, 还有Max/Average Pooling怎么得到特征图的
 - [聚类](/algorithm/clustering)
@@ -96,10 +96,10 @@ level: chg
     - ♻️[聚合式算法如何进行分簇](/algorithm/clustering/#agglomerative-algorithm), 首先每个点当作一个簇, 然后慢慢合并距离最近的两个簇, 直到变成一整个簇, 看一下例子就行, 注意一下那个distance matrix
     - ☢️[DBSCAN算法如何分簇](/algorithm/clustering/#dbscan), 把core point, border point, noise point, MinPts, Eps的理念搞搞懂, 特别注意, MinPts是包括自己的; a. 任何两个核心点, 若在各自对方的Eps内, 属于同一个簇; b. 任何边界点放在与其相关联的核心点所属的簇中; c. 噪声点抛弃
     - ⚠️[如何选择Eps和MinPts](/algorithm/clustering/#select-eps-minpts), 和elbow method很像, 画出一个点到$k$个最近邻居的距离图
-    - ☢️[计算凝聚度/分离度](/algorithm/clustering/#conhesion-separration), 很简单, 但是很重要, 看清楚是不是平方距离 
+    - ☢️[计算凝聚度/分离度](/algorithm/clustering/#conhesion-separration), 很简单, 但是很重要, 看清楚是不是平方距离
     - ♻️[计算轮廓系数](/algorithm/clustering/#sihouette-coefficient), 对于一个点, 一个簇, 整个聚类, 计算轮廓系数有不同, 越接近1越好, ai表示的是凝聚度, bi表示的分离度, ai越小越好, bi越大越好, $s_i=\frac{b_i-a_i}{max(a_i, b_i)}$
     - ♻️[相似度矩阵是啥](/algorithm/clustering/#correlation-similarity-matrix)
-    - ⚠️[如何选择簇的数量](/algorithm/clustering/#choose-number-cluster): 选择SSE的拐点对应的簇的数量, 选择轮廓系数的最大值对应的簇数量 
+    - ⚠️[如何选择簇的数量](/algorithm/clustering/#choose-number-cluster): 选择SSE的拐点对应的簇的数量, 选择轮廓系数的最大值对应的簇数量
 - [马尔可夫链](/algorithm/markov-chain)
     - ☢️[利用马尔科夫假设进行预测](/algorithm/markov-chain/#markov-assumption), 搞清楚三种概率, initial probability, transition probability, emission probability, 然后计算状态序列的概率
     - ♻️[HMM的两个假设](/algorithm/markov-chain/#hmm-assumptions): 齐次假设和观测独立性假设

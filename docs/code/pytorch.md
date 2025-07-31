@@ -741,7 +741,7 @@ plt.show()
 ```
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/085abdcf90f7eb7f63be72b28979026e.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/085abdcf90f7eb7f63be72b28979026e.png){ loading=lazy width='500' }
 </figure>
 
 ### 创建自定义数据集
@@ -814,7 +814,7 @@ print(f"Label: {label}")
 ```
 
 <figure markdown='1'>
-  ![](https://img.ricolxwz.download/c0251616f9dcfd140eda0ec82b82eba5.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.asia/c0251616f9dcfd140eda0ec82b82eba5.png){ loading=lazy width='500' }
 </figure>
 
 ``` title='输出'
@@ -1145,7 +1145,7 @@ loss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)
 上述代码对应于这个计算图:
 
 <figure markdown='1'>
-  ![](https://img.ricolxwz.download/7efcb858120ecb3c0d118ce548c1fa96.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.asia/7efcb858120ecb3c0d118ce548c1fa96.png){ loading=lazy width='500' }
 </figure>
 
 在这个网络中, `w`和`b`是参数, 是我们要优化的对象, 因此, 我们需要去计算损失函数对应于这些参数的梯度. 为了实现这一点, 我们设置`requires_grad`为`True`.

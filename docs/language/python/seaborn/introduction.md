@@ -40,7 +40,7 @@ Seaborn是一个绘制统计图形的Python库. 它建立在Matplotlib至上并�
 
     输出:
 
-    ![](https://img.ricolxwz.download/cca4c3866d6d22eff8d3d53c640ae8d3.png){:style="width:680px"}
+    ![](https://img.ricolxwz.asia/cca4c3866d6d22eff8d3d53c640ae8d3.png){:style="width:680px"}
 
     解释:
 
@@ -86,13 +86,13 @@ Seaborn是一个绘制统计图形的Python库. 它建立在Matplotlib至上并�
 
     输出:
 
-    ![](https://img.ricolxwz.download/9b8acb9e250b3d738200f06e8fe36255.png){:style="width:680px"}
+    ![](https://img.ricolxwz.asia/9b8acb9e250b3d738200f06e8fe36255.png){:style="width:680px"}
 
     可以注意到`size`和`style`属性在散点图和折线图中的表现形式是不一样的. 在散点图中, 表现为点的大小和点的样式; 在这线图中, 表现为线宽和线的样式. 我们无需关注这些细节, 只需要关注整体的结构和信息.
 
 ### 统计估计
 
-通常, 我们对一个变量的平均值如何随其他变量变化感兴趣. 许多Seaborn函数会自动执行必要的统计估计, 以回答上述问题. 
+通常, 我们对一个变量的平均值如何随其他变量变化感兴趣. 许多Seaborn函数会自动执行必要的统计估计, 以回答上述问题.
 
 ???+ example "例子"
 
@@ -109,9 +109,9 @@ Seaborn是一个绘制统计图形的Python库. 它建立在Matplotlib至上并�
 
     输出:
 
-    ![](https://img.ricolxwz.download/8c3652651af2bfaaa744595a9dcc9cac.png){:style="width:680px"}
+    ![](https://img.ricolxwz.asia/8c3652651af2bfaaa744595a9dcc9cac.png){:style="width:680px"}
 
-当估计统计值的时候, Seaborn将使用自举法计算置信区间, 并绘制表示估计不确定性的误差条. 
+当估计统计值的时候, Seaborn将使用自举法计算置信区间, 并绘制表示估计不确定性的误差条.
 
 Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使用`lmplot`函数包括线性回归模型来增强散点图.
 
@@ -126,7 +126,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
     输出:
 
-    ![](https://img.ricolxwz.download/b047e90a9ddb125c57ae1a77afec08ac.png){:style="width:680px"}
+    ![](https://img.ricolxwz.asia/b047e90a9ddb125c57ae1a77afec08ac.png){:style="width:680px"}
 
 ### 分布一览
 
@@ -145,7 +145,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
         输出:
 
-        ![](https://img.ricolxwz.download/2de4aebb24a049959d67456a46dcde37.png){:style="width:680px"}
+        ![](https://img.ricolxwz.asia/2de4aebb24a049959d67456a46dcde37.png){:style="width:680px"}
 
     === "核密度估计"
 
@@ -158,11 +158,11 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
         输出:
 
-        ![](https://img.ricolxwz.download/5dfe53af5b6b0b90dc7a43da7bffb07c.png){:style="width:680px"}
+        ![](https://img.ricolxwz.asia/5dfe53af5b6b0b90dc7a43da7bffb07c.png){:style="width:680px"}
 
 ### 绘制分类数据
 
-在Seaborn中, 有几类特殊的绘图类型是面向可视化分类数据的, 可以设置`catplot`函数中的`kind`属性来实现这一目标. 
+在Seaborn中, 有几类特殊的绘图类型是面向可视化分类数据的, 可以设置`catplot`函数中的`kind`属性来实现这一目标.
 
 ???+ example "例子"
 
@@ -177,13 +177,13 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
         输出:
 
-        ![](https://img.ricolxwz.download/aa9d69269b0f6a08d200c3d4ec049d60.png){style="width:400px"}
+        ![](https://img.ricolxwz.asia/aa9d69269b0f6a08d200c3d4ec049d60.png){style="width:400px"}
 
     === "小提琴图"
 
         小提琴图由数据进行核密度分析得到.
 
-        定义: 
+        定义:
 
         ```py
         tips = sns.load_dataset("tips")
@@ -192,7 +192,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
         输出:
 
-        ![](https://img.ricolxwz.download/691ee143fe024eecdb5d9bfa814bfd9d.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/691ee143fe024eecdb5d9bfa814bfd9d.png){:style="width:400px"}
 
     === "条形图"
 
@@ -205,7 +205,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
         输出:
 
-        ![](https://img.ricolxwz.download/10212999a727395aaf2e77a473adfd9a.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/10212999a727395aaf2e77a473adfd9a.png){:style="width:400px"}
 
 ## 多变量视图在复杂数据集上的应用
 
@@ -221,8 +221,8 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
     ```
 
     输出:
-    
-    ![](https://img.ricolxwz.download/5bf67848c9937c5b833d58da465f22f8.png){:style="width:400px"}
+
+    ![](https://img.ricolxwz.asia/5bf67848c9937c5b833d58da465f22f8.png){:style="width:400px"}
 
 另一个函数`pairplot`, 采取更加广泛的视角, 它分别显示了所有成对关系和每个变量的联合分布率和边缘分布函数.
 
@@ -237,11 +237,11 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
     输出:
 
-    ![](https://img.ricolxwz.download/2330f9ee031951a4e682ab317c3f7fbb.png){:style="width:680px"}
+    ![](https://img.ricolxwz.asia/2330f9ee031951a4e682ab317c3f7fbb.png){:style="width:680px"}
 
 ### 构建图形的低级工具
 
-这些工具通过将轴级绘图函数与管理图形布局的对象相结合来工作, 将数据集的结构链接到轴网络. 
+这些工具通过将轴级绘图函数与管理图形布局的对象相结合来工作, 将数据集的结构链接到轴网络.
 
 ???+ example "例子"
 
@@ -259,7 +259,7 @@ Seaborn中的统计估计并不仅限于描述性统计. 例如, 可以通过使
 
     输出:
 
-    ![](https://img.ricolxwz.download/6bac39d5783de6544096522f89b3f872.png){:style="width:680px"}
+    ![](https://img.ricolxwz.asia/6bac39d5783de6544096522f89b3f872.png){:style="width:680px"}
 
     解释:
 
@@ -311,7 +311,7 @@ Seaborn通过一次函数调用就能创建完整的图形. 在可能的情况�
 
     输出:
 
-    ![](https://img.ricolxwz.download/aa8a80a940f730450d879b91f026c83f.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/aa8a80a940f730450d879b91f026c83f.png){:style="width:400px"}
 
 当你准备发布你的作品的时候, 你可能希望对图形进行更加精细的打磨. Seaborn允许多层次的自定义. 它定义了多个适用于所有图形的内置主题. 当你创建了一个图之后, 其属性可以通过Seaborn API进行修改, 也可以通过降到matplotlib层进行更加精细的修改.
 
@@ -336,4 +336,4 @@ Seaborn通过一次函数调用就能创建完整的图形. 在可能的情况�
 
     输出:
 
-    ![](https://img.ricolxwz.download/674ba39973e4cbe3c4bef7f0b8861d0f.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/674ba39973e4cbe3c4bef7f0b8861d0f.png){:style="width:400px"}

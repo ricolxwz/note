@@ -2,8 +2,8 @@
 title: 数据库:关系代数
 comments: true
 ---
- 
-关系代数(Relational Algebra)是一种基于集合论的数学理论, 用于对关系数据库中的数据进行建模和查询. 它由埃德加·F·科德(Edgar F. Codd)提出, 提供了一套运算符, 这些运算符可以对一个或者多个关系进行操作, 生成新的关系作为结果. 
+
+关系代数(Relational Algebra)是一种基于集合论的数学理论, 用于对关系数据库中的数据进行建模和查询. 它由埃德加·F·科德(Edgar F. Codd)提出, 提供了一套运算符, 这些运算符可以对一个或者多个关系进行操作, 生成新的关系作为结果.
 
 ## 运算符 {#operator}
 
@@ -14,7 +14,7 @@ comments: true
     - 投影(π): 从关系中选择某些列
     - 重命名(ρ): 重命名属性或者关系
 - 二元运算符, Binary Operator
-    - 连接操作符 
+    - 连接操作符
         - 笛卡尔积(×): 将两个关系中所有元组组合起来, 形成一个新的关系
         - 连接(⋈): 将两个关系中匹配的元组组合起来, 通常会基于共同的属性进行匹配
     - 集合操作符
@@ -22,13 +22,13 @@ comments: true
         - 交(∩): 返回关系A和B中同时存在的元组
         - 差(-): 返回只在关系A中存在而不在关系B中存在的元组
 
-这些运算符可以组合使用, 以表达更加复杂的查询. 关系代数描述了得到答案的详细步骤, 因此它是一种过程式语言. 元组演算相比之下是一种声明式语言, 描述的是最终状态的结果. SQL是声明式的. 
+这些运算符可以组合使用, 以表达更加复杂的查询. 关系代数描述了得到答案的详细步骤, 因此它是一种过程式语言. 元组演算相比之下是一种声明式语言, 描述的是最终状态的结果. SQL是声明式的.
 
 其实, 只有6种基本运算符, 分别是σ, π, ×, ∪, -, ρ. 其他的都是衍生的运算符, 如⋈~Θ~, 其实可以表示为R⋈~Θ~S = σ~Θ~(R×S)...
 
 ### 选择条件
 
-在数据查询和筛选中, 选择条件通常是由许多个条件组合而成的布尔表达式. 这些条件用于过滤数据集, 以便根据特定的标准选择数据. 每个术语可以是以下两种形式之一: 
+在数据查询和筛选中, 选择条件通常是由许多个条件组合而成的布尔表达式. 这些条件用于过滤数据集, 以便根据特定的标准选择数据. 每个术语可以是以下两种形式之一:
 
 - 属性和常量之间的比较: `attribute op constant`
 - 属性之间的比较: `attribute1 op attribute2`
@@ -37,8 +37,8 @@ comments: true
 
 - `<`: 小于
 - `>`: 大于
-- `<=`: 小于或等于 
-- `>=`: 大于或等于 
+- `<=`: 小于或等于
+- `>=`: 大于或等于
 - `≠`: 不等于
 - `=`: 等于
 
@@ -49,7 +49,7 @@ comments: true
 
 ### 笛卡尔积 {#join}
 
-笛卡尔积, 又可以叫作Cartesian Product. 可以被表示为RxS = {ts|t∈R∧s∈S}. 也就是说, R中的每一个元组都会和S中的每一个元组配对. 如[图](https://img.ricolxwz.download/41fb587e0c524889d69f3d1782c3f266.png).
+笛卡尔积, 又可以叫作Cartesian Product. 可以被表示为RxS = {ts|t∈R∧s∈S}. 也就是说, R中的每一个元组都会和S中的每一个元组配对. 如[图](https://img.ricolxwz.asia/41fb587e0c524889d69f3d1782c3f266.png).
 
 ???+ example "例子"
 
@@ -79,18 +79,18 @@ comments: true
 
 #### 条件连接 {#条件连接}
 
-条件连接, 又叫作Θ连接. 是在笛卡尔积的基础上再加上一个选择运算符. R⋈~Θ~S=σ~Θ~(R×S). 如[图](https://img.ricolxwz.download/bd426ebd66d36ac36fefbdf04429db34.png).
+条件连接, 又叫作Θ连接. 是在笛卡尔积的基础上再加上一个选择运算符. R⋈~Θ~S=σ~Θ~(R×S). 如[图](https://img.ricolxwz.asia/bd426ebd66d36ac36fefbdf04429db34.png).
 
 ???+ tip "Tip"
 
-    条件连接有四种类型: 
+    条件连接有四种类型:
 
     - 内连接
     - 左外连接
     - 右外连接
     - 全外连接
 
-    如[图](https://img.ricolxwz.download/544a3baef5ea8d499660dacdd610aa38.png).
+    如[图](https://img.ricolxwz.asia/544a3baef5ea8d499660dacdd610aa38.png).
 
     默认的条件连接为内连接.
 
@@ -148,7 +148,7 @@ comments: true
             可以看到, 在包含内连接那些元组的基础上, 还包含来自A中`CustomerID`在B中`CustomerID`找不到的元组, 找不到所有的属性填充为`NULL`.
 
         === "右外连接"
-        
+
             现在有两张表A和B.
 
             | CustomerID | CustomerName |
@@ -229,7 +229,7 @@ comments: true
 
 ###### 自然连接
 
-自然连接, Natural Join是一种等值连接的特殊情况, 它在等值连接的基础之上, 又明确了对于所有的名字相同的属性都进行等值连接, 并且只保留其中的一列. 
+自然连接, Natural Join是一种等值连接的特殊情况, 它在等值连接的基础之上, 又明确了对于所有的名字相同的属性都进行等值连接, 并且只保留其中的一列.
 
 ???+ example "例子"
 
@@ -254,13 +254,13 @@ comments: true
     | 3     | Charlie | 10     | HR          |
     | 2     | Bob     | 20     | Engineering |
 
-    另外还有例子, 如[图](https://img.ricolxwz.download/5f27225a266af62d76910969c2f42ce4.png).
+    另外还有例子, 如[图](https://img.ricolxwz.asia/5f27225a266af62d76910969c2f42ce4.png).
 
 ### 集合 {#set}
 
 集合操作和笛卡尔积等连接操作有很大区别. 集合操作要求两个参与的关系必须有相同的结构, 即类的数量和类型必须相同. 以Union集合操作为例, 结果表的结构和原始表的结构相同, 列的数量和类型都保持一致, 结果集合的行数是两个集合中所有行的总和(去除重复行后); 笛卡尔积的结果表的结构是两个原始表的结构的组合, 列的数量是两个原始表的列数的总和(不考虑自然连接), 结果表的行数是两个原始表的行数的乘积.
 
-举一个例子, 如[图](https://img.ricolxwz.download/56e947249dad059e89bf9fca117c7c88.png).
+举一个例子, 如[图](https://img.ricolxwz.asia/56e947249dad059e89bf9fca117c7c88.png).
 
 ### 重命名
 
@@ -268,8 +268,8 @@ comments: true
 
 ???+ example "例子"
 
-    假设我们有一个关系 employee, 它的属性有 empid, name, age, department. 如果我们使用重命名操作ρemp_info​(employee), 那么这个操作的结果是将 employee 这个关系命名为 emp_info, 但它的属性名保持不变. 结果可以表示为emp_info(empid, name, age, department). 
-    
+    假设我们有一个关系 employee, 它的属性有 empid, name, age, department. 如果我们使用重命名操作ρemp_info​(employee), 那么这个操作的结果是将 employee 这个关系命名为 emp_info, 但它的属性名保持不变. 结果可以表示为emp_info(empid, name, age, department).
+
     再举一个例子, 如果我们使用带有属性名和表名的重名名操作ρemp_info​(eid,ename,eage,dept)(employee), 么这个操作不仅将 employee 这个关系命名为 emp_info, 而且还将它的属性名称分别重命名为 eid, ename, eage, 和 dept. 结果可以表示为: emp_info(eid, ename, eage, dept)
 
 ## RA在RDBMS中的角色 {#RA在RDBMS中的角色}
@@ -281,4 +281,4 @@ comments: true
 5. 查询执行计划被转换为可执行代码
 6. 最后生成的代码在数据库引擎中执行, 以实际获取查询结果
 
-如[图](https://img.ricolxwz.download/79349016c11055718d8ce3bc39138192.png).
+如[图](https://img.ricolxwz.asia/79349016c11055718d8ce3bc39138192.png).

@@ -23,20 +23,20 @@ NLP邻域最重要的一个范式是先使用通用领域的大规模数据进�
 
 作者想要解决的这个微调效率低下的问题已经存在很久了. 自动迁移学习出现, 已经有许多工作想要使得模型的调优变得更加parameter&compute高效. 以语言模型举一个例子, 有两种主流的方法: 一个是添加adapter层. 一个是优化输入层激活(其实就是Prompt调优?). 但是, 这些策略都有它们各自的限制, 尤其是在大规模的对延迟很敏感的领域.
 
-**Adapter层会导致推理延迟**. Adapters有很多变种, 作者关注的是由Houlsby等人[^2]提供的原始设计, 这个设计在每个Transformer的block中都有两个adapter模块. Lin等人[^8]提出了一种更为简化的设计, 每个块中只有一个适配器层, 但是有一个额外的LN层. 虽然可以通过剪枝或者利用多任务来降低延迟, 但是由adapter这一层带来的额外计算量是无法绕过的. 这看起来不成问题, 因为adapter被设计成一种"瓶颈结构", 所增加的参数量非常少(有时甚至是原预训练模型的$1\%$之内), 但是, ^^大型神经网络依赖于硬件上的并行性使得延迟降低, 而adapter层是串行处理的, 特别是在线推理的场景下, batch_size通常为1, adapter层推理时间的占比会显著增加.^^ 实验显示, 在没有模型并行的情况下, 在单块GPU上运行GPT-2, 即使adapter的瓶颈维度非常小, 也会显著增加延迟(见下表). 
+**Adapter层会导致推理延迟**. Adapters有很多变种, 作者关注的是由Houlsby等人[^2]提供的原始设计, 这个设计在每个Transformer的block中都有两个adapter模块. Lin等人[^8]提出了一种更为简化的设计, 每个块中只有一个适配器层, 但是有一个额外的LN层. 虽然可以通过剪枝或者利用多任务来降低延迟, 但是由adapter这一层带来的额外计算量是无法绕过的. 这看起来不成问题, 因为adapter被设计成一种"瓶颈结构", 所增加的参数量非常少(有时甚至是原预训练模型的$1\%$之内), 但是, ^^大型神经网络依赖于硬件上的并行性使得延迟降低, 而adapter层是串行处理的, 特别是在线推理的场景下, batch_size通常为1, adapter层推理时间的占比会显著增加.^^ 实验显示, 在没有模型并行的情况下, 在单块GPU上运行GPT-2, 即使adapter的瓶颈维度非常小, 也会显著增加延迟(见下表).
 
 <figure markdown='1'>
-  ![](https://img.ricolxwz.download/b4cce089d30456a9b8007148c07c08ba.webp#only-light){ loading=lazy width='600' }
-  ![](https://img.ricolxwz.download/b4cce089d30456a9b8007148c07c08ba_inverted.webp#only-dark){ loading=lazy width='600' }
+  ![](https://img.ricolxwz.asia/b4cce089d30456a9b8007148c07c08ba.webp#only-light){ loading=lazy width='600' }
+  ![](https://img.ricolxwz.asia/b4cce089d30456a9b8007148c07c08ba_inverted.webp#only-dark){ loading=lazy width='600' }
   <figcaption>GPT-2中型模型单次前向传播的100次实验平均值, 单位毫秒. 使用的是NVIDIA Quadro RTX8000. $|\Theta|$表示的是adapter层的可训练参数数量. AdapterL和AdapterH是两种adapter调优的方法</figcaption>
 </figure>
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/51b932b2b2603d0713554d1306e6dd04.webp#only-light){ loading=lazy width='600' }
-![](https://img.ricolxwz.download/51b932b2b2603d0713554d1306e6dd04_inverted.webp#only-dark){ loading=lazy width='600' }
+![](https://img.ricolxwz.asia/51b932b2b2603d0713554d1306e6dd04.webp#only-light){ loading=lazy width='600' }
+![](https://img.ricolxwz.asia/51b932b2b2603d0713554d1306e6dd04_inverted.webp#only-dark){ loading=lazy width='600' }
 <figcaption>以没有adapter(r=0)作为基线, 比较不同seq_len, batch_size, r下adapter延迟增加的百分比. 上面的一条是AdapterH, 下面的一条是AdapterL. 大batch_size和seq_len能够缓解延迟. 在线推理, 短序列的情况下, 这种推理时间增加的百分比高达30%</figcaption>
 </figure>
-    
+
 ???+ note "如何计算attention层和adapter层的复杂度"
 
     设$N$是序列长度, $D$是特征维度, $B$是batch_size, $D'$是adapter模块的瓶颈维度, 通常$D'\ll D$.
@@ -70,8 +70,8 @@ NLP邻域最重要的一个范式是先使用通用领域的大规模数据进�
 作者受到Li等人[^6]和Aghajanyan等人[^7]研究工作的启发. 🌟他们的研究表明, 学习到的过参数化模型(Over-Parameterized Model)实际上存在于一个低内在维度空间(Low Intrinsic Dimension)中. 基于这一发现, 作者假设在模型的**调优/适应**过程中, 权重的变化**也**具有低内在秩(Intrinsic Rank). 这促使作者提出了低秩适应(LoRA)的方法.🌟 ^^LoRA允许我们通过在调优过程中优化某些特定密集层(Dense Layer)的权重变化的秩分解矩阵(Rank Decomposition Matrices)来间接"训练"这些密集层, 同时保持预训练的权重冻结.^^ 如下图所示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/1ed1d2f0549dd53c0a7684355d9f56a4.webp#only-light){ loading=lazy width='210' }
-![](https://img.ricolxwz.download/1ed1d2f0549dd53c0a7684355d9f56a4_inverted.webp#only-dark){ loading=lazy width='210' }
+![](https://img.ricolxwz.asia/1ed1d2f0549dd53c0a7684355d9f56a4.webp#only-light){ loading=lazy width='210' }
+![](https://img.ricolxwz.asia/1ed1d2f0549dd53c0a7684355d9f56a4_inverted.webp#only-dark){ loading=lazy width='210' }
 <figcaption>LoRA. 会对原始权重和调整权重进行相加操作, $d$表示密集层的理论最大秩, $r$表示在调优中的权重变换矩阵的秩</figcaption>
 </figure>
 
@@ -127,7 +127,7 @@ $$\max_{\Theta} \sum_{(x, y) \in \mathcal{Z}} \sum_{t=1}^{|y|} \log (p_{\Phi_0 +
 
 ### 低秩参数化更新矩阵
 
-一个神经网络包含许多执行矩阵乘法操作的密集层. 这些密集层的权重矩阵常常是满秩的. 当将其搬到特定任务的时候, Aghajanyan等人的工作显示了预训练模型有低内在维度, 并且即使将模型的高维参数空间通过随机投影降维到一个较小的子空间, 模型仍然能够高效地学习(不是调优). 作者受到他们的启发, 推测在调优的时候对权重的更新也具有低内在秩. 
+一个神经网络包含许多执行矩阵乘法操作的密集层. 这些密集层的权重矩阵常常是满秩的. 当将其搬到特定任务的时候, Aghajanyan等人的工作显示了预训练模型有低内在维度, 并且即使将模型的高维参数空间通过随机投影降维到一个较小的子空间, 模型仍然能够高效地学习(不是调优). 作者受到他们的启发, 推测在调优的时候对权重的更新也具有低内在秩.
 
 ???+ question "为什么权重矩阵是满秩的, 而模型本身具有低内在秩"
 
@@ -137,7 +137,7 @@ $$\max_{\Theta} \sum_{(x, y) \in \mathcal{Z}} \sum_{t=1}^{|y|} \log (p_{\Phi_0 +
 
 $$h=W_0x+\Delta W_x=W_0x+BAx$$
 
-这个公式已经被表示在第一张图中. ^^作者对$A$进行标准正态分布初始化, 对$B$初始化为零矩阵, 使得$\Delta W=BA=0$, 这个做法类似于adapter的初始化^^, 保证在开始的时候, LoRA模块不会显著改变模型的输出, 这对于保证模型的初始性能和稳定性非常重要. 
+这个公式已经被表示在第一张图中. ^^作者对$A$进行标准正态分布初始化, 对$B$初始化为零矩阵, 使得$\Delta W=BA=0$, 这个做法类似于adapter的初始化^^, 保证在开始的时候, LoRA模块不会显著改变模型的输出, 这对于保证模型的初始性能和稳定性非常重要.
 
 作者还对更新量$\Delta Wx$的学习率$\alpha$进行了缩放: 乘以$\frac{1}{r}$, 这是因为, 在没有缩放的情况下, 同样的学习率$\alpha$下改变秩$r$会直接影响权重更新的尺度. 通过引入与$\frac{1}{r}$成比例的缩放, 我们可以对梯度尺度进行归一化, 使其对$r$的变化不太敏感, 这使得超参数$r$的调整更加容易, 因为单个$\alpha$就可以在不同的$r$下表现良好, 即$\frac{\alpha}{r}$才是真正的学习率. 简单的说, 就是通过$r$的改变使得在不同的$r$下Adam优化器能够以相同的策略调整$\alpha$, 省去了不同$r$下调优$\alpha$的必要.
 
@@ -149,7 +149,7 @@ $$h=W_0x+\Delta W_x=W_0x+BAx$$
 
 在实际运用中, 我们可以将LoRA运用于神经网络的任何权重矩阵上以减少可调优的参数. 在Transformer架构中, 自注意力模块上, 有4个权重矩阵($W_q, W_k, W_v, W_o$); MLP模块上, 有两个权重矩阵. 我们将$W_q$(或$W_k, W_v$视为一个维度为$d_{model}\times d_{model}$的单一矩阵, 即使产生的$Q$, $K$, $V$矩阵会被切分为注意力头). ^^作者仅调整了下游任务的注意力权重, 而不对MLP的权重进行调整, 这是为了简化和提高参数效率.^^ 作者还进一步研究了在Transformer中采用不同类型的注意力权重矩阵的影响. 他们将在后续研究中探讨调整MLP层, LN层的权重和偏置项的影响.
 
-**实践优势和限制.** 最明显的优势来自节约了内存的使用量. 对于一个采用Adam优化器训练的大Transformer模型, 如果$r\ll d_{model}$, VRAM的使用率下降可以高达$2/3$, 因为和全量微调来说, 不需要存储那些冻结参数在优化器中的状态. 例如, 在GPT-3 175B上, 他们将在训练时VRAM的使用量从1.2TB降低到了350GB, 甚至于, 在$r=4$, 并且只对$Q$和$V$投影矩阵进行LoRA低秩矩阵更新的时候, 又减少了大概10000倍, 从350GB减小到35MB. 这允许他们的更少的GPUs上训练并且避免IO瓶颈. 另外一个显著的优势是他们可以通过替换掉LoRA的权重来以极低的成本实现在任务之间的调整, 甚至可以实时调整. 和全量微调相比, 他们还在GPT-3 175B的微调中观察到了25%的加速, 因为不需要计算绝大多数参数的梯度. LoRA也有limitations, 例如, 如果选择将$A$, $B$吸收到$W$中以消除推理延迟, 那么在一个前向传播中批量处理本应由不同$A$, $B$处理的不同任务并非易事. 当然, 在延迟不是那么关键地时候, 也可以动态地选择用于批处理地LoRA模块. 
+**实践优势和限制.** 最明显的优势来自节约了内存的使用量. 对于一个采用Adam优化器训练的大Transformer模型, 如果$r\ll d_{model}$, VRAM的使用率下降可以高达$2/3$, 因为和全量微调来说, 不需要存储那些冻结参数在优化器中的状态. 例如, 在GPT-3 175B上, 他们将在训练时VRAM的使用量从1.2TB降低到了350GB, 甚至于, 在$r=4$, 并且只对$Q$和$V$投影矩阵进行LoRA低秩矩阵更新的时候, 又减少了大概10000倍, 从350GB减小到35MB. 这允许他们的更少的GPUs上训练并且避免IO瓶颈. 另外一个显著的优势是他们可以通过替换掉LoRA的权重来以极低的成本实现在任务之间的调整, 甚至可以实时调整. 和全量微调相比, 他们还在GPT-3 175B的微调中观察到了25%的加速, 因为不需要计算绝大多数参数的梯度. LoRA也有limitations, 例如, 如果选择将$A$, $B$吸收到$W$中以消除推理延迟, 那么在一个前向传播中批量处理本应由不同$A$, $B$处理的不同任务并非易事. 当然, 在延迟不是那么关键地时候, 也可以动态地选择用于批处理地LoRA模块.
 
 [^1]: Hu, E. J., Shen, Y., Wallis, P., Allen-Zhu, Z., Li, Y., Wang, S., Wang, L., & Chen, W. (2021). LoRA: Low-rank adaptation of large language models (No. arXiv:2106.09685). arXiv. https://doi.org/10.48550/arXiv.2106.09685
 [^2]: Houlsby, N., Giurgiu, A., Jastrzebski, S., Morrone, B., Laroussilhe, Q. de, Gesmundo, A., Attariyan, M., & Gelly, S. (2019). Parameter-efficient transfer learning for NLP (No. arXiv:1902.00751). arXiv. https://doi.org/10.48550/arXiv.1902.00751

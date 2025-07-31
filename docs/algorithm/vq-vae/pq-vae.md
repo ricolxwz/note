@@ -45,8 +45,8 @@ $$
 这$M$个子量化器的输出$z_q^{(m)}$会被拼接为一个完整的码字$z_q(\mathbf{x})=[z_q^{(1)}(\mathbf{x}), z_q^{(2)}(\mathbf{x}), ..., z_q^{(M)}(\mathbf{x})]$, 然后传递给解码器重构出给定图像$\mathbf{x}$. 如下图所示, 这是一个完整的流程.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.download/3bc91d5463a78e0f7087a678cfe68a14.webp#only-light){ loading=lazy width='400' }
-![](https://img.ricolxwz.download/3bc91d5463a78e0f7087a678cfe68a14_inverted.webp#only-dark){ loading=lazy width='400' }
+![](https://img.ricolxwz.asia/3bc91d5463a78e0f7087a678cfe68a14.webp#only-light){ loading=lazy width='400' }
+![](https://img.ricolxwz.asia/3bc91d5463a78e0f7087a678cfe68a14_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>图1: PQ-VAE示意图</figcaption>
 </figure>
 
@@ -86,8 +86,8 @@ $$d(\mathbf{q}, \mathbf{x}) = LT_1 \left(z_q^{(1)}, z_x^{(1)}\right) + \cdots + 
 其中, $z_q$是查询图像的编码, $z$是数据库图像的编码. 可以达成快速检索, 因为不需要任何额外的距离计算步骤. 查询过程如下图所示.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.download/f4425a6a7bd16bfeb87bf60df46d304a.webp#only-light){ loading=lazy width='400' }
-![](https://img.ricolxwz.download/f4425a6a7bd16bfeb87bf60df46d304a_inverted.webp#only-dark){ loading=lazy width='400' }
+![](https://img.ricolxwz.asia/f4425a6a7bd16bfeb87bf60df46d304a.webp#only-light){ loading=lazy width='400' }
+![](https://img.ricolxwz.asia/f4425a6a7bd16bfeb87bf60df46d304a_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>图2: 查询过程</figcaption>
 </figure>
 

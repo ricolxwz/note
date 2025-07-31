@@ -28,8 +28,8 @@ Momentum Contrast(MoCo)是一种**自监督视觉表征学习方法**. 它的核
 作者提出了MoCo, 用于构建大型且一致的字典, 用于基于对比损失的自监督学, 如下图所示.
 
 <figure markdown='1'>
-  ![](https://img.ricolxwz.download/0749763f0af77bcc0e453e77775b0204.webp#only-light){ loading=lazy width='300' }
-  ![](https://img.ricolxwz.download/0749763f0af77bcc0e453e77775b0204_inverted.webp#only-dark){ loading=lazy width='300' }
+  ![](https://img.ricolxwz.asia/0749763f0af77bcc0e453e77775b0204.webp#only-light){ loading=lazy width='300' }
+  ![](https://img.ricolxwz.asia/0749763f0af77bcc0e453e77775b0204_inverted.webp#only-dark){ loading=lazy width='300' }
   <figcaption>动量对比(MoCo)通过计算查询$q$和一个动态字典中的所有key$k_0, k_1, k_2, ...$的对比损失, 来训练一个视觉表示encoder. 这个动态字典的key是从一组数据样本中即时定义的(defined on-the-fly). 该字典以队列的形式构建: 将当前的小批量数据加入队列, 同时移除最旧的小批量数据, 使其和小批量数据的大小解耦. 这些key由一个逐步更新(slowly-progressing)的编码器进行编码, 该编码器(又叫做动量编码器)通过和锚点编码器之间的动量更新来驱动. 这个方法能够为学习视觉表示提供一个大且一致的字典</figcaption>
 </figure>
 
@@ -55,7 +55,7 @@ MoCo是一种用于对比学习的机制, 它通过构建"动态字典"来存储
 
 常见的损失函数衡量的是模型的预测和固定的目标之间的差异, 例如[自编码器](/algorithm/ae)中使用L1和L2损失来减少重构误差; 又例如通过交叉熵或者基于边际的损失函数将输入分类到预定义的类别中.
 
-对比损失衡量的是样本对在表示空间的相似度. 与传统的"给定输入匹配固定类别"不同, 它所学习或者对比的目标可以在训练过程中动态变化, 这个目标由网络对数据生成的表示决定. 对比学习已经成为很多无监督学习工作的核心. 
+对比损失衡量的是样本对在表示空间的相似度. 与传统的"给定输入匹配固定类别"不同, 它所学习或者对比的目标可以在训练过程中动态变化, 这个目标由网络对数据生成的表示决定. 对比学习已经成为很多无监督学习工作的核心.
 
 对抗损失衡量的是概率分布之间的差异. 这是无监督数据生成领域比较成功的技术. 对抗方法还可以用于特征表示学习. :fontawesome-solid-question: GAN和noise-contrastive estimation, NCE之间有相似之处, 后者是让模型区分真实样本和噪声样本来估计数据的分布, 前者是让模型去区分真实样本和生成样本来估计数据的分布.
 
@@ -92,7 +92,7 @@ MoCo是一种用于对比学习的机制, 它通过构建"动态字典"来存储
 考虑一个编码查询$q$和字典中的一堆编码样本$k_0, k_1, k_2, ...$. 假设在字典中有一个唯一的key$k_+$与$q$吻合. 当$q$和$k_+$相似的时候, 对比损失函数的值较小. 点积可以用来衡量两者之间的相似度, 在本研究中, 作者选择使用的是基于点积的InfoNCE当做对比损失函数.
 
 \[
-\mathcal{L}_q = -\log 
+\mathcal{L}_q = -\log
   \frac{\exp\left(\frac{q \cdot k_{+}}{\tau}\right)}
        {\sum\limits_{i=0}^{K} \exp\left(\frac{q \cdot k_{i}}{\tau}\right)}
 \]
@@ -107,7 +107,7 @@ $\tau$是一个温度超参数, 这个思想和[蒸馏](/algorithm/knowledge-dis
 
 #### 队列=字典
 
-MoCo最核心的思想是字典被维护为一个数据样本的队列. 我们可以重复利用历史仍保留在队列中的mini-batches中已经编码过的key, 并且字典的大小可以设置得比典型的mini-batch大很多, 可以作为一个独立的超参数, 实现了字典大小和mini-batch size的解耦. 
+MoCo最核心的思想是字典被维护为一个数据样本的队列. 我们可以重复利用历史仍保留在队列中的mini-batches中已经编码过的key, 并且字典的大小可以设置得比典型的mini-batch大很多, 可以作为一个独立的超参数, 实现了字典大小和mini-batch size的解耦.
 
 这个字典中的样本被渐进式地替换. 当前的mini-batch入队, 最旧的mini-batch出队. 这意味着字典中的样本始终是整个数据集的一个采样子集. 维护一个固定大小的队列所需的额外计算资源是有限的, 计算复杂度较低. 并且, 随着训练的进行, key编码器的参数会不断更新, 意味着新编码的key会更准确地放映负样本的特征表示.
 
@@ -126,12 +126,12 @@ $$\theta_k\leftarrow m\theta_k+(1-m)\theta_q$$
 MoCo是一个通用的使用对比损失的机制. 作者将其和显存的通用机制比较, 在字典大小和一致性上, 展现了不同的设置. 如下图所示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/97c82f262e093f50074fd74bd53ea734.webp#only-light){ loading=lazy width='700' }
-![](https://img.ricolxwz.download/97c82f262e093f50074fd74bd53ea734_inverted.webp#only-dark){ loading=lazy width='700' }
+![](https://img.ricolxwz.asia/97c82f262e093f50074fd74bd53ea734.webp#only-light){ loading=lazy width='700' }
+![](https://img.ricolxwz.asia/97c82f262e093f50074fd74bd53ea734_inverted.webp#only-dark){ loading=lazy width='700' }
 <figcaption>三种对比损失机制在理念上的比较. 这里只展示了一对query和key. 三种机制的主要区别是在key如何维护和key编码器如何更新上. (a) query和key的编码器是端到端反向传播更新的 (b) key是从一个记忆池中采样的 (c) MoCo使用动量编码器即时对key进行编码, 维护key的一个队列</figcaption>
 </figure>
 
-使用反向传播进行end-to-end更新是一种很自然的机制. 它使用当前的mini-batch作为负样本字典, 所以负样本key之间的编码具有一致性, 但是字典的大小和mini-batch的大小是相等的, 它的大小受限于GPU所能容纳的batch size. 最近的一些同类的方法通过使用局部位置信息来构造更多的样本, 从而增加字典大小, 这些方法需要对网络结构进行特殊的设计, 可能在迁移到下游任务的时候带来额外的困难. 
+使用反向传播进行end-to-end更新是一种很自然的机制. 它使用当前的mini-batch作为负样本字典, 所以负样本key之间的编码具有一致性, 但是字典的大小和mini-batch的大小是相等的, 它的大小受限于GPU所能容纳的batch size. 最近的一些同类的方法通过使用局部位置信息来构造更多的样本, 从而增加字典大小, 这些方法需要对网络结构进行特殊的设计, 可能在迁移到下游任务的时候带来额外的困难.
 
 另外一种机制叫做记忆池. 记忆池中包含了数据集中所有样本的表示. 每个mini-batch中, 会随机从记忆池中采样出字典(负样本), 其余样本的表示不参与反向传播, 这可以支持非常大的字典规模. 但是, 记忆池中的每个样本的表示是"它上一次被模型采样"时才更新的, 这意味着同一批采样的key可能来自网络不同训练阶段的表示, 不够一致, 会产生偏差. 某些研究针对记忆池引入了一种动量更新的方式, 但是它更新的是"同一个样本在记忆池中的表示"(保证同一个样本的表示不会因为一次迭代变化过大), 而不是更新编码器参数, 所以这个动量更新方式和MoCo无关. MoCo不需要为每个样本都存储一个特征表示, 因此更加节省内存. 即使数据规模达到数十亿样本, MoCo也能训练, 而记忆池在这种个规模下往往难以维护(需要在池中存储所有样本的特征表示).
 
@@ -149,7 +149,7 @@ f_k.params = f_q.params  # initialize
 for x in loader:  # load a minibatch x with N samples
     x_q = aug(x)  # a randomly augmented version
     x_k = aug(x)  # another randomly augmented version
-    
+
     q = f_q.forward(x_q)  # queries: NxC
     k = f_k.forward(x_k)  # keys: NxC
     k = k.detach()        # no gradient to keys
@@ -185,11 +185,11 @@ for x in loader:  # load a minibatch x with N samples
 
 #### 洗牌式BN
 
-在深度学习任务中, BN通过计算当前mini-batch的每一列的均值和方差, 对激活值进行归一化, 以加速收敛并稳定训练. 但是在多GPU并行训练的时候, 通常每张卡只在自己那部分mini-batch数据上计算均值和方差, 如果各卡的数据分布差异较大, BN在单卡上估计得到的统计量就可能出现较大偏差, 从而影响模型的收敛和性能. 
+在深度学习任务中, BN通过计算当前mini-batch的每一列的均值和方差, 对激活值进行归一化, 以加速收敛并稳定训练. 但是在多GPU并行训练的时候, 通常每张卡只在自己那部分mini-batch数据上计算均值和方差, 如果各卡的数据分布差异较大, BN在单卡上估计得到的统计量就可能出现较大偏差, 从而影响模型的收敛和性能.
 
 洗牌式BN的核心思路为跨卡随机打乱, 在进行BN的统计量计算之前, 将不同卡上的数据进行某种随机方式的重组, 例如, 卡1上的一部分样本会和卡2上的一部分样本交换, 从而使得每个卡上所拥有的数据分布都相对接近全局分布. 在各卡完成数据洗牌之后, 再各自计算新的mini-batch的均值和方差, 然后进行标准化运算. 完成BN操作后, 需要把刚才打乱过的数据还原到原本的顺序, 再继续后续的正向和方向传播训练.
 
-但是作者提出的Shuffling BN和上述的BN有一些些小小的差异: 
+但是作者提出的Shuffling BN和上述的BN有一些些小小的差异:
 
 作者在做实验的时候发现, 模型似乎在前置任务上"作弊", 找到了一个低损失解. 他们认为这可能是因为batch内的样本之间有一种由BN引起的统计信息的交互而导致信息泄露. 解决方法如下.
 

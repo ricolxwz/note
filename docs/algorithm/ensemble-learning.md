@@ -27,7 +27,7 @@ comments: true
 在上述例子中, 基分类器错误率和得到的集成学习模型错误率的关系如图所示:
 
 <div style="text-align: center;">
-    <img src="https://img.ricolxwz.download/39c630377194dc1bd1310e8e5623aa6d.png" alt="description" style="width: 600px;">
+    <img src="https://img.ricolxwz.asia/39c630377194dc1bd1310e8e5623aa6d.png" alt="description" style="width: 600px;">
 </div>
 
 从图中我们可以看到, 当基分类器错误率大于$0.5$的时候, 集成学习模型的错误率甚至会高于基分类器的错误率. 这种情况下基分类器的预测比在两个类别之间随机猜的结果还差.
@@ -58,13 +58,13 @@ Bagging(Bootstrap Aggregating)由Breimam于1996年提出, 基本思想如下:
 如图所示, 这是一个$3$次抽样的例子.
 
 <div style="text-align: center;">
-    <img src="https://img.ricolxwz.download/b8b387f29a640fa842dd29a87a5b6867.png" style="width: 600px"/>
+    <img src="https://img.ricolxwz.asia/b8b387f29a640fa842dd29a87a5b6867.png" style="width: 600px"/>
 </div>
 
 产生数个新的训练集后, 对于每一个训练集都训练一个基分类器, 获取所有基分类器的预测结果, 进行投票, 票数多的结果就是集成学习模型的预测结果. 注意, 这里所有的基分类器的权重都是一样的, 即所有基分类器的投票权都是相等的, 民主投票.
 
 <div style="text-align: center;">
-    <img src="https://img.ricolxwz.download/e4f4fae640b9d7fb6ab55027f1753911.png" style="width: 500px;"/>
+    <img src="https://img.ricolxwz.asia/e4f4fae640b9d7fb6ab55027f1753911.png" style="width: 500px;"/>
 </div>
 
 ## 随机森林 {#random-forest}
@@ -77,7 +77,7 @@ Bagging(Bootstrap Aggregating)由Breimam于1996年提出, 基本思想如下:
 
 2. 树的构建
 
-    每次根据采样得到的数据和特征构建一颗决策树. 在构建决策树的过程中, 会让决策树生长完全不进行预剪枝. 构建出的若干棵决策树组成了最终的随机森林. 预测的方法同Bagging. 
+    每次根据采样得到的数据和特征构建一颗决策树. 在构建决策树的过程中, 会让决策树生长完全不进行预剪枝. 构建出的若干棵决策树组成了最终的随机森林. 预测的方法同Bagging.
 
 ## Boosting
 
@@ -92,12 +92,12 @@ Boosting是一种提升算法, 可以将弱的学习算法提升为强的学习�
 
 Adaboost由Freund和Schapire在1996年发明.
 
-Adaboost是Boosting的经典实现之一. 它的每一个训练样本都带有一个权重, 权重越高, 说明先前的基分类器在预测它的时候错误率较高, 表示这个样本“较难”预测. 这个样本在下一个新训练集中出现的可能性较高(出现的次数可能会多). 最终, 在所有基分类器结果组合的时候, 是非民主投票, 也就是说, 错误率小的分类器的投票权更大, 权重更高. 
+Adaboost是Boosting的经典实现之一. 它的每一个训练样本都带有一个权重, 权重越高, 说明先前的基分类器在预测它的时候错误率较高, 表示这个样本“较难”预测. 这个样本在下一个新训练集中出现的可能性较高(出现的次数可能会多). 最终, 在所有基分类器结果组合的时候, 是非民主投票, 也就是说, 错误率小的分类器的投票权更大, 权重更高.
 
 可以用图表表示:
 
 <div style="text-align: center">
-<img src="https://img.ricolxwz.download/c3e20e67512f1075ba5c78b5af35121d.png" style="width: 500px"/>
+<img src="https://img.ricolxwz.asia/c3e20e67512f1075ba5c78b5af35121d.png" style="width: 500px"/>
 </div>
 
 其中, 1个矩形对应1个训练样本. 矩形的高度对应样本的权重. ✅和❌对应样本是否被当前的基分类器正确预测. 决策树图片的大小对应在最终预测结果里面的权重.
@@ -119,19 +119,19 @@ Adaboost是Boosting的经典实现之一. 它的每一个训练样本都带有�
 === "原始训练集$D_1$"
 
     <div style="text-align: center">
-        <img src="https://img.ricolxwz.download/f271dee1805fd69aba2f4851b1fe72f2.png" style="width:250px"/>
+        <img src="https://img.ricolxwz.asia/f271dee1805fd69aba2f4851b1fe72f2.png" style="width:250px"/>
     </div>
 
-    注意: 
+    注意:
 
     - 这些数据点显然不是线性可分的
-    - 在一开始的时候, 所以的样本的权重都是相同的, 注意图中+和-号的大小 
+    - 在一开始的时候, 所以的样本的权重都是相同的, 注意图中+和-号的大小
     - 选择的基分类器是一个很垃圾的分类器: 根据单一属性进行决策, 即"决策树桩", Decision Stump. 在图中会显示为横分割线或竖分割线
 
 === "经过基分类器$h_1$训练过后得到训练集$D_2$"
 
     <div style="text-align: center">
-    <img src="https://img.ricolxwz.download/13d32a92192788b57deb82b52eddcff2.png" style="width: 450px"/>
+    <img src="https://img.ricolxwz.asia/13d32a92192788b57deb82b52eddcff2.png" style="width: 450px"/>
     </div>
 
     可以看到, 图中圈出来的三个+号是预测错误的, 错误率$\epsilon_1$为$\frac{1}{10}+\frac{1}{10}+\frac{1}{10}=0.3$, 可以计算出该基分类器的权重为$\beta_1 = 0.42$. 然后我们要更新当前训练集中样本的权重: 对于预测错误的样本, 其新的权重为$(\frac{1}{10}\times e^{-0.42\times 1\times -1})/[\frac{1}{10}\times e^{-0.42\times 1\times -1}\times 3 + \frac{1}{10}\times e^{-0.42\times 1\times 1}\times 2 + \frac{1}{10}\times e^{-0.42\times -1\times -1}\times 5]=0.072$. 对于预测正确的样本, 其新的权重为$0.17$.
@@ -160,7 +160,7 @@ Adaboost是Boosting的经典实现之一. 它的每一个训练样本都带有�
 === "经过基分类器$h_2$训练过后得到训练集$D_3$"
 
     <div style="text-align: center">
-    <img src="https://img.ricolxwz.download/23e5cef8f4e2efb2c9dbbfd247a1fe0c.png" style="width: 650px"/>
+    <img src="https://img.ricolxwz.asia/23e5cef8f4e2efb2c9dbbfd247a1fe0c.png" style="width: 650px"/>
     </div>
 
     可以看到, 图中圈出来的三个-号是预测错误的, 错误率为$\epsilon_2$为$0.072\times 3=0.216$, 可以计算出该基分类器的权重为$\beta_2=0.65$. 然后我们要更新当前训练集中样本的权重: 对于预测错误的样本, 其新的权重为$0.167$, 对于预测正确的样本, 其新的权重为$0.0456$或$0.105$.
@@ -183,14 +183,14 @@ Adaboost是Boosting的经典实现之一. 它的每一个训练样本都带有�
     输出:
 
     ```
-    [0.16736013 0.16736013 0.16736013 0.04561096 0.04561096 0.04561096 
+    [0.16736013 0.16736013 0.16736013 0.04561096 0.04561096 0.04561096
     0.04561096 0.10515859 0.10515859 0.10515859]
     ```
 
 === "基分类器$h_3$训练"
 
     <div style="text-align: center">
-    <img src="https://img.ricolxwz.download/054aa0fb9d74590599fd6136c39fe49f.png" style="width: 650px"/>
+    <img src="https://img.ricolxwz.asia/054aa0fb9d74590599fd6136c39fe49f.png" style="width: 650px"/>
     </div>
 
     可以看到, 图中圈出来的2个+号和1个-号是预测错误的. 错误率$\epsilon_3$为$0.0456*3=0.1368$, 可以算出该分类器的权重为$\beta_3=0.921$. 不用更新训练集的权重, 因为已经是最后一个了.
@@ -198,7 +198,7 @@ Adaboost是Boosting的经典实现之一. 它的每一个训练样本都带有�
 最终, 得到最终的分类器, 经过非民主投票, 可以得到某一个新样本的预测结果, 如图:
 
 <div style="text-align: center">
-<img src="https://img.ricolxwz.download/8062d0815ee0c39a7e4b92df8079183a.png" style="width: 650px"/>
+<img src="https://img.ricolxwz.asia/8062d0815ee0c39a7e4b92df8079183a.png" style="width: 650px"/>
 </div>
 
 #### 原理
@@ -209,14 +209,14 @@ Adaboost最小化分类错误的损失函数. 假设我们现在有一个分类�
 
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/b546c37bbdbdb4edff8eeecb4288968a.png){:style="width: 300px"}
+![](https://img.ricolxwz.asia/b546c37bbdbdb4edff8eeecb4288968a.png){:style="width: 300px"}
 </figure>
 
 那么, 假设我们现在已经有了第$t-1$次训练后的集成学习的加权投票的值$f_{t-1}(x)$, 现在需要加入一个新的基分类器$h_t(x)$得到最终的加权投票的值$f(x)=f_{t-1}(x)+\beta_t h_t(x)$, 那么, 我们应该怎么选择最优的分类器$h_t(x)$和系数$\beta_t$呢?
 
-我们使用$h^*_t(x)$和$\beta_t^*$表示$t$轮训练的最优值. 也就是说, 我们要最小化$t$轮的指数损失函数, $(h^*_t(x), \beta^*_t)=argmin_{(h_t(x), \beta_t)}\sum_n e^{-y_nf(x_n)}=argmin_{(h_t(x), \beta_t)}\sum_n e^{-y_n[f_{t-1}(x_n)+\beta_th_t(x_n)]}=argmin_{(h_t(x), \beta_t)}\sum_n w_t(n)e^{-y_n\beta_t h_t(x_n)}$, 其中$w_t(n)=e^{-y_nf_{t-1}(x_n)}$. 
+我们使用$h^*_t(x)$和$\beta_t^*$表示$t$轮训练的最优值. 也就是说, 我们要最小化$t$轮的指数损失函数, $(h^*_t(x), \beta^*_t)=argmin_{(h_t(x), \beta_t)}\sum_n e^{-y_nf(x_n)}=argmin_{(h_t(x), \beta_t)}\sum_n e^{-y_n[f_{t-1}(x_n)+\beta_th_t(x_n)]}=argmin_{(h_t(x), \beta_t)}\sum_n w_t(n)e^{-y_n\beta_t h_t(x_n)}$, 其中$w_t(n)=e^{-y_nf_{t-1}(x_n)}$.
 
-现在, 我们可以将这个损失函数拆分为两个部分, $\sum_n w_t(n)e^{-y_n\beta_th_t(x_n)}=\sum_n w_t(n)e^{\beta_t}\mathbb{I}[y_n\neq h_t(x_n)]+\sum_n w_t(n)e^{-\beta_t}\mathbb{I}[y_n=h_t(x_n)]=\sum_n w_t(n)e^{\beta_t}\mathbb{I}[y_n\neq h_t(x_n)]+\sum_n w_t(n)e^{-\beta_t}(1-\mathbb{I}[y_n\neq h_t(x_n)])=(e^{\beta_t}-e^{-\beta_t})\sum_n w_t(n)\mathbb{I}[y_n\neq h_t(x_n)]+e^{-\beta_t}\sum_n w_t(n)$. 
+现在, 我们可以将这个损失函数拆分为两个部分, $\sum_n w_t(n)e^{-y_n\beta_th_t(x_n)}=\sum_n w_t(n)e^{\beta_t}\mathbb{I}[y_n\neq h_t(x_n)]+\sum_n w_t(n)e^{-\beta_t}\mathbb{I}[y_n=h_t(x_n)]=\sum_n w_t(n)e^{\beta_t}\mathbb{I}[y_n\neq h_t(x_n)]+\sum_n w_t(n)e^{-\beta_t}(1-\mathbb{I}[y_n\neq h_t(x_n)])=(e^{\beta_t}-e^{-\beta_t})\sum_n w_t(n)\mathbb{I}[y_n\neq h_t(x_n)]+e^{-\beta_t}\sum_n w_t(n)$.
 
 我们可以这样拆分的原因是:
 
@@ -224,7 +224,7 @@ Adaboost最小化分类错误的损失函数. 假设我们现在有一个分类�
 - $h_t(x_n)$是当前弱分类器的判断
 - 指示器函数$\mathbb{I}[y_n=h_t(x_n)]$不是$0$就是$1$, 所以$1-\mathbb{I}[y_n=h_t(x_n)]$不是$0$就是$1$
 
-总结, $(h^*_t(x), \beta^*_t)=argmin_{(h_t(x), \beta_t)}(e^{\beta_t}-e^{-\beta_t})\sum_n w_t(n)\mathbb{I}[y_n\neq h_t(x_n)]+e^{-\beta_t}\sum_n w_t(n)$. 之前我们说过, $w_t(n)=e^{-y_nf_{t-1}(x_n)}$, $y_n$是第$n$个样本的真实标签, $f_{t-1}(x_n)$是第$t-1$轮所有弱分类器加权投票后的值, 可以看出$\sum_n w_t(n)$这一部分其实等于$1$(因为在$t-1$轮结束之前会对所有的样本权重进行归一化处理), 和选择$h_t(x)$是没有关系的. 所以$h^*_t(x)=argmin_{h_t(x)}\epsilon_t=\sum_n w_t(n)\mathbb{I}[y_n\neq h_t(x_n)]$, 正好对应于Adaboost算法的第3.1步. 细心的同学可能会发现, 那$\beta_t$不是和这个损失函数也有关系吗? 不错, 是有关系, 但是我们这里将联合优化问题分解, 采用分步优化, 首先选择的是最佳的$h_t(x)$, 然后才选择最佳的$\beta_t$. 我们可以通过损失函数对$\beta_t$求导, 令其等于$0$, 从而求解最优的$\beta_t$, 可以解出$\beta^*_t=\frac{1}{2}\ln\frac{1-\epsilon_t}{\epsilon_t}$, 正好对应于Adaboost算法的第3.2步. 
+总结, $(h^*_t(x), \beta^*_t)=argmin_{(h_t(x), \beta_t)}(e^{\beta_t}-e^{-\beta_t})\sum_n w_t(n)\mathbb{I}[y_n\neq h_t(x_n)]+e^{-\beta_t}\sum_n w_t(n)$. 之前我们说过, $w_t(n)=e^{-y_nf_{t-1}(x_n)}$, $y_n$是第$n$个样本的真实标签, $f_{t-1}(x_n)$是第$t-1$轮所有弱分类器加权投票后的值, 可以看出$\sum_n w_t(n)$这一部分其实等于$1$(因为在$t-1$轮结束之前会对所有的样本权重进行归一化处理), 和选择$h_t(x)$是没有关系的. 所以$h^*_t(x)=argmin_{h_t(x)}\epsilon_t=\sum_n w_t(n)\mathbb{I}[y_n\neq h_t(x_n)]$, 正好对应于Adaboost算法的第3.1步. 细心的同学可能会发现, 那$\beta_t$不是和这个损失函数也有关系吗? 不错, 是有关系, 但是我们这里将联合优化问题分解, 采用分步优化, 首先选择的是最佳的$h_t(x)$, 然后才选择最佳的$\beta_t$. 我们可以通过损失函数对$\beta_t$求导, 令其等于$0$, 从而求解最优的$\beta_t$, 可以解出$\beta^*_t=\frac{1}{2}\ln\frac{1-\epsilon_t}{\epsilon_t}$, 正好对应于Adaboost算法的第3.2步.
 
 当我们求出最优的弱分类器和它的权重之后, 我们就可以更新分类器$f(x)=f_{t-1}(x)+\beta^*_t h_t^*(x)$. 第$n$个样本的权重$w_{t+1}(n)\propto e^{-y_nf(x_n)}=e^{-y_n[f_{t-1}(x)+\beta^*_t h^*_t(x_n)]}=w_t(n)e^{-y_n\beta^*_th^*_t(x_n)}$, 然后对其进行归一化处理. 从而, 分类错误的样本它的权重会增加, 分类正确的样本它的权重会减少.
 

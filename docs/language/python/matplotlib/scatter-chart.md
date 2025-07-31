@@ -26,7 +26,7 @@ matplotlib.pyplot.scatter(x, y, s, c, marker, cmap, norm, vmin, vmax, alpha, lin
 - `c`: 点的颜色, 默认颜色`b`, 也可以是个RGB或RGBA二维行数组
 - `marker`: 点的样式, 默认小圆圈`o`
 - `cmap`: colormap, 默认`viridis`, 标量或者是一个colormap的名字
-- `norm`: normalize, 默认`None`, 数据亮度在0-1之间 
+- `norm`: normalize, 默认`None`, 数据亮度在0-1之间
 - `vmin/vmax`: 亮度设置
 - `alpha`: 透明度设置, 0-1之间, 默认为`None`
 - `linewidths`: 标记点的长度
@@ -52,7 +52,7 @@ matplotlib.pyplot.scatter(x, y, s, c, marker, cmap, norm, vmin, vmax, alpha, lin
 
     输出:
 
-    ![](https://img.ricolxwz.download/a6f61285ed40093190febc0cd19d7d7b.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/a6f61285ed40093190febc0cd19d7d7b.png){:style="width:400px"}
 
 ### 自定义图标大小
 
@@ -71,7 +71,7 @@ matplotlib.pyplot.scatter(x, y, s, c, marker, cmap, norm, vmin, vmax, alpha, lin
 
     输出:
 
-    ![](https://img.ricolxwz.download/b5cace04387167c8f9c61a426b6d3ad5.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/b5cace04387167c8f9c61a426b6d3ad5.png){:style="width:400px"}
 
 ### 自定义点的颜色
 
@@ -90,7 +90,7 @@ matplotlib.pyplot.scatter(x, y, s, c, marker, cmap, norm, vmin, vmax, alpha, lin
 
     输出:
 
-    ![](https://img.ricolxwz.download/707cac73771cb1710bf9d350a0edc7d7.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/707cac73771cb1710bf9d350a0edc7d7.png){:style="width:400px"}
 
 ### 多批散点
 
@@ -112,7 +112,7 @@ matplotlib.pyplot.scatter(x, y, s, c, marker, cmap, norm, vmin, vmax, alpha, lin
 
     输出:
 
-    ![](https://img.ricolxwz.download/b2fc157e8e8fefc16ddfc9e318280292.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/b2fc157e8e8fefc16ddfc9e318280292.png){:style="width:400px"}
 
 ### 使用随机数来设置散点图
 
@@ -136,7 +136,7 @@ matplotlib.pyplot.scatter(x, y, s, c, marker, cmap, norm, vmin, vmax, alpha, lin
 
     输出:
 
-    ![](https://img.ricolxwz.download/3028dacb8e1d392ec05649d809e34021.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/3028dacb8e1d392ec05649d809e34021.png){:style="width:400px"}
 
 ### 使用颜色条
 
@@ -164,7 +164,7 @@ matplotlib.pyplot.scatter(x, y, s, c, marker, cmap, norm, vmin, vmax, alpha, lin
 
         输出:
 
-        ![](https://img.ricolxwz.download/2928952519aebd835e7723954ec4d543.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/2928952519aebd835e7723954ec4d543.png){:style="width:400px"}
 
     === "例子2"
 
@@ -177,11 +177,11 @@ matplotlib.pyplot.scatter(x, y, s, c, marker, cmap, norm, vmin, vmax, alpha, lin
 
         plt.scatter(x, y, c=colors, cmap='afmhot_r')
         plt.colorbar()
-        plt.show() 
+        plt.show()
         ```
 
         输出:
 
-        ![](https://img.ricolxwz.download/115247970ff2fff7c8c4b4af964702c4.png){:style="width:400px"}
+        ![](https://img.ricolxwz.asia/115247970ff2fff7c8c4b4af964702c4.png){:style="width:400px"}
 
 [^1]: Matplotlib 散点图 | 菜鸟教程. (n.d.). From https://www.runoob.com/matplotlib/matplotlib-scatter.html

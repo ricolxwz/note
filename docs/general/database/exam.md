@@ -9,7 +9,7 @@ comments: true
 
 - 如何表示属性, 包括它的主键(实线), 外键(虚线); 复合属性(多个椭圆连接到一个大椭圆); 区分符(虚线); 派生属性(虚线椭圆); 多值属性(双椭圆形)
 - 如何表示约束, 包括键约束(箭头), 参与约束(粗线), 键约束和参与约束的结合(粗线箭头), 以及基数约束(小数字)
-- 如何表示实体, 包括强实体(矩形), 弱实体(双矩形). 
+- 如何表示实体, 包括强实体(矩形), 弱实体(双矩形).
 - 如何表示关系, 包括普通的实体之间的关系(菱形), 强弱实体之间的关系(双菱形)
 - 如何表示isA关系(三角形)
 - isA关系中的重叠约束和覆盖约束, overlap constraints包括disjoint还有overlapping(分别表示一个实体只能属于其中一个低层实体集, 一个实体集可以属于多个低层实体集). covering constraints包括partial和total(分别表示一个实体不必属于任何一个底层实体集, 一个实体至少属于一个底层实体集)
@@ -36,13 +36,13 @@ comments: true
 
 要点:
 
-- 如何映射没有任何约束的关系: 关系集独立建表, 两个实体集的主键的组合称为该新表的主键, 同时也是该新表的外键, 需要用箭头指到相应的实体集的主键, 如[图](https://img.ricolxwz.download/f7a07b8706af6f4dab96d5a946ee93a2.png)
-- 如何映射单侧有键约束的关系: 合并关系集和含有约束一侧实体集的属性, 并在这一侧实体集上加上一个外键, 指向另一侧实体集的主键, 如[图](https://img.ricolxwz.download/e65017767a761150a29e223fd8ea03dd.png).
-- 如何映射双侧有键约束的关系: 在上面单侧键约束的基础上, 往一侧的实体集的外键上加一个唯一性约束, 如[图](https://img.ricolxwz.download/d528c111b390896090bb774e9fd92fab.png)
-- 如何映射双侧有键约束, 其中一侧还有参与约束的关系: 在上面双侧键约束的基础上, 往一侧的实体集的外键上加一个非空约束, 如[图](https://img.ricolxwz.download/fca7486e063b1bc75f1ef25d31873e46.png)
-- 如何映射强弱实体关系: 如[图](https://img.ricolxwz.download/ec2b4323b6856140eea624640c405c24.png)
-- 如何映射isA关系: 如[图](https://img.ricolxwz.download/e24aee851049a321ea87670a3368daf6.png)
-- 如何映射聚合: 如[图](https://img.ricolxwz.download/e5f435a531088490c3c6c0eb1ce55426.png)
+- 如何映射没有任何约束的关系: 关系集独立建表, 两个实体集的主键的组合称为该新表的主键, 同时也是该新表的外键, 需要用箭头指到相应的实体集的主键, 如[图](https://img.ricolxwz.asia/f7a07b8706af6f4dab96d5a946ee93a2.png)
+- 如何映射单侧有键约束的关系: 合并关系集和含有约束一侧实体集的属性, 并在这一侧实体集上加上一个外键, 指向另一侧实体集的主键, 如[图](https://img.ricolxwz.asia/e65017767a761150a29e223fd8ea03dd.png).
+- 如何映射双侧有键约束的关系: 在上面单侧键约束的基础上, 往一侧的实体集的外键上加一个唯一性约束, 如[图](https://img.ricolxwz.asia/d528c111b390896090bb774e9fd92fab.png)
+- 如何映射双侧有键约束, 其中一侧还有参与约束的关系: 在上面双侧键约束的基础上, 往一侧的实体集的外键上加一个非空约束, 如[图](https://img.ricolxwz.asia/fca7486e063b1bc75f1ef25d31873e46.png)
+- 如何映射强弱实体关系: 如[图](https://img.ricolxwz.asia/ec2b4323b6856140eea624640c405c24.png)
+- 如何映射isA关系: 如[图](https://img.ricolxwz.asia/e24aee851049a321ea87670a3368daf6.png)
+- 如何映射聚合: 如[图](https://img.ricolxwz.asia/e5f435a531088490c3c6c0eb1ce55426.png)
 
 注意点:
 
@@ -92,7 +92,7 @@ comments: true
 - 空值
 	- 任何含有`NULL`的表达式的结果是`NULL`
     - 任何含有`NULL`的比较的结果是`unkown`
-    - 如果`WHERE`表达式的结果是`unkown`, 则会被当作`false`处理	
+    - 如果`WHERE`表达式的结果是`unkown`, 则会被当作`false`处理
 
 ## 关系代数
 
@@ -143,33 +143,33 @@ comments: true
 - [functional dependencies closure](/general/database/normalization/#functional-dependency-closure)
 - [attributes closure](/general/database/normalization/#属性闭包)
 
-怎么做判断是否为候选键的题: 
+怎么做判断是否为候选键的题:
 
 1. 判断它是否是超键: 通过Armstrong公理不断推出属性闭包, 如果该闭包中包含所有的属性, 则为超键
 2. 判断它的真子集是否为超键: 写出它的真子集, 分别对这些真子集使用Armstrong公理写出属性闭包, 如果闭包中包含所有的属性, 则为超键, 只要有一个真子集是超键, 则原属性组合就不是候选键
 
 怎么做MVD和4NF的题:
 
-1. 如何检查是不是MVD: 如[图](https://img.ricolxwz.download/ef967f1ab99097e46abaf33cfec9cc6d.png), 对于任意两个UoS是COMP9120的记录, 存在另外两个UoS是9120的记录, 使得Textbook相同的情况下Tutor不同, Tutor相同的情况下Textbook不同. (然后还可以插入一条新的记录, 比如插入一个老师Lijun C, 则应该有两条记录, 对应两种Textbook)
+1. 如何检查是不是MVD: 如[图](https://img.ricolxwz.asia/ef967f1ab99097e46abaf33cfec9cc6d.png), 对于任意两个UoS是COMP9120的记录, 存在另外两个UoS是9120的记录, 使得Textbook相同的情况下Tutor不同, Tutor相同的情况下Textbook不同. (然后还可以插入一条新的记录, 比如插入一个老师Lijun C, 则应该有两条记录, 对应两种Textbook)
 2. 如何判断是否处于4NF: 满足下列条件中的任意一条 a. **所有**的多值依赖都是平凡多值依赖(Y ⊆ X或X ∪ Y = R, 特别注意第二个条件); b. **所有**的多值依赖中左侧是超键
 
 怎么做范式的题:
 
 1. 弄清楚2NF, 3NF, BCNF的概念, 分别是没有部分依赖, 非主属性不能依赖其他非主属性, 左侧是超键
 2. 对于BCNF, 它可能会先给出很多函数依赖, 然后让你判断这些函数依赖是否符合BCNF, 那么判断的方法就是对于这些函数依赖的左侧, 用属性闭包判断其是否为超键, 如果是所有函数依赖的左侧都是超键, 则说明表符合BCNF
-3. 执行分解: 如[图](https://img.ricolxwz.download/ba06d45ab84b9af2868b8fd73170af4b.png)
-4. 检查分解: a. 检查分解后的函数依赖闭包是否和原始闭包相同或者函数依赖和原始函数依赖相同, 如[图](https://img.ricolxwz.download/180a82391d7abd8b74382f665b8a260e.png); b. 检查无损连接, 交集是否能够推出其中任意一个表, 即交集的属性至少是任意一个表的键
+3. 执行分解: 如[图](https://img.ricolxwz.asia/ba06d45ab84b9af2868b8fd73170af4b.png)
+4. 检查分解: a. 检查分解后的函数依赖闭包是否和原始闭包相同或者函数依赖和原始函数依赖相同, 如[图](https://img.ricolxwz.asia/180a82391d7abd8b74382f665b8a260e.png); b. 检查无损连接, 交集是否能够推出其中任意一个表, 即交集的属性至少是任意一个表的键
 
 ## 事务
 
-要点: 
+要点:
 
 - ACID: Atomocity, Consistency, Isolation, Durability. 原子性; 事务开始和结束之后, 一致性没有被破坏; 并发调度的结果和串行调度的结果相同; 事务结束后, 数据能够persist
 - 事务怎么用SQL写: `COMMIT`和`ROLLBACK`的使用
 - 串行调度和可串行化调度: 串行调度是事务按照串行顺序执行的调度, 可串行化调度是调度进行转换后等价于可串行调度
 - 三种问题: lost update, temporary update, incorrect summary. 事务B覆盖了事务A的更新; 读取了回滚前的数据; 在进行aggregation的时候读取了部分数据
 - 隔离等级: read uncommited; read committed, repeatable read, serializable; 特别注意第三个, 其他事务只能看到事务提交之前的数据, 后三种隔离分别能解决temporary update, incorrect summary, lost update问题
-- 冲突等价调度: 每一对冲突的操作在两个调度中都相同, 则它们冲突等价. 可以通过调换不冲突操作的顺序确定两个调度是否冲突等价, 如果一个调度冲突等价于一个串行调度, 则为冲突可串行化调度. 可以使用优先图来判断, 每个事务都是一个节点, 若一对冲突操作中事务A在事务B前面, 则从事务A到事务B有一条有向边. 若不存在环, 则调度就是冲突可串行化的. 冲突可串行化一定可串行化, 但是可串行化不一定冲突可串行化. 
+- 冲突等价调度: 每一对冲突的操作在两个调度中都相同, 则它们冲突等价. 可以通过调换不冲突操作的顺序确定两个调度是否冲突等价, 如果一个调度冲突等价于一个串行调度, 则为冲突可串行化调度. 可以使用优先图来判断, 每个事务都是一个节点, 若一对冲突操作中事务A在事务B前面, 则从事务A到事务B有一条有向边. 若不存在环, 则调度就是冲突可串行化的. 冲突可串行化一定可串行化, 但是可串行化不一定冲突可串行化.
 - 优先图转为串行化方案: 必须保持原有的方向性, 没有箭头的可以调换顺序
 - 锁: 使用二阶段锁, 如果有写, 要用exclusive lock, 如果只有读, 只用shared lock就行. shared lock可以由多个事务持有, 但是exclusive lock在某个时刻只能由一个事务持有. 分为两个阶段, growing phase和shrinking phase, 前者只获得锁不释放锁; 后者只释放锁不获得锁
 - `UPDATE ... WHERE ...`这个语句包含了两个步骤, 首先根据条件读取, READ, 然后写入, WRITE; 普通的`SELECT`语句只有READ(幻灯片p34)
@@ -239,22 +239,22 @@ comments: true
 	- Not examinable
 	- The intersection of these three relations is none, and none is not the key of any relations
 	- 3NF, non-prime attribute can not depends on non-prime attribute, so B -> D violates 3NF
-	- Not examinable 
+	- Not examinable
 	- BCNF, LHS must be superkey, A -> B, A is not a superkey (you can verify it using attribute closure), so it violates BCNF
 - Q4
 	- T1, r(x_1), w(x_1); T2, r(x_1), w(x_1); There are two possible anomalies, lost update, T2 reads x_1 before T1 writes to x_1; temporary read, T2 reads x_1 but T1 rollbacks later. the correct result is \$1500, the result of lost update is \$2500, the result of temporary update is \$2000, suppose the initial fund is \$2000
     - T1, r(x_1), w(x_1); T3, r(x_1), w(x_1), r(x_2), w(x_2), lost update, T3 read x_1 before T1 write to x_1. The amount of 201 would be \$1700 which is incorrect. We can use the exclusive lock, T1 first gets the lock, T3 keeps waiting until T1 releases the lock
-	- Dirty reads == temporary reads, the other two are not examinable. The isolation level is serializable. 
+	- Dirty reads == temporary reads, the other two are not examinable. The isolation level is serializable.
 	- Deak lock occurs when two resources waiting for each other to release their locks. Possible scenario: T1 gets lock on 201, T3 gets lock on 203. Suppose T1 needs to update some status of 203, T1 needs lock of 203, T3 needs lock of 201, it's a deadlock
 	- Share lock can be held by multiple transactions at the same time while exclusive lock is not. We can attach exclusive lock on T1 and T2 to prevent anomalies, because they need to write on the same data, which will potentially cause lost update or temporary read
 	- COMMIT is used to commit a transaction, ROLLBACK is used to undo the transaction, revert back to the original state. It will lead to temporary read.
 	- 2PL: 2 phase locking, as its name suggests, has two phases, growing phase and shrinking phase, during growing phase, a transaction does not release any locks but acquire locks; during shrinking phase,  a transaction does not acquire any locks but release locks. This will ensure transaction always be executed after other transactions release the desired lock
 	- Not examinable
-	- Not examinable 
+	- Not examinable
 	- T1, r(x_1), w(x_1); T3, r(x_1), w(x_1), r(x_2), w(x_2). There are three conflicts here: T1 r(x_1) and T3 w(x_1); T1 w(x_1) and T3 r(x_1). T1 w(x_1) and T3 w(x_1). There exists a circle in the precedence graph, so it's not conflict serializable.
 - Q5
 
-	The storage can be used in a page: (8192-300)\*0.9=7102.8 bytes. The table needs 2000000\*(4+10+6+15+4)=78000000 bytes. 78000000/7102.8=10981.58, so we need 10982 pages to store the entire inventory table, the total space needed 10982\*8192=89964544 bytes, overhead is (89964544-78000000)/78000000=15.33%. The time for loading each page is 200 milliseconds, so we need 200*10982=2196400 milliseconds to scan the entire table. The search key takes (10+4) bytes, so the index entry takes 14+4=18 bytes, we can store 7102.8/18=394.6 which is 394 records in one page, so we need 2000000/394=5076.14 which is 5077 pages to store all the indices. We need 5077/394=12.89 which is 13 pages to store the bottom index pages, we need 1 page at root level. So the B+ tree looks like this: 1 page at top, 13 pages in between, 5077 pages at the bottom and there are 10982 leaf nodes. For a single query, we need 4 IOs(let's assume that one page = one IO, which is default in this course), so it takes 4\*200=800 milliseconds to reach the specific leaf nodes. 
+	The storage can be used in a page: (8192-300)\*0.9=7102.8 bytes. The table needs 2000000\*(4+10+6+15+4)=78000000 bytes. 78000000/7102.8=10981.58, so we need 10982 pages to store the entire inventory table, the total space needed 10982\*8192=89964544 bytes, overhead is (89964544-78000000)/78000000=15.33%. The time for loading each page is 200 milliseconds, so we need 200*10982=2196400 milliseconds to scan the entire table. The search key takes (10+4) bytes, so the index entry takes 14+4=18 bytes, we can store 7102.8/18=394.6 which is 394 records in one page, so we need 2000000/394=5076.14 which is 5077 pages to store all the indices. We need 5077/394=12.89 which is 13 pages to store the bottom index pages, we need 1 page at root level. So the B+ tree looks like this: 1 page at top, 13 pages in between, 5077 pages at the bottom and there are 10982 leaf nodes. For a single query, we need 4 IOs(let's assume that one page = one IO, which is default in this course), so it takes 4\*200=800 milliseconds to reach the specific leaf nodes.
 
 ## Practice Final Exam
 
@@ -279,8 +279,8 @@ comments: true
 - 7
 
 	```sql
-	SELECT branch_name 
-	FROM branch 
+	SELECT branch_name
+	FROM branch
 	WHERE assets >= SOME (
 		SELECT assets FROM branch WHERE branch_city = 'Gold Coast'
 	);
@@ -303,8 +303,8 @@ comments: true
 
 	```sql
 	SELECT depositor.customer_name
-	FROM depositor 
-	JOIN borrower ON borrower.customer_name = depositor.customer_name 
+	FROM depositor
+	JOIN borrower ON borrower.customer_name = depositor.customer_name
 	WHERE borrower.loan_number IN (
 		SELECT loan_number FROM loan WHERE branch_name = 'Darling Harbour'
 	);
@@ -326,8 +326,8 @@ comments: true
 	- Room_no: J
 	- No_of_students: K
 
-	we have the following functional dependencies: 
-	
+	we have the following functional dependencies:
+
 	- A -> CDE
 	- ABGH -> IJKF
 	- JIGH -> FAB
@@ -361,5 +361,5 @@ comments: true
 	Not very sure, but:
 
 	<figure markdown='1'>
-	![](https://img.ricolxwz.download/ddd0159a2b9fe0a0231d30ae468ad372.png){ loading=lazy width='500' }
+	![](https://img.ricolxwz.asia/ddd0159a2b9fe0a0231d30ae468ad372.png){ loading=lazy width='500' }
 	</figure>

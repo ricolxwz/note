@@ -29,19 +29,19 @@ comments: true
 <iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.youtube.com/embed/qJeaCHQ1k2w?si=rpggP8B3fmXl6wFd" frameborder="yes" scrolling="no" allowfullscreen="true"></iframe>
 </div>
 
-在普通的AE中, 我们在潜空间中随机选一个潜向量, 再通过decoder生成的像素向量所代表的图片往往是没有意义的噪声, 这是因为普通AE的encoder只将输入的图片映射到了潜空间中的一个潜向量上, 所以潜空间中只有一些特定的潜向量能够重构回原图, 这会导致潜空间的"支离破碎", 其他的潜向量经过解码器后只会得到没有意义的噪声, 如潜向量1能重构图1, 潜向量2能重构图2, 但是在潜向量1和潜向量2之间的潜向量3经过decoder会得到一张没有意义的图片. 
+在普通的AE中, 我们在潜空间中随机选一个潜向量, 再通过decoder生成的像素向量所代表的图片往往是没有意义的噪声, 这是因为普通AE的encoder只将输入的图片映射到了潜空间中的一个潜向量上, 所以潜空间中只有一些特定的潜向量能够重构回原图, 这会导致潜空间的"支离破碎", 其他的潜向量经过解码器后只会得到没有意义的噪声, 如潜向量1能重构图1, 潜向量2能重构图2, 但是在潜向量1和潜向量2之间的潜向量3经过decoder会得到一张没有意义的图片.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/092c19c9031472a566c9cd3122dba8fd.webp#only-light){ loading=lazy width='700' }
-![](https://img.ricolxwz.download/092c19c9031472a566c9cd3122dba8fd_inverted.webp#only-dark){ loading=lazy width='700' }
+![](https://img.ricolxwz.asia/092c19c9031472a566c9cd3122dba8fd.webp#only-light){ loading=lazy width='700' }
+![](https://img.ricolxwz.asia/092c19c9031472a566c9cd3122dba8fd_inverted.webp#only-dark){ loading=lazy width='700' }
 <figcaption></figcaption>
 </figure>
 
 在VAE中的潜空间中, 大部分区域的潜向量都能重构回看起来合理的样本. 这是因为VAE的encoder会将输入的图片映射到潜空间中的一个分布上, 这个分布内的潜向量都能构建出一张和原图类似的图片, 在这些潜向量中, 某些潜向量构建出原图的概率更高, 某些潜向量构建出原图的概率较低. 假设图片1被映射到的潜空间中潜向量2...潜向量8...潜向量12这个区域内, 图片2被映射到潜空间中潜向量10...潜向量14...潜向量18的区域内, 那么如果我们从潜空间中取潜向量11, 经过decoder之后大概率得到的是图片1和图片2的融合品, 如图片1是猫, 图片2是狗, 那么出来的图片可能是带有狗鼻子的猫. 换句话说, 现在, 在这个潜空间中随机去一个点, 经过decoder都能得到一个有意义的图. 这让VAE不仅仅能够重建图片, 还能够创造新的图片, 这说明, VAE具有极其强大的泛化性能.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/7e539da4e2d8feb1d3e1f5c973b8ad2c.webp#only-light){ loading=lazy width='300' }
-![](https://img.ricolxwz.download/7e539da4e2d8feb1d3e1f5c973b8ad2c_inverted.webp#only-dark){ loading=lazy width='300' }
+![](https://img.ricolxwz.asia/7e539da4e2d8feb1d3e1f5c973b8ad2c.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.asia/7e539da4e2d8feb1d3e1f5c973b8ad2c_inverted.webp#only-dark){ loading=lazy width='300' }
 <figcaption></figcaption>
 </figure>
 
@@ -52,8 +52,8 @@ comments: true
 VAE在训练的时候, 往往会让这些由encoder生成的潜向量的分布往先验分布靠, 于此同时, 也不能让它们靠得太紧. (1) 为什么要往先验分布靠? 这是一个正则化的过程. 举个例子, 如果图片1被映射到潜向量2...潜向量8...潜向量12, 图片2被映射到潜向量20...潜向量24...潜向量28, 那么如果我们取潜向量15, 经过decoder生成的是无意义的图片, 这种叫做潜空间的"真空区", 这个真空区内的潜向量经过decoder之后生成的是噪声, 所以要尽量减少这种分布之间的真空区; (2) 为什么不能靠得太紧? 举个例子, 如果图片1被映射到潜向量2...潜向量8...潜向量12, 图片2被映射到潜向量3...潜向量9...潜向量13, 那么我们甚至无法找到一个合理的潜向量去重构图1或者图2. 这就是为什么VAE的损失函数里面第一部分是重构损失, 第二部分是encoder生成的潜向量分布和先验分布的KL散度.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/843639a0a1b9f9e3e24c5a78e731bf43.webp#only-light){ loading=lazy width='600' }
-![](https://img.ricolxwz.download/843639a0a1b9f9e3e24c5a78e731bf43_inverted.webp#only-dark){ loading=lazy width='600' }
+![](https://img.ricolxwz.asia/843639a0a1b9f9e3e24c5a78e731bf43.webp#only-light){ loading=lazy width='600' }
+![](https://img.ricolxwz.asia/843639a0a1b9f9e3e24c5a78e731bf43_inverted.webp#only-dark){ loading=lazy width='600' }
 <figcaption></figcaption>
 </figure>
 
@@ -71,21 +71,21 @@ $$p(\mathbf{Z} |\mathbf{X}=\mathbf{x}) = \frac{p(\mathbf{Z}, \mathbf{X}=\mathbf{
 
 其中, $p(\mathbf{X})$可以用全概率公式计算:
 
-$$p(\mathbf{X}=\mathbf{x})=\int _{\mathbf{z}}p(\mathbf{X}=\mathbf{x}|\mathbf{Z}=\mathbf{z})p(\mathbf{Z}=\mathbf{z})d\mathbf{z}$$ 
+$$p(\mathbf{X}=\mathbf{x})=\int _{\mathbf{z}}p(\mathbf{X}=\mathbf{x}|\mathbf{Z}=\mathbf{z})p(\mathbf{Z}=\mathbf{z})d\mathbf{z}$$
 
 然而, 当$\mathbf{Z}$的维度较高的时候, 这个积分几乎无法求解, 用数值方法计算也会非常困难或者代价高昂. 正因为如此, 我们无法得到结果$p(\mathbf{X}=\mathbf{x})$然后代入到贝叶斯公式来得到$p(\mathbf{Z}|\mathbf{X}=\mathbf{x})$. 所以在实际中, 我们会借助近似方法, 如变分推断, MCMC等来绕过求解该积分的难题.
 
 ### 变分推断
 
-变分推断的基本思想是把难以求解的$p(\mathbf{Z}|\mathbf{X}=\mathbf{x})$转化为一个可优化的问题, 具体来说, 变分推断会定义一个包含可调节参数的分布$q_{\phi}(\mathbf{Z}|\mathbf{X}=\mathbf{x})$, 称为"变分分布", 它的$\phi$是可学习的. 
+变分推断的基本思想是把难以求解的$p(\mathbf{Z}|\mathbf{X}=\mathbf{x})$转化为一个可优化的问题, 具体来说, 变分推断会定义一个包含可调节参数的分布$q_{\phi}(\mathbf{Z}|\mathbf{X}=\mathbf{x})$, 称为"变分分布", 它的$\phi$是可学习的.
 
-在VAE中, 是通过encoder的神经网络来拟合这个分布, 我们的先验分布$p(\mathbf{Z})$是标准正态分布, 我们要让encoder生成的分布尽量贴近这个标准正态分布, 即只要让KL散度$KL(q_{\phi}(\mathbf{Z}|\mathbf{X}=\mathbf{x})\;\|\;p(\mathbf{Z}))$变小, 不管是黑猫白猫, 只要能够使它变小, 都是好的分布. 这里, 我们选择让encoder拟合一个均值为$\mathbf{\mu}_{\phi}, \mathbf{\sigma}^2_{\phi}\cdot \mathbf{I}$的正态分布, 即$q_{\phi}(\mathbf{Z}|\mathbf{X}=\mathbf{x})\sim \mathcal{N}(\mathbf{\mu}_{\phi}, \mathbf{\sigma}^2_{\phi}\cdot \mathbf{I})$. 
+在VAE中, 是通过encoder的神经网络来拟合这个分布, 我们的先验分布$p(\mathbf{Z})$是标准正态分布, 我们要让encoder生成的分布尽量贴近这个标准正态分布, 即只要让KL散度$KL(q_{\phi}(\mathbf{Z}|\mathbf{X}=\mathbf{x})\;\|\;p(\mathbf{Z}))$变小, 不管是黑猫白猫, 只要能够使它变小, 都是好的分布. 这里, 我们选择让encoder拟合一个均值为$\mathbf{\mu}_{\phi}, \mathbf{\sigma}^2_{\phi}\cdot \mathbf{I}$的正态分布, 即$q_{\phi}(\mathbf{Z}|\mathbf{X}=\mathbf{x})\sim \mathcal{N}(\mathbf{\mu}_{\phi}, \mathbf{\sigma}^2_{\phi}\cdot \mathbf{I})$.
 
-通过优化$\phi$来让$q_{\phi}(\mathbf{Z}|\mathbf{X}=\mathbf{x})$尽可能地逼近真实的后验分布$p(\mathbf{Z}|\mathbf{X}=\mathbf{x})$. 第一个感觉是可以使用KL散度来衡量两个分布之间的差距, 目标是最小化: 
+通过优化$\phi$来让$q_{\phi}(\mathbf{Z}|\mathbf{X}=\mathbf{x})$尽可能地逼近真实的后验分布$p(\mathbf{Z}|\mathbf{X}=\mathbf{x})$. 第一个感觉是可以使用KL散度来衡量两个分布之间的差距, 目标是最小化:
 
 $$KL\left(q_\phi(\mathbf{Z}|\mathbf{X} = \mathbf{x}) \;\|\; p(\mathbf{Z}|\mathbf{X} = \mathbf{x})\right)$$
 
-然而, 直接最小化这个KL散度往往是不可行的, 因为它需要我们知道真实的后验分布$p(\mathbf{Z}|\mathbf{X}=\mathbf{x})$, 而后者本身就是未知的. 为了解决这个问题, 变分推断会通过最大化"证据下界"(Evidence Lower BOund, ELBO)的方式来等价地最小化上述的KL散度.  
+然而, 直接最小化这个KL散度往往是不可行的, 因为它需要我们知道真实的后验分布$p(\mathbf{Z}|\mathbf{X}=\mathbf{x})$, 而后者本身就是未知的. 为了解决这个问题, 变分推断会通过最大化"证据下界"(Evidence Lower BOund, ELBO)的方式来等价地最小化上述的KL散度.
 
 ### 证据下界
 
@@ -134,11 +134,11 @@ $$
 
 $$\mathbb{E}_{q_\phi(\mathbf{Z}|\mathbf{X}=\mathbf{x})} \left[ \log p(\mathbf{X} = \mathbf{x}) \right]$$
 
-的时候, 因为$\log p(\mathbf{X}=\mathbf{x})$并不依赖于$\mathbf{Z}$, 它在积分运算中可以被视为一个常数$c$, 即: 
+的时候, 因为$\log p(\mathbf{X}=\mathbf{x})$并不依赖于$\mathbf{Z}$, 它在积分运算中可以被视为一个常数$c$, 即:
 
-$$\mathbb{E}_{q_\phi(\mathbf{Z}|\mathbf{X}=\mathbf{x})} \left[ c \right] 
-= \int_{\mathbf{z}} c \, q_\phi(\mathbf{Z}=\mathbf{z}|\mathbf{X}=\mathbf{x}) \, d\mathbf{z} 
-= c \int_{\mathbf{z}} q_\phi(\mathbf{Z}=\mathbf{z}|\mathbf{X}=\mathbf{x}) \, d\mathbf{z} 
+$$\mathbb{E}_{q_\phi(\mathbf{Z}|\mathbf{X}=\mathbf{x})} \left[ c \right]
+= \int_{\mathbf{z}} c \, q_\phi(\mathbf{Z}=\mathbf{z}|\mathbf{X}=\mathbf{x}) \, d\mathbf{z}
+= c \int_{\mathbf{z}} q_\phi(\mathbf{Z}=\mathbf{z}|\mathbf{X}=\mathbf{x}) \, d\mathbf{z}
 = c \cdot 1 = c.
 $$
 
@@ -157,8 +157,8 @@ $$
 如下图所示, 框的大小表示$\log p(\mathbf{X}=\mathbf{x})$, 不变, ELBO越大, KL散度越小.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/edd0237538287148b1827fc06b54a318.webp#only-light){ loading=lazy width='180' }
-![](https://img.ricolxwz.download/edd0237538287148b1827fc06b54a318_inverted.webp#only-dark){ loading=lazy width='180' }
+![](https://img.ricolxwz.asia/edd0237538287148b1827fc06b54a318.webp#only-light){ loading=lazy width='180' }
+![](https://img.ricolxwz.asia/edd0237538287148b1827fc06b54a318_inverted.webp#only-dark){ loading=lazy width='180' }
 <figcaption></figcaption>
 </figure>
 
@@ -205,12 +205,12 @@ $\mathcal{Loss}$中的第二项表示的是重建损失. 也就是说, 给定了
 ## 架构
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/d0c1e3e28dfb9f11ceb867b0764bfbb6.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.download/d0c1e3e28dfb9f11ceb867b0764bfbb6_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/d0c1e3e28dfb9f11ceb867b0764bfbb6.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/d0c1e3e28dfb9f11ceb867b0764bfbb6_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption></figcaption>
 </figure>
 
-VAE本质上是一个生成模型. 它的目标是使用encoder构造一个足够正则化的潜空间, 使得能够从中取样并生成图片. 在训练阶段, 构建的损失函数中包含KL Loss用于正则化潜空间, L2项用于减小重建误差. 从一个标准正态分布中采样, 然后通过重参数化技术映射到潜向量的分布中, 使误差可以反向传播. encoder通过最大化ELBO(其实就是损失函数经过变形)得到一个近似的后验分布. 
+VAE本质上是一个生成模型. 它的目标是使用encoder构造一个足够正则化的潜空间, 使得能够从中取样并生成图片. 在训练阶段, 构建的损失函数中包含KL Loss用于正则化潜空间, L2项用于减小重建误差. 从一个标准正态分布中采样, 然后通过重参数化技术映射到潜向量的分布中, 使误差可以反向传播. encoder通过最大化ELBO(其实就是损失函数经过变形)得到一个近似的后验分布.
 
 在生成阶段, 然而, 是没有encoder的. 也就是说, 我们是在标准正态分布中随机采样, 然后经过decoder生成一张图片, 我们无法控制生成某一张特定的图片, 如想要它生成猫或者是狗是做不到的, 它只能保证你采样之后生成的图片大概率是有意义的. 若或许你已经知道了某个动物的潜向量, 那么在附近取一个潜向量, 经过decoder大概率还是那个动物. 如果你想要不带encoder的VAE生成特定的图片, 可以使用CVAE, Conditional VAE.
 

@@ -15,13 +15,13 @@ comments: true
 
 ### 关系的概念
 
-关系是一张二维命名的表格. 这个表格由行(又称为元组或记录)和列(又称为属性或字段)组成. 
+关系是一张二维命名的表格. 这个表格由行(又称为元组或记录)和列(又称为属性或字段)组成.
 
 并非是所有的表格都是关系, 关系需要满足下列条件:
 
 - 关系必须有一个唯一的名字
 - 关系中的属性名必须有一个唯一的名字, 列的顺序是不重要的
-- 关系中所有的元组必须有相同的结构 
+- 关系中所有的元组必须有相同的结构
 - 所有的属性都是原子类型的, 即每列中的数据是不可再分的基本单位, 如一个人的姓名应该分为"名"和"姓"两个独立的列, 而不是放在一个列中, 这个就是"第一范式"
 - 一个关系是元组的集合, 所以每行必须是唯一的, 即不能有两行的所有属性值都相同; 行的顺序是不重要的
 
@@ -37,7 +37,7 @@ comments: true
 
             - 缺失: 新学生还没有选课
             - 不相关: 兼职教授的年收入是不相关的, 不是正式编制没有年收入
-        
+
         使用`null`的优势是用一个特殊的值表示缺失/不相关可能在某些情景下不好用.
 
         ???+ example "例子"
@@ -96,7 +96,7 @@ CREATE TABLE <table_name> (<column_name> <column_type>, ...)
     );
     ```
 
-    得到的表格如[图](https://img.ricolxwz.download/e7bd17ea2a47fbe0c29af21a62050751.png).
+    得到的表格如[图](https://img.ricolxwz.asia/e7bd17ea2a47fbe0c29af21a62050751.png).
 
 ### 删除表
 
@@ -108,7 +108,7 @@ DROP TABLE <table_name>
 
 ### 修改表
 
-支持对表格做出很多修改, 比如说修改属性名, 增加列, 具体见DBMS提供商的表格. 
+支持对表格做出很多修改, 比如说修改属性名, 增加列, 具体见DBMS提供商的表格.
 
 修改属性名:
 
@@ -186,11 +186,11 @@ DELETE FROM <table_name> WHERE <column_name>=<value>, ...
 
     === "例子1"
 
-        [见图](https://img.ricolxwz.download/97077b1a1099dfb5cf9b58a468008ba6.png)
+        [见图](https://img.ricolxwz.asia/97077b1a1099dfb5cf9b58a468008ba6.png)
 
     === "例子2"
 
-        以`FOREIGN KEY`为例, 默认情况下, 引用的是目标表的主键属性: 
+        以`FOREIGN KEY`为例, 默认情况下, 引用的是目标表的主键属性:
 
         ```sql
         FOREIGN KEY (sid) REFERENCES Student
@@ -202,7 +202,7 @@ DELETE FROM <table_name> WHERE <column_name>=<value>, ...
         FOREIGN KEY (lecturer) REFERENCES Lecturer(empid)
         ```
 
-## 完整性约束条件 
+## 完整性约束条件
 
 在[数据模型](/general/database/conceptual-model/#数据模型的组成要素)中, 我们提到, 数据模型由数据结构, 数据操作和完整性约束三部分组成, 这里关系模型是第二类数据模型, 所以它也有完整性约束.
 
@@ -221,7 +221,7 @@ DELETE FROM <table_name> WHERE <column_name>=<value>, ...
 
 ### 外键IC
 
-对于引用的关系中每个外键值为$\alpha$的元组, 一定要在被引用的关系中存在一个候选键也为$\alpha$的元组, 如[图](https://img.ricolxwz.download/3578df3777540c7e36266edb3b958db2.png).
+对于引用的关系中每个外键值为$\alpha$的元组, 一定要在被引用的关系中存在一个候选键也为$\alpha$的元组, 如[图](https://img.ricolxwz.asia/3578df3777540c7e36266edb3b958db2.png).
 
 ### 非空IC
 
@@ -262,7 +262,7 @@ RDBMS在默认情况下允许用`null`表示缺失/不相关. 对于某一些应
 
 什么是强实体型, 见[这里](/general/database/conceptual-model/#强弱实体型).
 
-在ERD中, 所有的强实体型都会变成一个关系. 列对应属性, 行对应实体. 
+在ERD中, 所有的强实体型都会变成一个关系. 列对应属性, 行对应实体.
 
 对于属性来说, 映射需要看情况:
 
@@ -276,17 +276,17 @@ RDBMS在默认情况下允许用`null`表示缺失/不相关. 对于某一些应
 
 ### 映射没有约束的关系
 
-没有约束的关系即对于实体集和某一个关系来说, 实体集没有键约束, 参与约束, 基数约束. 想要映射这种关系特别简单, 只要将实体集的主键的组合作为新的关系的主键就行了. 如[图](https://img.ricolxwz.download/f7a07b8706af6f4dab96d5a946ee93a2.png).
+没有约束的关系即对于实体集和某一个关系来说, 实体集没有键约束, 参与约束, 基数约束. 想要映射这种关系特别简单, 只要将实体集的主键的组合作为新的关系的主键就行了. 如[图](https://img.ricolxwz.asia/f7a07b8706af6f4dab96d5a946ee93a2.png).
 
 ### 映射有约束的关系 {#map-constraints}
 
-#### 映射有键约束的关系 
+#### 映射有键约束的关系
 
 什么是键约束, 见[这里](/general/database/conceptual-model/#键约束).
 
-可以将参与关系的实体集的关系和关系集的关系组合变成一个新的关系. 太复杂了....直接看[图](https://img.ricolxwz.download/c8203c4430ba88d59b0ccb708c07a162.png).
+可以将参与关系的实体集的关系和关系集的关系组合变成一个新的关系. 太复杂了....直接看[图](https://img.ricolxwz.asia/c8203c4430ba88d59b0ccb708c07a162.png).
 
-若要表示两侧都有键约束, 可以在外键上施加一个唯一性限制. 直接看[图](https://img.ricolxwz.download/d528c111b390896090bb774e9fd92fab.png).
+若要表示两侧都有键约束, 可以在外键上施加一个唯一性限制. 直接看[图](https://img.ricolxwz.asia/d528c111b390896090bb774e9fd92fab.png).
 
 我们要在`Employee`关系的`did`字段上施加一个唯一性限制, 表示每一个元组的`did`字段的值都不一样, 这就导致每一个部门只能有一个员工, 每一个员工只能属于一个部门.
 
@@ -294,13 +294,13 @@ RDBMS在默认情况下允许用`null`表示缺失/不相关. 对于某一些应
 
 什么是键约束, 见[这里](/general/database/conceptual-model/#键约束). 什么是参与约束, 见[这里](/general/database/conceptual-model/#participation-constraints).
 
-我们以两侧都有键约束为例, 现在在一侧加入一个参与约束, 要实现将这个参与约束映射到关系中, 就要使得这个外键不为空, 即为`NOT NULL`. 根据上面讲到的, 要实现两侧的键约束, 外键还需要是唯一的, 所以外键: 1. 既是唯一的; 2. 又是非空的. 见[图](https://img.ricolxwz.download/fca7486e063b1bc75f1ef25d31873e46.png).
+我们以两侧都有键约束为例, 现在在一侧加入一个参与约束, 要实现将这个参与约束映射到关系中, 就要使得这个外键不为空, 即为`NOT NULL`. 根据上面讲到的, 要实现两侧的键约束, 外键还需要是唯一的, 所以外键: 1. 既是唯一的; 2. 又是非空的. 见[图](https://img.ricolxwz.asia/fca7486e063b1bc75f1ef25d31873e46.png).
 
 ### 映射弱实体型 {#map-weakstrongentity}
 
 什么是弱实体型, 见[这里](/general/database/conceptual-model/#强弱实体型).
 
-弱实体型映射到一个主键是区分符和强实体型的主键的组合的关系中. 如[图](https://img.ricolxwz.download/ec2b4323b6856140eea624640c405c24.png).
+弱实体型映射到一个主键是区分符和强实体型的主键的组合的关系中. 如[图](https://img.ricolxwz.asia/ec2b4323b6856140eea624640c405c24.png).
 
 其中, 弱实体型映射的关系的主键是一个复合主键, 包含强实体型关系的主键`empID`和区分符`given`和`family`.
 
@@ -308,8 +308,8 @@ RDBMS在默认情况下允许用`null`表示缺失/不相关. 对于某一些应
 
 什么是isA结构(泛化/反泛化), 见[这里](/general/database/conceptual-model/#泛化反泛化).
 
-映射isA结构的时候, 子类的外键是超类(高层次的, 抽象的类)的主键. 如[图](https://img.ricolxwz.download/e24aee851049a321ea87670a3368daf6.png)
+映射isA结构的时候, 子类的外键是超类(高层次的, 抽象的类)的主键. 如[图](https://img.ricolxwz.asia/e24aee851049a321ea87670a3368daf6.png)
 
 ### 映射聚合 {#map-aggregation}
 
-聚合之后的新的实体型的键和另一个参与聚合关系的实体的键构成了聚合关系的键和外键. 如[图](https://img.ricolxwz.download/e5f435a531088490c3c6c0eb1ce55426.png).
+聚合之后的新的实体型的键和另一个参与聚合关系的实体的键构成了聚合关系的键和外键. 如[图](https://img.ricolxwz.asia/e5f435a531088490c3c6c0eb1ce55426.png).

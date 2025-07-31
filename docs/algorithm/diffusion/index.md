@@ -80,15 +80,15 @@ $$
 OK, 现在, 我们要最小化$q(x_{t-1}|x_t, x_0)$和$p_{\theta}(x_{t-1}|x_t)$的KL散度. 注意, $p_{\theta}(x_{t-1}|x_t)$的分布是由去噪网络预测出来的, 在DDPM中, 去噪网络预测分布的方差是人为固定的(当然也有工作是变化的). $q(x_{t-1}|x_t, x_0)$的均值是$\frac{\sqrt{\bar{\alpha}_{t-1}}\,\beta_t x_0+\sqrt{\alpha_t}\,(1-\bar{\alpha}_{t-1})\,x_t}{1-\bar{\alpha}_t}$, 自然而然的, 既然方差是没法动的, **那这个去噪网络的目标就是让它预测的均值尽量靠近$\frac{\sqrt{\bar{\alpha}_{t-1}}\,\beta_t x_0+\sqrt{\alpha_t}\,(1-\bar{\alpha}_{t-1})\,x_t}{1-\bar{\alpha}_t}$以减小KL散度**, 现在, 我们的问题就简化为了下面的这张图:
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.download/6963b310027e3d66714988e98c36aab5.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.download/6963b310027e3d66714988e98c36aab5_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/6963b310027e3d66714988e98c36aab5.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/6963b310027e3d66714988e98c36aab5_inverted.webp#only-dark){ loading=lazy width='800' }
 </figure>
 
 进一步的, 由于我们知道$x_t$和$x_0$的关系, $\frac{x_t-\sqrt{1-\bar{\alpha}_t}\,\epsilon}{\sqrt{\bar{\alpha}_t}} = x_{0}$, 我们可以把均值里面的$x_0$替换成$x_t$的形式, 推导, 得到$\frac{\sqrt{\bar{\alpha}_{t-1}}\,\beta_t x_0+\sqrt{\alpha_t}\,(1-\bar{\alpha}_{t-1})\,x_t}{1-\bar{\alpha}_t}=\frac{\sqrt{\bar{\alpha}_{t-1}}\,\beta_t \frac{x_t-\sqrt{1-\bar{\alpha}_t}\,\epsilon}{\sqrt{\bar{\alpha}_t}}+\sqrt{\alpha_t}\,(1-\bar{\alpha}_{t-1})\,x_t}{1-\bar{\alpha}_t}= \frac{1}{\sqrt{\alpha_t}}\left(x_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon\right)$, 所以, 我们修改一下上面的图:
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.download/9a617728f8c7014e5a42d2327e029717.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.download/9a617728f8c7014e5a42d2327e029717_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/9a617728f8c7014e5a42d2327e029717.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/9a617728f8c7014e5a42d2327e029717_inverted.webp#only-dark){ loading=lazy width='800' }
 </figure>
 
 你会发现, 除了$\epsilon$其余的都是固定的, 所以网络唯一需要预测的部分其实就是$\epsilon$.

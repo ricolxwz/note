@@ -5,15 +5,15 @@ comments: true
 
 ## 神经元
 
-神经网络由神经元(单元, 节点)组成, 这些神经元通过有向链接互相连接, 每个连接都有一个相关的数值权重. 神经元会组成层状结构, 包括输入层, 输出层或多个隐藏层. 在训练的过程中, 权重会被调整, 以学习执行一个特定的任务. 
+神经网络由神经元(单元, 节点)组成, 这些神经元通过有向链接互相连接, 每个连接都有一个相关的数值权重. 神经元会组成层状结构, 包括输入层, 输出层或多个隐藏层. 在训练的过程中, 权重会被调整, 以学习执行一个特定的任务.
 
 在生物神经网络中, 每个神经元与其他神经元相连, 当它兴奋的时候, 就会向相连的神经元发送化学物质, 从而改变这些神经元内的电位, 如果某神经元的电位超过一个阈值, 那么它就会被激活, 即兴奋起来, 向其他神经元发送化学物质. 机器学习中的神经元也类似, 神经元接受到其他$n$个神经元传递过来的输入信号, 这些输入信号通过带权重的连接进行传递, 神经元接收到总输入将与神经元的阈值进行比较, 然后通过"激活函数"处理以产生神经元的输出.
 
 1943年, McMulloch和Pittes将上述情景抽象, 这就是一直沿用至今的"M-P"神经元模型:
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/9e2e01f533f1d459d48b80f753580c0c.png){ loading=lazy width='500' }
-</figure> 
+![](https://img.ricolxwz.asia/9e2e01f533f1d459d48b80f753580c0c.png){ loading=lazy width='500' }
+</figure>
 
 每一个神经元包含:
 
@@ -21,11 +21,11 @@ comments: true
 - 权重向量$\bm{w}$: 每个输入都有一个对应的权重$w_1, w_2, ..., w_n$, 对应$n$个参数
 - 偏置$b$: 是一个常数, 在将输入加权求和后添加, 用于平移激活曲线
 - 求和$\sum$: 输入$x_1, x_2, ..., x_n$和权重$w_1, w_2, ..., w_n$相乘相加, 加上偏置值, 结果表达式为$\bm{w}\bm{x}+b$
-- 传递函数$f$: 又叫激活函数, 是将求和结果进行映射并生成输出, 其中$a=f(\bm{w}\bm{x}+b)$ 
+- 传递函数$f$: 又叫激活函数, 是将求和结果进行映射并生成输出, 其中$a=f(\bm{w}\bm{x}+b)$
 - 输出$a$: 对加权和及偏置应用激活函数后产生的最终结果
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/f2b529bb036ac241e7d09acd263e4c90.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/f2b529bb036ac241e7d09acd263e4c90.png){ loading=lazy width='500' }
 </figure>
 
 理想的激活函数应该是阶跃函数(如上左图所示), 它将输入值映射为输出值为$0$或$1$, $1$对应于神经元兴奋, $0$对应于神经元抑制. 但是阶跃函数具有不连续, 不光滑等不太好的特性, 因此实际常用sigmoid函数作为激活函数(如上右图所示).
@@ -58,7 +58,7 @@ comments: true
 感知机, Perceptron, 它是最简单的神经网络, 由两层神经元组成, 输入层接受外界输入的信号后传递给输出层, 输出层是M-P神经元, 也被称为"阈值逻辑单元", 激活函数为阶跃函数.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/c4090b80e90cb85ba787e93a035cb384.png){ loading=lazy width='300' }
+![](https://img.ricolxwz.asia/c4090b80e90cb85ba787e93a035cb384.png){ loading=lazy width='300' }
 </figure>
 
 它由Frank Rosenblatt在1957年提出. 同时它的局限性由Marvin Minsky和Seymour Papert在书<Perceptrons>中提出. Rosenblatt和他的同事意识到这个局限可以通过使用更复杂的NNs, 即multi-layer perceptrons解决, 但是他们没有将感知机使用于神经网络的训练.
@@ -118,7 +118,7 @@ comments: true
 
     第一轮结束后的权重$\bm{w}=[-0.7\ -0.8\ -1.4]$, 截距$b=-0.9$, 检查:
 
-    1. 所有的样本都被正确分类? 
+    1. 所有的样本都被正确分类?
         1. 第一个样本: $a=sign([-0.7\ -0.8\ 1.4][1\ 0\ 0]-0.9)=sign(-1.6)=0$, 正确✅
         2. 第二个样本: $a=sign([-0.7\ -0.8\ 1.4][1\ 0\ 1]-0.9)=sign(-0.2)=0$, 错误❎
         3. 第三个样本: 无需检查第三个样本, 因为第二个样本已经错误
@@ -140,7 +140,7 @@ comments: true
     感知机能够实现与门, 这是一个线性可分的问题, 如图所示.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/46ab58645bfbd9676237b0a659b777b2.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.asia/46ab58645bfbd9676237b0a659b777b2.png){ loading=lazy width='300' }
     </figure>
 
     感知机能够找到一个线性的决策边界, 如$w_1=1=w_2=1, b=2$, 即$y=sign(x_1+x_2-2)$.
@@ -150,7 +150,7 @@ comments: true
     感知机能够实现或门, 这是一个线性可分的问题, 如图所示.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/b08609a89b6033ac9fae3be1f27257a3.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.asia/b08609a89b6033ac9fae3be1f27257a3.png){ loading=lazy width='300' }
     </figure>
 
     感知机能够找到一个线性的决策边界, 如$w_1=w_2=1, b=0.5$, 即$y=sign(x_1+x_2-0.5).$
@@ -160,26 +160,26 @@ comments: true
     感知机能够实现与非门, 这是一个线性可分的问题, 如图所示.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/4abb87c91ddaecb717517d3b804c5dc1.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.asia/4abb87c91ddaecb717517d3b804c5dc1.png){ loading=lazy width='300' }
     </figure>
 
 === "异或门"
 
     感知机无法实现异或门, 这不是一个线性可分的问题, 如图所示.
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/0a17bba3cfe79eb90d6be35c888c0e0d.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.asia/0a17bba3cfe79eb90d6be35c888c0e0d.png){ loading=lazy width='300' }
     </figure>
 
     然而, 异或门可以通过与门, 非门和与非门的组合实现, 如图所示.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/363ac96f910fd04b3f83b13284af5a29.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.asia/363ac96f910fd04b3f83b13284af5a29.png){ loading=lazy width='300' }
     </figure>
 
     所以, 只要使用一个两层的感知机就能解决异或问题.
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.download/710cecd9811caa570be36bda6616991c.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.asia/710cecd9811caa570be36bda6616991c.png){ loading=lazy width='300' }
     </figure>
 
 ---
@@ -187,7 +187,7 @@ comments: true
 从上面的实验中, 我们得出结论, 如果增加更多的层, 可以得到更加复杂的决策边界, 如图所示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/7018b43e284156ad9fbd3b1c3e4d240f.png){ loading=lazy width='800' }
+![](https://img.ricolxwz.asia/7018b43e284156ad9fbd3b1c3e4d240f.png){ loading=lazy width='800' }
 </figure>
 
 ## 深度学习
@@ -213,27 +213,27 @@ comments: true
 解决方法是使用其他的激活函数, 如ReLU和LReLu. 它们没有上限, 因此输出不会饱和, 对于$x>0$, ReLU的梯度为$1$.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/529ee4cf1b146b4e80b2c9613be8fbe6.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/529ee4cf1b146b4e80b2c9613be8fbe6.png){ loading=lazy width='500' }
 </figure>
 
 ### Dropout
 
-Dropout是一种防止过拟合的方法. 
+Dropout是一种防止过拟合的方法.
 
 核心思想是在每一次反向迭代的时候, 网络的每一层都会随机选择部分神经元, 并将其输出设为$0$, 即"丢弃"这些神经元. 这些"丢弃"的神经元不会参与当前轮次的权重更新, 相当于暂时禁用它们. 真正有用的特征更能抵抗神经元的随机移除, 因为它们在不同的神经元的组合下仍然表现良好.
 
-由于Dropout在训练的时候随机丢弃一部分神经元, 这实际上是在每次迭代的时候训练一个较小的子网络. 
+由于Dropout在训练的时候随机丢弃一部分神经元, 这实际上是在每次迭代的时候训练一个较小的子网络.
 
 - 在训练的过程中, 我们会用反向传播算法更新子网中的权重和截距, 然后将这些更新的权重值加回到原始的网络中
 - 在测试的过程中, 我们不会丢弃任何的神经元, 由于在训练过程中, Dropout会随机"丢弃"一部分神经元, 因此, 对于每一次训练迭代, 模型的激活和权重更新都是基于部分神经元计算, 例如, 如果Dropout率是$0.5$, 那么在训练过程中, 激活函数的输入会是原始网络中大约$50\%$的信号, 这意味着, 在每一次前向传播的过程中, 神经元的输出实际值比全网络的预期值大约低$50\%$. 在测试阶段, 我们需要对权重进行缩放, 乘以$0.5$
 
 <figure markdown='1'>
-![](https://img.ricolxwz.download/4fb64c6600f1837d32bee9477168fee8.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.asia/4fb64c6600f1837d32bee9477168fee8.png){ loading=lazy width='500' }
 </figure>
 
 ### Softmax函数 {#softmax}
 
-神经网络输出的结果能够被继续处理成为概率. 神经网络的输出为$(o_1, ..., o_n)$, softmax函数为$p_i=\frac{e^{o_i}}{\sum_j e^{o_i}}$. 
+神经网络输出的结果能够被继续处理成为概率. 神经网络的输出为$(o_1, ..., o_n)$, softmax函数为$p_i=\frac{e^{o_i}}{\sum_j e^{o_i}}$.
 
 ???+ example "例子"
 

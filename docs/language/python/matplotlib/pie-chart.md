@@ -56,7 +56,7 @@ matplotlib.pyplot.pie(x, explode, labels, colors, autopct, pctdistance, shadow, 
 
     输出:
 
-    ![](https://img.ricolxwz.download/86ac6f273c7503e3853732d4b7a117dd.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/86ac6f273c7503e3853732d4b7a117dd.png){:style="width:400px"}
 
 ### 自定义扇区标签和颜色
 
@@ -74,7 +74,7 @@ matplotlib.pyplot.pie(x, explode, labels, colors, autopct, pctdistance, shadow, 
 
     输出:
 
-    ![](https://img.ricolxwz.download/0b70dcaa921c6154a12298857d67ad45.png){:style="width:400px"}
+    ![](https://img.ricolxwz.asia/0b70dcaa921c6154a12298857d67ad45.png){:style="width:400px"}
 
 ### 突出显示扇区/格式化输出
 
@@ -94,7 +94,7 @@ matplotlib.pyplot.pie(x, explode, labels, colors, autopct, pctdistance, shadow, 
     ```
 
     输出:
-    
-    ![](https://img.ricolxwz.download/acbc2b926e3c7e0b889a399f6b4ae285.png){:style="width:400px"}
+
+    ![](https://img.ricolxwz.asia/acbc2b926e3c7e0b889a399f6b4ae285.png){:style="width:400px"}
 
 [^1]: Matplotlib 饼图 | 菜鸟教程. (n.d.). From https://www.runoob.com/matplotlib/matplotlib-pie.html
