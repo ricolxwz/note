@@ -85,7 +85,8 @@ function fig() {
                 echo "Starting rollback operation..."
                 function Rollback() {
                     local file_name="$1"
-                    wrangler r2 object delete "ricolxwz-image/${file_name}"
+                    # wrangler r2 object delete "ricolxwz-image/${file_name}"
+                    ossutil rm "oss://ricolxwz-image/$file_name"
                 }
                 Rollback "$new_name"
                 Rollback "$inverted_name"
