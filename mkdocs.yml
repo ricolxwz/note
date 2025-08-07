@@ -342,6 +342,7 @@ nav:
       - 专家学习: general/randomised-algorithm/learn-from-experts.md
     - 网络:
       - general/network/index.md
+    - 离散优化: general/discrete-optimization/ind.md
   - 算法:
     - 人工智能:
       - algorithm/index.md
