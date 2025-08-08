@@ -3,8 +3,6 @@ title: 随机算法:图算法
 comments: true
 ---
 
-PDF批注: [https://huggingface.co/datasets/wenzexu/share/blob/main/Week%205%20-%20Graph%20Algorithms.pdf](https://huggingface.co/datasets/wenzexu/share/blob/main/Week%205%20-%20Graph%20Algorithms.pdf).
-
 本节主要聚焦于图算法. 现存的确定性算法不够牛掰, 所以尝试用随机算法.
 
 ## Min-Cut算法

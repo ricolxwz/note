@@ -3,8 +3,6 @@ title: 学习与检测未知概率分布
 comments: true
 ---
 
-**由于时间关系, 剩余内容以pdf注解的形式分享, 请下载: [https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%2011%20-%20Learning%20and%20testing%20probability%20distributions.pdf?download=true](https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%2011%20-%20Learning%20and%20testing%20probability%20distributions.pdf?download=true).**
-
 ## 主题
 
 这节课的主题是学习与检测未知分布, 也就是从一堆数据中学习到一个分布. 我们假设输入数据$x_1, ..., x_n$是从一个未知的分布$\mathbf{p}$中独立同分布抽样得到的, 目前是通过这些数据, 去了解$\mathbf{p}$本身. 我们会对这个未知的分布做一些有限的假设, 唯一的假设是它是定义在一个已知的, 离散的集合$\mathcal{X}$上面, 且空间大小是$k$, 即$|\mathcal{X}|=k$.

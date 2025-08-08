@@ -328,6 +328,7 @@ nav:
       - 命令: general/k8s/command.md
       - 示例: general/k8s/example.md
     - 随机算法:
+      - general/randomised-algorithm/index.md
       - 一些基础: general/randomised-algorithm/basic.md
       - 随机性, 概率和算法: general/randomised-algorithm/randomness.md
       - 集中界限: general/randomised-algorithm/concentration-bounds-tricks.md

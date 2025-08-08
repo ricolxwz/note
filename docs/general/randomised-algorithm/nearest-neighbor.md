@@ -3,8 +3,6 @@ title: 随机算法:最近邻问题
 comments: true
 ---
 
-PDF批注: [https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%207%20-%20Nearest%20Neighbours%20and%20Dimensionality%20Reduction.pdf?download=true](https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%207%20-%20Nearest%20Neighbours%20and%20Dimensionality%20Reduction.pdf?download=true)
-
 ## 最近邻问题
 
 上一周, 我们讨论的是字典问题, 即给定全集$\mathcal{X}$, 和其中的一个子集, 快速判断一个查询元素$x\in \mathcal{X}$是否属于$\mathcal{S}$. 我们可以用Bloom Filter和哈希表的方式解决这个问题.

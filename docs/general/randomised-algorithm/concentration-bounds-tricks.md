@@ -3,8 +3,6 @@ title: 随机算法:集中界限
 comments: true
 ---
 
-PDF批注: [https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%202%20-%20Concentration%20Bounds%2C%20and%20Tricks.pdf?download=true](https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%202%20-%20Concentration%20Bounds%2C%20and%20Tricks.pdf?download=true)
-
 ## 定义
 
 在随机算法中, "集中界限"指的是一系列用于分析随机变量偏离其期望值程度的概率不等式. 它们回答了这样一个核心问题: 给定一个随机变量, 它与其期望值之间的差值有多大, 又出现这种差值的概率是多少?

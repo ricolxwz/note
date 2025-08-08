@@ -3,8 +3,6 @@ title: 随机算法:随机性, 概率和算法
 comments: true
 ---
 
-PDF批注: [https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%201%20-%20Randomness%2C%20Probability%2C%20and%20Algorithms.pdf?download=true](https://huggingface.co/datasets/wenzexu/share/resolve/main/Week%201%20-%20Randomness%2C%20Probability%2C%20and%20Algorithms.pdf?download=true)
-
 ## 一个问题
 
 考虑一个问题: 洗一副牌: 然后按顺序依次查看它们. 在期望意义下, 两张连续的牌有相同花色的次数是多少? 用Python可以写为:
