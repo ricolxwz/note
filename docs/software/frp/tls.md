@@ -10,15 +10,8 @@ comments: true
 ### 生成服务端证书
 
 ```bash
-set -x
-# 获取服务器的外部ip
-external_ip_v4=$(curl -4 -s ifconfig.me)
-external_ip_v6=$(curl -6 -s ifconfig.me)
-# 移除现有的所有证书文件
-rm /home/wenzexu/man/frp/ssl/*
-# 配置OpenSSL
-mkdir -p /home/wenzexu/man/frp/ssl
-echo "[ ca ]
+cat > my-openssl.cnf << EOF
+[ ca ]
 default_ca = CA_default
 [ CA_default ]
 x509_extensions = usr_cert
@@ -40,7 +33,8 @@ authorityKeyIdentifier = keyid,issuer
 [ v3_ca ]
 subjectKeyIdentifier   = hash
 authorityKeyIdentifier = keyid:always,issuer
-basicConstraints       = CA:true" > /home/wenzexu/man/frp/ssl/my-openssl.cnf
+basicConstraints       = CA:true
+EOF
 
 openssl genrsa -out ca.key 2048
 openssl req -x509 -new -nodes -key ca.key -subj "/CN=example.ca.com" -days 5000 -out ca.crt
@@ -60,12 +54,8 @@ openssl x509 -req -days 365 -sha256 \
 ### 生成客户端证书
 
 ```bash
-set -x
-# 移除现有的所有证书文件
-rm /Users/wenzexu/man/frp/ssl/*
-# 配置OpenSSL
-mkdir -p /Users/wenzexu/man/frp/ssl
-echo "[ ca ]
+cat > my-openssl.cnf << EOF
+[ ca ]
 default_ca = CA_default
 [ CA_default ]
 x509_extensions = usr_cert
@@ -87,7 +77,8 @@ authorityKeyIdentifier = keyid,issuer
 [ v3_ca ]
 subjectKeyIdentifier   = hash
 authorityKeyIdentifier = keyid:always,issuer
-basicConstraints       = CA:true" > /Users/wenzexu/man/frp/ssl/my-openssl.cnf
+basicConstraints       = CA:true
+EOF
 
 # 导入刚才生成的ca
 
