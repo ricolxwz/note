@@ -7,7 +7,7 @@ comments: true
 
 ## 双向TLS
 
-### 生成服务端证书
+### 生成客户端证书
 
 ```bash
 cat > my-openssl.cnf << EOF
@@ -39,19 +39,20 @@ EOF
 openssl genrsa -out ca.key 2048
 openssl req -x509 -new -nodes -key ca.key -subj "/CN=example.ca.com" -days 5000 -out ca.crt
 
-openssl genrsa -out server.key 2048
-openssl req -new -sha256 -key server.key \
-    -subj "/C=XX/ST=DEFAULT/L=DEFAULT/O=DEFAULT/CN=server.com" \
+openssl genrsa -out client.key 2048
+openssl req -new -sha256 -key client.key \
+    -subj "/C=XX/ST=DEFAULT/L=DEFAULT/O=DEFAULT/CN=client.com" \
     -reqexts SAN \
-    -config <(cat my-openssl.cnf <(printf "\n[SAN]\nsubjectAltName=DNS:home.ricolxwz.download")) \
-    -out server.csr
+    -config <(cat my-openssl.cnf <(printf "\n[SAN]\nsubjectAltName=DNS:localhost,IP:127.0.0.1")) \
+    -out client.csr
+
 openssl x509 -req -days 365 -sha256 \
-	-in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
-	-extfile <(printf "subjectAltName=DNS:home.ricolxwz.download") \
-	-out server.crt
+    -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
+	-extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1") \
+	-out client.crt
 ```
 
-### 生成客户端证书
+### 生成服务端证书
 
 ```bash
 cat > my-openssl.cnf << EOF
@@ -82,15 +83,14 @@ EOF
 
 # 导入刚才生成的ca
 
-openssl genrsa -out client.key 2048
-openssl req -new -sha256 -key client.key \
-    -subj "/C=XX/ST=DEFAULT/L=DEFAULT/O=DEFAULT/CN=client.com" \
+openssl genrsa -out server.key 2048
+openssl req -new -sha256 -key server.key \
+    -subj "/C=XX/ST=DEFAULT/L=DEFAULT/O=DEFAULT/CN=server.com" \
     -reqexts SAN \
-    -config <(cat my-openssl.cnf <(printf "\n[SAN]\nsubjectAltName=DNS:localhost,IP:127.0.0.1")) \
-    -out client.csr
-
+    -config <(cat my-openssl.cnf <(printf "\n[SAN]\nsubjectAltName=DNS:home.ricolxwz.download")) \
+    -out server.csr
 openssl x509 -req -days 365 -sha256 \
-    -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
-	-extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1") \
-	-out client.crt
+	-in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
+	-extfile <(printf "subjectAltName=DNS:home.ricolxwz.download") \
+	-out server.crt
 ```
