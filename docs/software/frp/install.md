@@ -7,10 +7,6 @@ comments: true
 
 ## 服务端
 
-### SSL证书
-
-请见[这里](/software/frp/tls#生成服务端证书).
-
 ### `frps.toml`文件
 
 ```toml
@@ -29,22 +25,10 @@ allowPorts = [
 
 ## 客户端
 
-目前客户端主要用的是Mac Mini.
-
-### 准备
-
-```
-docker network create --subnet=172.18.0.0/24 app
-```
-
-### SSL证书
-
-请见[这里](/software/frp/tls#生成客户端证书).
-
 ### `frpc.toml`文件
 
 ```toml
-serverAddr = "<请填入地址>"
+serverAddr = "<请填入DNS地址>"
 serverPort = 5440
 auth.token = "<请填入token>"
 transport.protocol = "quic"
