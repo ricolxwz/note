@@ -2,7 +2,7 @@ site_name: 机器蝉
 site_author: ricolxwz
 site_url: https://note.ricolxwz.cc
 edit_uri: https://github.com/ricolxwz/note/edit/master/docs
-copyright: <p xmlns:cc="http://creativecommons.org/ns#" >版权所有 &copy 由 <span property="cc:attributionName">麦旋风超好吃</span> 采用 <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0&nbsp</a>许可证发布</p>
+copyright: <p xmlns:cc="http://creativecommons.org/ns#" >版权所有 &copy 由 <span property="cc:attributionName">麦旋风超好吃</span> 采用 <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0&nbsp</a>许可证发布 | 浙ICP备2025190393号-2</p>
 theme:
   name: material
   logo_light_mode: https://cdn.ricolxwz.asia/favicon-black-mc-be1517f676f6767b821a61dee1fe0de1.svg
