@@ -410,6 +410,21 @@ nav:
       - GNN: algorithm/gnn.md
       - U-Net: algorithm/u-net.md
       - RAG: algorithm/rag.md
+      - SFT:
+        - FLAN: algorithm/sft/flan.md
+        - T0: algorithm/sft/t0.md
+        - Self-Instruct: algorithm/sft/self-instruct.md
+        - Alpaca: algorithm/sft/alpaca.md
+        - Vicuna: algorithm/sft/vicuna.md
+      - RLHF:
+        - HP: algorithm/rlhf/hp.md
+        - InstructGPT: algorithm/rlhf/instructgpt.md
+        - DPO: algorithm/rlhf/dpo.md
+        - PPO: algorithm/rlhf/ppo.md
+        - ORPO: algorithm/rlhf/orpo.md
+        - KTO: algorithm/rlhf/kto.md
+        - Constitutional AI: algorithm/rlhf/constitutional-ai.md
+        - RLAIF: algorithm/rlhf/rlaif.md
   - 代码:
       - PyTorch快速入门: code/pytorch.md
       - Transformer品尝: code/transformer.md
