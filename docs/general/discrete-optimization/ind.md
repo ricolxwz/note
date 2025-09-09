@@ -8,6 +8,7 @@ comments: true
 * 单纯形法: [https://share.ricolxwz.download/84449b6441d8d0b29fd2ed44eedae412.pdf](https://share.ricolxwz.download/84449b6441d8d0b29fd2ed44eedae412.pdf)
 * 线性规划建模: [https://share.ricolxwz.download/0c6b7eb2c9aa86756e22d2ffa99a30fc.pdf](https://share.ricolxwz.download/0c6b7eb2c9aa86756e22d2ffa99a30fc.pdf)
 * [整数线性规划](/general/discrete-optimization/ilp)
+* [线性规划运用](/general/discrete-optimization/lpa)
 
 强对偶定理: 如果一个线性规划是可行的并且有界, 那么它的对偶问题也是可行的并且有界, 更进一步, 两个问题的最优目标值是相等的. 证明思路是借助单纯形法. 假设原问题有解并且可行, 那么单纯形法一定会找到一个最优的基本可行解x, 设B是x对应的基, 单纯形法的最优性判别条件是所有化简之后的检验数(reduced cost)非负, 这个时候, 我们发现, 当主问题达到最优解的时候, 我们令检验数中的(*)这一部分为y^T, 那么检验数非负的这个约束其实可以被转化为对偶问题的约束, 所以y是一个对偶可行解, 我们计算对偶目标值, 得到原问题和对偶问题的目标函数值是相同的, 由于弱对偶定理, 我们得出这个目标函数同时也是对偶问题的最优解.
 
