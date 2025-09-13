@@ -5,8 +5,8 @@ edit_uri: https://github.com/ricolxwz/note/edit/master/docs
 copyright: <p xmlns:cc="http://creativecommons.org/ns#" >版权所有 &copy 由 <span property="cc:attributionName">麦旋风超好吃</span> 采用 <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0&nbsp</a>许可证发布 | 浙ICP备2025190393号-2</p>
 theme:
   name: material
-  logo_light_mode: https://cdn.ricolxwz.asia/favicon-black-mc-be1517f676f6767b821a61dee1fe0de1.svg
-  logo_dark_mode: https://cdn.ricolxwz.asia/favicon-white-mc-9874bcbf2890db92e65db16e14c4edb4.svg
+  logo_light_mode: http://cdn.ricolxwz.asia/favicon-black-mc-be1517f676f6767b821a61dee1fe0de1.svg
+  logo_dark_mode: http://cdn.ricolxwz.asia/favicon-white-mc-9874bcbf2890db92e65db16e14c4edb4.svg
   language: zh
   custom_dir: overrides
   font: false
@@ -88,7 +88,7 @@ extra:
   #   provider: google
   #   property: G-65D8M5V1CL
 extra_css:
-  # - https://cdn.ricolxwz.asia/katex.min.css
+  # - http://cdn.ricolxwz.asia/katex.min.css
   - stylesheets/extra.css
   # - https://unpkg.com/katex@0/dist/katex.min.css
   - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css
