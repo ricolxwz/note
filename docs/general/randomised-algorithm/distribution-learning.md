@@ -12,8 +12,8 @@ comments: true
 假设我们有这样的一组数据, 这是加拿大"Lotto 6/49"彩票抽样结果的直方图,$k=49$, 总抽样数为$3665$. 现在想从中学习分布$\mathbf{p}$的信息.
 
 <figure markdown='1' id='fig1'>
-![](http://img.ricolxwz.cn/b4b63f0808c1d10dd2ca3302da1ddd4c.webp#only-light){ loading=lazy width='600' }
-![](http://img.ricolxwz.cn/b4b63f0808c1d10dd2ca3302da1ddd4c_inverted.webp#only-dark){ loading=lazy width='600' }
+![](https://img.ricolxwz.cn/b4b63f0808c1d10dd2ca3302da1ddd4c.webp#only-light){ loading=lazy width='600' }
+![](https://img.ricolxwz.cn/b4b63f0808c1d10dd2ca3302da1ddd4c_inverted.webp#only-dark){ loading=lazy width='600' }
 </figure>
 
 ### 我们的目标

@@ -8,7 +8,7 @@ comments: true
     - "Guess Who"游戏:
         - 简要介绍: [https://en.wikipedia.org/wiki/Guess_Who%3F](https://en.wikipedia.org/wiki/Guess_Who%3F)
         - 实际体验: [https://www.crazygames.com/game/guess-who-multiplayer](https://www.crazygames.com/game/guess-who-multiplayer)
-        - 人物: [https://web.archive.org/web/20170215034006/http://www.hasbro.com/upload/guesswho/GWc_Kooky-en_GB.pdf](https://web.archive.org/web/20170215034006/http://www.hasbro.com/upload/guesswho/GWc_Kooky-en_GB.pdf)
+        - 人物: [https://web.archive.org/web/20170215034006/https://www.hasbro.com/upload/guesswho/GWc_Kooky-en_GB.pdf](https://web.archive.org/web/20170215034006/https://www.hasbro.com/upload/guesswho/GWc_Kooky-en_GB.pdf)
     - Jupyter Notebook练习: [https://github.com/ricolxwz/gk/blob/cab00842852837fca5840936d3d38a82f512df64/docs/%E4%BF%A1%E6%81%AF%E8%AE%BA/Module_1_notebook.ipynb](https://github.com/ricolxwz/gk/blob/cab00842852837fca5840936d3d38a82f512df64/docs/%E4%BF%A1%E6%81%AF%E8%AE%BA/Module_1_notebook.ipynb)
 
 ## 信息
@@ -24,7 +24,7 @@ comments: true
 
 信息论在其他领域也有广泛的应用:
 
-![](http://img.ricolxwz.cn/ee100df97b4ef95d182b80b3439e5949.webp){:style="width:400px"}
+![](https://img.ricolxwz.cn/ee100df97b4ef95d182b80b3439e5949.webp){:style="width:400px"}
 
 ## 测量单位
 
@@ -50,7 +50,7 @@ comments: true
 
 函数图像为:
 
-![](http://img.ricolxwz.cn/e853e09c6248971025eaa9a7704a13c7.png){:style="width:400px"}
+![](https://img.ricolxwz.cn/e853e09c6248971025eaa9a7704a13c7.png){:style="width:400px"}
 
 ???+ example "例子"
 
@@ -131,7 +131,7 @@ comments: true
 
 文式图表示:
 
-![](http://img.ricolxwz.cn/c2e19c07e7381c048c819d78f8526aff.png){:style="width:400px"}
+![](https://img.ricolxwz.cn/c2e19c07e7381c048c819d78f8526aff.png){:style="width:400px"}
 
 ???+ example "例子"
 

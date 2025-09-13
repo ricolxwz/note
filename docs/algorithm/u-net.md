@@ -7,7 +7,7 @@ comments: true
 
 ## 摘要
 
-普遍认为, 成功训练深度神经网络需要数以千计的标注样本. 本文提出了一种充分依赖数据增强的新型网络架构与训练策略, 使得有限标注数据也能被高效利用. 该架构包含一条用于捕获上下文的收缩路径, 以及一条对称的扩张路径以实现精准的定位. 我们证明, 这样的网络可以端到端地从极少量图像中训练, 并在ISBI电子显微堆栈神经结构分割挑战赛中超越此前最佳的滑动窗口卷积网络方法. 使用相同的网络在透射光显微图像(相差和DIC)上训练后, 他们在2015年ISBI细胞跟踪挑战赛的相关类别中以巨大优势获得第一. 此外, 网络推理速度很快: 在最新GPU上分割一张512×512的图像耗时不到1秒. 完整实现(基于Caffe)及训练好的网络已发布于[http://lmb.informatik.uni-freiburg.de/people/ronneber/u-net](http://lmb.informatik.uni-freiburg.de/people/ronneber/u-net).
+普遍认为, 成功训练深度神经网络需要数以千计的标注样本. 本文提出了一种充分依赖数据增强的新型网络架构与训练策略, 使得有限标注数据也能被高效利用. 该架构包含一条用于捕获上下文的收缩路径, 以及一条对称的扩张路径以实现精准的定位. 我们证明, 这样的网络可以端到端地从极少量图像中训练, 并在ISBI电子显微堆栈神经结构分割挑战赛中超越此前最佳的滑动窗口卷积网络方法. 使用相同的网络在透射光显微图像(相差和DIC)上训练后, 他们在2015年ISBI细胞跟踪挑战赛的相关类别中以巨大优势获得第一. 此外, 网络推理速度很快: 在最新GPU上分割一张512×512的图像耗时不到1秒. 完整实现(基于Caffe)及训练好的网络已发布于[https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net](https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net).
 
 ???+ note "滑动窗口卷积"
 
@@ -30,8 +30,8 @@ comments: true
 本文基于一种更为优雅的架构——全卷积网络(fully convolutional network, FCN). ^^作者对该架构进行了修改与扩展, 使其在仅需极少量训练图像的情况下即可获得更精确的分割结果^^; 见[图1](#fig1). FCN的核心思想是: 在常规收缩(contracting)网络之后追加若干层, 将池化(pooling)操作替换为上采样(upsampling)操作, 继而逐步提高输出分辨率. 为了实现精确定位, **收缩路径中的高分辨率特征与上采样后的输出进行融合**, 随后的卷积层便可基于这些融合信息学习组装出更为细致的分割结果.
 
 <figure markdown='1' id='fig1'>
-![](http://img.ricolxwz.cn/ea7b522b02df0594678669305f245d3e.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/ea7b522b02df0594678669305f245d3e_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/ea7b522b02df0594678669305f245d3e.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/ea7b522b02df0594678669305f245d3e_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图1: U-Net架构(以最低分辨率32×32像素为例). 每个蓝色方块对应一个多通道特征图, 方块顶部标注通道数, 左下角标注x-y尺寸. 白色方块表示复制的特征图. 箭头表示不同操作. </figcaption>
 </figure>
 
@@ -44,8 +44,8 @@ FCN架构中的一个重要改进是, 上采样部分他们同样使用大量特
     这指不在输入周围补零, 核只能在"合法"区域滑动; 若输入大小为$n$, 卷积核大小为$f$, 步长为$s$, 输出大小变为$\lfloor\frac{n-f}{s}+1\rfloor$, 因此每次卷积都会让特征图在边缘缩小一圈. ​
 
 <figure markdown='1' id='fig2'>
-![](http://img.ricolxwz.cn/b052e82e71d0d1895b95edac6078e21e.webp#only-light){ loading=lazy width='400' }
-![](http://img.ricolxwz.cn/b052e82e71d0d1895b95edac6078e21e_inverted.webp#only-dark){ loading=lazy width='400' }
+![](https://img.ricolxwz.cn/b052e82e71d0d1895b95edac6078e21e.webp#only-light){ loading=lazy width='400' }
+![](https://img.ricolxwz.cn/b052e82e71d0d1895b95edac6078e21e_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>图2: 重叠拼块(overlap-tile)策略能够实现对任意大小图像的无缝分割(此处示例为电子显微镜堆栈中的神经结构分割). 在预测黄色区域的分割结果时, 网络需要蓝色区域内的图像数据作为输入; 若输入数据缺失, 则通过镜像扩展(mirroring)进行外推补全. </figcaption>
 </figure>
 
@@ -54,8 +54,8 @@ FCN架构中的一个重要改进是, 上采样部分他们同样使用大量特
 在许多细胞分割任务中, 另一个难点是将同类别, 相互接触的目标区分开来; 见[图3](#fig3). 为此, 作者提出在损失函数中使用加权损失(weighted loss), 对位于接触细胞之间的背景标签给予较大的权重.
 
 <figure markdown='1' id='fig3'>
-![](http://img.ricolxwz.cn/6e8e8b6c2a4e54e1db67f9e204097c47.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/6e8e8b6c2a4e54e1db67f9e204097c47_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/6e8e8b6c2a4e54e1db67f9e204097c47.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/6e8e8b6c2a4e54e1db67f9e204097c47_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图3: 玻片上的HeLa细胞, 使用DIC(differential interference contrast)显微镜成像.  (a) 原始图像.  (b) 与真实分割标签叠加; 不同颜色对应不同HeLa细胞实例.  (c) 生成的分割掩模(白色:前景, 黑色:背景).  (d) 像素级损失权重图, 用于强化网络对边界像素的学习.</figcaption>
 </figure>
 

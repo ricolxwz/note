@@ -9,7 +9,7 @@ comments: true
 
 哪吒监控使用的是Github, Gitlab, Gitee作为后台管理员账号, 所以需要创建一个OAuth App给哪吒监控提供授权登录的功能.
 
-1. 首先, 新建一个验证应用, 打开[https://github.com/settings/developers](https://github.com/settings/developers), 依次选择"OAuth Apps", "New OAuth App". 名字随便填写, 域名填写面板的访问域名, 如`http://dashboard.example.com:8008`. 回调地址填写`http://dashboard.example.com:8008/oauth2/callback`, 在面板域名后面加上后缀`/oauth2/callback`
+1. 首先, 新建一个验证应用, 打开[https://github.com/settings/developers](https://github.com/settings/developers), 依次选择"OAuth Apps", "New OAuth App". 名字随便填写, 域名填写面板的访问域名, 如`https://dashboard.example.com:8008`. 回调地址填写`https://dashboard.example.com:8008/oauth2/callback`, 在面板域名后面加上后缀`/oauth2/callback`
 2. 点击注册应用
 3. 保存页面中的Client ID, 然后点击"Generate a new client secret", 这个密钥要妥善保存
 
@@ -25,7 +25,7 @@ echo "/swapfile  none  swap  defaults  0 0" >> /etc/fstab
 
 ## 服务器中安装面板
 
-在服务器中, 运行安装脚本: 
+在服务器中, 运行安装脚本:
 
 ```bash
 curl -L https://raw.githubusercontent.com/naiba/nezha/master/script/install.sh -o nezha.sh && chmod +x nezha.sh && sudo ./nezha.sh
@@ -144,18 +144,18 @@ server {
         ssl_ciphers           ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
         ssl_prefer_server_ciphers off;
         location / {
-            proxy_pass http://127.0.0.1:8008;
+            proxy_pass https://127.0.0.1:8008;
             proxy_set_header Host $http_host;
             proxy_set_header      Upgrade $http_upgrade;
         }
         location ~ ^/(ws|terminal/.+|file/.+)$ {
-            proxy_pass http://127.0.0.1:8008;
+            proxy_pass https://127.0.0.1:8008;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "Upgrade";
             proxy_set_header Host $http_host;
         }
-        
+
 }
 server {
         listen 80;
@@ -167,7 +167,7 @@ server {
 
 ### 更新OAuth
 
-打开[https://github.com/settings/developers](https://github.com/settings/developers), 更新面板域名`https://dashboard.example.com`, 回调域名`http://dashboard.example.com/oauth2/callback`.
+打开[https://github.com/settings/developers](https://github.com/settings/developers), 更新面板域名`https://dashboard.example.com`, 回调域名`https://dashboard.example.com/oauth2/callback`.
 
 ## 设置DDNS
 

@@ -34,23 +34,23 @@ test_data = datasets.FashionMNIST(
 ```
 
 ``` title="输出"
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/train-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/train-images-idx3-ubyte.gz
 100%|██████████| 26.4M/26.4M [00:01<00:00, 20.9MB/s]
 Extracting drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/train-images-idx3-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw
 
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/train-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/train-labels-idx1-ubyte.gz
 100%|██████████| 29.5k/29.5k [00:00<00:00, 427kB/s]
 Extracting drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/train-labels-idx1-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw
 
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/t10k-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/t10k-images-idx3-ubyte.gz
 100%|██████████| 4.42M/4.42M [00:00<00:00, 6.11MB/s]
 Extracting drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/t10k-images-idx3-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw
 
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/t10k-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/t10k-labels-idx1-ubyte.gz
 100%|██████████| 5.15k/5.15k [00:00<00:00, 18.9MB/s]
 Extracting drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw/t10k-labels-idx1-ubyte.gz to drive/MyDrive/Data/FashionMNIST/FashionMNIST/raw
 ```
@@ -667,8 +667,8 @@ test_data = datasets.FashionMNIST(
 ```
 
 ``` title='输出'
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz to data/FashionMNIST/raw/train-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz to data/FashionMNIST/raw/train-images-idx3-ubyte.gz
 
   0%|          | 0.00/26.4M [00:00<?, ?B/s]
   0%|          | 65.5k/26.4M [00:00<01:12, 361kB/s]
@@ -684,15 +684,15 @@ Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-ima
 100%|##########| 26.4M/26.4M [00:01<00:00, 19.3MB/s]
 Extracting data/FashionMNIST/raw/train-images-idx3-ubyte.gz to data/FashionMNIST/raw
 
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz to data/FashionMNIST/raw/train-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz to data/FashionMNIST/raw/train-labels-idx1-ubyte.gz
 
   0%|          | 0.00/29.5k [00:00<?, ?B/s]
 100%|##########| 29.5k/29.5k [00:00<00:00, 325kB/s]
 Extracting data/FashionMNIST/raw/train-labels-idx1-ubyte.gz to data/FashionMNIST/raw
 
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz to data/FashionMNIST/raw/t10k-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz to data/FashionMNIST/raw/t10k-images-idx3-ubyte.gz
 
   0%|          | 0.00/4.42M [00:00<?, ?B/s]
   1%|1         | 65.5k/4.42M [00:00<00:12, 359kB/s]
@@ -703,8 +703,8 @@ Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-imag
 100%|##########| 4.42M/4.42M [00:00<00:00, 6.02MB/s]
 Extracting data/FashionMNIST/raw/t10k-images-idx3-ubyte.gz to data/FashionMNIST/raw
 
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz to data/FashionMNIST/raw/t10k-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz to data/FashionMNIST/raw/t10k-labels-idx1-ubyte.gz
 
   0%|          | 0.00/5.15k [00:00<?, ?B/s]
 100%|##########| 5.15k/5.15k [00:00<00:00, 38.2MB/s]
@@ -741,7 +741,7 @@ plt.show()
 ```
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/085abdcf90f7eb7f63be72b28979026e.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/085abdcf90f7eb7f63be72b28979026e.png){ loading=lazy width='500' }
 </figure>
 
 ### 创建自定义数据集
@@ -814,7 +814,7 @@ print(f"Label: {label}")
 ```
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/c0251616f9dcfd140eda0ec82b82eba5.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/c0251616f9dcfd140eda0ec82b82eba5.png){ loading=lazy width='500' }
 </figure>
 
 ``` title='输出'
@@ -846,8 +846,8 @@ ds = datasets.FashionMNIST(
 ```
 
 ``` title='输出'
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz to data/FashionMNIST/raw/train-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz to data/FashionMNIST/raw/train-images-idx3-ubyte.gz
 
   0%|          | 0.00/26.4M [00:00<?, ?B/s]
   0%|          | 65.5k/26.4M [00:00<01:14, 354kB/s]
@@ -864,15 +864,15 @@ Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-ima
 100%|##########| 26.4M/26.4M [00:01<00:00, 17.8MB/s]
 Extracting data/FashionMNIST/raw/train-images-idx3-ubyte.gz to data/FashionMNIST/raw
 
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz to data/FashionMNIST/raw/train-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz to data/FashionMNIST/raw/train-labels-idx1-ubyte.gz
 
   0%|          | 0.00/29.5k [00:00<?, ?B/s]
 100%|##########| 29.5k/29.5k [00:00<00:00, 326kB/s]
 Extracting data/FashionMNIST/raw/train-labels-idx1-ubyte.gz to data/FashionMNIST/raw
 
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz to data/FashionMNIST/raw/t10k-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz to data/FashionMNIST/raw/t10k-images-idx3-ubyte.gz
 
   0%|          | 0.00/4.42M [00:00<?, ?B/s]
   1%|1         | 65.5k/4.42M [00:00<00:12, 361kB/s]
@@ -882,8 +882,8 @@ Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-imag
 100%|##########| 4.42M/4.42M [00:00<00:00, 6.09MB/s]
 Extracting data/FashionMNIST/raw/t10k-images-idx3-ubyte.gz to data/FashionMNIST/raw
 
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz
-Downloading http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz to data/FashionMNIST/raw/t10k-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz
+Downloading https://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz to data/FashionMNIST/raw/t10k-labels-idx1-ubyte.gz
 
   0%|          | 0.00/5.15k [00:00<?, ?B/s]
 100%|##########| 5.15k/5.15k [00:00<00:00, 38.0MB/s]
@@ -1145,7 +1145,7 @@ loss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)
 上述代码对应于这个计算图:
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/7efcb858120ecb3c0d118ce548c1fa96.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/7efcb858120ecb3c0d118ce548c1fa96.png){ loading=lazy width='500' }
 </figure>
 
 在这个网络中, `w`和`b`是参数, 是我们要优化的对象, 因此, 我们需要去计算损失函数对应于这些参数的梯度. 为了实现这一点, 我们设置`requires_grad`为`True`.

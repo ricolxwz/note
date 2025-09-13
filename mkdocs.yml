@@ -2,11 +2,11 @@ site_name: 机器蝉
 site_author: ricolxwz
 site_url: https://note.ricolxwz.cc
 edit_uri: https://github.com/ricolxwz/note/edit/master/docs
-copyright: <p xmlns:cc="http://creativecommons.org/ns#" >版权所有 &copy 由 <span property="cc:attributionName">麦旋风超好吃</span> 采用 <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0&nbsp</a>许可证发布 | 浙ICP备2025190393号-2</p>
+copyright: <p xmlns:cc="https://creativecommons.org/ns#" >版权所有 &copy 由 <span property="cc:attributionName">麦旋风超好吃</span> 采用 <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0&nbsp</a>许可证发布 | 浙ICP备2025190393号-2</p>
 theme:
   name: material
-  logo_light_mode: http://cdn.ricolxwz.cn/favicon-black-mc-be1517f676f6767b821a61dee1fe0de1.svg
-  logo_dark_mode: http://cdn.ricolxwz.cn/favicon-white-mc-9874bcbf2890db92e65db16e14c4edb4.svg
+  logo_light_mode: https://cdn.ricolxwz.cn/favicon-black-mc-be1517f676f6767b821a61dee1fe0de1.svg
+  logo_dark_mode: https://cdn.ricolxwz.cn/favicon-white-mc-9874bcbf2890db92e65db16e14c4edb4.svg
   language: zh
   custom_dir: overrides
   font: false
@@ -88,7 +88,7 @@ extra:
   #   provider: google
   #   property: G-65D8M5V1CL
 extra_css:
-  # - http://cdn.ricolxwz.cn/katex.min.css
+  # - https://cdn.ricolxwz.cn/katex.min.css
   - stylesheets/extra.css
   # - https://unpkg.com/katex@0/dist/katex.min.css
   - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css

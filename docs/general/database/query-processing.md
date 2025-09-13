@@ -7,7 +7,7 @@ comments: true
 
 查询处理流程可以简单的分为:
 
-1. 语义检查和查询重写: 检查查询语句是否有语法错误或者语义问题. 然后将SQL查询转换为[关系代数表达式](/general/database/relational-algebra), 可以被表示为一颗表达式树(expression tree), 如[图](http://img.ricolxwz.cn/a99283244cfa79f7c7629924cc0cff5d.png)所示. 最后将[视图](/general/database/advanced-sql/#view)替换为实际的子查询, 以便进一步处理
+1. 语义检查和查询重写: 检查查询语句是否有语法错误或者语义问题. 然后将SQL查询转换为[关系代数表达式](/general/database/relational-algebra), 可以被表示为一颗表达式树(expression tree), 如[图](https://img.ricolxwz.cn/a99283244cfa79f7c7629924cc0cff5d.png)所示. 最后将[视图](/general/database/advanced-sql/#view)替换为实际的子查询, 以便进一步处理
 2. 查询优化: 在所有等价的查询计划中, 选择成本最低的计划:
     1. 逻辑查询计划优化: 在关系代数层面使用启发式方法(对表达式树进行重新排列操作, 以减少中间结果的大小, 减少临时数据的存储和计算量)进行优化
     2. 物理查询计划优化: 基于成本估算(最小化磁盘IO次数)选择合适的查询执行策略
@@ -83,9 +83,9 @@ comments: true
 
 ### 物理查询计划优化
 
-物理查询计划读取上一步产生的逻辑查询计划树然后产生一个查询计划. 该计划会为逻辑查询计划中的每一个操作符选择一个算法. 最终, 在所有等价的查询计划中找到一个最优计划, 选择IO次数最少的物理查询计划. 如[图](http://img.ricolxwz.cn/1d09130ce83e4a5cd350b1e3a7a973ac.png), 会产生一些不同的物理查询计划树.
+物理查询计划读取上一步产生的逻辑查询计划树然后产生一个查询计划. 该计划会为逻辑查询计划中的每一个操作符选择一个算法. 最终, 在所有等价的查询计划中找到一个最优计划, 选择IO次数最少的物理查询计划. 如[图](https://img.ricolxwz.cn/1d09130ce83e4a5cd350b1e3a7a973ac.png), 会产生一些不同的物理查询计划树.
 
-与逻辑查询计划树类似, 一个带有物理操作符的查询计划树称为物理查询计划, 如[图](http://img.ricolxwz.cn/9dc039f22f74584a5dffeb865e233b5d.png)o
+与逻辑查询计划树类似, 一个带有物理操作符的查询计划树称为物理查询计划, 如[图](https://img.ricolxwz.cn/9dc039f22f74584a5dffeb865e233b5d.png)o
 
 #### 计算成本
 

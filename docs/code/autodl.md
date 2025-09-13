@@ -11,8 +11,8 @@ comments: true
 
 ```bash
 # 西北设置
-git config --global http.proxy http://10.37.1.23:12798
-git config --global https.proxy http://10.37.1.23:12798
+git config --global http.proxy https://10.37.1.23:12798
+git config --global https.proxy https://10.37.1.23:12798
 ```
 
 取消设置:

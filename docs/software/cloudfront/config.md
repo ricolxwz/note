@@ -12,7 +12,7 @@ Cloudfront的正确使用方法为:
 3. 新增CloudFront Distribution
 4. 原站域名设置为test-origin.ricolxwz.net
 5. Certificate manager申请test.ricolxwz.net证书
-6. Alternate domain name (CNAME) *- optional* [新增test.ricolxwz.net](http://domain新增test.ricolxwz.net) (重要! 否则CloudFront会拒绝访问)
+6. Alternate domain name (CNAME) *- optional* [新增test.ricolxwz.net](https://domain新增test.ricolxwz.net) (重要! 否则CloudFront会拒绝访问)
 7. Custom SSL certificate *- optional: 选择刚才创建的test.ricolxwz.net的SSL证书*
 8. 点击创建
 9. 将CloudFront提供的边缘服务器域名如 [d3i8ytor5ql52c.cloudfront.net](https://d3i8ytor5ql52c.cloudfront.net/)在域名服务上那边添加一条CNAME记录, 即test.ricolxwz.net的CNAME记录为[d3i8ytor5ql52c.cloudfront.net](https://d3i8ytor5ql52c.cloudfront.net/), 大工告成!

@@ -43,8 +43,8 @@ comments: true
 就像之前一样, 我们会用$n=|\mathcal{S}|$表示子集当前的大小, 然而, 我们不再用$m$表示$\mathcal{X}$的大小, 而是用$\mathbb{R}^d$表示高纬度的空间, $d$是维度.
 
 <figure markdown='1' id='fig'>
-![](http://img.ricolxwz.cn/2946708885d86aa3869765a15f6332d3.webp#only-light){ loading=lazy width='200' }
-![](http://img.ricolxwz.cn/2946708885d86aa3869765a15f6332d3_inverted.webp#only-dark){ loading=lazy width='200' }
+![](https://img.ricolxwz.cn/2946708885d86aa3869765a15f6332d3.webp#only-light){ loading=lazy width='200' }
+![](https://img.ricolxwz.cn/2946708885d86aa3869765a15f6332d3_inverted.webp#only-dark){ loading=lazy width='200' }
 </figure>
 
 简易起见, 我们设定离线模式, 即假设一次性拿到$\mathcal{S}$的全部$n$个元素, 而这个子集$\mathcal{S}$是不会随着时间改变的, 即不会有新增也不会有和删除. 接着, 需要支持$Query(x)$, 给定查询点$x$, 返回使得$dist(x, y)$最小的$y\in \mathcal{S}$.

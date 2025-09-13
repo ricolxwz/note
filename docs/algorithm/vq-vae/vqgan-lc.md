@@ -14,8 +14,8 @@ comments: true
 扩大码本规模和提高码本利用率. 传统的VQGAN模型在潜空间中常常遇到码本坍缩的问题. 这使得他们难以将码本规模扩大到10000个条目以上. VQGAN的变体, 例如VQGAN-FC和VQGAN-EMA, 虽然在一定程度上有所改进, 但是在扩大码本规模和提高码本利用率方面仍然面临挑战. 近期的研究进展, 特别是收到LLaMA成功的启发, 增大码本规模可以显著提升模型性能.
 
 <figure markdown='1' id='fig1'>
-![](http://img.ricolxwz.cn/f4ac1344e5177624c9782f9d1d846f8b.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/f4ac1344e5177624c9782f9d1d846f8b_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/f4ac1344e5177624c9782f9d1d846f8b.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/f4ac1344e5177624c9782f9d1d846f8b_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图1: VQGAN的两个增强版本, 即VQGAN-FC(因子化编码)和VQGAN-EMA(指数移动平均), 随着码本规模的扩大, 其码本利用率和性能均出现下降. 相比之下, 作者提出的方法VQGAN-LC(大码本), 能够有效利用极大码本, 持续保持高达99%的利用率并获得了更高的性能. 作者突出了每个模型的最佳重建rFID. (b)三种模型在不同任务上的比较. 在图像生成方面, 作者评估了这三种VQGAN变体在GPT, LDM, DiT和SiT中的应用. </figcaption>
 </figure>
 
@@ -36,16 +36,16 @@ VQGAN的这种变体采用指数移动平均(EMA)策略来优化码本. 具体�
 ## 方法
 
 <figure markdown='1' id='fig2'>
-![](http://img.ricolxwz.cn/6c7fd98fd887a227d8898d46f5de2880.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/6c7fd98fd887a227d8898d46f5de2880_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/6c7fd98fd887a227d8898d46f5de2880.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/6c7fd98fd887a227d8898d46f5de2880_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图2: (a) VQGAN 的编码器-量化器-解码器结构, 其中码本与量化器相连.  (b) VQGAN 和 VQGAN-FC 中采用的码本优化策略.  (c) VQGAN-EMA 中使用的码本更新机制.  (d) 他们的 VQGAN-LC 中实现的码本初始化和量化过程. </figcaption>
 </figure>
 
 在这些 VQGAN 的增强版本中, 码本是随机初始化的. 在每次迭代期间, 只有与当前训练批次相关的码本条目的一小部分子集被优化. 结果是, 频繁优化的条目与编码器生成的特征图分布更加一致, 而较少优化的条目则仍然未被充分利用. 因此, 在训练和推理阶段, 码本的很大一部分仍然未被使用. [图3](#fig3)显示了训练周期内的码本利用率, 并可视化了训练完成后每个码本条目的使用频率.
 
 <figure markdown='1' id='fig3'>
-![](http://img.ricolxwz.cn/ee676e5ef54d7dad88a97155d45decac.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/ee676e5ef54d7dad88a97155d45decac_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/ee676e5ef54d7dad88a97155d45decac.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/ee676e5ef54d7dad88a97155d45decac_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图3: (左) 训练周期内的码本利用率. 如果一个码本条目在一个周期内至少被使用一次, 则认为该条目被利用.  (右) 所有周期内每个码本条目的平均使用频率, 其中每个像素代表一个条目. 所有模型均采用大小为 100K 的码本, 并在 ImageNet 上使用分辨率为 256 × 256 的图像. </figcaption>
 </figure>
 

@@ -13,8 +13,8 @@ transformer旨在学习序列数据中的长程交互, 在多种任务上持续�
 ## 简介
 
 <figure markdown='1' id='fig1'>
-![](http://img.ricolxwz.cn/b851e6b46df520955647ebc8a62eb6a7.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/b851e6b46df520955647ebc8a62eb6a7_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/b851e6b46df520955647ebc8a62eb6a7.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/b851e6b46df520955647ebc8a62eb6a7_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图1: 该方法使transformer能够合成如本例所示的高分辨率图像, 分辨率为1280x460 pixels.</figcaption>
 </figure>
 
@@ -33,8 +33,8 @@ Transformer模型正迅速崛起——它们已成为语言任务的事实标准
 高分辨率图像合成要求模型能够理解图像的整体构图, 既能生成局部逼真的细节, 也能保持全局一致的模式. 因此, 我们不再使用像素来表示图像, 而是将其表示为由codebook中感知丰富的图像成分所组成的组合. 通过如下面第一小节所述学习一套高效编码, 我们能够显著减少这些组合的描述长度, 从而按照下面第二小节中的方法, 使用transformer架构高效地建模图像内部的全局关联. 如下图所示, 该方法在无条件和有条件设置下均能生成逼真且连贯的高分辨率图像.
 
 <figure markdown='1' id='fig2'>
-![](http://img.ricolxwz.cn/07632a674c37fb011518d820d6c782d5.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/07632a674c37fb011518d820d6c782d5_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/07632a674c37fb011518d820d6c782d5.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/07632a674c37fb011518d820d6c782d5_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图2: 该方法采用卷积学习蕴含上下文信息的视觉部件码本, 随后使用自回归transformer架构对其组合进行建模. 离散码本作为两种架构之间的接口, 基于patch的判别器在保持高感知质量的同时实现强压缩. 此方法将卷积方法的高效性引入基于transformer的高分辨率图像合成. </figcaption>
 </figure>
 
@@ -139,8 +139,8 @@ p(s|c)=\prod_i p(s_i|s_{<i},c)
 #### 生成高分辨率图像
 
 <figure markdown='1' id='fig'>
-![](http://img.ricolxwz.cn/b4e5eadbaaec484057481f7886a58e4b.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/b4e5eadbaaec484057481f7886a58e4b_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/b4e5eadbaaec484057481f7886a58e4b.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/b4e5eadbaaec484057481f7886a58e4b_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图3: 滑动注意力窗口</figcaption>
 </figure>
 

@@ -12,7 +12,7 @@ comments: true
 词汇表是一种用one-hot编码来表示词的方法, 例如, 如果man在字典里是第5391个, 那么就可以表示为一个向量, 只在5391这个位置上是1, 其他地方为0, 使用$O_{5391}来代表这个量$; 如果woman的编号是9853, 那么这个向量在9853处为1, 其他地方为0, 使用$O_{9853}$来代表这个量. 其他的词如king, queen, apple, orange都可以这样表示出来. 这种表示方法最大的缺点就是将每个词孤立了起来, 这样使得算法对相关词的泛化能力不强.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/c2ca6351fdf76fe5b747211d159b8472.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/c2ca6351fdf76fe5b747211d159b8472.png){ loading=lazy width='500' }
 </figure>
 
 假如你已经学习到了一个语言模型, 但你看到"I want a glass of orange \_\_"的时候, 那么下一个词的时候会是什么? 很可能是juice. 即使你的学习算法已经学习到了"I want a glass of orage juice"这样的一个很可能的橘子, 但是如果看到"I want a glass of apple __", 因为算法不知道apple和orange的关系很接近, 就像man和woman, king和queen一样. 所以算法很难从已经知道的orange juice是一个很常见的东西, 而明白apple juice也是很常见的东西或者说是常见的句子. 因为任何两个one-hot向量的内积都是0, 说明apple和orange是不相关的, 还无法表示相关的程度, 如无法知道apple, orange的相关程度和apple, peach的相关程度.
@@ -22,7 +22,7 @@ comments: true
 换一种表示方式, 如果不用one-hot表示, 而是用特征化的表示来表示每个词, man, woman, king, queen, apple, orange或者字典里面的任何一个单词, 我们学习这些词的特征或者数值. 举一个例子, 对于这些词, 比如我们想知道这些词在Gender上的表示是怎么样的, 假定男性的性别是+1, 女性的性别是-1, 那么man的这个Gender的属性可以用+1表示, woman的Gender属性可以用-1表示. 最终根据经验king就是-0.95(剩下的0.05人妖是吧), queen是+0.97. 另外一个特征是这些词有多高贵(Royal), man, woman和高贵没多大关系, 所以它们的特征值接近于0, 而king和queen很高贵, apple, orange跟高贵也没多大关系. 那么年龄呢? man和woman一般没有年龄的意思, 也许man和woman隐藏着成年人的意思, 但也可能接近于young和old之间, 所以它们的值也接近于0, 而通常king和queen都是成年人, apple和orange就跟年龄没什么关系了. 还有一个特征, 这个词是否是食物, man不是食物, woman不是食物, king和queen也不是, 但是apple和orange是食物. 当然还可以有很多其他特征, 如Size, Cost, Alive, Action, Noun, Verb等等.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/c679a2cc7a679aaa676627f906fc80b4.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/c679a2cc7a679aaa676627f906fc80b4.png){ loading=lazy width='500' }
 </figure>
 
 所以你可以想很多的特征, 为了说明, 假设有300个特征, 这样的话对于每个词就有了一列数字, 如用300维的向量来表示man这个词, 使用$e_{5391}$来表示这个量. 现在, 如果我们用这种方法来表示apple和orange, 那么apple和orange的表示肯定会非常相似, 可能有一些特征不太一样, 比如颜色, 口味.. 但是总的来说apple和orange的大部分特征都是差不多的, 或者说有相似的值, 这样它们两个词的内积就会比较大.
@@ -34,7 +34,7 @@ comments: true
 如果我们能够学习到一个300维的特征向量, 或者说是300维的词嵌入, 通常我们可以做一件事情, 就是把这300维度的数据嵌入到一个二维空间里面, 这样就可以可视化了. 常用的可视化算法是t-SNE算法[^2]. 如果观察这种词嵌入的表示方法, 你会发现man和woman这些词聚集在一块, 如下图, king和queen聚集在一块, 动物聚集在一起, 水果聚集在一起.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/0455d8f6163ce2dc94ea360c32a9012d.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/0455d8f6163ce2dc94ea360c32a9012d.png){ loading=lazy width='500' }
 </figure>
 
 这种表示方式用的是在300维的空间里的特征表示, 这叫做嵌入(embeddings), 如orange会被嵌入到300维空间的一个点上, apple这个词会被嵌入到300维空间的另一个点上, 在上图中由于画不出300维, 所以使用一个3维的点代替. t-SNE算法就是把这个空间映射到低维空间, 可以画出一个2维图像然后观察.
@@ -50,7 +50,7 @@ comments: true
 但是如果你用特征化的表示方法, 即词嵌入. 那么用词嵌入作为输入, 如果你看到一个新的输入"Robert Lin is an apple farmer". 因为你知道apple和orange很相似, 即apple和orange的词向量很相似, 那么相相当于有了类似的上下文, 算法可以很容易就知道Robert Lin也是一个人的名字. 再举一个例子, 如果这个时候变成了"Robert Lin is a durian cultivator", 训练集里面甚至没有durian和cultivator这两个词, 但是如果有一个已经学习好的词嵌入, 它会告诉你durian是水果, 就像orange一样, cultivator和farmer差不多, 那么也可以推断出Robert Lin是一个人.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/4927908c6964b1d8d55d9008a7e543ac.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/4927908c6964b1d8d55d9008a7e543ac.png){ loading=lazy width='500' }
 </figure>
 
 ### 迁移学习 {#transfer-learning}
@@ -58,7 +58,7 @@ comments: true
 词嵌入能够达到这样的效果, 其中的一个原因是学习词嵌入的算法会考察非常大的文本集, 也许是从网上找到的, 这样你可以考察很大的数据集甚至是1亿个单词, 甚至达到100亿都是合理的. 通过考察大量的**无标签**的文本, 你可以发现orange和durian相近, farmer和cultivator相近. 尽管你只有一个很小的训练集, 也许训练集里只有100000个单词, 你也可以通过迁移学习将从互联网上免费获得的大量的词嵌入表示运用到你的任务中.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/d89785032c4d1b77f250e06a473e0d70.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/d89785032c4d1b77f250e06a473e0d70.png){ loading=lazy width='500' }
 </figure>
 
 如上图所示, 迁移学习的步骤可以表示为:
@@ -78,7 +78,7 @@ comments: true
 之前我们讲到, 词嵌入的作用之一是捕捉相似词之间的关系. 词嵌入还有一个特性就是它能实现类比推理, 它更关注捕捉不同实体之间的关系模式. 假如提出一个问题, man如果对应woman, 那么king应该对应什么, 都知道king应该对应queen, 这里强调的是性别差异模式, 能否有一种算法能够自动推导出这种关系.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/bedd9aba9a35a07b6bb3d6d499077f07.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/bedd9aba9a35a07b6bb3d6d499077f07.png){ loading=lazy width='500' }
 </figure>
 
 我们使用一个四维向量来表示man, 标识为$e_{man}$, 而旁边这个表示woman的嵌入向量, 称其为$e_{woman}$, 对king和queen也是同样的表示方法. 这里为了简化表示假设使用的是$4$维的嵌入向量, 对向量$e_{man}$和$e_{woman}$进行减法运算, 即:
@@ -146,7 +146,7 @@ $$\mathbf{e}_{\text{king}} - \mathbf{e}_{\text{queen}} =
 这个结果表示, man和woman主要的差异是gender上的差异, 而king和queen之间的主要差异, 根据向量的表示, 也是gender上的差异, 这就是为什么$e_{man}-e_{woman}$和$e_{king}-e_{queen}$的结果是相同的. 所以的出这种方法对应的就是当算法被问及man对woman相当于king对什么的时候, 算法所做的就是计算$e_{man}-e_{woman}$, 然后找到一个向量也就是找出一个词, 使得$e_{man}-e_{woman}\simeq e_{king}-e_{?}$, 也就是说, 当这个新词是queen的时候, 式子的左边会近似地等于右边. 这种思想源于Tomas Mikolov等人的研究[^6].
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/d999f07762bbe97c0eb0c884eb2220f3.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/d999f07762bbe97c0eb0c884eb2220f3.png){ loading=lazy width='500' }
 </figure>
 
 那么, 如何将这种思想写成算法呢? 在上图中, 词嵌入向量在一300维的空间里面, 每个单词对应的是300维空间上的一个点. 所示的箭头代表的就是向量在gender这一特征的差值, 可以看到man, woman的差值非常接近于king, woman之间的差值. 为了得出上述类比推理, 你能做的就是找到单词$w$使得$e_{man}-e_{woman}\simeq e_{king}-e_{w}$这个等式成立. 我们要做的是把$e_w$放到等式的一边, 于是等式的另一边就是$e_{king}-e_{man}+e_{woman}$, 这个式子的意思就是找到单词$w$最大化$e_w$和$e_{king}-e_{man}+e_{woman}$的相似度. 如果理想的话, 应该会得到单词queen. 但是, 如果查看一些研究文献不难发现, 通过这种方法做类比推理的准确率大概只有30%-75%.
@@ -156,7 +156,7 @@ $$\mathbf{e}_{\text{king}} - \mathbf{e}_{\text{queen}} =
 余弦函数是一种常用的相似度测量函数. 在余弦相似度中, 向量$u$和$v$之间的相似度可以被定义为$sim(u, v)=\frac{u^Tv}{||u||_2||v||_2}$. 如果$u$和$v$非常相似, 那么它们的内积会非常大, 当夹角是$90$度的话, 那么余弦相似度是0, 所以说, 这种相似性取决于向量$u$和$v$之间的角度.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/fc0d12a75b44f0ad50c7817db6b35c6d.png){ loading=lazy width='700' }
+  ![](https://img.ricolxwz.cn/fc0d12a75b44f0ad50c7817db6b35c6d.png){ loading=lazy width='700' }
 </figure>
 
 用到上述的例子中, 就是计算$e_w$和$e_{king}-e_{man}+e_{woman}$的余弦相似度.
@@ -168,7 +168,7 @@ $$\mathbf{e}_{\text{king}} - \mathbf{e}_{\text{queen}} =
 和之前一样, 假设我们的词汇表含有$10000$个单词, 词汇表里有a, aaron, orange, zulu, 等等词汇. 我们要做的就是学习一个嵌入矩阵$E$, 它是一个$300\times 10000$的矩阵. 假设orange的单词编号是$6257$, 使用$O_{6257}$来表示这个one-hot向量, 显然它的形状是$10000\times 1$, 它不像下图(右侧)中的那么短, 它的高度应该和左边的那个嵌入矩阵的宽度($10000$)相等.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/1d1a0c6e49eaa13069990aa098f06e5c.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/1d1a0c6e49eaa13069990aa098f06e5c.png){ loading=lazy width='500' }
 </figure>
 
 假设这个嵌入矩阵叫做$E$. 如果用$E$去乘右边的$O_{6257}$, 那么就会得到一个$300$维的向量, 产生的矩阵的形状是$300\times 1$的, 也就是一个列向量. 这个列向量的第一个元素(图中编号6)对应的就是嵌入矩阵中orange列的第一个元素(图中编号5), 以此类推, **得到的列向量与orange列构成的向量是相等的. 所以说每个单词的词向量其实就存储在嵌入矩阵的对应列中**.
@@ -195,19 +195,19 @@ $$\mathbf{e}_{\text{king}} - \mathbf{e}_{\text{queen}} =
 假如你在构建一个语言模型, 并且用神经网络来实现这个模型. 在训练过程中, 你可能想要你的神经网络能够做到比如输入"I want a glass of orange __", 然后预测这句话的下一个词. 在每个单词下面, 我们都写上了它们在词汇表中对应的序号. 从第一个词"I"开始, 建立一个one-hot向量表示这个单词, 用为经过初始化的$E$乘以这个$O_{4343}$, 得到嵌入向量$e_{4343}$, 然后对于其他的词都做同样的操作... 于是现在你有6个300维的向量, 把他们全部放到神经网络里面, 经过神经网络之后再通过softmax层, 这个softmax产生的输出代表10000个单词作为下一个词的可能性, 然后根据真实的下一个词计算误差反向传播, 更新嵌入矩阵$E$.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/a0fdd6fae7201e9347ff9a8a2199313c.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/a0fdd6fae7201e9347ff9a8a2199313c.png){ loading=lazy width='500' }
 </figure>
 
 实际上更加常见的做法是使用一个固定的历史窗口, 举个例子, 你总是想预测四个单词后的下一个单词, 注意这里的4是超参数. 这就意味着你的神经网络输入的不是一个6个300维的向量, 而是4个300维的向量.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/c20828ff376bed49b8ce6268ffad46c0.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/c20828ff376bed49b8ce6268ffad46c0.png){ loading=lazy width='500' }
 </figure>
 
 这个是早期比较成功的学习词嵌入的方法之一. 我们先来概括一下这个算法, 看看我们怎样来推导出更加简单的算法. 假设你的训练集中有这样一个更长的句子"I want a glass of orange juice to go aloing with my cereal.". 我们将需要预测的词称为目标词, 即juice为目标词. 在上述方法中, 目标词是通过前面的4个词推导出来的. 如果你要建立一个[语言模型](https://zh.wikipedia.org/zh-cn/%E8%AA%9E%E8%A8%80%E6%A8%A1%E5%9E%8B), 那么一般选取目标词前的几个词作为上下文, 但是如果你的目标不是建立目标模型的话, 那么可以选择其他的上下文.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/623d942029f748dededcff06919d5587.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/623d942029f748dededcff06919d5587.png){ loading=lazy width='500' }
 </figure>
 
 🌟比如, 提出这样一个学习问题, 它的上下文是左边和右边的四个词, 如上图编号3所示. 这个问题需要将左边和右边的4个词的嵌入向量供给给神经网络, 来预测中间的单词是什么. 或者用一个更加简单的上下文, 也许只提供目标词的前一个词, 比如只给出orange这个词来预测orange后面的是什么, 这又是另一个学习问题了, 可以构建一个神经网络, 只把目标词的前一个词或者说前一个词的嵌入向量输入到神经网络来预测该词的下一个词, 然后通过计算误差反向传播得到嵌入矩阵. 还有一个效果非常好的做法是告诉你目标词, 比如说, 告诉你glass, 然后附近有一个词和glass的位置很近, 那么这个词会是什么, 对应的是skip-gram模型的思想🌟.
@@ -223,13 +223,13 @@ $$\mathbf{e}_{\text{king}} - \mathbf{e}_{\text{queen}} =
 假设在训练集中给定了这样的一个句子: "I want a glass of orange juice to go along with my careal.", 在Skip-Gram模型中, 我们要做的是抽取上下文和目标词配对, 来构造一个监督学习问题. 上下文不一定总是在目标词之间离得最近的四个单词, 或者最近的$n$个单词. 我们要做的是随机选择一个词作为上下文词, 比如选择orange, 然后在一定词距内随机选择另一个词作为目标词, 比如正好选到了juice, 或者是glass, 又或者是my.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/4ad603bef5dddd0461c51d8145db5ae4.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/4ad603bef5dddd0461c51d8145db5ae4.png){ loading=lazy width='500' }
 </figure>
 
 继续假设使用一个10000词的词汇表. 我们要解决的监督学习问题是一种映射关系, 从上下文$c$, 比如单词orange, 到某个目标词, 记为$t$, 可能是单词juice, glass或者my... 我们可以拿嵌入矩阵$E$乘以向量$O_c$, 然后得到了输入的上下文词的嵌入向量$e_c=EO_c$, 然后把向量$e_c$喂入一个softmax单元, 输出属于词汇表中某个单词的概率.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/8378cbeae5c72435e821c08ce1a3a0c7.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/8378cbeae5c72435e821c08ce1a3a0c7.png){ loading=lazy width='500' }
 </figure>
 
 Softmax模型对于某个单词的概率可以表示为:
@@ -251,7 +251,7 @@ $$L(\hat{y}, y) = -\sum_{i=1}^{10000} y_i \log \hat{y}_i$$
 这里有一些解决方案, 如分级(hierarchical)的softmax分类和负采样. 这里先来讲分级分类器. 它通过构造一棵分类树, 逐步缩小目标词的范围, 而不是一次性计算整个词汇表中的词和$c$的相似度. 想象如果你有一个分类器(如下图编号1所示), 它告诉你目标词是在词汇表的前5000还是后5000个词中, 如果这个二分类器告诉你这个词在前5000个词中, 那么往左走, 然后第二个分类器会告诉你在词汇表的前2500个词还是后2500个词中, 依此类推, 直到最终你找到一个词准确所在的分类器. 注意, 这棵树的每个内部节点都会有一个参数向量$\theta_n$, 表示该节点的分类器, 在该节点, 判断应该往左走还是往右走的方法是计算该目标词属于左子树的概率$p(左子树|n_root)=\sigma(\theta_{root}^Te_c)$, 如果概率$p(左子树|n_{root})>0.5$, 选择左子树, 否则选择右子树. 这样的计算成本和词汇表大小的对数成正比, 而不是词汇表大小的线性函数.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/251511adf4332b5ca4ae05c4adbe8dc1.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/251511adf4332b5ca4ae05c4adbe8dc1.png){ loading=lazy width='500' }
 </figure>
 
 需要提一嘴的是, 在实际中分级分类器不会是一棵完美平衡的分类树或者说一棵左边和右边分支的词数都相同的对称树. 实际上, 分级分类器会被构造成常用词在顶部, 然而不常用的词像是durian会在树的更深处(如上图编号2所示), 因为更常见的词使用会更频繁, 所以你可能只需要少量检索就可以获得常用单词像是the和of, 更少见的词durian适合在较深的地方.
@@ -263,7 +263,7 @@ $$L(\hat{y}, y) = -\sum_{i=1}^{10000} y_i \log \hat{y}_i$$
 在Skip-Gram中, 学习问题就是给定一对单词, 比如orange和juice, 我们需要去预测这是否是一对上下文词-目标词. 在这个例子中, orange和juice是正样本, 那么orange和king就是负样本. 我们要做的是, 先随机抽取一个上下文词, 然后在一定词距比如说正负10个词距内选择一个目标词, 这就是生成这个表的第一行, 记为orange-juice-1, 然后为了生成一个负样本, 你将用相同的上下文词, 再在字典中随机选择一个词, 比如king, 记为orange-king-0, 继续, 生成orange-book-0, orange-the-0, orange-of-0(注意, 即使of出现在orange前面, 但是编号为3的位置应该是juice, 所以还是0), 总共负采样$K$次, 如下图所示.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/1128fac230e745b4f267079c02ff6cf1.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/1128fac230e745b4f267079c02ff6cf1.png){ loading=lazy width='500' }
 </figure>
 
 ???+ note "优化目标和任务的区别"
@@ -275,7 +275,7 @@ $$L(\hat{y}, y) = -\sum_{i=1}^{10000} y_i \log \hat{y}_i$$
 如何选取$K$? 原文作者推荐如果小数据集的话, $K$从5到20比较好, 如果数据集比较大, $K$就小一点, 对于更大的数据集$K$就等于2到5.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/1fe9baf0e00324f77d80153af58395b1.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/1fe9baf0e00324f77d80153af58395b1.png){ loading=lazy width='500' }
 </figure>
 
 那么这个优化目标2怎么表示呢? 上图中的公式是优化目标1中使用的softmax函数. 那么在优化目标2中, 输入是$x$(编号2), 输出是$y$(编号3), 仍然使用$c$表示上下文词, $t$表示*可能*的目标词, 再使用$y$表示0和1, 表示是正采样还是负采样. 我们要做的是定义一个逻辑回归模型, 给定输入的$c, t$, 给出$y=1$的概率, 即:
@@ -285,7 +285,7 @@ $$p(y=1|c, t)=\sigma(\theta_t^T e_c)$$
 如果输入词是orange, 它的one-hot向量和嵌入向量相乘得到词向量, 我们就得到了10000个可能的逻辑回归分类问题, 但是并不是每次迭代都进行10000次逻辑判断, 而是只进行5次逻辑判断($K=4$), 这就极大降低了计算量和参数更新的成本.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/a16f699705c14f2d8950b92c9745694d.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/a16f699705c14f2d8950b92c9745694d.png){ loading=lazy width='500' }
 </figure>
 
 这个算法还有一个重要的细节是如何选取负样本, 一个办法是对上图中中间的这些词进行采样, 可以根据词语出现的频率进行采样, 但是这会导致在like, the, of, and出现的频率较高, 也可以根据词汇表进行均匀采样, 即每个单词选中的概率都是$1/10000$, 但是这对于英文单词没有代表性. 原文作者等人根据经验, 发现如下的采样效果较好, 它位于这两个极端采样的方法之间:
@@ -303,12 +303,12 @@ $$p(w_i) = \frac{f(w_i)^{\frac{3}{4}}}{\sum_{j=1}^{10000} f(w_j)^{\frac{3}{4}}}$
 于Skip-Gram刚好相反, CBOW(连续词袋模型, Continuous Bag-Of-Words Model)是获得中间词两边的上下文, 然后用周围的词去预测中间的词. CBOW对于小型数据库比较合适, 而Skip-Gram在大型语料库中表现较好.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/c0f1d855a804b0c9160c7347e28a9bac.jpg){ loading=lazy width='200' }
+  ![](https://img.ricolxwz.cn/c0f1d855a804b0c9160c7347e28a9bac.jpg){ loading=lazy width='200' }
   <figcaption>Skip-Gram模型</figcaption>
 </figure>
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/b64e1c1dbc76bc2c893d6ac0c98ff2f4.jpg){ loading=lazy width='200' }
+  ![](https://img.ricolxwz.cn/b64e1c1dbc76bc2c893d6ac0c98ff2f4.jpg){ loading=lazy width='200' }
   <figcaption>CBOW模型</figcaption>
 </figure>
 
@@ -325,14 +325,14 @@ $$\text{minimize} \sum_{i=1}^{10,000} \sum_{j=1}^{10,000} f(X_{ij}) \left( \thet
 这个公式的目标是最小化一个误差值, 误差是由词对$i$和$j$的实际共现频率$\log X_{ij}$和模型预测值$\theta_i^T e_j+b_i+b_j'$的差距组成的.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.cn/4e3c06ef5d59815da01c40a227f227bc.png){ loading=lazy width='500' }
+  ![](https://img.ricolxwz.cn/4e3c06ef5d59815da01c40a227f227bc.png){ loading=lazy width='500' }
 </figure>
 
 附加一些细节, 如果$X_{ij}$等于0的话, 那么$\log 0$是未定义的, 是负无穷大的, 解决方法是在前面添加一个额外的加权项$f(X_{ij})$, 同时有一个约定, $0\log 0=0$. 对于$X_{ij=0}$, 模型直接跳过不进行计算, 这就意味着, 优化公式实际上只关注至少出现过一次的词对. 此外, 权重函数的设计也有几个启发性原则. 对于this, is, of, a这样的高配词非常常见, 它们之间的共现次数会远高于其他词对, 权重函数对于这类情况会进行适当限制, 同时不给不常用的词, 如durion太小的权值.
 
 由于上述对称性, 目标嵌入矩阵和上下文嵌入矩阵是对称的, 所以对于一个词$w$的词向量, 那么它最终的词向量可以通过对于两个嵌入矩阵所对应位置的词向量取平均得到, 即$e_w^{(final)}=\frac{e_w+\theta_w}{2}$. 不像之前的模型, $\theta$和$e$的功能不一样, 因此那里不能取平均, 通常拿$e$作为最终的嵌入矩阵.
 
-[^1]: 深度学习笔记. (不详). 从 http://www.ai-start.com/dl2017/html/lesson5-week2.html#header-n169
+[^1]: 深度学习笔记. (不详). 从 https://www.ai-start.com/dl2017/html/lesson5-week2.html#header-n169
 [^2]: Maaten, L. van der, & Hinton, G. (2008). Visualizing data using t-SNE. Journal of Machine Learning Research, 9(86), 2579–2605.
 [^3]: Song, X., Salcianu, A., Song, Y., Dopson, D., & Zhou, D. (2021). Fast WordPiece tokenization (No. arXiv:2012.15524). arXiv. https://doi.org/10.48550/arXiv.2012.15524
 [^4]: Sennrich, R., Haddow, B., & Birch, A. (2016). Neural machine translation of rare words with subword units (No. arXiv:1508.07909). arXiv. https://doi.org/10.48550/arXiv.1508.07909

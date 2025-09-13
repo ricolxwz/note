@@ -16,8 +16,8 @@ Whisper认为, 在语音识别研究中, 对弱监督预训练的规模化一直
 ## 插图
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/2d62f64b0927c46e4caa061acf7cce52.webp#only-light){ loading=lazy width='1000' }
-![](http://img.ricolxwz.cn/2d62f64b0927c46e4caa061acf7cce52_inverted.webp#only-dark){ loading=lazy width='1000' }
+![](https://img.ricolxwz.cn/2d62f64b0927c46e4caa061acf7cce52.webp#only-light){ loading=lazy width='1000' }
+![](https://img.ricolxwz.cn/2d62f64b0927c46e4caa061acf7cce52_inverted.webp#only-dark){ loading=lazy width='1000' }
 <figcaption>方法概览. 他们训练了一个序列到序列的Transformer模型, 涵盖多种语音处理任务, 包括多语言语音识别、语音翻译、口语语言识别以及语音活动检测. 所有这些任务都被统一表示为需要由解码器预测的一系列tokens, 从而使单一模型能够替代传统语音处理管线中的多个不同阶段. 多任务训练格式使用了一组特殊的tokens, 作为任务指定或分类目标, 相关细节在后续小节中进一步说明</figcaption>
 </figure>
 

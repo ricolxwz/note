@@ -22,22 +22,22 @@ MAE是一种更加通用的[去噪自编码器](/algorithm/ae/#denoising-ae), �
 3. AE的解码器, 在文本和图像的重构中扮演者不同的角色. 在视觉中, 解码器对像素进行重构, 因此其输出的语义水平低于普通的识别任务, 限制了其在表示中的高层语义信息的表达. 而文本中, 解码器预测的是缺失的单词, 这些单词中包含丰富的语义信息, 解码器需要理解上下文并有意义的词汇, 涉及更高层次的语义理解. 在BERT中, 解码器很明显是一个MLP, 但是作者发现对于图像来说, 解码器的设计非常重要, 直接影响潜在表示中的语义信息的层次
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/69a7e7aaf32d294a74b33f7a99df3a60.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/69a7e7aaf32d294a74b33f7a99df3a60_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/69a7e7aaf32d294a74b33f7a99df3a60.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/69a7e7aaf32d294a74b33f7a99df3a60_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>ImageNet验证图像的结果, 对于每个triplet, 作者展示了掩蔽图像(左), MAE的重建结果(中)以及真实图像(右). 掩盖比例为80%, 仅仅留下196个patches中的39个. 由于为在可见补丁上计算损失. 注意, 由于在可见patches(那39个)未计算损失, 模型在可见patches上的输出在质量上较差, 可以简单地将输出和可见patches叠加以提高视觉质量, 但是作者故意选择没这么做, 以便更全面地展示该方法的行为</figcaption>
 </figure>
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/fa888e66ef2179027eb9b88abc3a6611.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/fa888e66ef2179027eb9b88abc3a6611_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/fa888e66ef2179027eb9b88abc3a6611.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/fa888e66ef2179027eb9b88abc3a6611_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>COCO验证图像上的示例结果. 使用的是在ImageNet上训练的MAE(模型权重和上图的相同). 观察最右侧两个示例的重建结果, 虽然和实际情况不同, 但是在语义上是合理的</figcaption>
 </figure>
 
 在这一分析的推动下, 他们提出了一种用于视觉表征学习的简单, 有效, 可扩展的掩码自编码器MAE. MAE屏蔽输入图像中的随机patches, 并在像素空间中重建缺失的patches. 它采用了非对称的编码器-解码器设计. 编码器只对可见的patches进行编码, 而解码器则是轻量级的, 可以从latent representation和mask tokens中重建输入. 如下图所示.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/26badaa2f7a7e3b86e82a92e170603ae.webp#only-light){ loading=lazy width='400' }
-![](http://img.ricolxwz.cn/26badaa2f7a7e3b86e82a92e170603ae_inverted.webp#only-dark){ loading=lazy width='400' }
+![](https://img.ricolxwz.cn/26badaa2f7a7e3b86e82a92e170603ae.webp#only-light){ loading=lazy width='400' }
+![](https://img.ricolxwz.cn/26badaa2f7a7e3b86e82a92e170603ae_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>MAE的架构. 在预训练的时候, 很大一部分随机的patches如75%会被遮挡. 编码器用于所有可见patches的编码. 在encoder之后才引入mask tokens. 编码后的可见patches和mask tokens被一个较小的decoder处理以像素为单位重建原始图像. 在预训练之后, 解码器会被丢弃, 编码器将用于未损坏的图像图像的识别任务</figcaption>
 </figure>
 
@@ -46,8 +46,8 @@ MAE是一种更加通用的[去噪自编码器](/algorithm/ae/#denoising-ae), �
 MAE可以学习到high-capacity的模型, 同时还能很好的泛化. 通过MAE预训练, 像ViT-Large或ViT-Huge这样的大型视觉Transformer模型, 能在ImageNet-1K这种相对有限的数据集上取得更好的泛化性能. 以ViT-Huge为例, 微调后再ImageNet-1K上取得了87.8%的准确率, 超过了以往只使用ImageNet-1K数据的结果. 在目标检测, 实例分割和语义分割等下游任务中, MAE预训练不仅比监督预训练表现更好, 而且在模型增大的时候获得更加明显的收益. 这些现象和NLP中的自监督预训练(如BERT等)的发展相符, 作者希望视觉领域能够借此继续探索并取得类似的突破.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/16571b836804ef0dc3cf49425afdf213.webp#only-light){ loading=lazy width='400' }
-![](http://img.ricolxwz.cn/16571b836804ef0dc3cf49425afdf213_inverted.webp#only-dark){ loading=lazy width='400' }
+![](https://img.ricolxwz.cn/16571b836804ef0dc3cf49425afdf213.webp#only-light){ loading=lazy width='400' }
+![](https://img.ricolxwz.cn/16571b836804ef0dc3cf49425afdf213_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>以75%的遮挡率训练的MAE对ImageNet验证图像进行重建, 但是遮挡率不同. 预测结果和原始图像有明显差异, 这表明该方法可以泛化</figcaption>
 </figure>
 

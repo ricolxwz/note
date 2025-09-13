@@ -6,7 +6,7 @@ comments: true
 ## 定义
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/8239a1ae76b302f915750ca9351bb477.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/8239a1ae76b302f915750ca9351bb477.png){ loading=lazy width='500' }
 </figure>
 
 自组织是一个动态的过程, 通过该过程, 系统自发地形成不一般的宏观结构或行为, 并随着时间推移产生变化. 自组织的关键特征为: 组织程度随时间增加并且不依赖中央或外部控制.

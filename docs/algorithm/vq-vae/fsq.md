@@ -39,8 +39,8 @@ addi: https://arxiv.org/pdf/2309.15505
 作者称这种方法为有限标量量化(FSQ). 其核心洞见在于: 只要为每个通道仔细设定取值范围, 就能构造出几乎任意大小的**隐式码本**. 设向量$z$含$d$个通道. 若将每个分量$z_i$映射到$L$个离散值(例如先做$zi↦⌊L/2⌋\tanh(zi)$, 再四舍五入取整), 便得到量化后的$\hat{z}$. 由此$\hat{z}$必属于$L^d$个唯一向量之一. 例如[图1](#fig1)给出了$d=3$, $L=3$的FSQ示例, 对应码本$C = \{(-1,-1,-1), (-1,-1,0), (-1,-1,1), …, (1,1,1)\}$, 其大小为$|C| = L^d = 27$.
 
 <figure markdown='1' id='fig1'>
-![](http://img.ricolxwz.cn/1fbf6cf7651a765964ae8a268f3d2f5b.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/1fbf6cf7651a765964ae8a268f3d2f5b_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/1fbf6cf7651a765964ae8a268f3d2f5b.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/1fbf6cf7651a765964ae8a268f3d2f5b_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图1: FSQ(左): 最后一层编码器将特征投影到$d$维空间(示例中$d=3$). 对编码器输出$z$的每一维设定$L$个离散取值(示例中$L=3$), 再将其四舍五入为整数, 得到量化向量$\hat{z}$, 即位于此超立方体内的最近点. VQ(右): 最后一层编码器同样投影到$d$维空间(示例中$d=7$, 在VQ中$d$通常更大). 生成的向量$z$通过最近邻查找, 被替换为码本中最接近的向量$\hat{z}$.
 </figcaption>
 </figure>
@@ -54,8 +54,8 @@ addi: https://arxiv.org/pdf/2309.15505
 3. 作者指出, 在码本规模较大时, VQ完整公式的高度灵活性几乎无法带来额外收益, 甚至表现劣于简单的FSQ方法. 这主要归因于VQ的优化难度较高, 而FSQ可被视为对标准VQ框架做出的两点改动: (a) 限制编码器输出范围; (b) 固定码本大小C. 同时, FSQ的(隐式)码本C维度显著小于VQ, 通常d < 10, 而VQ常见d ≥ 512.
 
 <figure markdown='1' id='fig2'>
-![](http://img.ricolxwz.cn/434a00243d64a5b21fbf420cfeb02a21.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/434a00243d64a5b21fbf420cfeb02a21_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/434a00243d64a5b21fbf420cfeb02a21.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/434a00243d64a5b21fbf420cfeb02a21_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图2: 左: 简化版VQ——比较VQ与FSQ在实现与优化上的异同. 右: 通过函数f对z进行范围限制,随后对输出进行舍入; 图示为单通道,且量化等级L=5.
 </figcaption>
 </figure>
@@ -87,8 +87,8 @@ addi: https://arxiv.org/pdf/2309.15505
 FSQ具有如下超参数: 通道数$d$以及每个通道的量化级数$L=[L_1,\dots,L_d]$. 在大多数实验中, 为了实现公平比较, 作者根据欲用FSQ替换的VQ码本来选择目标码本大小$|C|$. 然而, 多种$d$与$L_i$的组合都可以逼近给定的$|C|$(即满足$\prod_i L_i\approx|C|$的任何$L$都是候选). 作者在研究中考察了这些配置, 发现并非所有选择都能得到最优结果. 不过, 他们提出了一个在全部任务中均表现良好的简单启发式: 对所有$i$设$L_i\ge5$. [表1](#tab1)列出了常见目标$|C|$对应的$L$取值.
 
 <figure markdown='1' id='tab1'>
-![](http://img.ricolxwz.cn/f351ab953d78a98e18407404f027efb0.webp#only-light){ loading=lazy width='600' }
-![](http://img.ricolxwz.cn/f351ab953d78a98e18407404f027efb0_inverted.webp#only-dark){ loading=lazy width='600' }
+![](https://img.ricolxwz.cn/f351ab953d78a98e18407404f027efb0.webp#only-light){ loading=lazy width='600' }
+![](https://img.ricolxwz.cn/f351ab953d78a98e18407404f027efb0_inverted.webp#only-dark){ loading=lazy width='600' }
 <figcaption>表1: 推荐的FSQ离散级数L组合, 以近似匹配给定的码本大小|C|</figcaption>
 </figure>
 

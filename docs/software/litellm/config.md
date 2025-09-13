@@ -48,7 +48,7 @@ import requests
 import json
 
 def test_embedding():
-    url = "http://localhost:5001/v1/embeddings"
+    url = "https://localhost:5001/v1/embeddings"
     headers = {
         "Authorization": "Bearer sk-xxxx",
         "Content-Type": "application/json"

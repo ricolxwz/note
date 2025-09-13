@@ -19,7 +19,7 @@ comments: true
 3. 确保后台没有迁移任务
     1. `docker compose -f /home/wenzexu/app.yaml exec gitlab gitlab-rails runner -e production 'puts Gitlab::BackgroundMigration.remaining'`: 这是未执行的后台迁移任务的数量
     2. `docker compose -f /home/wenzexu/app.yaml exec gitlab gitlab-rails runner -e production 'puts Gitlab::Database::BackgroundMigration::BatchedMigration.queued.count'`: 这是等待执行的批量迁移任务的数量
-    3. 或者直接查看UI: http://xxx.com/admin/background_jobs
+    3. 或者直接查看UI: https://xxx.com/admin/background_jobs
 4. 保没有Runner正在处理作业, 防止runner获取到新任务
     1. 编辑`./app/gitlab/config/gitlab.rb`文件, 新增: `nginx['custom_gitlab_server_config'] = "location ^~ /api/v4/jobs/request {\n deny all;\n return 503;\n}\n"`
     2. `docker compose -f /home/wenzexu/app.yaml exec gitlab gitlab-cli reconfigure`
@@ -35,7 +35,7 @@ comments: true
     4. `docker compose -f /home/wenzexu/app.yaml up -d gitlab`
     5. 查看日志, 是否升级成功: `docker compose -f /home/wenzexu/app.yaml logs gitlab`
     6. 按照升级路径重复上述过程
-7. 升级gitlab-runner: 
+7. 升级gitlab-runner:
     1. 修改`app.yaml`文件中`gitlabr-runner`服务的版本号和gitlab最后的版本号匹配
     2. `docker compose -f /home/wenzexu/app.yaml stop gitlab-runner && docker compose -f /home/wenzexu/app.yaml rm gitlab-runner`
     3. `docker compose -f /home/wenzexu/app.yaml up -d gitlab-runner`

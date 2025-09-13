@@ -30,8 +30,8 @@ Hoffman等人提出的缩放定律的目的是如何在特定的 ^^训练预算^
 他们的训练集由下表所列的多个数据源混合而成, 涵盖了多个领域, 在大多数情况下, 他们重复使用已经被用于训练其他LLM的数据源, 但是仅限于公开可用的数据, 和开源精神兼容.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/3e169dccaffce4ffabc1af2afccdb536.webp#only-light){ loading=lazy width='300' }
-![](http://img.ricolxwz.cn/3e169dccaffce4ffabc1af2afccdb536_inverted.webp#only-dark){ loading=lazy width='300' }
+![](https://img.ricolxwz.cn/3e169dccaffce4ffabc1af2afccdb536.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.cn/3e169dccaffce4ffabc1af2afccdb536_inverted.webp#only-dark){ loading=lazy width='300' }
 <figcaption>预训练数据. 列出了每个子集的采样占总体的比例. 当训练数据量为1.4T Tokens的时候, 每个子集的epochs数量, 以及每个子集的磁盘大小. 对于1T Tokens的预训练, 采样的比例是不变的.</figcaption>
 </figure>
 
@@ -84,8 +84,8 @@ AdamW和传统Adam优化器的区别在于, 他是"先更新, 再衰减". 传统
 他们还根据模型的大小调整了学习率和batch大小, 如下表所示.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/068ac6308f10745cfa53681208671f28.webp#only-light){ loading=lazy width='500' }
-![](http://img.ricolxwz.cn/068ac6308f10745cfa53681208671f28_inverted.webp#only-dark){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/068ac6308f10745cfa53681208671f28.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/068ac6308f10745cfa53681208671f28_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>模型大小, 架构和优化器的超参数</figcaption>
 </figure>
 

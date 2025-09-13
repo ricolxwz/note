@@ -25,7 +25,7 @@ Mitchell提出了如下对比:
 它还指出, "language of dynamical systems may be more useful than language of computation", 即"动态系统的语言可能比计算语言更有用". 这意味着在理解复杂系统的时候, 传统的计算范式可能不足以解释解释系统中的信息流动. 相反, 动态系统理论, 一种通过研究系统随时间变化的行为来解释信息处理, 可能更加适合复杂系统的本质.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/bcbe3e386fa8b1a7ed14771b66760ddc.png){ loading=lazy width='400' }
+![](https://img.ricolxwz.cn/bcbe3e386fa8b1a7ed14771b66760ddc.png){ loading=lazy width='400' }
 </figure>
 
 图中展示了一个系统(🧠)如何通过动态过程, 将初始状态(左脑, 带有输入)通过某种动态变化, 转变为最终状态(右脑, 带有输出). 输入通过这个动态过程被转换, 最终得到输出.
@@ -70,7 +70,7 @@ Mitchell提出了如下对比:
 信息动力学研究的是如何通过存储, 传递和修改来研究复杂系统的下一个状态, 即$x_{n+1}$.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/2d81d2714fc7e8dfc51484daa6b037b9.png){ loading=lazy width='400' }
+![](https://img.ricolxwz.cn/2d81d2714fc7e8dfc51484daa6b037b9.png){ loading=lazy width='400' }
 </figure>
 
 图中展示了一个复杂系统, 由多个节点($Y_1, A, X, Y_2, B$)组成. 这些节点相互作用, 影响着系统的演变, 箭头表示信息或者影响的传递路径. 下方是时间序列示意图, 展示了每个时刻变量的状态(用$0$和$1$表示). 时间是自上而下推进的, 表示状态随时间的演化. 图中系统的绿色竖条代表的是$X$的时间序列, 显示了从$n-k+1$到$n+1$的所有信息.
@@ -116,7 +116,7 @@ Mitchell提出了如下对比:
 不仅仅是熵率可以度量块长度变化的熵增量, 条件熵也可以度量下一个随机变量在给定之前变量的情况下的熵增量. $H_{\mu \bm{X}}=\lim_{n\rightarrow \infty}\frac{1}{n}H(X_n|X_1, X_2, ..., X_{n-1})$. 同样也可以用[块向量](#块向量)来表示$H_{\mu \bm{X}}=\lim_{n\rightarrow \infty}H(X_n|X_{n-1}^{(n-1)})$.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/1ff61a6c75d9e4df8e1b1eb4dc22f575.png){ loading=lazy width='200' }
+![](https://img.ricolxwz.cn/1ff61a6c75d9e4df8e1b1eb4dc22f575.png){ loading=lazy width='200' }
 </figure>
 
 对于平稳增长来说, $H'_{\mu \bm{X}}=H_{\mu X}$, 即条件熵和熵率是相同的, 随着时间步的增加, 每个时间步带来的平均不确定性(熵率)和当前时间步给定之前所有的时间步带来的不确定性(条件熵)趋于相等.

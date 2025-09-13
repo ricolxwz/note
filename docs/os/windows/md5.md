@@ -34,9 +34,9 @@ function fig {
             $new_path = Join-Path $snip_dir $new_name
             Rename-Item -Path $latest_file.FullName -NewName $new_name
         }
-        $original_url = "http://img.ricolxwz.cn/$new_name"
+        $original_url = "https://img.ricolxwz.cn/$new_name"
         $inverted_name = "${md5_hash}_inverted.$extension"
-        $inverted_url = "http://img.ricolxwz.cn/$inverted_name"
+        $inverted_url = "https://img.ricolxwz.cn/$inverted_name"
         $inverted_path = Join-Path $snip_dir $inverted_name
         magick "$new_path" -negate `
             -fuzz "$Fuzz2%" -fill "rgb(18,19,23)" -opaque black `

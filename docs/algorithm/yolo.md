@@ -30,14 +30,14 @@ YOLO的架构非常高效, 其基础模型能够实时处理每秒45帧的图像
 作者将物体检测重构为一个单一的回归问题, 直接从图像像素到边界框坐标和类别概率. 使用他们的系统, 您只需要观察一次图像(YOLO), 就能预测出哪些物体存在以及它们在哪里.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/4993fc849506765959eeb72b2227be45.webp#only-light){ loading=lazy width='500' }
-![](http://img.ricolxwz.cn/4993fc849506765959eeb72b2227be45_inverted.webp#only-dark){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/4993fc849506765959eeb72b2227be45.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/4993fc849506765959eeb72b2227be45_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>YOLO检测系统. 使用YOLO处理图像是一个简单又直接的过程. 他们的系统 (1) 将图像resize到448*448, (2) 在图像上跑一个卷积网络, (3) 根据模型的置信度对检测结果进行阈值化处理</figcaption>
 </figure>
 
 YOLO简单地令人耳目一新: 见上图. 一个卷积网络可以同时预测多个边界框和这些边界框的类别概率. YOLO在完整图像上进行训练, 并直接优化检测性能. 这和传统的物体检测方法相比, 这种过统一模型具有多种优势.
 
-首先, YOLO速度极快. 由于他们将检测视为一个回归问题, 因此不需要复杂的流水线. 只需要在测试时在新图上运行神经网络, 即可预测检测结果. 他们的基础网络在Titan X GPU上以每秒45帧的速度运行, 没有进行批处理, 而快速版本的运行速度则超过了每秒150帧. 这意味着可以实时处理流媒体视频, 延迟时间不到25毫秒. 此外, YOLO的平均精度也是其他实时系统的2倍多. 如果需要观看他们的系统在网络摄像头上实时运行的演示, 可以访问他们的项目网页: http://pjreddie.com/yolo/.
+首先, YOLO速度极快. 由于他们将检测视为一个回归问题, 因此不需要复杂的流水线. 只需要在测试时在新图上运行神经网络, 即可预测检测结果. 他们的基础网络在Titan X GPU上以每秒45帧的速度运行, 没有进行批处理, 而快速版本的运行速度则超过了每秒150帧. 这意味着可以实时处理流媒体视频, 延迟时间不到25毫秒. 此外, YOLO的平均精度也是其他实时系统的2倍多. 如果需要观看他们的系统在网络摄像头上实时运行的演示, 可以访问他们的项目网页: https://pjreddie.com/yolo/.
 
 其次, YOLO在进行预测的时候会对图像进行全局推理. 这和基于滑动窗口和区域提议的技术不同, YOLO在训练和测试的时候看到的都是整幅图像, 所以它可以隐式的对关于类别及外观的上下文信息进行编码. Faster R-CNN, 一个顶级检测方法, 由于看不到更大的上下文, 因此会将图像中的背景patches看成是物体. YOLO的背景错误率(FP)不到一半.
 
@@ -70,8 +70,8 @@ $$\Pr(Class_i | Object) \cdot \Pr(Object) \cdot IOU_{\text{pred}}^{\text{truth}}
 这些分数表示该类出现在box中的概率, 也表示预测的box和物体的匹配程度.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/5f16e80bdc5fa40de5eb234682e85b72.webp#only-light){ loading=lazy width='500' }
-![](http://img.ricolxwz.cn/5f16e80bdc5fa40de5eb234682e85b72_inverted.webp#only-dark){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/5f16e80bdc5fa40de5eb234682e85b72.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/5f16e80bdc5fa40de5eb234682e85b72_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>YOLO模型. 他们的模型是一个回归问题. 它将一张图片分成$S\times S$的cell, 对于每个cell预测$B$个box, 这些box的置信度, 和$C$个类别概率. 这些预测被编码为一个$S\times S\times (B*5+C)$的tensor</figcaption>
 </figure>
 
@@ -95,8 +95,8 @@ $$\Pr(Class_i | Object) \cdot \Pr(Object) \cdot IOU_{\text{pred}}^{\text{truth}}
 他们的网络架构受到了GoogLeNet图像分类模型的启发. 网络共有24个卷积层, 然后是2个全连接层. 他们并没有使用GoogLeNet的Inception模块. 取代Inception模块的方式是使用1\*1卷积层然后再使用3\*3卷积层进行特征提取. 网络架构如图所示.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/53aa7365ab6527d87e23f321c3e7a237.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/53aa7365ab6527d87e23f321c3e7a237_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/53aa7365ab6527d87e23f321c3e7a237.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/53aa7365ab6527d87e23f321c3e7a237_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>YOLO网络架构. 使用了24层卷积层和2层全连接层. 交替使用的1*1卷积层缩小了前几层的特征空间. 他们在ImageNet分类任务中以一半的分辨率(224*224)输入对卷积层进行预训练, 然后以两倍的分辨率用于检测.</figcaption>
 </figure>
 

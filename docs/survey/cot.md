@@ -14,8 +14,8 @@ comments: true
 在人类的认知领域中, 推理作为关键枢纽, 对于理解世界和形成决策至关重要. 随着预训练规模的不断发展, 大型语言模型(LLMs)在众多下游任务中展现出越来越强的能力. 最近, 研究者发现LLMs能够通过上下文学习展现逐步推理的能力, 这一现象被称为链式思维(CoT)推理. 普遍观察到, CoT提示显著增强了LLMs的推理能力, 尤其是在复杂任务中.
 
 <figure markdown='1' id='fig1'>
-![](http://img.ricolxwz.cn/c7433be139acdeee35014c49ef83b158.webp#only-light){ loading=lazy width='500' }
-![](http://img.ricolxwz.cn/c7433be139acdeee35014c49ef83b158_inverted.webp#only-dark){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/c7433be139acdeee35014c49ef83b158.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/c7433be139acdeee35014c49ef83b158_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>图1: 模型在链式思维提示的指导下逐步解决复杂问题</figcaption>
 </figure>
 

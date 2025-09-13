@@ -25,8 +25,8 @@ comments: true
 自从GPT-4[^22]发布以来, 它所展示的令人惊叹的多模态示例引发了对MLLMs的研究热潮. 学术界和工业界的共同努力加速了这一领域的发展. MLLMs的早期研究主要关注基于文本提示与图像[^17][^21]/视频[^23][^24]/音频[^25]的文本内容生成. 后续工作进一步拓展了模型的能力或使用场景, 包括: (1) 更精细的粒度支持. 通过方框[^26]或单击某个对象[^27]来实现对用户提示的更精细控制. (2) 对输入和输出模态的增强支持[^28][^29], 如图像、视频、音频以及点云. 除了输入以外, 像NExT-GPT[^30]这样的项目还进一步支持以不同模态进行输出. (3) 语言支持的改进. 有研究尝试在训练语料相对有限的情况下, 将MLLMs的成功经验推广到其他语言(例如中文)[^31][^32]. (4) 向更多领域和使用场景拓展. 一些研究将MLLMs的强大能力应用于医学图像理解[^33][^34][^35]和文档解析[^36][^37][^38]等领域. 此外, 多模态智能体也被开发用于辅助真实世界中的交互, 例如具身智能体[^39][^40]和GUI智能体[^41][^42][^43]. 下图中展示了MLLMs的发展时间线.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/1a83353a9331c33630be6673f9b4356e.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.cn/1a83353a9331c33630be6673f9b4356e_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/1a83353a9331c33630be6673f9b4356e.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/1a83353a9331c33630be6673f9b4356e_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>代表性MLLMs的时间线.</figcaption>
 </figure>
 
@@ -39,8 +39,8 @@ comments: true
 一个典型的MLLM可以被抽象为三个模块, 分别是预训练的模态编码器、预训练的LLM以及连接它们的模态接口. 如果将其与人类做类比, 那么图像/音频等模态编码器就像人的眼睛/耳朵, 负责接收并预处理光学/声学信号, 而LLM则如同人类大脑, 用于理解并推理这些处理过的信号. 在此过程中, 模态接口用于对齐不同的模态. 一些MLLM还包含生成器, 用于输出除文本以外的其他模态. 下图中展示了该架构示意图. 在本节中, 作者将依次介绍每个模块.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/d76d54f68aefa45dc820ae980b6944c6.webp#only-light){ loading=lazy width='400' }
-![](http://img.ricolxwz.cn/d76d54f68aefa45dc820ae980b6944c6_inverted.webp#only-dark){ loading=lazy width='400' }
+![](https://img.ricolxwz.cn/d76d54f68aefa45dc820ae980b6944c6.webp#only-light){ loading=lazy width='400' }
+![](https://img.ricolxwz.cn/d76d54f68aefa45dc820ae980b6944c6_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>典型的MLLM架构. 它包含一个编码器、一个连接器以及一个LLM. 除此之外, 可以在LLM上附加一个可选的生成器, 用于生成除文本之外的更多模态. 编码器负责接收图像、音频或视频并输出特征, 这些特征再通过连接器进行处理, 使LLM能够更好地理解. 通常而言, 连接器可以分为三种类型: 基于投影的连接器、基于查询的连接器以及基于融合的连接器. 前两种类型采用基于token的融合方式, 将特征处理为token, 与文本token一起输入; 而最后一种类型则允许在LLM内部进行基于特征层面的融合.</figcaption>
 </figure>
 

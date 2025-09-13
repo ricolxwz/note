@@ -12,7 +12,7 @@ comments: true
 1943年, McMulloch和Pittes将上述情景抽象, 这就是一直沿用至今的"M-P"神经元模型:
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/9e2e01f533f1d459d48b80f753580c0c.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/9e2e01f533f1d459d48b80f753580c0c.png){ loading=lazy width='500' }
 </figure>
 
 每一个神经元包含:
@@ -25,7 +25,7 @@ comments: true
 - 输出$a$: 对加权和及偏置应用激活函数后产生的最终结果
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/f2b529bb036ac241e7d09acd263e4c90.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/f2b529bb036ac241e7d09acd263e4c90.png){ loading=lazy width='500' }
 </figure>
 
 理想的激活函数应该是阶跃函数(如上左图所示), 它将输入值映射为输出值为$0$或$1$, $1$对应于神经元兴奋, $0$对应于神经元抑制. 但是阶跃函数具有不连续, 不光滑等不太好的特性, 因此实际常用sigmoid函数作为激活函数(如上右图所示).
@@ -58,7 +58,7 @@ comments: true
 感知机, Perceptron, 它是最简单的神经网络, 由两层神经元组成, 输入层接受外界输入的信号后传递给输出层, 输出层是M-P神经元, 也被称为"阈值逻辑单元", 激活函数为阶跃函数.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/c4090b80e90cb85ba787e93a035cb384.png){ loading=lazy width='300' }
+![](https://img.ricolxwz.cn/c4090b80e90cb85ba787e93a035cb384.png){ loading=lazy width='300' }
 </figure>
 
 它由Frank Rosenblatt在1957年提出. 同时它的局限性由Marvin Minsky和Seymour Papert在书<Perceptrons>中提出. Rosenblatt和他的同事意识到这个局限可以通过使用更复杂的NNs, 即multi-layer perceptrons解决, 但是他们没有将感知机使用于神经网络的训练.
@@ -140,7 +140,7 @@ comments: true
     感知机能够实现与门, 这是一个线性可分的问题, 如图所示.
 
     <figure markdown='1'>
-    ![](http://img.ricolxwz.cn/46ab58645bfbd9676237b0a659b777b2.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.cn/46ab58645bfbd9676237b0a659b777b2.png){ loading=lazy width='300' }
     </figure>
 
     感知机能够找到一个线性的决策边界, 如$w_1=1=w_2=1, b=2$, 即$y=sign(x_1+x_2-2)$.
@@ -150,7 +150,7 @@ comments: true
     感知机能够实现或门, 这是一个线性可分的问题, 如图所示.
 
     <figure markdown='1'>
-    ![](http://img.ricolxwz.cn/b08609a89b6033ac9fae3be1f27257a3.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.cn/b08609a89b6033ac9fae3be1f27257a3.png){ loading=lazy width='300' }
     </figure>
 
     感知机能够找到一个线性的决策边界, 如$w_1=w_2=1, b=0.5$, 即$y=sign(x_1+x_2-0.5).$
@@ -160,26 +160,26 @@ comments: true
     感知机能够实现与非门, 这是一个线性可分的问题, 如图所示.
 
     <figure markdown='1'>
-    ![](http://img.ricolxwz.cn/4abb87c91ddaecb717517d3b804c5dc1.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.cn/4abb87c91ddaecb717517d3b804c5dc1.png){ loading=lazy width='300' }
     </figure>
 
 === "异或门"
 
     感知机无法实现异或门, 这不是一个线性可分的问题, 如图所示.
     <figure markdown='1'>
-    ![](http://img.ricolxwz.cn/0a17bba3cfe79eb90d6be35c888c0e0d.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.cn/0a17bba3cfe79eb90d6be35c888c0e0d.png){ loading=lazy width='300' }
     </figure>
 
     然而, 异或门可以通过与门, 非门和与非门的组合实现, 如图所示.
 
     <figure markdown='1'>
-    ![](http://img.ricolxwz.cn/363ac96f910fd04b3f83b13284af5a29.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.cn/363ac96f910fd04b3f83b13284af5a29.png){ loading=lazy width='300' }
     </figure>
 
     所以, 只要使用一个两层的感知机就能解决异或问题.
 
     <figure markdown='1'>
-    ![](http://img.ricolxwz.cn/710cecd9811caa570be36bda6616991c.png){ loading=lazy width='300' }
+    ![](https://img.ricolxwz.cn/710cecd9811caa570be36bda6616991c.png){ loading=lazy width='300' }
     </figure>
 
 ---
@@ -187,7 +187,7 @@ comments: true
 从上面的实验中, 我们得出结论, 如果增加更多的层, 可以得到更加复杂的决策边界, 如图所示.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/7018b43e284156ad9fbd3b1c3e4d240f.png){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/7018b43e284156ad9fbd3b1c3e4d240f.png){ loading=lazy width='800' }
 </figure>
 
 ## 深度学习
@@ -213,7 +213,7 @@ comments: true
 解决方法是使用其他的激活函数, 如ReLU和LReLu. 它们没有上限, 因此输出不会饱和, 对于$x>0$, ReLU的梯度为$1$.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/529ee4cf1b146b4e80b2c9613be8fbe6.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/529ee4cf1b146b4e80b2c9613be8fbe6.png){ loading=lazy width='500' }
 </figure>
 
 ### Dropout
@@ -228,7 +228,7 @@ Dropout是一种防止过拟合的方法.
 - 在测试的过程中, 我们不会丢弃任何的神经元, 由于在训练过程中, Dropout会随机"丢弃"一部分神经元, 因此, 对于每一次训练迭代, 模型的激活和权重更新都是基于部分神经元计算, 例如, 如果Dropout率是$0.5$, 那么在训练过程中, 激活函数的输入会是原始网络中大约$50\%$的信号, 这意味着, 在每一次前向传播的过程中, 神经元的输出实际值比全网络的预期值大约低$50\%$. 在测试阶段, 我们需要对权重进行缩放, 乘以$0.5$
 
 <figure markdown='1'>
-![](http://img.ricolxwz.cn/4fb64c6600f1837d32bee9477168fee8.png){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/4fb64c6600f1837d32bee9477168fee8.png){ loading=lazy width='500' }
 </figure>
 
 ### Softmax函数 {#softmax}
