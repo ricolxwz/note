@@ -44,3 +44,4 @@ pages:
   rules:
     # 此作业仅在代码被推送到项目的默认分支时运行 (通常是 'main' 或 'master').
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    
