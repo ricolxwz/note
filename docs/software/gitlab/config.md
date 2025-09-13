@@ -83,7 +83,7 @@ pages.ricolxwz.download {
 }
 ```
 
-然后, 如果我们要添加github pages的自定义域名, 我们需要将自定义域名加入到Caddyfile中, 因为自定义域名也需要证书:
+然后, 如果我们要添加github pages的自定义域名, 我们需要将自定义域名加入到Caddyfile中, 因为自定义域名也需要证书(因为我们的Github pages它只负责http, https是由Caddy来处理的):
 
 ```
 note.ricolxwz.cc {
