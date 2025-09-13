@@ -3,38 +3,62 @@ title: 配置
 comments: true
 ---
 
-# 配置
+## Docker Compose配置
 
-## UI
+```yaml
+services:
+  gitlab:
+    container_name: gitlab
+    hostname: gitlab
+    image: gitlab/gitlab-ce:latest
+    restart: unless-stopped
+    networks:
+      - net
+    ports:
+      - 8090:8090
+      - 8181:8181
+      - 2222:22
+    environment:
+      GITLAB_ROOT_EMAIL: <填写>
+      GITLAB_ROOT_PASSWORD: <填写>
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url "https://git.ricolxwz.download"
+        nginx['enable'] = false
+        letsencrypt['enable'] = false
+        gitlab_workhorse['listen_network'] = "tcp"
+        gitlab_workhorse['listen_addr'] = "0.0.0.0:8181"
+        gitlab_rails['trusted_proxies'] = [ '192.168.0.0/16' ]
+        pages_external_url 'https://pages.ricolxwz.download'
+        gitlab_pages['enable'] = true
+        gitlab_pages['access_control'] = true
+        gitlab_pages['external_http'] = ['0.0.0.0:8090']
+        gitlab_pages['listen_proxy'] = nil
+        gitlab_pages['inplace_chroot'] = true
+        gitlab_pages['gitlab_server'] = 'https://git.ricolxwz.download'
+    volumes:
+      - /root/gitlab/config:/etc/gitlab
+      - /root/gitlab/logs:/var/log/gitlab
+      - /root/gitlab/data:/var/opt/gitlab
+  gitlab-runner:
+    container_name: gitlab-runner
+    hostname: gitlab-runner
+    image: gitlab/gitlab-runner:latest
+    restart: unless-stopped
+    depends_on:
+      - gitlab
+    volumes:
+      - /root/gitlab-runner/config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - net
 
-- Admin-Settings-General:
-    - Sign-up restrictions:
-        - 🈚️ Sign-up enabled
-    - Visibility and access controls:
-        - Enabled Git access protocols: Both SSH and HTTP(S)
-    - Sign-in restrictions:
-        - 🈚️ 允许通过HTTP(S)对Git进行密码验证
-- Admin-Settings-CI/CD:
-    - Continuous Integration and Deployment:
-        - 🈚️ Default to Auto DevOps pipeline for all projects
-- Admin-Settings-Repository:
-    - Default branch:
-        - Initial default branch name: master
-- User-Preferences:
-    - Integrations:
-        - ✅ Enable extension marketplace (需要打开对应的feature)
-
-## `gitlab.rb`
-
-- `gitlab_rails['gitlab_ssh_host'] = '<你的ssh主机名>'`
-
-## Features
-
+networks:
+  net:
+    driver: bridge
 ```
-docker exec -it gitlab gitlab-rails console # 等几分钟
-Feature.enable(:<feature flag>)
-Feature.disable(:<feature flag>)
-Feature.all.map {|f| [f.name, f.state]} # 查看所有的features
-```
 
-- `web_ide_extensions_marketplace`: ✅
+这里, 我们把容器内的nginx关掉了, 因为我们在外部使用了caddy反代, 然后trusted_proxies设置为局域网段, 或者设置为frpc的ip.
+
+## Caddy反代设置
+
+需要使用`xcaddy`进行编译, 参考: https://caddyserver.com/docs/modules/dns.providers.cloudflare. 然后配置Cloudflare API, 修改caddyfile acme, 然后加上`*.pages.ricolxwz.download`和`pages.ricolxwz.download`.
