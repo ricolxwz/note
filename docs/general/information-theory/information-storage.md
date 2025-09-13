@@ -10,7 +10,7 @@ comments: true
 对于人来说, 我们可以用肉眼或者说是直觉根据过去的值判断下一个值.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/6a17f69ad6bd7041781666e8eafdb028.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/6a17f69ad6bd7041781666e8eafdb028.png){ loading=lazy width='500' }
 </figure>
 
 如上面的图片, 需要根据已经给出的数据来预测$x(n)$的下一个值. 在这个过程中, 做了什么假设呢? 例如, 我们可能假设这些值在后续的$n$中继续保持不变, 或者呈现某种趋势/规律. 具体是从哪里获取信息来做出这个假设的呢? 例如, 我们可能会说基于所有的数据点保持不变这一信息, 做出了下一个值也不变的假设. 那么这个从过去获取信息的量是多少呢?
@@ -73,7 +73,7 @@ Ragwitz准则用于最小化系统预测的误差.
     [元胞自动机](https://zh.wikipedia.org/wiki/%E7%B4%B0%E8%83%9E%E8%87%AA%E5%8B%95%E6%A9%9F), Cellular Automata, CA, 是一种数学模型. 用来模拟复杂系统的演化行为.
 
     <figure markdown='1'>
-    ![](http://img.ricolxwz.asia/1f873f046c080eeb244e67ef362a2893.gif){ loading=lazy width='250' }
+    ![](http://img.ricolxwz.cn/1f873f046c080eeb244e67ef362a2893.gif){ loading=lazy width='250' }
     </figure>
 
     在CA中, 简单的局部规则可以生成复杂的全局行为.
@@ -91,7 +91,7 @@ Ragwitz准则用于最小化系统预测的误差.
 这里我们可以通过互信息来度量过去状态和未来状态之间的信息关联$E_X=\lim_{k\rightarrow \infty}I(\bm{X}_n^{(k)};\bm{X}_{n+1}^{(k+)})$. 对于有限长度$k$的情况, 可以通过$E_X(k)=I(\bm{X}_n^{(k)};\bm{X}_{n+1}^{(k+)})$计算.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/05415e249e2c33e6f8a4fd0aecfdfc25.png){ loading=lazy width='200' }
+![](http://img.ricolxwz.cn/05415e249e2c33e6f8a4fd0aecfdfc25.png){ loading=lazy width='200' }
 </figure>
 
 预测信息和AIS不同, AIS侧重于只是用那些能够计算出下一个状态的信息, 即更加关注一阶信息(即关于下一时间步的信息), 而预测信息是更广泛的概念, 关注系统的过去和未来的整体之间的关联.

@@ -76,8 +76,8 @@ SQ-VAE的框架如[图1](#fig1)所示. 与VQ-VAE类似, SQ-VAE也具有一个可
     因为在初始训练的时候, 先验$P(\mathbf{Z}_q)$通常被假设为一个简单的均匀分布, 这便于模型训练. 但是在数据编码到离散的$\mathbf{Z}_q$之后, 其真实均匀分布往往不是均匀的. 因此, 在主要训练阶段之后, 需要第二阶段来专门学习一个更接近真实数据特征的$P(\mathbf{Z}_q)$, 这样做可以: 提升生成样本的质量, 并且能够更好的捕捉数据结构, 通常使用PixelCNN, Transformer等自回归模型学习这个先验.
 
 <figure markdown='1' id='fig1'>
-![](http://img.ricolxwz.asia/2fe77603b62d7297ef74d2a10d58c8ad.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/2fe77603b62d7297ef74d2a10d58c8ad_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/2fe77603b62d7297ef74d2a10d58c8ad.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/2fe77603b62d7297ef74d2a10d58c8ad_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图1: SQ-VAE的编码和生成过程. 从$\mathbf{x}$到$\mathbf{Z}_q$的编码路径包括(E1)确定性编码, (E2)随机解量化和(E3)量化过程. 对于生成, 在(G1)中, 我们首先从先验$p(\mathbf{Z}_q)$中采样$\mathbf{Z}_q \in \mathbf{B}^{d_z}$. 然后, 在(G2)中, 我们将$\mathbf{Z}_q$输入到随机解码器中以生成数据样本. </figcaption>
 </figure>
 
@@ -134,8 +134,8 @@ $$
 其中$\mathcal{R}_{\varphi}^{\mathcal{N}}(\mathbf{Z}, \mathbf{Z}_q)$表示[表1](#tab1)中的正则化目标, 具体取决于$\Sigma_{\varphi}$的参数化形式.
 
 <figure markdown='1' id='tab1'>
-![](http://img.ricolxwz.asia/f639f22a061bd19f43631bb641b6752e.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/f639f22a061bd19f43631bb641b6752e_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/f639f22a061bd19f43631bb641b6752e.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/f639f22a061bd19f43631bb641b6752e_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>表1: 高斯SQ-VAE中方差$\Sigma_{\varphi}$的不同参数化方法. </figcaption>
 </figure>
 
@@ -156,8 +156,8 @@ $$
 为验证训练过程中是否发生*自退火*, 他们在MNIST上进行了一项实验. 他们训练了高斯SQ-VAE, 其中$\Sigma_\phi = \sigma^2_\phi \mathbf{I}$. 作为比较对象, 他们还训练了将$\sigma^2_\phi$固定为指定值$\sigma^2_q$的模型. 实验设置的细节可在附录中找到. 结果总结在[图2](#fig2)中.
 
 <figure markdown='1' id='fig2'>
-![](http://img.ricolxwz.asia/6961403a3c2be096625f2c8d793ca3c4.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/6961403a3c2be096625f2c8d793ca3c4_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/6961403a3c2be096625f2c8d793ca3c4.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/6961403a3c2be096625f2c8d793ca3c4_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图2: 本节中与$\sigma^2_\phi$相关的动态变化的实证研究. (a)方差参数$\sigma^2_\phi$(蓝色)随$\sigma^2$(红色)减小, 其中$\sigma^2_0$和$\sigma^2_{\phi,0}$是它们的初始值. (b)量化过程相对于迭代次数的平均熵, 通过蒙特卡洛估计获得. (c)测试集上可训练$\sigma^2_\phi$和不同$\sigma^2_q$值对应的均方误差(MSE). </figcaption>
 </figure>
 
@@ -180,8 +180,8 @@ $$\mathcal{L}_{\text{CE-SQ}}^{\text{naive}} = \mathbb{E}_{q_\omega(\mathbf{z}|\m
 为了利用自退火的优势, 他们引入vMF分布来改进模型, 如[图3](#fig3)所示, 并将其称为vMF SQ-VAE. 考虑一个嵌入在$F$维空间中的超球面$S^{F-1}$. 令$w_c$表示第$c$个数据类别在$S^{F-1}$表面上的投影向量. 接下来, 他们将数据$x_d$在超球面上的投影表示为$v_d \in \{w_c\}_{c=1}^{C_{all}}$. 如果$x_d$属于类别$c$, 即$x_d = c$, 则$v_d = w_c$, 反之亦然.
 
 <figure markdown='1' id='fig3'>
-![](http://img.ricolxwz.asia/d7448ea350c6854f92123230a8eec305.webp#only-light){ loading=lazy width='500' }
-![](http://img.ricolxwz.asia/d7448ea350c6854f92123230a8eec305_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/d7448ea350c6854f92123230a8eec305.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/d7448ea350c6854f92123230a8eec305_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>图3: vMF解码器</figcaption>
 </figure>
 

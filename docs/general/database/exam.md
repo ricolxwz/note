@@ -36,13 +36,13 @@ comments: true
 
 要点:
 
-- 如何映射没有任何约束的关系: 关系集独立建表, 两个实体集的主键的组合称为该新表的主键, 同时也是该新表的外键, 需要用箭头指到相应的实体集的主键, 如[图](http://img.ricolxwz.asia/f7a07b8706af6f4dab96d5a946ee93a2.png)
-- 如何映射单侧有键约束的关系: 合并关系集和含有约束一侧实体集的属性, 并在这一侧实体集上加上一个外键, 指向另一侧实体集的主键, 如[图](http://img.ricolxwz.asia/e65017767a761150a29e223fd8ea03dd.png).
-- 如何映射双侧有键约束的关系: 在上面单侧键约束的基础上, 往一侧的实体集的外键上加一个唯一性约束, 如[图](http://img.ricolxwz.asia/d528c111b390896090bb774e9fd92fab.png)
-- 如何映射双侧有键约束, 其中一侧还有参与约束的关系: 在上面双侧键约束的基础上, 往一侧的实体集的外键上加一个非空约束, 如[图](http://img.ricolxwz.asia/fca7486e063b1bc75f1ef25d31873e46.png)
-- 如何映射强弱实体关系: 如[图](http://img.ricolxwz.asia/ec2b4323b6856140eea624640c405c24.png)
-- 如何映射isA关系: 如[图](http://img.ricolxwz.asia/e24aee851049a321ea87670a3368daf6.png)
-- 如何映射聚合: 如[图](http://img.ricolxwz.asia/e5f435a531088490c3c6c0eb1ce55426.png)
+- 如何映射没有任何约束的关系: 关系集独立建表, 两个实体集的主键的组合称为该新表的主键, 同时也是该新表的外键, 需要用箭头指到相应的实体集的主键, 如[图](http://img.ricolxwz.cn/f7a07b8706af6f4dab96d5a946ee93a2.png)
+- 如何映射单侧有键约束的关系: 合并关系集和含有约束一侧实体集的属性, 并在这一侧实体集上加上一个外键, 指向另一侧实体集的主键, 如[图](http://img.ricolxwz.cn/e65017767a761150a29e223fd8ea03dd.png).
+- 如何映射双侧有键约束的关系: 在上面单侧键约束的基础上, 往一侧的实体集的外键上加一个唯一性约束, 如[图](http://img.ricolxwz.cn/d528c111b390896090bb774e9fd92fab.png)
+- 如何映射双侧有键约束, 其中一侧还有参与约束的关系: 在上面双侧键约束的基础上, 往一侧的实体集的外键上加一个非空约束, 如[图](http://img.ricolxwz.cn/fca7486e063b1bc75f1ef25d31873e46.png)
+- 如何映射强弱实体关系: 如[图](http://img.ricolxwz.cn/ec2b4323b6856140eea624640c405c24.png)
+- 如何映射isA关系: 如[图](http://img.ricolxwz.cn/e24aee851049a321ea87670a3368daf6.png)
+- 如何映射聚合: 如[图](http://img.ricolxwz.cn/e5f435a531088490c3c6c0eb1ce55426.png)
 
 注意点:
 
@@ -150,15 +150,15 @@ comments: true
 
 怎么做MVD和4NF的题:
 
-1. 如何检查是不是MVD: 如[图](http://img.ricolxwz.asia/ef967f1ab99097e46abaf33cfec9cc6d.png), 对于任意两个UoS是COMP9120的记录, 存在另外两个UoS是9120的记录, 使得Textbook相同的情况下Tutor不同, Tutor相同的情况下Textbook不同. (然后还可以插入一条新的记录, 比如插入一个老师Lijun C, 则应该有两条记录, 对应两种Textbook)
+1. 如何检查是不是MVD: 如[图](http://img.ricolxwz.cn/ef967f1ab99097e46abaf33cfec9cc6d.png), 对于任意两个UoS是COMP9120的记录, 存在另外两个UoS是9120的记录, 使得Textbook相同的情况下Tutor不同, Tutor相同的情况下Textbook不同. (然后还可以插入一条新的记录, 比如插入一个老师Lijun C, 则应该有两条记录, 对应两种Textbook)
 2. 如何判断是否处于4NF: 满足下列条件中的任意一条 a. **所有**的多值依赖都是平凡多值依赖(Y ⊆ X或X ∪ Y = R, 特别注意第二个条件); b. **所有**的多值依赖中左侧是超键
 
 怎么做范式的题:
 
 1. 弄清楚2NF, 3NF, BCNF的概念, 分别是没有部分依赖, 非主属性不能依赖其他非主属性, 左侧是超键
 2. 对于BCNF, 它可能会先给出很多函数依赖, 然后让你判断这些函数依赖是否符合BCNF, 那么判断的方法就是对于这些函数依赖的左侧, 用属性闭包判断其是否为超键, 如果是所有函数依赖的左侧都是超键, 则说明表符合BCNF
-3. 执行分解: 如[图](http://img.ricolxwz.asia/ba06d45ab84b9af2868b8fd73170af4b.png)
-4. 检查分解: a. 检查分解后的函数依赖闭包是否和原始闭包相同或者函数依赖和原始函数依赖相同, 如[图](http://img.ricolxwz.asia/180a82391d7abd8b74382f665b8a260e.png); b. 检查无损连接, 交集是否能够推出其中任意一个表, 即交集的属性至少是任意一个表的键
+3. 执行分解: 如[图](http://img.ricolxwz.cn/ba06d45ab84b9af2868b8fd73170af4b.png)
+4. 检查分解: a. 检查分解后的函数依赖闭包是否和原始闭包相同或者函数依赖和原始函数依赖相同, 如[图](http://img.ricolxwz.cn/180a82391d7abd8b74382f665b8a260e.png); b. 检查无损连接, 交集是否能够推出其中任意一个表, 即交集的属性至少是任意一个表的键
 
 ## 事务
 
@@ -361,5 +361,5 @@ comments: true
 	Not very sure, but:
 
 	<figure markdown='1'>
-	![](http://img.ricolxwz.asia/ddd0159a2b9fe0a0231d30ae468ad372.png){ loading=lazy width='500' }
+	![](http://img.ricolxwz.cn/ddd0159a2b9fe0a0231d30ae468ad372.png){ loading=lazy width='500' }
 	</figure>

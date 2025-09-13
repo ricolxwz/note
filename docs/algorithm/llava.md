@@ -113,14 +113,14 @@ comments: true
 * 复杂推理. 上述的两种类型的问题主要集中在视觉内容本身. 再次基础上, 他们进一步制作了深度推理问题, 答案通常需要按照严密的逻辑逐步推理
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/4fe9d333253f301574047f72d9992da8.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/4fe9d333253f301574047f72d9992da8_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/4fe9d333253f301574047f72d9992da8.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/4fe9d333253f301574047f72d9992da8_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>指令跟随数据的一个例子. 最上面的标题/边框是GPT-4的prompt中的一部分. 最下面的问题/回答和图片是LLaVA的prompt中的一部分</figcaption>
 </figure>
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/55e367bc05d73ed1bc1a1c60ffc2a9d5.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/55e367bc05d73ed1bc1a1c60ffc2a9d5_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/55e367bc05d73ed1bc1a1c60ffc2a9d5.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/55e367bc05d73ed1bc1a1c60ffc2a9d5_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>GPT-4的输入</figcaption>
 </figure>
 
@@ -131,8 +131,8 @@ comments: true
 主要目标是有效利用现有的预训练的LLM和视觉模型的功能. 网格架构如下图所示. 他们选择的是Vicuna作为以$\phi$作为参数的LLM $f_{\phi}(\cdot)$, 因为Vicuna在公开的checkpoints中具有最佳的指令跟踪能力.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/20310f3fdd5c88bb694fe2d8a6956fcf.webp#only-light){ loading=lazy width='500' }
-![](http://img.ricolxwz.asia/20310f3fdd5c88bb694fe2d8a6956fcf_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/20310f3fdd5c88bb694fe2d8a6956fcf.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/20310f3fdd5c88bb694fe2d8a6956fcf_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>LLaVA网络架构</figcaption>
 </figure>
 
@@ -167,8 +167,8 @@ $$p(\mathbf{X}_a \mid \mathbf{X}_v, \mathbf{X}_{\text{instruct}}) = \prod_{i=1}^
     都是连成一个串输入进去的.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/50f5a8dd0bd9e1fb341480878a7643fe.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/50f5a8dd0bd9e1fb341480878a7643fe_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/50f5a8dd0bd9e1fb341480878a7643fe.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/50f5a8dd0bd9e1fb341480878a7643fe_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>用于训练模型的序列. 注意上图中的序列都是串行的, 都是并行的, 是因为表示清晰所以并排列出; 这里只举例说明了两个对话回合, 在实际操作中, 回合的数量会根据指令跟随数据的不同而变化. 在他们的实现中, 按照Vicuna-v0设置了一个系统信息$\mathbf{X}_{\text{system}}$并设置STOP=###. 该模型经过训练, 用于预测assistant的答案$\mathbf{X}_a$和停止的位置, 所以只有颜色不同的哪些序列/tokens会被用于在自回归模型中计算损失</figcaption>
 </figure>
 

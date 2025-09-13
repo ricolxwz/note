@@ -51,7 +51,7 @@ matplotlib.pyplot.bar(x, height, width, bottom, *, align, data, **kwargs)
 
         输出:
 
-        ![](http://img.ricolxwz.asia/02b390d48e3ab42cc9fefd641d48e87a.png){:style="width:400px"}
+        ![](http://img.ricolxwz.cn/02b390d48e3ab42cc9fefd641d48e87a.png){:style="width:400px"}
 
     === "垂直柱形图"
 
@@ -67,7 +67,7 @@ matplotlib.pyplot.bar(x, height, width, bottom, *, align, data, **kwargs)
 
         输出:
 
-        ![](http://img.ricolxwz.asia/3d9918113dafe4dbe01f781ca8e14def.png){:style="width:400px"}
+        ![](http://img.ricolxwz.cn/3d9918113dafe4dbe01f781ca8e14def.png){:style="width:400px"}
 
 ### 自定义柱的颜色
 
@@ -87,7 +87,7 @@ matplotlib.pyplot.bar(x, height, width, bottom, *, align, data, **kwargs)
 
         输出:
 
-        ![](http://img.ricolxwz.asia/32bb911b7ce2237e94433514a2964766.png){:style="width:400px"}
+        ![](http://img.ricolxwz.cn/32bb911b7ce2237e94433514a2964766.png){:style="width:400px"}
 
     === "设置各个柱的颜色"
 
@@ -103,7 +103,7 @@ matplotlib.pyplot.bar(x, height, width, bottom, *, align, data, **kwargs)
 
         输出:
 
-        ![](http://img.ricolxwz.asia/1ba81d2856cfb1b74386f4fe9f617e26.png){:style="width:400px"}
+        ![](http://img.ricolxwz.cn/1ba81d2856cfb1b74386f4fe9f617e26.png){:style="width:400px"}
 
 ### 自定义柱的宽度
 
@@ -124,6 +124,6 @@ matplotlib.pyplot.bar(x, height, width, bottom, *, align, data, **kwargs)
 
     输出:
 
-    ![](http://img.ricolxwz.asia/359892a4b0f6ff5375e79e5e1c6d2bca.png){:style="width:400px"}
+    ![](http://img.ricolxwz.cn/359892a4b0f6ff5375e79e5e1c6d2bca.png){:style="width:400px"}
 
 [^1]: Matplotlib 柱形图 | 菜鸟教程. (n.d.). From https://www.runoob.com/matplotlib/matplotlib-bar.html

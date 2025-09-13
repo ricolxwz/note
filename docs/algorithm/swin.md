@@ -30,10 +30,10 @@ comments: true
 为了解决这些问题, 作者提出了一种Transformer[通用主干网络](/dicts/backbone), 叫做Swin-T. **它会构建分层特征图, 并且其计算复杂度和图像的大小呈现线性关系. 它通过从小patches开始, 并在更深的Transformer层中(更深的stage)逐渐合并相邻补丁, 构建层次表示(如下图所示)**. 利用这些分层特征图, Swin-T模型可以方便地利用高级稠密预测技术, 例如特征金字塔网络(FPN)或者U-Net. 他们将图像划分为非重叠的窗口(红色框), 并在窗口内局部计算自注意力, 且每个窗口中patch的数量固定, 因此复杂度是图像大小的线性函数(见下方复杂度计算).
 
 <figure markdown='1'>
-<!-- ![](http://img.ricolxwz.asia/77e84ae173ab3e1ff94dd4d5a678ac96.webp#only-light){ loading=lazy width='400' }
-![](http://img.ricolxwz.asia/77e84ae173ab3e1ff94dd4d5a678ac96_inverted.webp#only-dark){ loading=lazy width='400' } -->
-![](http://img.ricolxwz.asia/c78aa09e2a4a017c112084c2eca559a8.webp#only-light){ loading=lazy width='600' }
-![](http://img.ricolxwz.asia/c78aa09e2a4a017c112084c2eca559a8_inverted.webp#only-dark){ loading=lazy width='600' }
+<!-- ![](http://img.ricolxwz.cn/77e84ae173ab3e1ff94dd4d5a678ac96.webp#only-light){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/77e84ae173ab3e1ff94dd4d5a678ac96_inverted.webp#only-dark){ loading=lazy width='400' } -->
+![](http://img.ricolxwz.cn/c78aa09e2a4a017c112084c2eca559a8.webp#only-light){ loading=lazy width='600' }
+![](http://img.ricolxwz.cn/c78aa09e2a4a017c112084c2eca559a8_inverted.webp#only-dark){ loading=lazy width='600' }
 <figcaption>(a) Swin-T通过在深层合并patches构造层次的特征图, 由于只在窗口内部有注意力, 窗口内patch的数量是固定的, 所以复杂度和图像大小线性相关. (b) ViT只能产生一个低分辨率的特征图, 而且其复杂度和图像大小的平方成正比</figcaption>
 </figure>
 
@@ -55,16 +55,16 @@ comments: true
 Swin-T中的另一个比较重要的设计就是移位窗口, Shifted Window. 这种移位窗口发生在同一个stage的不同transformer块之间, 使得不同block的窗口之间产生了连接/重叠/交叉, 让原本独立的窗口之间产生了联系, 使得模型能够学习到更大范围的信息, 提升了在不同窗口之间的理解能力. 如下图所示.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/c1b8074569e7a51ce2c3008dd1caf2dc.webp#only-light){ loading=lazy width='500' }
-![](http://img.ricolxwz.asia/c1b8074569e7a51ce2c3008dd1caf2dc_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/c1b8074569e7a51ce2c3008dd1caf2dc.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/c1b8074569e7a51ce2c3008dd1caf2dc_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>移位窗口. 在左边, 使用的是一种常规的分割策略. 在右边, 是将前一个block的窗口进行移动.</figcaption>
 </figure>
 
 这个策略同样在真实世界降低延迟方面也很有效, 所有在同一个窗口内不同的patch的$Q$向量共享的都是同一个键集合, 而不是像传统的滑动窗口(sliding window)方法那样不同的patch的$Q$向量使用的是不同的键集合, 这样可以极大降低延迟和内存占用. 作者的实验显示在消耗的算力差不多的情况下移位窗口策略的延迟相比滑动窗口显著降低. 这种移位窗口的approach被证明对所有的MLP架构是有益的.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/8b85d471089af1b92eb97119e1bc71ea.webp#only-light){ loading=lazy width='500' }
-![](http://img.ricolxwz.asia/8b85d471089af1b92eb97119e1bc71ea_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/8b85d471089af1b92eb97119e1bc71ea.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/8b85d471089af1b92eb97119e1bc71ea_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>传统滑动窗口计算某一个patch对其他patches注意力的时候, 必须要用到它的周围一圈的patches组成的键集合; 但是移位窗口计算某一个patch对其他patches注意力的时候, 只用同一个窗口下的patches组成的键集合. 如b2, b3, b4, b5, b6, b7计算注意力的时候用到的都是同一个键集合. 但是b2, b3计算注意力的时候用到的不是同一个键集合</figcaption>
 </figure>
 
@@ -109,8 +109,8 @@ ViT在图像分类上的结果令人鼓舞, 但是其架构不适合用作密集
 ### 整体架构
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/84eb2b84b063a9220fd7325a70b10e4c.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/84eb2b84b063a9220fd7325a70b10e4c_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/84eb2b84b063a9220fd7325a70b10e4c.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/84eb2b84b063a9220fd7325a70b10e4c_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>(a) Swin-T的架构. (b) 两个连续的Swin-T块, 其中, W-MSA和SW-MSA分别是常规和移位窗口下的多头注意力模块</figcaption>
 </figure>
 
@@ -136,8 +136,8 @@ ViT在图像分类上的结果令人鼓舞, 但是其架构不适合用作密集
 为了产生层次化的表示, 随着stage的变化, 会通过patch合并层(patch merging layer)以减少embedding的数量, 增大patch的分辨率. 第一个patch合并层将相邻的$2\times 2$(共$4$个)patches进行合并, ^^注意, 是对这$4$个patches在**通道**方向上进行合并(如何合并见下图, 将每个窗口相同位置的像素取出), 也就是说, 会得到一个$4C$维向量, 然后再通过一个线性层(通常会将$4C$维度投影到新的维度, 例如$2C$)得到patch合并层的最终输出,^^ 这个向量表示的是像素大小是$8\times 8$, 所以这样的patch数量为$\frac{H}{8}\times \frac{W}{8}$, 输出大小为$\frac{H}{8}\times \frac{W}{8}\times 2C$, 特征图分辨率为$\frac{H}{8}\times \frac{W}{8}$, 然后, 这些patches会通过Swin-T块, 上述操作就是stage2.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/af0ec1985beaa09580776e5974f032e3.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/af0ec1985beaa09580776e5974f032e3_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/af0ec1985beaa09580776e5974f032e3.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/af0ec1985beaa09580776e5974f032e3_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption></figcaption>
 </figure>
 
@@ -169,8 +169,8 @@ $$\begin{aligned}
 上述W-MSA缺乏窗口之间的注意力, 这限制了模型的建模能力. 为了在保持非重叠窗口的高效计算的同时引入跨窗口连接, 作者提出了一种移位窗口的方法, 基于这种方法的注意力机制又叫做SW-MSA. ^^W-MSA和SW-MSA在同一个stage内交替使用.^^
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/c1b8074569e7a51ce2c3008dd1caf2dc.webp#only-light){ loading=lazy width='400' }
-![](http://img.ricolxwz.asia/c1b8074569e7a51ce2c3008dd1caf2dc_inverted.webp#only-dark){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/c1b8074569e7a51ce2c3008dd1caf2dc.webp#only-light){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/c1b8074569e7a51ce2c3008dd1caf2dc_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>移位窗口. 在左边, 使用的是一种常规的分割策略. 在右边, 是将前一个block的窗口进行移动.</figcaption>
 </figure>
 
@@ -196,15 +196,15 @@ $$\begin{aligned}
 作者提出了一种更加高效的方法: 循环移位, cyclic-shifting. 如图.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/dfcac15ee3737b3ab5f5929822dac872.webp#only-light){ loading=lazy width='600' }
-![](http://img.ricolxwz.asia/dfcac15ee3737b3ab5f5929822dac872_inverted.webp#only-dark){ loading=lazy width='600' }
+![](http://img.ricolxwz.cn/dfcac15ee3737b3ab5f5929822dac872.webp#only-light){ loading=lazy width='600' }
+![](http://img.ricolxwz.cn/dfcac15ee3737b3ab5f5929822dac872_inverted.webp#only-dark){ loading=lazy width='600' }
 </figure>
 
 通过循环移位, 得到的窗口数量和原始窗口数量是一样的, 都是4个, 但是, 可以从上图看到, 左下, 右下, 右上的窗口是由几个在特征图内非相邻的子窗口组成的. 为了解决这个问题, 他们采用了掩码来使自注意力计算限制在各个子窗口内.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/ea61d3a1880b70d06eb6a5824b00e023.webp#only-light){ loading=lazy width='500' }
-![](http://img.ricolxwz.asia/ea61d3a1880b70d06eb6a5824b00e023_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/ea61d3a1880b70d06eb6a5824b00e023.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/ea61d3a1880b70d06eb6a5824b00e023_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption></figcaption>
 </figure>
 

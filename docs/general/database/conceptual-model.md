@@ -26,7 +26,7 @@ comments: true
 
 从现实世界到概念模型的转换是由数据库设计人员完成的; 从概念模型到逻辑模型的转换可以由数据库设计人员完成, 也可以用数据库设计工具协助设计人员完成. 从逻辑模型到物理模型的转换主要由数据库管理系统完成.
 
-图片表示, 点击[这里](http://img.ricolxwz.asia/2bc049b413b75e4859bb24979b34414f.png).
+图片表示, 点击[这里](http://img.ricolxwz.cn/2bc049b413b75e4859bb24979b34414f.png).
 
 ## 概念模型
 
@@ -46,11 +46,11 @@ comments: true
 
 弱实体的存在取决于一个识别拥有者实体(Identifying Owner Entity)的存在. 换句话说, 如果没有与之相关的强实体存在, 弱实体本身就无法存在. 弱实体集必须通过一个一对多/多对一的识别关系和强实体集相联系. 在这种关系中, 强实体集通过主键来识别和关联弱实体集. 弱实体集必须全部参与到关系中(即[完全参与约束](/general/database/conceptual-model/#participation-constraints)), 弱实体集中的每一个实体必须参与这个关系. 弱实体集在ERD中表现为一个嵌套的方形(方形外面套一个方形).  强弱实体的关系集在ERD中表现为一个嵌套的菱形(菱形外面套一个菱形).
 
-区分符(discriminator): 如, 贷款和还款. "贷款"是一个强实体集, "还款"是一个弱实体集. 每一个贷款可以有多个还款, 这是一个一对多的关系. 所有的还款必须参与到关系中. Load_ID是贷款的主键, Repayment_ID是还款的编号, 是区分符, 用于区分同一笔贷款中的不同还款. 还款表的主键应该是(Loan_ID, Repayment_Number). 如[图](http://img.ricolxwz.asia/e75dfbf672dd913e0347777af2d9bd14.png).
+区分符(discriminator): 如, 贷款和还款. "贷款"是一个强实体集, "还款"是一个弱实体集. 每一个贷款可以有多个还款, 这是一个一对多的关系. 所有的还款必须参与到关系中. Load_ID是贷款的主键, Repayment_ID是还款的编号, 是区分符, 用于区分同一笔贷款中的不同还款. 还款表的主键应该是(Loan_ID, Repayment_Number). 如[图](http://img.ricolxwz.cn/e75dfbf672dd913e0347777af2d9bd14.png).
 
 #### 属性[^3] {#attributes}
 
-- 属性(Attribute): 实体所具有的某一方面的特性, 属性可以只有一个值, 也可以有多个值. 一个值的属性用一个椭圆表示, 多个值的属性用两个椭圆表示(椭圆外面再套一个椭圆); 属性也可以是简单的, 或者是复合的, 简单属性只有一层椭圆, 复合属性由多层椭圆表示, 如[图](http://img.ricolxwz.asia/0dd1b5682e37ff151a9151b99636c7e3.png)
+- 属性(Attribute): 实体所具有的某一方面的特性, 属性可以只有一个值, 也可以有多个值. 一个值的属性用一个椭圆表示, 多个值的属性用两个椭圆表示(椭圆外面再套一个椭圆); 属性也可以是简单的, 或者是复合的, 简单属性只有一层椭圆, 复合属性由多层椭圆表示, 如[图](http://img.ricolxwz.cn/0dd1b5682e37ff151a9151b99636c7e3.png)
 - 域(Domain): 一个属性可能取的所有属性值的范围称为该属性的域
 - 码(Key): 唯一标识实体的属性集, 在ERD中, 有下划线的属性为码
 
@@ -110,7 +110,7 @@ comments: true
 
 如, 一个职工最多只能在一个部门工作, 但是一个部门可以有多个员工. 此时是一对多/多对一的关系. "多"的那一侧是职工实体集, 对于职工实体集有键约束, 且职工实体集的主键emp_id就是该关系集的候选键.
 
-键约束在ERD中的表现形式是一根箭头, 如[图](http://img.ricolxwz.asia/3ad7c122d9e79fcf8efc11aab38e51b5.png).
+键约束在ERD中的表现形式是一根箭头, 如[图](http://img.ricolxwz.cn/3ad7c122d9e79fcf8efc11aab38e51b5.png).
 
 ##### 参与约束 {#participation-constraints}
 
@@ -118,17 +118,17 @@ comments: true
 
 如, 所有员工必须至少属于一个部门.
 
-完全参与约束在ERD中的表现形式是一条粗线, 如[图](http://img.ricolxwz.asia/637d503618d08762f2d1e835b4e20e6c.png).
+完全参与约束在ERD中的表现形式是一条粗线, 如[图](http://img.ricolxwz.cn/637d503618d08762f2d1e835b4e20e6c.png).
 
 ##### 键约束结合参与约束
 
-如果所有的实体正好都参与一次关系, 那么该实体所处的实体集同时受到键约束和参与约束, 如[图](http://img.ricolxwz.asia/43388783c414a63ca2a6096caf8dacc1.png).
+如果所有的实体正好都参与一次关系, 那么该实体所处的实体集同时受到键约束和参与约束, 如[图](http://img.ricolxwz.cn/43388783c414a63ca2a6096caf8dacc1.png).
 
 ##### 基数约束 {#基数约束}
 
 基数约束是指对参与某个关系的实体集中的实体在在某个关系中至少参与多少次和最多参与多少次. 在ERD中, 用min...max的形式表示.
 
-如, 所有的员工必须在1-3个部门工作, 如[图](http://img.ricolxwz.asia/ddf4672192186f4aa0ca1c07cdea115c.png).
+如, 所有的员工必须在1-3个部门工作, 如[图](http://img.ricolxwz.cn/ddf4672192186f4aa0ca1c07cdea115c.png).
 
 ### 实体-关系方法
 
@@ -142,7 +142,7 @@ ERD图怎么画, 在上面的各个小节中描述地很清楚了.
 
 ##### 泛化/反泛化 {#泛化反泛化}
 
-如Person实体集表示了一般的人员概念, 它包含了id, name, phone, address这些属性. 这是泛化的结果, 将两个更加具体的实体集Employee和Customer的共同属性抽象为一个更一般的Person实体集. Person实体集还可以反泛化为为两个更加具体的子实体集, 即Employee和Customer. 见[图](http://img.ricolxwz.asia/a95e1bdc0b959cb71b3401f449141373.png). 我们用isA关系集来表示层次结构中的继承关系, isA关系在ERD中用三角形表示.
+如Person实体集表示了一般的人员概念, 它包含了id, name, phone, address这些属性. 这是泛化的结果, 将两个更加具体的实体集Employee和Customer的共同属性抽象为一个更一般的Person实体集. Person实体集还可以反泛化为为两个更加具体的子实体集, 即Employee和Customer. 见[图](http://img.ricolxwz.cn/a95e1bdc0b959cb71b3401f449141373.png). 我们用isA关系集来表示层次结构中的继承关系, isA关系在ERD中用三角形表示.
 
 若两个实体型EF的关系是isA关系(F是一个E), 则:
 
@@ -165,7 +165,7 @@ ERD图怎么画, 在上面的各个小节中描述地很清楚了.
 
 聚合(Aggregation)表示我们将一组实体和关系视为一个更高级别的实体.
 
-如[图](http://img.ricolxwz.asia/77127e293d6f948352193e79dfcc6fa9.png).
+如[图](http://img.ricolxwz.cn/77127e293d6f948352193e79dfcc6fa9.png).
 
 图中, 整个Sponsor关系(包括Project和Department)被聚合为一个新的实体, 这个新的实体作为Monitors关系的一部分与Employee进行交互. 在这里, Monitors关系连接了Employee和聚合后的Sponsors实体, 表示某个员工复杂监控某个部门对项目的赞助, 直到某个时间为止.
 

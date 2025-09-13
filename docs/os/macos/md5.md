@@ -43,9 +43,9 @@ function fig() {
             mv "$latest_file_path" "$new_path"
         fi
 
-        local original_url="http://img.ricolxwz.asia/${new_name}"
+        local original_url="http://img.ricolxwz.cn/${new_name}"
         local inverted_name="${md5_hash}_inverted.${extension}"
-        local inverted_url="http://img.ricolxwz.asia/${inverted_name}"
+        local inverted_url="http://img.ricolxwz.cn/${inverted_name}"
         local inverted_path="$snip_dir/$inverted_name"
 
         # 创建反色图像

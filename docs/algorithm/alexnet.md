@@ -12,7 +12,7 @@ AlexNet采用的是非饱和非线性函数, 而不是才用传统的饱和非�
 $max(0, x)$是AlexNet采用的非饱和非线性函数. 输出为正值的时候, 导数恒为$1$, 输出为负值的时候, 导数恒为$0$.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/ef635b798a4cfa5fe4207d4d54967ff5.png){ loading=lazy width='300' }
+![](http://img.ricolxwz.cn/ef635b798a4cfa5fe4207d4d54967ff5.png){ loading=lazy width='300' }
 </figure>
 
 从图中可以看出, 使用一个ReLU的四层CNN达到$25\%$错误率的速度比使用$\tanh$激活函数的CNN快$6$倍.
@@ -62,7 +62,7 @@ LRN受到了神经生物学的一个启发. 侧抑制(Lateral Inhibition)是一�
 如下图, 是一张AlexNet整体架构图:
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/1588ab9320a43a44d17240bf1a5aa017.png){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/1588ab9320a43a44d17240bf1a5aa017.png){ loading=lazy width='800' }
 </figure>
 
 其中, 第二, 四, 五卷积层的核仅仅连接到前一层中位于同一GPU上的那些特征图. 第三卷积层的核连接到前一层的所有神经元, 从图中可以看到是不同GPU对应的部分之间是有虚线连接的(说明存在GPU之间的通信). 全连接层中的神经元连接到前一层的所有神经元(为了保持和单GPU训练时的参数量一致).

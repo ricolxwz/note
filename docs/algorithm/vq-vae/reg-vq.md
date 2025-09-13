@@ -21,14 +21,14 @@ addi: https://arxiv.org/pdf/2303.06424
 根据离散token的选择方式, 向量量化模型大致可分为确定性量化和随机量化两类. 具体而言, 典型的确定性方法如VQ-GAN通过Argmin或Argmax直接选择最佳匹配的token; 而随机方法如Gumbel-VQ则根据预测的token分布进行随机采样. 另一方面, 确定性量化存在[码本崩溃](/dicts/codebook-collapse)问题, 即大部分码本嵌入向量无效, 值接近零(如下[图1](#fig1)所示); 此外, 确定性量化与生成建模的推断阶段不一致, 后者通常会随机采样token而非选择最佳匹配的. 与之相对, 随机量化通过[Gumbel-Softmax](/dicts/gumbel-softmax)对token分布进行采样, 能够避免码本崩溃并缓解推断不一致; 然而, 尽管随机量化中的大多数码本嵌入值是有效的, 实际用于量化的仅是一小部分, 导致码本利用率低(如下[图1](#fig1)所示). 另外, 由于随机方法从分布中采样token, 重构图像往往与原始图像不完全对齐, 导致重构目标受到扰动, 重建图像不够真实.
 
 <!-- <figure markdown='1' id='fig1'>
-![](http://img.ricolxwz.asia/f774a558fda60099392a926954d75ed2.webp#only-light){ loading=lazy width='600' }
-![](http://img.ricolxwz.asia/f774a558fda60099392a926954d75ed2_inverted.webp#only-dark){ loading=lazy width='600' }
+![](http://img.ricolxwz.cn/f774a558fda60099392a926954d75ed2.webp#only-light){ loading=lazy width='600' }
+![](http://img.ricolxwz.cn/f774a558fda60099392a926954d75ed2_inverted.webp#only-dark){ loading=lazy width='600' }
 <figcaption>图1: 在CelebA-HQ数据集上的表现, 左侧为VQ-GAN, 右侧为Reg-VQ</figcaption>
 </figure> -->
 
 <figure markdown='1' id='fig1'>
-![](http://img.ricolxwz.asia/1a9e69a42fb317dbd4461ff0feb3efa8.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/1a9e69a42fb317dbd4461ff0feb3efa8_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/1a9e69a42fb317dbd4461ff0feb3efa8.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/1a9e69a42fb317dbd4461ff0feb3efa8_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图1: 在ADE20K数据集上, 第一行为码本可视化, 第二行为码本利用率示意图. VQGAN存在严重的码本坍缩问题, 大多数码本嵌入为无效值. Gumbel-VQ为所有码本嵌入学习到有效值, 然而如利用率示意图所示, 仅有少数嵌入实际用于量化. 相比之下, 本文提出的正则化量化既避免了码本坍缩, 又实现了完整的码本利用. </figcaption>
 </figure>
 
@@ -92,8 +92,8 @@ addi: https://arxiv.org/pdf/2303.06424
 在向量量化框架完成训练后, 图像即可用这些码本索引(离散token)表示. 基于离散token, 生成模型如auto-regressive模型与diffusion模型可用于建模token之间的依赖关系. 在生成推断阶段, 先从模型采样得到一串token用于图像合成; 再将这些token映射回其对应的码本嵌入并输入解码器$G$, 便可直接生成图像.
 
 <figure markdown='1' id='fig2'>
-![](http://img.ricolxwz.asia/b45caeadd4f3884a90c2aac839984c3c.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/b45caeadd4f3884a90c2aac839984c3c_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/b45caeadd4f3884a90c2aac839984c3c.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/b45caeadd4f3884a90c2aac839984c3c_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图2: 所提出的正则化量化框架流程如下: 在预测token分布上施加随机掩码(紫色区域)以指定随机采样区域. 随后, 编码向量依据选中的码本嵌入表示, 产生用于图像重建的量化向量. 为避免码本坍缩及低码本利用率, 通过计算后验token分布与先验token分布之间的KL散度$D_{\mathrm{KL}}(P\,\|\,Q)$实现正则化.</figcaption>
 </figure>
 
@@ -137,8 +137,8 @@ $$
 另一方面, 选择最可能token的确定性量化会导致与生成模型推断阶段的不一致, 因为推断阶段通常依据预测分布随机采样token. 相反, 随机量化在量化过程中引入随机性, 有助于缓解这种不一致. 然而, 随机量化往往会扰动重构目标, 因为采样得到的token可能与原始图像不匹配. 结果如[图3](#fig3)所示, 随机量化在生成质量(FID)方面相比确定性量化仅有轻微提升. 为在未受扰动的重构目标与推断阶段一致性之间取得平衡, 作者提出随机掩码正则化: 通过对图像区域施加随机掩码, 协调随机量化与确定性量化的比例, 具体示意见[图2](#fig2)
 
 <figure markdown='1' id='fig3'>
-![](http://img.ricolxwz.asia/43763f5c204906d0fb514cb86ed8f1cf.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/43763f5c204906d0fb514cb86ed8f1cf_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/43763f5c204906d0fb514cb86ed8f1cf.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/43763f5c204906d0fb514cb86ed8f1cf_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图3: 不同掩码比例对ADE20K数据集上的图像重构与图像生成效果的影响. 采用不同量化方法的VQ-GAN进行图像token化, 并使用自回归模型进行图像合成. DVQ, S-VQ, MaskReg分别表示确定性向量量化, 随机向量量化以及本文提出的随机掩码正则化. 图像重构质量通过PSNR(峰值信噪比)评估, 图像生成质量通过FID(Fréchet Inception Distance)评估. 需要注意, 较高的PSNR并不一定意味着更好的生成质量.</figcaption>
 </figure>
 
@@ -155,8 +155,8 @@ $$
 随机掩码正则化缓解了训练与推断阶段的不一致. 然而, 对于采用随机量化的图像区域, 随机采样token仍会引入重构目标扰动. 为此, 作者提出概率对比损失(PCL), 以削弱随机量化区域中的扰动目标. 由于传统$L_1$重构目标要求对原始图像进行完美复原, PCL通过对比学习在随机量化区域实现弹性图像重建.
 
 <figure markdown='1' id='fig4'>
-![](http://img.ricolxwz.asia/29a4b88b1a7ca111ac324d8437485709.webp#only-light){ loading=lazy width='600' }
-![](http://img.ricolxwz.asia/29a4b88b1a7ca111ac324d8437485709_inverted.webp#only-dark){ loading=lazy width='600' }
+![](http://img.ricolxwz.cn/29a4b88b1a7ca111ac324d8437485709.webp#only-light){ loading=lazy width='600' }
+![](http://img.ricolxwz.cn/29a4b88b1a7ca111ac324d8437485709_inverted.webp#only-dark){ loading=lazy width='600' }
 <figcaption>图4: 对比L1 loss, vanilla对比损失以及本文提出的概率对比损失(PCL)在图像重建任务中的表现. PCL为正样本对引入自适应权重$\{w_i\}_{i=1}^N$, 以促进更优的表征学习并实现弹性图像重建.</figcaption>
 </figure>
 

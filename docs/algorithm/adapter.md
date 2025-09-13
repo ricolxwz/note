@@ -34,8 +34,8 @@ comments: true
 基于特征的迁移学习和微调对于每个人物都需要一堆新的权重参数. 如果网络的较底层能够共享权重的话, 微调更加节约参数. 但是, 作者提出的adapter方法更加节约参数:laughing:. 下图展示了这种trade-off.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/eb18642fbd8a8d7ab88bc333671b123d.webp#only-light){ loading=lazy width='400' }
-![](http://img.ricolxwz.asia/eb18642fbd8a8d7ab88bc333671b123d_inverted.webp#only-dark){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/eb18642fbd8a8d7ab88bc333671b123d.webp#only-light){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/eb18642fbd8a8d7ab88bc333671b123d_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>对于adapter和微调准度和任务相关参数数量的trade-off. y轴已经针对全量微调的准度进行归一化. 下/中/上三条曲线分别展示了20分位, 50分位, 80分位的GLUE基准测试中9个任务的性能</figcaption>
 </figure>
 
@@ -72,8 +72,8 @@ Adapter模块有两个核心的特性: 参数数量少而且近乎相同的初�
 由于adapter模块的设计空间极大, 研究人员可以在其架构上做出很多选择, 在面对多种可能的设计选择的时候, 作者决定采用一种较为简单的adapter架构, 这种简单设计不仅易于实现和理解, 还能在多个数据集上取得很好的性能. 虽然作者最终选择了简单的设计, 但是他们并没有忽视其他更加复杂的架构可能带来的潜在优势, 因此, 他们进行了多种更加复杂的设计实验, 以评估其性能.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/188d8d2ffcf8b5a1b8be33ca52db1d9d.webp#only-light){ loading=lazy width='400' }
-![](http://img.ricolxwz.asia/188d8d2ffcf8b5a1b8be33ca52db1d9d_inverted.webp#only-dark){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/188d8d2ffcf8b5a1b8be33ca52db1d9d.webp#only-light){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/188d8d2ffcf8b5a1b8be33ca52db1d9d_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>Adapter模块的架构以及它和Transformer的集成</figcaption>
 </figure>
 

@@ -3,7 +3,7 @@
 微分有四种方法: 手动微分, 数值微分, 符号微分和自动微分. 如图[^2]所示.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.asia/e8b99a520b4a39e9675ad00859811bf4.png){ loading=lazy width='600' }
+  ![](http://img.ricolxwz.cn/e8b99a520b4a39e9675ad00859811bf4.png){ loading=lazy width='600' }
 </figure>
 
 - **手动微分**: 一种通过手动推导和计算来求解函数导数的方法. 根据微积分中的求导法则(如链式法则, 乘法法则等), 手动推导出该函数的导数表达式. 并将这个手动推导出来的公式用计算机代码表示, 以便在给定输入值时计算出相应的导数值
@@ -29,14 +29,14 @@
 ### 正向模式
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.asia/9896183d8df1e4f92cbbb37a6961e12a.png){ loading=lazy width='500' }
+  ![](http://img.ricolxwz.cn/9896183d8df1e4f92cbbb37a6961e12a.png){ loading=lazy width='500' }
   <figcaption>正向模式例子. 定义输出函数为$y=f(x_1, x_2)=\ln(x_1)+x_1x_2-\sin(x_2)$, 计算$(x_1, x_2)=(2, 5)$处的偏导数$\frac{\partial y}{\partial x_1}$</figcaption>
 </figure>
 
 ### 反向模式
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.asia/da7f074ddd48d72e35c1ed7c7f06ebd2.png){ loading=lazy width='500' }
+  ![](http://img.ricolxwz.cn/da7f074ddd48d72e35c1ed7c7f06ebd2.png){ loading=lazy width='500' }
   <figcaption>反向模式例子. 定义输出函数为$y=f(x_1, x_2)=\ln(x_1)+x_1x_2-\sin(x_2)$, 计算$(x_1, x_2)=(2, 5)$处的偏导数$\frac{\partial y}{\partial x_1}$和偏导数$\frac{\partial y}{\partial x_2}$</figcaption>
 </figure>
 
@@ -57,7 +57,7 @@ $$\mathbf{J} =
 **若设置单个种子**, 正向模式和反向模式一次分别能计算Jacobian矩阵的一列和一行, 如图所示.
 
 <figure markdown='1'>
-  ![](http://img.ricolxwz.asia/b608f936c0a583e468b44541fab6d1c3.png){ loading=lazy width='500' }
+  ![](http://img.ricolxwz.cn/b608f936c0a583e468b44541fab6d1c3.png){ loading=lazy width='500' }
   <figcaption>总共有$m$个函数, $n$个输入</figcaption>
 </figure>
 

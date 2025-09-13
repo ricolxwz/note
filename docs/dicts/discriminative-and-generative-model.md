@@ -9,11 +9,11 @@
 下面两图可以更加清晰地看出两个模型之间的区别:
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/60a52a3289e03706a2808f6040120717.avif){width="500"}
+![](http://img.ricolxwz.cn/60a52a3289e03706a2808f6040120717.avif){width="500"}
 </figure>
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/ecbafa552c33e5925b0ff77361ddaad0.avif){width="500"}
+![](http://img.ricolxwz.cn/ecbafa552c33e5925b0ff77361ddaad0.avif){width="500"}
 </figure>
 
 总结一下, 判别式模型直接学习决策函数或者条件概率, 不能反映训练数据本身的特性, 它查找的是不同类别之间的最优分裂面, 反映的是异类数据之间的差异, 直接面对预测往往学习准确度更高. 生成式模型学习的是联合概率分布, 可以从统计的角度表示分布的情况, 能够反映数据本身的相似度, 它不关心到底划分不同类的边界在哪里.

@@ -18,8 +18,8 @@ $$ \arg \min_{A,B} \mathbb{E}[\Delta(\mathbf{x}, B \circ A(\mathbf{x}))] $$
 其中, $\Delta$表示的是重构损失函数, 衡量的是输入和输出之间的距离/差距, 通常使用[L2范数](https://developer.aliyun.com/article/1316675)(即向量元素平方和的平方根)来衡量这种差异. 通常使用 $\mathbf{x}$是编码器的输入. **$\mathbf{x}$表示的是某个输入样本(例如一张图片)的输入向量$\mathbf{x}=\{x_1, x_2, ...\}$, $x_1, x_2, ...$这些是像素值**. 中间的小圆点$\circ$表示的是函数复合, $B\circ A(\mathbf{x})$就是先对输入$\mathbf{x}$施加函数$A$, 然后再将结果输入到函数$B$中, 如图所示.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/4cb7518300ce438c9aa59a59cf51e252.webp#only-light){ loading=lazy width='500' }
-![](http://img.ricolxwz.asia/4cb7518300ce438c9aa59a59cf51e252_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/4cb7518300ce438c9aa59a59cf51e252.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.cn/4cb7518300ce438c9aa59a59cf51e252_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption></figcaption>
 </figure>
 
@@ -94,8 +94,8 @@ $$ \arg \min_{A,B} \mathbb{E}[\Delta(\mathbf{x}, B \circ A(\mathbf{x})) + \sum_j
 在具体的实现中, 常见的加噪方式包括添加高斯白噪声或者利用Dropout模拟输入缺失, 或者使用token掩码/片段掩码? 然后模型学习如何从这些带噪数据中重构原始输入.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/594c13ddb657a2f3bbd38301f86a47a3.webp#only-light){ loading=lazy width='400' }
-![](http://img.ricolxwz.asia/594c13ddb657a2f3bbd38301f86a47a3_inverted.webp#only-dark){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/594c13ddb657a2f3bbd38301f86a47a3.webp#only-light){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/594c13ddb657a2f3bbd38301f86a47a3_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption></figcaption>
 </figure>
 

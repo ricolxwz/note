@@ -87,8 +87,8 @@ comments: true
 他们的初始方法, 类似于VirTex, 从头开始联合训练图像CNN和文本Transformer来预测图像的标题. 使用一个CNN(如ResNet-50)从输入图像中提取特征, 然后将提取到的特征输入到一个Transformer语言模型中, 根据输入的图像特征, 预测与图像对应的文本标题/描述. 然而, 这种方法在实际操作中很难高效地扩展规模. 在下图中, 他们展示了一个拥有6300万参数的Transformer语言模型, 这个大模型所使用的计算量已经是它搭档ResNet-50图像编码器的两倍. 与预测相同文本的词袋编码更简单的基线相比, 学习识别ImageNet类别慢了三倍.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/3cb3757204a938298316a5a8b43eda96.webp#only-light){ loading=lazy width='400' }
-![](http://img.ricolxwz.asia/3cb3757204a938298316a5a8b43eda96_inverted.webp#only-dark){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/3cb3757204a938298316a5a8b43eda96.webp#only-light){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/3cb3757204a938298316a5a8b43eda96_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>CLIP在零样本迁移上比图像标题预测基线更加高效. 虽然基于Transformer的语言模型的表现力很高, 但是作者发现在零样本ImageNet预测任务下的性能很弱, 比BoW Prediction慢三倍. 将预测目标更改为对比目标能够让性能再提升4x.</figcaption>
 </figure>
 
@@ -140,8 +140,8 @@ loss   = (loss_i + loss_t) / 2
 ### 选择和缩放模型
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/0720388cdd8e9f51a156de88b2b56a9d.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/0720388cdd8e9f51a156de88b2b56a9d_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/0720388cdd8e9f51a156de88b2b56a9d.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/0720388cdd8e9f51a156de88b2b56a9d_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>CLIP的总览. 标准的视觉模型会训练一个特征提取器和一个线性分类器来预测某些标签, 而CLIP同时训练一个图像编码器和文本编码器来预测正确的(图像, 文本)对. 在测试时, 学习到的文本编码器通过嵌入目标类别的名字或者描述来实现一个零样本的线性分类器</figcaption>
 </figure>
 

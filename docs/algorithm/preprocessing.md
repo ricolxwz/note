@@ -40,7 +40,7 @@ comments: true
 
     如在差劲的通话环境下, 人的声音的信号是这样的:
 
-    ![](http://img.ricolxwz.asia/00f2ff264dad186c92c52efb4c11ad57.png){:style="width:600px"}
+    ![](http://img.ricolxwz.cn/00f2ff264dad186c92c52efb4c11ad57.png){:style="width:600px"}
 
 #### 虚假的值
 
@@ -48,7 +48,7 @@ comments: true
 
 ???+ example "例子"
 
-    ![](http://img.ricolxwz.asia/f1a3a65d8d33b23f41a23b7a5cb790fd.png){:style="width:600px"}
+    ![](http://img.ricolxwz.cn/f1a3a65d8d33b23f41a23b7a5cb790fd.png){:style="width:600px"}
 
 #### 不一致/重复的值
 
@@ -96,7 +96,7 @@ comments: true
 
     如下图, 左边的图显示的是横坐标为时间的信号, 该信号由两个正弦波和一些噪音组成. 右边的图是经过傅里叶变换之后的频域信号, 频域信号展示了信号在不同频率上的幅度分布. 在这个图中, 有两个明显的峰值, 这些峰值对应于原始信号中的两个主要正弦波的频率.
 
-    ![](http://img.ricolxwz.asia/f77c1d154335251b77981a08481e95bd.png){:style="width:600px"}
+    ![](http://img.ricolxwz.cn/f77c1d154335251b77981a08481e95bd.png){:style="width:600px"}
 
 ### 特征子集选择
 
@@ -131,7 +131,7 @@ comments: true
 
 ???+ example "例子"
 
-    ![](http://img.ricolxwz.asia/0c5968fc679a51290752b85f1f0fad37.png){:style="width:400px"}
+    ![](http://img.ricolxwz.cn/0c5968fc679a51290752b85f1f0fad37.png){:style="width:400px"}
 
 #### 离散化
 
@@ -144,7 +144,7 @@ comments: true
 
 ##### 无监督离散化
 
-![](http://img.ricolxwz.asia/b1722f03cbe284678c874ce9efd607fb.png){:style="width:600px"}
+![](http://img.ricolxwz.cn/b1722f03cbe284678c874ce9efd607fb.png){:style="width:600px"}
 
 考虑的问题有:
 
@@ -261,7 +261,7 @@ comments: true
 
 皮尔逊相关系数的范围为$[-1, 1]$, $-1$表示完全负相关, $1$表示完全正相关, $0$表示没有相关性.
 
-![](http://img.ricolxwz.asia/3e4007d639b983d41c0050bfdcfef2ce.png){:style="width:600px"}
+![](http://img.ricolxwz.cn/3e4007d639b983d41c0050bfdcfef2ce.png){:style="width:600px"}
 
 ## 降维
 

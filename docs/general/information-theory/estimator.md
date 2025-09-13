@@ -49,7 +49,7 @@ comments: true
 在很多情况下, 我们面对的是连续数据, 而我们希望通过离散的统计方法进行处理, 为了做到这一点, 我们可以对连续数据进行离散化, 也就是通过分箱, binning的方式将连续的数据分成多个离散的区间或者类别. 这其实是机器学习预处理的一种. 如图所示.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/d497a05e2096fd85dfc4dcf04ffffd62.png){ loading=lazy width='400' }
+![](http://img.ricolxwz.cn/d497a05e2096fd85dfc4dcf04ffffd62.png){ loading=lazy width='400' }
 </figure>
 
 在图中展示的是在二维平面中, 对连续数据进行分箱. 每个箱📦代表的是某个$x$和$y$范围内的数据, 在同一个箱中的数据点被视为同类数据, 例如, 在图中这个红色的箱有$2$个数据点, 因此$2/18$用来表示该箱的频率. 计算箱的频率的过程就是最大似然估计器来拟合这组观测数据(即计算它的频率)的过程.
@@ -111,7 +111,7 @@ $H_D(X)$有一些有趣的性质:
 
 对于相关系数, 它和协方差很像, 公式为$\rho=\frac{Cov(X,Y)}{\sigma_X\sigma_Y}$. 相关系数可以被看为一种特殊的协方差: 剔除了两个变量量纲的影响, 标准化之后的协方差.
 
-很多时候, $X$和$Y$虽然是同向变化, 但是它们变化的幅度不一样, 如[图](http://img.ricolxwz.asia/ef6d91e949fa6691ef2eae243a51a766.png)所示, 情况一的协方差会远远大于情况二的协方差.
+很多时候, $X$和$Y$虽然是同向变化, 但是它们变化的幅度不一样, 如[图](http://img.ricolxwz.cn/ef6d91e949fa6691ef2eae243a51a766.png)所示, 情况一的协方差会远远大于情况二的协方差.
 
 于是, 为了能准确研究两个变量在变化过程中的相似程度, 我们要把变化幅度对协方差的影响, 从协方差里面剔除掉, 于是就有了相关系数的公式.
 
@@ -126,7 +126,7 @@ $H_D(X)$有一些有趣的性质:
     高斯分布就是正态分布. 下面全部都用高斯分布代替.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/6d1ea415085ecd372aa60f6bdbf63fae.png){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/6d1ea415085ecd372aa60f6bdbf63fae.png){ loading=lazy width='800' }
 </figure>
 
 使用高斯模型的前提是数据或转换后的数据要近似符合高斯分布. 可以通过Shapiro-Wilk检验或者Kolmogorov-Smirnov检验数据是否近似符合高斯分布. 若数据近似符合高斯分布, 我们可以使用最大似然估计法找到高斯分布的参数, 即每一个随机变量的期望和标准差, 进而可以计算协方差矩阵$\Omega_{\bm{X}}=\bm{X}\bm{X}^T$.
@@ -168,7 +168,7 @@ y_n - y_{n'}
 \end{smallmatrix}\right|-r$表示的是样本点$(x_n, y_n)$和另一个样本点$(x'_n, y'_n)的距离$. 这个结果需要经过归一化, $\hat{f}(x_n, y_n)=\frac{\hat{p}(x_n, y_n)}{2r}$, 因为它衡量的是$(x_n, y_n)$所属的宽度为$r$的矩形内的点的数量在所有点中的占比, 然后将这个概率近似看作是$(x_n, y_n)$的概率密度, 或者说衡量的是其他点落在以$(x_n, y_n)$所在的宽度为$r$的矩形区域里的概率.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/705268d17c4514bc1de00244c0c0d1a4.png){ loading=lazy width='300' }
+![](http://img.ricolxwz.cn/705268d17c4514bc1de00244c0c0d1a4.png){ loading=lazy width='300' }
 </figure>
 
 熵可以计算为$H(X)=\frac{1}{N}\sum_{n'=1}^N\log \hat{f}(x_n)$. 互信息的问题就转化为如果我们知道某一个点落在宽度为$r$的矩形区域内对另一个点落在宽度为$r$的矩形区域内的影响.
@@ -185,7 +185,7 @@ y_n - y_{n'}
 KSG, Kraskov-Stogbauer-Grassberger, 是一种与矩形核函数类似的估计概率密度的方法, KSG使用KNN算法来估计样本点周围的局部密度, 对于每个样本点, 它找到最近的$k$个邻居, 并根据这些邻居的分布情况来估计概率密度.
 
 <figure markdown='1'>
-![](http://img.ricolxwz.asia/86a4b3bfa5544f950d82cfa4292110fe.png){ loading=lazy width='350' }
+![](http://img.ricolxwz.cn/86a4b3bfa5544f950d82cfa4292110fe.png){ loading=lazy width='350' }
 </figure>
 
 KSG相较于矩形核密度有更低的偏差, 其一是因为可以利用Kozachenko-Leonenko熵估计器对偏差进行修正, 其二是因为在联合空间中使用固定数量的$k$个邻居的最邻近计数能够更好的抵消偏差.

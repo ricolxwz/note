@@ -23,8 +23,8 @@ comments: false
 作者通过一种通用的微调方法, 为预训练的, 以参数化记忆为基础的生成模型赋予非参数化记忆, 将其称为检索增强生成(RAG). 作者构建的RAG模型中, 参数化记忆是预训练的seq2seq transformer, 非参数化记忆是Wikipedia的密集向量索引, 由预训练的神经检索器访问. 作者将这些组件组合成一个端到端训练的概率模型(见[图1](#fig1)). 检索器(Dense Passage Retriever, 下文简称DPR)在给定输入的条件下提供潜在文档, 而seq2seq模型(BART)则在这些潜在文档与输入的联合条件下生成输出. 作者使用top-K近似对潜在文档进行边际化, 可以按两种粒度执行: 以输出为粒度(假设同一文档为所有token提供证据), 或以token为粒度(允许不同文档分别为不同token提供证据). 与T5或BART相似, RAG可以在任意seq2seq任务上进行微调, 并对生成器与检索器进行联合学习.
 
 <figure markdown='1' id='fig1'>
-![](http://img.ricolxwz.asia/cae6a3acc2f53b53162fae53bf86162d.webp#only-light){ loading=lazy width='800' }
-![](http://img.ricolxwz.asia/cae6a3acc2f53b53162fae53bf86162d_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/cae6a3acc2f53b53162fae53bf86162d.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.cn/cae6a3acc2f53b53162fae53bf86162d_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图1: 方法概览. 作者将一个预训练的检索器(Query Encoder + Document Index)与一个预训练的seq2seq模型(Generator)结合, 并进行端到端微调. 对于查询$x$, 使用最大内积搜索(MIPS)找到top-K个文档$z_i$. 在得到最终预测$y$时, 将$z$视为潜在变量, 并对不同文档条件下的seq2seq预测进行边际化.</figcaption>
 </figure>
 
