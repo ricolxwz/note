@@ -103,3 +103,7 @@ note.ricolxwz.cc {
     ```
 
     因为这个域名`ricolxwz.cc`我没有给API的权限, 所以不能通过这种方式验证.
+
+## CDN加速设置
+
+在阿里云回源源站选择gitlab给我的域名, 然后回源Host填写gitlab给我的域名(识别主机要用), 回源SNI填写gitlab给我的域名(TLS解析要用), 回源协议选择https(防止重定向循环).
