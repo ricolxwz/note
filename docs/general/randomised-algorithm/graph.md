@@ -12,8 +12,8 @@ comments: true
 Min-Cut问题就是在途中寻找一个割(两个子集), 使得被切断的便的数量总和最小. 现存的解决这个问题的确定性算法是由Karger提出的, 他们是用最大流做的(Max-Flow). 然而, 这个确定性算法显然不是最优的, 有没有什么比较牛掰的随机算法呢? 是的, 有的. 首先, 需要定义一下什么是Contraction.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/b719f4311866a8f57b05e23867e2ff43.webp#only-light){ loading=lazy width='400' }
-![](https://img.ricolxwz.asia/b719f4311866a8f57b05e23867e2ff43_inverted.webp#only-dark){ loading=lazy width='400' }
+![](http://img.ricolxwz.asia/b719f4311866a8f57b05e23867e2ff43.webp#only-light){ loading=lazy width='400' }
+![](http://img.ricolxwz.asia/b719f4311866a8f57b05e23867e2ff43_inverted.webp#only-dark){ loading=lazy width='400' }
 </figure>
 
 Contraction就是对于新图中的每个顶点u, 可以看作是原图中的一个顶点的子集, 比如上图中最左边(原图)中的顶点子集1和2经过收缩之后变成了新的顶点1,2, 这个新图(最右边)中的顶点1,2对应的是原图中的顶点子集1和2. 同时, 如果在新图中有两个不同的顶点u和v, 那么它们对应的原图顶点子集Su和Sv一定是相互不重叠的, 因为在一次收缩里, 原图中的同一个顶点不会收缩到两个不同的新顶点里. 简而言之, 每个新顶点对应一批原定点合并而成, 不同新顶点的这批原顶点之间不会重叠.
@@ -200,8 +200,8 @@ $$M<\binom{n}{2}$$
 这个结论其实相当惊人, 因为一个$n$顶点无向图中, 可以有多达$2^{n-1}-1$种不同的切分方式, 但是不是所有的切分都是最小割, 不同的最小割最多只有$\binom{n}{2}$. 这个上界是否能达到呢? 是否是紧的呢? 答案是能, 例如下面这个$n$个顶点构成的环图. 刚好有$\binom{n}{2}$个最小割.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/56248c7a03a55837f18b9b6f0e411607.webp#only-light){ loading=lazy width='300' }
-![](https://img.ricolxwz.asia/56248c7a03a55837f18b9b6f0e411607_inverted.webp#only-dark){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/56248c7a03a55837f18b9b6f0e411607.webp#only-light){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/56248c7a03a55837f18b9b6f0e411607_inverted.webp#only-dark){ loading=lazy width='300' }
 </figure>
 
 ## MST算法

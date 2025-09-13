@@ -8,13 +8,13 @@ comments: true
 监督学习旨在通过训练集中的已知标签$y$来训练模型, 使模型的输出尽可能模仿这些标签, 通常用于分类或回归任务. 例如, 将不同类型的宝可梦进行分类, 在这种情况下, 输入有一个正确答案或者标签, 模型试图预测每个输入的标签.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/4ac5abb0cf015b7b4090727b14619b9f.png){ loading=lazy width='350' }
+![](http://img.ricolxwz.asia/4ac5abb0cf015b7b4090727b14619b9f.png){ loading=lazy width='350' }
 </figure>
 
 但是, 在一些复杂任务中, 如让机器人学会骑自行车中, 定义"正确答案"非常困难, 很难提供明确的监督信号去指导算法模仿, 因此监督学习不适合这类问题.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/59327b41a383dd54769205f503770e69.png){ loading=lazy width='250' }
+![](http://img.ricolxwz.asia/59327b41a383dd54769205f503770e69.png){ loading=lazy width='250' }
 </figure>
 
 ## 定义 {#definition}
@@ -22,13 +22,13 @@ comments: true
 强化学习可以用来解决上述问题, 可以通过婴儿学习的类比来解释: 婴儿在成长过程中没有明确的老是指导, 而是通过与环境的互动积累经验. 例如, 婴儿通过玩耍, 挥动手臂或四处观察等活动, 接受到来自环境的正面(如称赞)和负面(如批评)反馈, 这些反馈塑造了他们的行为和性格, 这种试错和反馈的过程类似于强化学习中的"反馈机制".
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/3c49aa991e47c617c6c802da039debb3.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/3c49aa991e47c617c6c802da039debb3.png){ loading=lazy width='500' }
 </figure>
 
 强化学习的目标是学习如何做出一系列良好的决策. 智能体, Agent根据当前的状态$s_t$采取行动$a_t$, 并根据从环境中获得的奖励来调整其策略, 通过试错来最大化累计奖励. 这种奖励可以用奖励函数$r_t$来描述, 它是一个标量, 反馈智能体在$t$时刻的表现好坏.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/572319de8ee175bda36bc5024ccf4a7a.png){ loading=lazy width='250' }
+![](http://img.ricolxwz.asia/572319de8ee175bda36bc5024ccf4a7a.png){ loading=lazy width='250' }
 </figure>
 
 ???+ tip "Tip"
@@ -64,7 +64,7 @@ comments: true
 	假设有一个扫地机器人, 它完成扫地后要回到它的基地, 起始位置可以是任何房间.
 
 	<figure markdown='1'>
-	![](https://img.ricolxwz.asia/d18b1e9303deaf5464c7261cd95d395a.png){ loading=lazy width='200' }
+	![](http://img.ricolxwz.asia/d18b1e9303deaf5464c7261cd95d395a.png){ loading=lazy width='200' }
 	</figure>
 
 	如上图, 总共有$12$个房间, 机器人完成扫地后可以在任意房间, 意味着总共有$12$个状态, 它需要做的是在最少的步骤下回到灰色方块所指示的房间. 它的行为可以是向上, 向下, 向左, 向右. 每次移动都设置为一个负奖励, 表示每走一步就扣一分, 鼓励机器人在最少的步数内到达基地.
@@ -76,7 +76,7 @@ comments: true
 	策略$\pi$是机器人在每个状态下选择的动作规则, 例如, 在每个房间, 机器人可以选择向上, 向下, 向左, 向右. 最优策略$\pi^*$是使得奖励总和最大化的策略. 由于初始状态和状态转移概率的不确定性, 如机器人初始可能在任意一个房间, 往各个房间(即下一个状态)走的概率也可能不一样.
 
 	<figure markdown='1'>
-	![](https://img.ricolxwz.asia/7236bec10dca7d6d88ece46d3301adb6.png){ loading=lazy width='400' }
+	![](http://img.ricolxwz.asia/7236bec10dca7d6d88ece46d3301adb6.png){ loading=lazy width='400' }
 	</figure>
 
 	在这种情况下, 最优策略需要在所有可能的路径中最大化期望奖励. 使用公式可以表示为$\pi^*=argmax_{\pi}\mathbb{E}[\sum_{t\geq 0}\gamma^t r_t|\pi]$. $\sum_{t\geq 0}$表示的是从时间步$t=0$开始一直到未来的所有时间步的奖励$r_t$之和, 每个奖励都乘以折扣因子$\gamma$, 用于表示对未来奖励的重视程度. 条件期望$\mathbb{E[...|\pi]}$表示在给定策略$\pi$下计算的期望值, 即在该策略引导下, 累积的折扣奖励的期望. 初始状态$s_0\sim p(s_0)$, 表示机器人初始状态符合一定的概率分布. 行为$a_t\sim \pi(\cdot |s_t)$, 表示在每个时间步$t$, 机器人的行为符合概率分布$\pi(\cdot|s_t)$, 策略$\pi$是一个关于状态的概率分布, 描述了在不同状态下选择不同动作的概率. 状态转移$s_{t+1}\sim p(\cdot | s_t, a_t)$, 表示机器人的下一个状态符合概率分布$p(\cdot|s_t, a_t)$, 这个转移概率分布描述了在当前状态和采取的动作下, 环境可能转移到的下一个状态的分布.
@@ -137,7 +137,7 @@ Q学习算法的目的就是获得所有状态-动作对的最优Q值, 步骤为
 这种网络被称为"Q网络", 如图.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/674d26b8e92821c8839d8bbbe9a298ba.png){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/674d26b8e92821c8839d8bbbe9a298ba.png){ loading=lazy width='300' }
 </figure>
 
 左图是❌错误的, 这个神经网络接受一个状态和一个动作, 然后输出该特定状态-动作对的Q值$Q_w(s, a)$. 这个方法的问题在于, 每次只能输出一个特定动作的Q值, 导致效率低下. 特别是在动作空间很大的情况下, 这会导致大量重复计算.

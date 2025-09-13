@@ -17,7 +17,7 @@ comments: true
 
 #### 异常
 
-以[学生选课表为例](https://img.ricolxwz.asia/9284796b69eedeeebe319e75c18049a9.png), 数据冗余可能会导致三种异常:
+以[学生选课表为例](http://img.ricolxwz.asia/9284796b69eedeeebe319e75c18049a9.png), 数据冗余可能会导致三种异常:
 
 - 更新异常: 如果该门课程的房间号发生了变化, 例如从"R101"改为"R203", 那么所有与此房间关联的记录都要进行更新, 如果遗漏了某条记录, 会导致数据不一致的情况, 即更新异常
 - 删除异常: 如果所有的学生都退选了这个课程, 那么该课程的房间信息就会被删除, 因为它是和学生记录一起存储的, 这样就会导致丢失该课程的房间信息, 即删除异常
@@ -52,7 +52,7 @@ comments: true
 - 考虑属性的语义
 - 分析表中的实际数据
 
-在大多数情况下, 我们使用语义来判断函数依赖. 当使用数据来确定函数依赖的过程又被称为知识挖掘, knowledge mining. 如[图](https://img.ricolxwz.asia/be0f5b8161ff4bbd9b178cead0c599ac.png). 从数据可以大致判断, 分行的名称和城市之间有一个函数依赖, 贷款编号和客户名称/数量之间有一个函数依赖, 贷款编号和分行名称之间有一个函数依赖, 城市和资产之间有一个函数依赖, 但是, 这样确定依赖不是特别靠谱, 请见下方注意.
+在大多数情况下, 我们使用语义来判断函数依赖. 当使用数据来确定函数依赖的过程又被称为知识挖掘, knowledge mining. 如[图](http://img.ricolxwz.asia/be0f5b8161ff4bbd9b178cead0c599ac.png). 从数据可以大致判断, 分行的名称和城市之间有一个函数依赖, 贷款编号和客户名称/数量之间有一个函数依赖, 贷款编号和分行名称之间有一个函数依赖, 城市和资产之间有一个函数依赖, 但是, 这样确定依赖不是特别靠谱, 请见下方注意.
 
 ???+ warning "注意"
 
@@ -101,7 +101,7 @@ Armstrong公理是函数依赖推理规则的基础, 它主要包含三个公理
 
 ???+ example "例子"
 
-    假设我们在关系R中有三个属性A, B, C. 已知的函数依赖集F为F={A → B, B → C}. 可以计算出F+如[图](https://img.ricolxwz.asia/b21b9f5c8611d9361bbd42a5902009a8.png)所示.
+    假设我们在关系R中有三个属性A, B, C. 已知的函数依赖集F为F={A → B, B → C}. 可以计算出F+如[图](http://img.ricolxwz.asia/b21b9f5c8611d9361bbd42a5902009a8.png)所示.
 
 Armstrong公理具有:
 
@@ -171,7 +171,7 @@ Armstrong公理具有:
 #### 完全/部分函数依赖 {#完全部分依赖}
 
 - 完全函数依赖: 设X, Y是关系R的两个属性集合, X'是X的真子集, 存在X → Y, 但对于每一个X', 都有X' !→ Y
-- 部分函数依赖: 设X, Y是关系R的两个属性集合, 存在X → Y, 若X'是X的真子集, 存在X' → Y, 如[图](https://img.ricolxwz.asia/3f6628e1effaa6ad0a07f37bea85de93.png)
+- 部分函数依赖: 设X, Y是关系R的两个属性集合, 存在X → Y, 若X'是X的真子集, 存在X' → Y, 如[图](http://img.ricolxwz.asia/3f6628e1effaa6ad0a07f37bea85de93.png)
 
 #### 传递函数依赖 {#传递函数依赖}
 
@@ -192,7 +192,7 @@ Armstrong公理具有:
 
 ???+ example "例子"
 
-    如假设一个学生表中有一列"联系方式", 其中既存储了学生的手机号码, 也存储了电子邮件地址, 这不符合第一范式. 要符合第一范式, 应该将手机号和电子邮件分成两个独立的字段, 如[图](https://img.ricolxwz.asia/c74a86751954e772ea874b35a64fcf75.png).
+    如假设一个学生表中有一列"联系方式", 其中既存储了学生的手机号码, 也存储了电子邮件地址, 这不符合第一范式. 要符合第一范式, 应该将手机号和电子邮件分成两个独立的字段, 如[图](http://img.ricolxwz.asia/c74a86751954e772ea874b35a64fcf75.png).
 
 ### 第二范式
 
@@ -206,7 +206,7 @@ Armstrong公理具有:
 
     === "例子2"
 
-        假设有[表](https://img.ricolxwz.asia/74915bbea717584c16c54c9d8388e614.png), 这样就会造成重复, 这个老师所教的所有的UoS中, Teacher_position这个信息都会被重复. 解决的方法是将拆分为两个关系, 然后检查拆分后的关系是否符合2NF. 可以拆为R1(Teacher_name, Teacher_position)和R2(Teacher_name, UnitOfStudy).
+        假设有[表](http://img.ricolxwz.asia/74915bbea717584c16c54c9d8388e614.png), 这样就会造成重复, 这个老师所教的所有的UoS中, Teacher_position这个信息都会被重复. 解决的方法是将拆分为两个关系, 然后检查拆分后的关系是否符合2NF. 可以拆为R1(Teacher_name, Teacher_position)和R2(Teacher_name, UnitOfStudy).
 
 ### 第三范式
 
@@ -220,15 +220,15 @@ Armstrong公理具有:
 
     === "例子2"
 
-        如[图](https://img.ricolxwz.asia/e4f6930f8f21ed69fca87639b886f79c.png). 需要将其拆分为R1(Employee, Department), R2(Department, Location).
+        如[图](http://img.ricolxwz.asia/e4f6930f8f21ed69fca87639b886f79c.png). 需要将其拆分为R1(Employee, Department), R2(Department, Location).
 
 ### Boyce-Codd范式 {#BCNF}
 
-Boyce-Codd范式, BCNF, 是3NF的增强版. 一个关系R满足BCNF当且仅当所有的[非平凡函数依赖](#平凡非平凡函数依赖)中的左侧必须是R的超键. 换句话说, 表中所有的属性必须完全依赖于超键. 更加正式地说, 对于所有的非平凡依赖X → Y, X必须是R的超键, 如[图](https://img.ricolxwz.asia/88db93437b3a505a3f91d3048755edff.png)所示.
+Boyce-Codd范式, BCNF, 是3NF的增强版. 一个关系R满足BCNF当且仅当所有的[非平凡函数依赖](#平凡非平凡函数依赖)中的左侧必须是R的超键. 换句话说, 表中所有的属性必须完全依赖于超键. 更加正式地说, 对于所有的非平凡依赖X → Y, X必须是R的超键, 如[图](http://img.ricolxwz.asia/88db93437b3a505a3f91d3048755edff.png)所示.
 
 ???+ example "例子"
 
-    假设有[表](https://img.ricolxwz.asia/e75a079e0516a4d4a7e4c7d4c05457d4.png), 其中Address → Teacher_name违反了BCNF. 需要分开为两个表R1(Address, Teacher_name), R2(Address, UnitofStudy).
+    假设有[表](http://img.ricolxwz.asia/e75a079e0516a4d4a7e4c7d4c05457d4.png), 其中Address → Teacher_name违反了BCNF. 需要分开为两个表R1(Address, Teacher_name), R2(Address, UnitofStudy).
 
 ???+ tip "Tip"
 
@@ -323,7 +323,7 @@ Boyce-Codd范式, BCNF, 是3NF的增强版. 一个关系R满足BCNF当且仅当�
 
     === "例子2"
 
-        这个[表格](https://img.ricolxwz.asia/6b4a8749c4a62f3cae138d95a3a2e8e1.png)是否符合4NF?
+        这个[表格](http://img.ricolxwz.asia/6b4a8749c4a62f3cae138d95a3a2e8e1.png)是否符合4NF?
 
         答案是不符合, 因为employee_name不是一个超键, 而且employee_name ↠ project_id是非平凡的多值依赖. 解决方法是将上述表一分为二. R1(employee_name, project_id), R2(employee_name, personal_phone_number).
 
@@ -341,7 +341,7 @@ Boyce-Codd范式, BCNF, 是3NF的增强版. 一个关系R满足BCNF当且仅当�
 
 ### 检查无损连接
 
-无损连接指的是当我们将一个关系分解为多个子关系后, 通过自然连接重新组合这些子关系的时候, 不会丢失任何信息, 能够恢复出原始的关系. 如[图](https://img.ricolxwz.asia/6bf4db7c2ae6f36e6ff200f2c15ecaf5.png).
+无损连接指的是当我们将一个关系分解为多个子关系后, 通过自然连接重新组合这些子关系的时候, 不会丢失任何信息, 能够恢复出原始的关系. 如[图](http://img.ricolxwz.asia/6bf4db7c2ae6f36e6ff200f2c15ecaf5.png).
 
 对于两个关系R1, R2, 它们具有无损连接的条件是: (R1 ​∩ R2​) → R1​或(R1 ​∩ R2​) → R2.
 

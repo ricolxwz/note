@@ -14,8 +14,8 @@ comments: true
 目前对于VQ-VAE中梯度无法传播的标准解决方案是直通估计器STE, 但是这种方法会丢失编码器输出和其对应码本向量之间的相对位置(如角度和幅度)等信息, 见下图.
 
 <figure markdown='1' id='fig1'>
-![](https://img.ricolxwz.asia/a03fa918f5387b0a7e91ff2548aecfdb.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/a03fa918f5387b0a7e91ff2548aecfdb_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/a03fa918f5387b0a7e91ff2548aecfdb.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/a03fa918f5387b0a7e91ff2548aecfdb_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图1: 直通估计器(STE)如何变换16个码本向量的梯度场的可视化展示, 其中(顶部)函数为$f(x, y) = x^2 + y^2$, (底部)函数为$f(x, y) = \log(1/2x + \tanh(y))$. STE获取码本向量$(qx, qy)$处的梯度, 并将其"复制粘贴"到同一码本区域内的所有其他位置, 从而在梯度场中形成一种"棋盘格"模式. </figcaption>
 </figure>
 
@@ -28,8 +28,8 @@ comments: true
 ## 方法
 
 <figure markdown='1' id='fig2'>
-![](https://img.ricolxwz.asia/1b58c49b8b7d125f3ac2167be395bebf.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/1b58c49b8b7d125f3ac2167be395bebf_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/1b58c49b8b7d125f3ac2167be395bebf.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/1b58c49b8b7d125f3ac2167be395bebf_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图2: 旋转技巧示意图. 在前向传播过程中, 编码器输出$e$经过旋转和缩放变换为$q_1$. 为简化起见, 图中未显示其他编码器输出的旋转过程. 在反向传播过程中, $q_1$处的梯度移动到$e$, 从而保持$\nabla_{q_1} \mathcal{L}$与$q_1$之间的夹角不变. 这样一来, 同一码本区域内的点会接收到不同的梯度, 具体取决于它们相对于码本向量的角度和大小. 例如, 具有较大角距离的点可能被推入新的码本区域, 从而提高码本的利用率. </figcaption>
 </figure>
 
@@ -37,8 +37,8 @@ comments: true
 从几何的角度看, 我们需要把码本向量q的梯度∇qL移动到编码器的输出e上. 并决定在搬运的时候需要保留哪些几何特性. 从本质上来说, 这篇文章提出的rotation trick和STE本质上都是搬运. 但是搬运的方式有些不同: 1. STE的做法是, 直接把∇qL当做∇eL, 保持梯度的方向和大小不变. 2. rotation trick的做法是, 在把梯度从q移动到e的时候, 保持梯度∇qL和q之间的夹角不变(如下图右), 后面会解释为啥不变.
 
 <figure markdown='1' id='fig3'>
-![](https://img.ricolxwz.asia/fb2b70df9d4a6d9cb2ca1ecee6dd2398.webp#only-light){ loading=lazy width='400' }
-![](https://img.ricolxwz.asia/fb2b70df9d4a6d9cb2ca1ecee6dd2398_inverted.webp#only-dark){ loading=lazy width='400' }
+![](http://img.ricolxwz.asia/fb2b70df9d4a6d9cb2ca1ecee6dd2398.webp#only-light){ loading=lazy width='400' }
+![](http://img.ricolxwz.asia/fb2b70df9d4a6d9cb2ca1ecee6dd2398_inverted.webp#only-dark){ loading=lazy width='400' }
 <figcaption>图3: 展示了$q$处的梯度如何通过STE(中图)和旋转技巧(右图)移动到$e$. STE通过"复制粘贴"梯度来保持其方向, 而旋转技巧则通过移动梯度来保持$q$与$\nabla_q \mathcal{L}$之间的夹角. </figcaption>
 </figure>
 
@@ -53,8 +53,8 @@ $$
 那么, 为什么要这么做呢? 看图:
 
 <figure markdown='1' id='fig4'>
-![](https://img.ricolxwz.asia/ee7d977655db45bccb4cff5d6b7b1e1b.webp#only-light){ loading=lazy width='250' }
-![](https://img.ricolxwz.asia/ee7d977655db45bccb4cff5d6b7b1e1b_inverted.webp#only-dark){ loading=lazy width='250' }
+![](http://img.ricolxwz.asia/ee7d977655db45bccb4cff5d6b7b1e1b.webp#only-light){ loading=lazy width='250' }
+![](http://img.ricolxwz.asia/ee7d977655db45bccb4cff5d6b7b1e1b_inverted.webp#only-dark){ loading=lazy width='250' }
 <figcaption>图4: 在STE方法中, 同一区域内各点之间的距离保持不变. 然而, 采用旋转技巧后, 点间的距离则会发生变化. 当$\phi < \pi/2$时, 角距离较大的点会被推远(蓝色表示距离增加); 而当$\phi > \pi/2$时, 点则会被拉向码本向量(绿色表示距离减小). </figcaption>
 </figure>
 

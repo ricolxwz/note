@@ -12,8 +12,8 @@ comments: true
 哈希表的基本思想是"The universe is a big place, but it's mostly empty". 所以, 如果我们能够map我们的宇宙$\mathcal{X}$到一个小得多的集合$\mathcal{Y}$, 使得任何由$n$个不同元素组成的子集$S\subset \mathcal{X}$都能映射到一个仍然由$n$个不同元素组成的子集$S'\subset \mathcal{Y}$, 我们就处于有利位置. 如下图所示.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/e0ba4b5413a86b2810cc34ec0464fabd.webp#only-light){ loading=lazy width='300' }
-![](https://img.ricolxwz.asia/e0ba4b5413a86b2810cc34ec0464fabd_inverted.webp#only-dark){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/e0ba4b5413a86b2810cc34ec0464fabd.webp#only-light){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/e0ba4b5413a86b2810cc34ec0464fabd_inverted.webp#only-dark){ loading=lazy width='300' }
 </figure>
 
 但是, 上述的思路真的可行吗? 很可惜, 是不行的. 不管我们怎么选择映射的方法, 我们总能找到一个$n$个元素的集合, 经过映射之后, 小于$n$个元素. 这就是大名鼎鼎的"鸽子洞原理":
@@ -76,8 +76,8 @@ $$h_{a,b}(x) = (ax + b \mod p) \mod m', \quad x \in \mathbb{Z}_p$$
 3. 一种用来处理"碰撞(collisions)"的策略.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/701d75e01fa5dfc5cddbfc5aa2cbbbdb.webp#only-light){ loading=lazy width='300' }
-![](https://img.ricolxwz.asia/701d75e01fa5dfc5cddbfc5aa2cbbbdb_inverted.webp#only-dark){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/701d75e01fa5dfc5cddbfc5aa2cbbbdb.webp#only-light){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/701d75e01fa5dfc5cddbfc5aa2cbbbdb_inverted.webp#only-dark){ loading=lazy width='300' }
 </figure>
 
 为什么仍然需要第三步(处理碰撞)? 因为无论哈希函数多么精心设计, 都不可避免会有不同元素映射到同一个数组位置(尤其生日悖论会告诉你, 当有足够多元素时, 碰撞几率大增). 所以除了尽量减少碰撞, 我们还必须有一整套机制来解决或缓解碰撞带来的问题(例如把同一位置上的元素用链表链接起来, 或者使用开放寻址等).
@@ -91,8 +91,8 @@ $$h_{a,b}(x) = (ax + b \mod p) \mod m', \quad x \in \mathbb{Z}_p$$
 Seperate chaining就是当若干元素哈希到相同的bucket的时候, 就在这个bucket后面挂一条链表, 把所有的碰撞到这个桶的元素都保存在这条链表里面. 插入, 查找, 删除操作就直接在对应桶的链表中进行.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/84b854cb4f32231ddfca6804c7c34adb.webp#only-light){ loading=lazy width='300' }
-![](https://img.ricolxwz.asia/84b854cb4f32231ddfca6804c7c34adb_inverted.webp#only-dark){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/84b854cb4f32231ddfca6804c7c34adb.webp#only-light){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/84b854cb4f32231ddfca6804c7c34adb_inverted.webp#only-dark){ loading=lazy width='300' }
 </figure>
 
 负载因子, 令$\alpha = \frac{n}{m'}$,. 表示每个桶期望存放多少的元素. 空间复杂度计算: 需要存储哈希函数, 大小为$m'$的数据, 所有链表节点, 总空间大概是$O(\log m+m'+n\log m)$. 时间复杂度计算: 所有的操作都是$O(1+\alpha)$, 因为在期望里, 每个桶的链表长度大约是$\alpha$. 但是若考虑最大负载(最坏的那个桶的链表长度), 可能达到$\Omega (\log n/\log\log n)$个元素, 操作成本较高.
@@ -102,8 +102,8 @@ Seperate chaining就是当若干元素哈希到相同的bucket的时候, 就在�
 传统哈希表只有一个哈希函数, 而open addressing这个方法会准备一系列的哈希函数$h_1, h_2, ..., h_{m'}$. 插入元素$x$的时候, 先看$h_1(x)$指向的位置是否空闲, 若已经被占用就继续看$h_2(x)$, 依次下去, 直到找到空位. 查找或者删除也同理.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/d168c8cb0921f26580e5856544943f00.webp#only-light){ loading=lazy width='300' }
-![](https://img.ricolxwz.asia/d168c8cb0921f26580e5856544943f00_inverted.webp#only-dark){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/d168c8cb0921f26580e5856544943f00.webp#only-light){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/d168c8cb0921f26580e5856544943f00_inverted.webp#only-dark){ loading=lazy width='300' }
 </figure>
 
 一些插入/查找/删除操作的细节:

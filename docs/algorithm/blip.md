@@ -26,8 +26,8 @@ BLIP是一个视觉-语言预训练(VLP)框架, 能够同时在理解型和生�
     许多先进的方法(如CLIP, ALBEF, SimVLM)都是在从网络收集的图文对数据上进行预训练的, 虽然大规模的网络数据能带来性能提升, 但是这些数据往往噪声过多, 文本描述也不够精准, 这会影响视觉-语言模型的学习效果. 作者提出的Captioner(Cap)和Filter(Filt)就是用来生成并筛选更加干净的训练数据, 以减轻网络噪声带来的问题, 并证明仅依赖网络上的原始的图文对数据并不一定能够达到最佳的视觉-语言学习效果.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/bfeba2f063208c625cee1ac24aea17ed.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.asia/bfeba2f063208c625cee1ac24aea17ed_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/bfeba2f063208c625cee1ac24aea17ed.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/bfeba2f063208c625cee1ac24aea17ed_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>作者使用Captioner(Cap)生成图像描述, 使用Filter(Filt)过滤质量较差的描述. </figcaption>
 </figure>
 
@@ -119,8 +119,8 @@ BLIP是一个视觉-语言预训练(VLP)框架, 能够同时在理解型和生�
 为了在有效进行预训练的同时利用多任务学习, 文本编码器和文本解码器共享除了SA层意外的所有参数. 原因在于解码和编码任务的差异主要体现在SA层上. 具体来说, 编码器使用的双向自注意力来构建当前输入token的表示, 而解码器使用英国自注意力(casual self-attention)来预测下一个token. 另一方面, embedding, CA层和FNN在编码与解码任务中的功能相似, 因此共享这些层可以提高训练效率, 同时受益于多任务学习.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/7a7cec306fb3cd00135dae47dd74128d.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/7a7cec306fb3cd00135dae47dd74128d_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/7a7cec306fb3cd00135dae47dd74128d.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/7a7cec306fb3cd00135dae47dd74128d_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>预训练模型结构和BLIP的优化目标(相同参数的颜色相同). 他们提出了一种多模态的编码器-解码器混合框架, 它是一个统一的视觉-语言模型, 可以在以下三种功能模式之一下运行: (i) 单模态编码器使用图文对比(ITC)进行训练, 以对齐视觉和语言表示; (ii) 基于图像的文本编码器使用额外的交叉注意力层来建模视觉和语言之间的交互, 并通过图文配对(ITM)损失来区分正样本和负样本的图文对; (iii) 基于图像的文本解码器将双向自注意力层替换为因果自注意力层, 并和编码器共享交叉注意力层和前馈网络. 解码器使用语言建模(LM)损失进行训练, 根据给定的图像生成描述性文本.</figcaption>
 </figure>
 
@@ -129,8 +129,8 @@ BLIP是一个视觉-语言预训练(VLP)框架, 能够同时在理解型和生�
 由于高昂的标注成本, 目前只有数量有限的高质量人工标注图文对$\{(I_h, T_h)\}$(例如, COCO). 最近的工作使用了大量自动从网络手机的图像和alt-text对$\{I_w, T_w\}$, 然而, 这些alt-text往往无法准确描述图像的视觉内容, 因此对学习视觉-语言对齐来说是一种含有较多噪声的信号.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/a0f1d4c7d2cba6c8d0f3e2da8730c180.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/a0f1d4c7d2cba6c8d0f3e2da8730c180_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/a0f1d4c7d2cba6c8d0f3e2da8730c180.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/a0f1d4c7d2cba6c8d0f3e2da8730c180_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>BLIP的学习框架. 他们引入了一个captioner来为网络图像生成合成描述, 并引入了一个filter来去除噪声的图文对. captioner和filter都是从同一个预训练模型初始化, 并分别在一个小规模的人工标注数据集上进行微调. 这个引导后得到的数据集被用于预训练一个新的模型.</figcaption>
 </figure>
 

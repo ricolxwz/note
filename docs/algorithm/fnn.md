@@ -8,7 +8,7 @@ comments: true
 前馈神经网络, Feedforward NN, 的架构如图所示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/182181d298a387078d650701b708d254.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/182181d298a387078d650701b708d254.png){ loading=lazy width='500' }
 </figure>
 
 具体说明如下:
@@ -30,21 +30,21 @@ comments: true
 那么, 我们怎么计算这个权重变化$\Delta w_{pq}$的呢? 参考线性回归, 我们可以定义一个误差损失函数然后使用梯度下降算法解决. 如均方误差函数, MSE. 每一次迭代/每一个批次对应于下山的"一步", 在山上的每一个位置对应于一组权重配置, 梯度的方向是误差增加最快的方向, 沿着负梯度的方向移动则可以使误差减小. 目标是通过调整权重, 使模型"下坡", 最终达到地形的最低点, 这样误差最小, 模型性能最佳. 用来下山的步子被称为"学习率", 这是算法的一个超参数.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/4392978da300d80f0485a0aa396966ff.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/4392978da300d80f0485a0aa396966ff.png){ loading=lazy width='500' }
 </figure>
 
 要注意的是, 梯度下降算法并不保证能找到全局最小值, 它只会找到基于起点的最近的局部最小值.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/21ad32b9aa5ba67e5b0f6abc71d55d08.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/21ad32b9aa5ba67e5b0f6abc71d55d08.png){ loading=lazy width='500' }
 </figure>
 
 假设 $w_{pq}(t)$表示的是从神经元$p$到神经元$q$在$t$这个时间的权重, 那么下一次在$t+1$这个时间的权重为$w_{pq}(t+1)=w_{pq}(t)+\Delta w_{pq}$, 其中$\Delta w_{pq}=\eta\cdot \delta_q\cdot o_p$, 即权重变化与神经元$p$在激活函数激活后的输出$o_p$, 神经元$q$的误差$\delta_q$成正比.
 
 神经元$q$的误差$\delta_q$要分两种情况计算:
 
-1. 若$q$是输出层的神经元, 则$\delta_q=(t_q-o_q)f'(z_q)$, 见[图](https://img.ricolxwz.asia/5f941efe6d1e0e2a24f4cc02e2b5f50c.png)
-2. 若$q$是隐藏层的神经元, 则$\delta_q=f'(z_q)\sum_i w_{qi}\delta_i$, 见[图](https://img.ricolxwz.asia/240c3a21ce4f4009099695a2a1c28f42.png)
+1. 若$q$是输出层的神经元, 则$\delta_q=(t_q-o_q)f'(z_q)$, 见[图](http://img.ricolxwz.asia/5f941efe6d1e0e2a24f4cc02e2b5f50c.png)
+2. 若$q$是隐藏层的神经元, 则$\delta_q=f'(z_q)\sum_i w_{qi}\delta_i$, 见[图](http://img.ricolxwz.asia/240c3a21ce4f4009099695a2a1c28f42.png)
 
 注意, $i$是$q$后面的神经元, 即顺序为$p\rightarrow q\rightarrow i$; 这里的$z_q$是在激活函数激活前的输出, $o_q=f(z_q)$. 可以被证明$f'(z_q)=f(z_q)(1-f(z_q))$(前提是使用sigmoid激活函数), 所以有$f'(z_q)=o_q(1-o_q)$. 上面的误差计算公式可以写为:
 
@@ -76,43 +76,43 @@ comments: true
     === "1--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.asia/efbaeae02cd8777f9b80255112fe680c.png){ loading=lazy width='550' }
+        ![](http://img.ricolxwz.asia/efbaeae02cd8777f9b80255112fe680c.png){ loading=lazy width='550' }
         </figure>
 
     === "2--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.asia/c5859d33d92cbffd51fa2b05db6f50e3.png){ loading=lazy width='650' }
+        ![](http://img.ricolxwz.asia/c5859d33d92cbffd51fa2b05db6f50e3.png){ loading=lazy width='650' }
         </figure>
 
     === "3--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.asia/4fbfa4681dde83cc2983beabf18b2b5c.png){ loading=lazy width='650' }
+        ![](http://img.ricolxwz.asia/4fbfa4681dde83cc2983beabf18b2b5c.png){ loading=lazy width='650' }
         </figure>
 
     === "4--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.asia/ad1fbdd3eb510d21579643d0c982ea49.png){ loading=lazy width='650' }
+        ![](http://img.ricolxwz.asia/ad1fbdd3eb510d21579643d0c982ea49.png){ loading=lazy width='650' }
         </figure>
 
     === "5--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.asia/478525aca15db7ed94df36a9839ac82d.png){ loading=lazy width='650' }
+        ![](http://img.ricolxwz.asia/478525aca15db7ed94df36a9839ac82d.png){ loading=lazy width='650' }
         </figure>
 
     === "6--->"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.asia/e053763d1f673ce6b687928f85addb82.png){ loading=lazy width='650' }
+        ![](http://img.ricolxwz.asia/e053763d1f673ce6b687928f85addb82.png){ loading=lazy width='650' }
         </figure>
 
     === "7"
 
         <figure markdown='1'>
-        ![](https://img.ricolxwz.asia/84b6a3083f59e94953f1dff056775fd7.png){ loading=lazy width='650' }
+        ![](http://img.ricolxwz.asia/84b6a3083f59e94953f1dff056775fd7.png){ loading=lazy width='650' }
         </figure>
 
 ### 其他梯度下降算法
@@ -150,7 +150,7 @@ comments: true
 
 ### 隐藏层
 
-隐藏层神经元对误差的影响如[图](https://img.ricolxwz.asia/54225f471feeb87e7664d00730b2f0cf.png).
+隐藏层神经元对误差的影响如[图](http://img.ricolxwz.asia/54225f471feeb87e7664d00730b2f0cf.png).
 
 - 隐藏层神经元过多: 导致过拟合
 - 隐藏层神经元过少: 导致欠拟合
@@ -159,7 +159,7 @@ comments: true
 
 1. 一开始使用较少的隐藏神经元来初始化网络
 2. 训练网络, 直到均方误差或其他损失指标不再显著减少
-3. 此时, 向隐藏层中添加一些新神经元, 并使用随机初始化的权重重新训练网络, 均方误差会减少, 如[图](https://img.ricolxwz.asia/b8176513be1475a51dbd250cd4e9bcdc.png)
+3. 此时, 向隐藏层中添加一些新神经元, 并使用随机初始化的权重重新训练网络, 均方误差会减少, 如[图](http://img.ricolxwz.asia/b8176513be1475a51dbd250cd4e9bcdc.png)
 4. 重复上述步骤, 直到满足终止条件, 例如添加新神经元不会导致显著的误差减少, 或者隐藏层达到设定的最大大小
 
 ## 学习率 {#learning-rate}
@@ -172,7 +172,7 @@ comments: true
 我们无法在训练前就预知最优的学习率.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/8a0280ce5fa12521df322cc115dfe04d.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/8a0280ce5fa12521df322cc115dfe04d.png){ loading=lazy width='500' }
 </figure>
 
 学习率可以是固定的, 也可以随时间变化. 后者一开始学习率交大, 随着时间推移, 慢慢减小. 一开始学习率较大能够造成更大的权重变化, 能够减少训练批次, 甚至还可能跳过某些局部最小值; 而后, 学习率慢慢减小, 防止振荡的发生. 公式有两种:

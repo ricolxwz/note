@@ -18,8 +18,8 @@ comments: true
 这些限制揭示了视觉编码器与LLM之间在参数规模和特征表示能力上存在着巨大的差距. 为了弥合这一差距, 我们的思路在于将视觉编码器的参数规模提升到与LLM相当的水平, 并随后协调它们的表示. 然而, 训练这样的大规模模型需要从互联网上获取海量的图文数据. 数据的高度异质性和质量差异在训练过程中带来了巨大的挑战. 为了增强训练的有效性, 他们如下图所示, 将生成式监督作为对比学习的补充策略, 以在训练时为模型提供额外指导. 但低质量数据是否适合用于生成式训练仍是一个需要考虑的问题. 此外, 如何有效地表示用户指令, 并对视觉编码器与LLM的表示进行对齐, 依然是一个亟待解决的难题.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/6daff545d1f52c33b32de9e2694ccc25.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/6daff545d1f52c33b32de9e2694ccc25_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/6daff545d1f52c33b32de9e2694ccc25.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/6daff545d1f52c33b32de9e2694ccc25_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>对不同视觉和视觉-语言基础模型的比较. (a) 表示传统的视觉基础模型, 例如在分类任务上预训练的ResNet. (b) 代表视觉-语言基础模型, 例如在图像-文本对上预训练的CLIP. (c) 则是他们的InternVL, 它提供了一种可行的方法来对齐大规模视觉基础模型(即InternViT-6B)与大型语言模型, 并可同时适用于对比式和生成式任务.</figcaption>
 </figure>
 
@@ -28,8 +28,8 @@ comments: true
 这些设计为作者的模型带来了以下优势: (1) 多功能. 它既能作为独立的视觉编码器处理感知任务, 也能与语言中间件协作, 用于视觉-语言任务和多模态对话系统. 该语言中间件弥合了视觉编码器与LLM解码器之间的鸿沟. (2) 强大. 借助训练策略、大规模参数以及web级数据, 作者的模型具备强大的表示能力, 能在各种视觉与视觉-语言任务上取得先进水平的结果, 如下图所示. (3) 与LLM兼容. 由于其与LLM的特征空间保持一致, 作者的模型可以与现有的LLM(例如LLaMA系列, Vicuna和InternLM)平滑集成. 这些特性使作者的模型区别于以往方法, 并确立了一个领先的视觉语言基础模型, 适用于多种应用场景.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/a819ab8a74a70749a499167636929711.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/a819ab8a74a70749a499167636929711_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/a819ab8a74a70749a499167636929711.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/a819ab8a74a70749a499167636929711_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>在图像分类、视频分类、图文检索、图像描述以及多模态对话等多种通用视觉语言任务上的对比结果. 所提出的InternVL在所有这些任务上都取得了最佳性能. 请注意, 这里仅包含在公共数据上训练的模型. “IN”是ImageNet的缩写.</figcaption>
 </figure>
 
@@ -60,8 +60,8 @@ comments: true
 ### 总体架构
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/85b047941a2c72f7698679e44d333882.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/85b047941a2c72f7698679e44d333882_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/85b047941a2c72f7698679e44d333882.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/85b047941a2c72f7698679e44d333882_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>所提出的InternVL模型的训练策略包含三个渐进式阶段, 分别是视觉-语言对比训练、视觉-语言生成训练以及有监督微调. 这些阶段能有效利用来自多种来源的公共数据, 从网络上的噪声图文对到高质量的图像描述、视觉问答以及多模态对话数据集, 充分挖掘并整合不同数据的优势.</figcaption>
 </figure>
 
@@ -78,8 +78,8 @@ comments: true
 作者在LAION-en数据集的一亿子集上进行对比学习, 用于衡量不同配置的InternViT-6B变体在准确性、速度和稳定性方面的表现. 作者得出以下结论: (1) 速度. 对于不同模型设置, 当计算尚未达到饱和时, 深度较小的模型在每张图像的处理速度上更快. 然而, 当GPU计算被完全利用后, 速度差异便可忽略不计. (2) 准确性. 在相同参数量的情况下, 深度、头部维度和MLP比率对模型性能影响不大. 基于这些发现, 作者最终确定了最稳定的配置, 如下表所示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/7d1634b6fef1c45e2b350f6e858f2ce4.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.asia/7d1634b6fef1c45e2b350f6e858f2ce4_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/7d1634b6fef1c45e2b350f6e858f2ce4.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/7d1634b6fef1c45e2b350f6e858f2ce4_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>InternViT-6B模型的架构细节</figcaption>
 </figure>
 
@@ -94,8 +94,8 @@ comments: true
 通过灵活地结合视觉编码器与语言中间件, InternVL可以支持多种视觉或视觉-语言任务.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/06c3f558639c2b7836fdd0192398c0f0.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/06c3f558639c2b7836fdd0192398c0f0_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/06c3f558639c2b7836fdd0192398c0f0.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/06c3f558639c2b7836fdd0192398c0f0_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>使用 InternVL 的不同方式. 通过灵活地结合视觉编码器与语言中间件, InternVL 可以支持多种视觉-语言任务, 包括对比任务、生成任务和多模态对话.</figcaption>
 </figure>
 
@@ -116,8 +116,8 @@ comments: true
 在第一阶段, 作者们进行对比学习, 将 InternViT-6B 与多语言 LLaMA-7B 在大规模、嘈杂的图文对上进行对齐. 这些数据全部公开可用, 包含多语言内容, 包括 LAION-en, LAION-multi, LAION-COCO, COYO, Wukong 等. 作者们将这些数据集组合在一起, 并过滤掉一些极低质量的数据来训练他们的模型. 如下表所示, 原始数据集包含 6.03 billion 图文对, 经过清洗后剩余 4.98 billion. 有关数据准备的更多细节将在补充材料中提供.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/f586e5cde0f68b73be06ba85e71c7839.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.asia/f586e5cde0f68b73be06ba85e71c7839_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/f586e5cde0f68b73be06ba85e71c7839.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/f586e5cde0f68b73be06ba85e71c7839_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>InternVL在第一阶段和第二阶段的训练数据详情. 其中, LAION-en, LAION-multi, COYO, 和 Wukong 都是网络规模的图文配对数据. LAION-COCO 是一个从LAION-en中合成而来的高质量图文配对数据集. CC12M, CC3M, 以及SBU 则是学术领域的图文描述数据集. “Multi”表示多语言.</figcaption>
 </figure>
 
@@ -130,8 +130,8 @@ comments: true
 #### 有监督微调
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/b60b07005af4de3f3123c54d8a486e23.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.asia/b60b07005af4de3f3123c54d8a486e23_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/b60b07005af4de3f3123c54d8a486e23.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/b60b07005af4de3f3123c54d8a486e23_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>第三阶段的 InternVL 训练数据详情. 作者收集了种类广泛的高质量指令数据, 总量约为 400 万条. 为了公平对比, 作者只使用了这些数据集的训练集部分.</figcaption>
 </figure>
 

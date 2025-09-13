@@ -36,7 +36,7 @@ Serre等人[^5]借鉴了灵长类动物的视觉皮层的工作原理, 使用了
 最简单直接的提高神经网络性能的方法是增大它的体积(包括深度和宽度). 但是这意味着参数的数量很大, 导致过拟合, 特别是带标签的样本太少的时候. 创造高质量训练集的成本是特别大的, 特别是当标注员都分不清的时候, 如下图的西伯利亚哈士奇和爱斯基摩犬.
 
 <figure markdown='1'>
-  ![](https://img.ricolxwz.asia/d00c62f52d0b6d1abc779568e8a2ba7c.png){ loading=lazy width='500' }
+  ![](http://img.ricolxwz.asia/d00c62f52d0b6d1abc779568e8a2ba7c.png){ loading=lazy width='500' }
 </figure>
 
 ### 计算资源短缺
@@ -66,7 +66,7 @@ Serre等人[^5]借鉴了灵长类动物的视觉皮层的工作原理, 使用了
 作者假设在CNN中, 前面层的每个神经元都对应于输入图像的某一部分区域, 这些单元被组合为滤波器组(filter banks). 靠近输入的低层, 它们的神经元通常会集中在图像的局部区域, 这意味着, 会有很多的聚焦于一个局部区域的簇, 这可以通过$1\times 1$的卷积核覆盖. 相反的, 可能会有数量较少的, 但是分布更广的簇, 这些簇可以通过更大的卷积核覆盖更大的区域. 随着区域越来越大, 簇的数量会越来越少(:fontawesome-solid-circle-question: 对于filter bank中所有的滤波器都是). 为了避免对齐问题(也就是要通过调整步长stride使得它们输出的特征图在尺寸上是一样的), 当前版本的Inception架构限制滤波器的大小为$1\times 1$, $3\times 3$, $5\times 5$. 该架构将所有的滤波器的输出进行拼接. 此外, 由于池化操作在当时的SOTA里面用得比较多, 所以他们在卷积的同时也有一条平行的池化路径.
 
 <figure markdown='1'>
-  ![](https://img.ricolxwz.asia/6012441b80690fcd0f07a2409a29f1ef.png){ loading=lazy width='400' }
+  ![](http://img.ricolxwz.asia/6012441b80690fcd0f07a2409a29f1ef.png){ loading=lazy width='400' }
   <figcaption>原汁原味的Inception模块</figcaption>
 </figure>
 
@@ -85,7 +85,7 @@ Serre等人[^5]借鉴了灵长类动物的视觉皮层的工作原理, 使用了
 作者因此萌生了一种解决方法. 在Inception模块里面有选择性的进行降维操作. 即如何生成一个embedding, embedding是一种将高维数据映射到低维向量空间的方式, 通常以稠密(dense)的形式表示, 用于在更小的空间中有效捕捉输入数据的语义或者特征. 虽然embeddings能压缩信息, 但它们是密集的, 这种表示方式使得直接建模变得更加困难. 为了符合Arora等人的研究所说明的要求, 作者只在必须对信号进行大量聚合的时候, 才压缩信息以简化操作. 具体的操作就是在$3\times 3$和$5\times 5$卷积之前应用$1\times 1$卷积进行降维, 并且借鉴了NiN中的思想, 包含了ReLU, 使得这个$1\times 1$的mlpconv能够很好的拟合非线性关系. 如下图所示.
 
 <figure markdown='1'>
-  ![](https://img.ricolxwz.asia/6bf9c946fb02851d11e5ee87e769ec94.png){ loading=lazy width='400' }
+  ![](http://img.ricolxwz.asia/6bf9c946fb02851d11e5ee87e769ec94.png){ loading=lazy width='400' }
   <figcaption>包含降维操作的Inception模块</figcaption>
 </figure>
 

@@ -21,14 +21,14 @@ comments: true
 ## 方法
 
 <figure markdown='1' id='fig1'>
-![](https://img.ricolxwz.asia/7cc71a0e5ccd7f49297ab9c3bf93b84b.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/7cc71a0e5ccd7f49297ab9c3bf93b84b_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/7cc71a0e5ccd7f49297ab9c3bf93b84b.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/7cc71a0e5ccd7f49297ab9c3bf93b84b_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图1: VQTalker框架包含两个主要组成部分:(1)一个量化的面部运动编解码器, 它通过自监督学习和组残差FSQ(GRFSQ)来学习一种通用的运动表示. (2)一个使用BERT模型的从粗到精的运动生成过程, 该模型接收语音令牌, 并在多个残差层上迭代生成面部运动令牌. 最后, 图像渲染器根据生成的离散码字合成最终的说话头像视频. </figcaption>
 </figure>
 
 <figure markdown='1' id='fig2'>
-![](https://img.ricolxwz.asia/04780f9740de57a0b57bade6e7e02d50.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.asia/04780f9740de57a0b57bade6e7e02d50_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/04780f9740de57a0b57bade6e7e02d50.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/04780f9740de57a0b57bade6e7e02d50_inverted.webp#only-dark){ loading=lazy width='500' }
 <figcaption>图2: 码本交错模式与混合面部运动生成矩阵. 其中, 行(r1至r4)代表细节程度递增的残差码本. t1至t4则标示了每个残差层的顺序处理步骤, 每个ti步骤都会一次性生成对应的ri. </figcaption>
 </figure>
 

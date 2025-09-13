@@ -7,7 +7,7 @@ comments: true
 
 ???+ example "例子"
 
-    如[图](https://img.ricolxwz.asia/056fd74701e82526e4b043f255c469ee.png)是一张学生表和参与课程表, 现在要你找到同时参加COMP5138和ISYS3207的学生的名字, 下列查询是否正确?
+    如[图](http://img.ricolxwz.asia/056fd74701e82526e4b043f255c469ee.png)是一张学生表和参与课程表, 现在要你找到同时参加COMP5138和ISYS3207的学生的名字, 下列查询是否正确?
 
     ```sql
     SELECT name FROM Student NATURAL JOIN Enrolled WHERE uos_code='COMP5138'
@@ -83,15 +83,15 @@ SQL支持数种聚合操作. 包括`COUNT`, `SUM`, `AVG`, `MAX`, `MIN`, 除了`C
 
     === "例子1"
 
-        如[图](https://img.ricolxwz.asia/b1d7089b238fb3a10cd0a4710cb3ed80.png).
+        如[图](http://img.ricolxwz.asia/b1d7089b238fb3a10cd0a4710cb3ed80.png).
 
     === "例子2"
 
-        如[图](https://img.ricolxwz.asia/e30cc90ccbccf965e719d51600e99369.png).
+        如[图](http://img.ricolxwz.asia/e30cc90ccbccf965e719d51600e99369.png).
 
     === "例子3"
 
-        如[图](https://img.ricolxwz.asia/9d439950a11be954151f5ffcc2212d27.png).
+        如[图](http://img.ricolxwz.asia/9d439950a11be954151f5ffcc2212d27.png).
 
 ### 分组
 
@@ -99,7 +99,7 @@ SQL支持数种聚合操作. 包括`COUNT`, `SUM`, `AVG`, `MAX`, `MIN`, 除了`C
 
 ???+ example "例子"
 
-    如[图](https://img.ricolxwz.asia/b1a1edec3f4d45f040fc471d6858c7e9.png). 这里, Sales表格可以分为IBM和DELL, 我们对company进行分组, 用`GROUP BY`关键字, 然后会对IBM的amount, DELL的amount分别进行聚合, 而不是整一个属性amount进行聚合.
+    如[图](http://img.ricolxwz.asia/b1a1edec3f4d45f040fc471d6858c7e9.png). 这里, Sales表格可以分为IBM和DELL, 我们对company进行分组, 用`GROUP BY`关键字, 然后会对IBM的amount, DELL的amount分别进行聚合, 而不是整一个属性amount进行聚合.
 
 #### 过滤
 
@@ -107,11 +107,11 @@ SQL支持数种聚合操作. 包括`COUNT`, `SUM`, `AVG`, `MAX`, `MIN`, 除了`C
 
 ## 评估流程
 
-评估流程如[图](https://img.ricolxwz.asia/549b2dcf48909f15ac8c06a30396c35f.png)所示.
+评估流程如[图](http://img.ricolxwz.asia/549b2dcf48909f15ac8c06a30396c35f.png)所示.
 
 ???+ example "例子"
 
-    如[图](https://img.ricolxwz.asia/91083d1329e274f2bb2ae9ad93942e52.png)--->[图](https://img.ricolxwz.asia/c0f6aab1c5ef2e998cb5a7f64e7133b1.png).
+    如[图](http://img.ricolxwz.asia/91083d1329e274f2bb2ae9ad93942e52.png)--->[图](http://img.ricolxwz.asia/c0f6aab1c5ef2e998cb5a7f64e7133b1.png).
 
 ## 空值
 

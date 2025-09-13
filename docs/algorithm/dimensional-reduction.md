@@ -14,7 +14,7 @@ Principle Component Analysis (PCA), 主成分分析, 是一种最人们的降维
 现在, 我们来看一个例子, 请解答, 下列数据沿着哪根轴的离散程度最大, $X$还是$Y$?
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/d7068ef901f3546bee95f37508f59d83.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/d7068ef901f3546bee95f37508f59d83.png){ loading=lazy width='500' }
 </figure>
 
 答案是$X$轴.
@@ -22,13 +22,13 @@ Principle Component Analysis (PCA), 主成分分析, 是一种最人们的降维
 我们再来看另一个例子, 请解答, 下列数据沿着哪根轴的离散程度最大, $X$, $Y$还是其他轴?
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/e9f5fe7ebe5c3a9a81e7754e3ac799ee.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/e9f5fe7ebe5c3a9a81e7754e3ac799ee.png){ loading=lazy width='500' }
 </figure>
 
 答案是$Z_1$轴, 如图所示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/858f3ee26803470379d34852975ff769.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/858f3ee26803470379d34852975ff769.png){ loading=lazy width='500' }
 </figure>
 
 注意看上图, 我们有两个多出来的轴, 一个是$Z_1$, 另一个是$Z_2$, $Z_1$方向的离散程度是最大的, $Z_2$方向的离散程度是最小的. 事实上, $Z_1$和$Z_2$是$X$和$Y$的线性组合: $Z_1=1\times X+1\times Y$, $Z_2=-1\times X+1\times Y$. 事实上, 我们可以想象, 将这些数据投影到$Z_1$轴上, 投影后的值为在$Z_1$轴上的坐标, 投影后的值的方差(关于什么是方差, 请见[这里](/algorithm/linear-regression/#偏差和方差))表示的就是数据的离散程度, 而数据分布越离散, 每个数据点的概率取值就比较小, 此时该分布的熵就更大, 包含更多信息.[^1]
@@ -38,7 +38,7 @@ Principle Component Analysis (PCA), 主成分分析, 是一种最人们的降维
 对于上面的例子, 原始维度为$2$维, 坐标轴为$X$和$Y$, $Z_1$是数据方差最大的方向, 我们通过线性组合$X$和$Y$, 将数据降为$1$维. 如图, 红色的点就是将原始绿点映射到第一主成分$Z_1$后的数据, 我们只需要用$Z_1$的坐标描述红点就行了.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/369b36dea39de9c2e6a317ede6bdc7e7.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/369b36dea39de9c2e6a317ede6bdc7e7.png){ loading=lazy width='500' }
 </figure>
 
 ### 确定PC的数量 {#确定PC的数量}
@@ -51,7 +51,7 @@ Principle Component Analysis (PCA), 主成分分析, 是一种最人们的降维
 2. 肘部法, Elbow Method. 绘制主成分的数量和累积方差图, 通常会在曲线上出现一个"肘点", 表示方差的增长速度开始减缓的地方, 这通常是一个合理的选择, 因为在此之后增加更多的维度带来的方差增益有限, 如下图, 总方差的$95\%$对应的是$153$维, 而肘点对应的是$100$维
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.asia/d27b500548b5b83cdbcb86d3f6ebcda6.png){ loading=lazy width='500' }
+    ![](http://img.ricolxwz.asia/d27b500548b5b83cdbcb86d3f6ebcda6.png){ loading=lazy width='500' }
     </figure>
 
 ### 确定PC {#get-pc}
@@ -71,7 +71,7 @@ Principle Component Analysis (PCA), 主成分分析, 是一种最人们的降维
 
 经过分解后, 原始样本数据可以被写为$\bm{X}=\lambda_1\bm{u_1}\bm{v_1}^T+\lambda_2\bm{u_2}\bm{v_2}^T+...+\lambda_m\bm{u_m}\bm{v_m}^T$, 其中, $\bm{v_1}$, $\bm{v_2}, ..., \bm{v_m}$对应的就是第$1$到第$m$主成分. 对于降维操作来说, 我们只需要其中的$k(k<m)$个主成分, 所以$\bm{X}_{reduced}=\lambda_1\bm{u_1}\bm{v_1}^T+\lambda_2\bm{u_2}\bm{v_2}^T+...+\lambda_k\bm{u_k}\bm{v_k}^T$
 
-可以在[这里](https://img.ricolxwz.asia/a2a0de53ba8ad8088723f59d956c980c.png)找到一个例子.
+可以在[这里](http://img.ricolxwz.asia/a2a0de53ba8ad8088723f59d956c980c.png)找到一个例子.
 
 #### 压缩 {#compression-rate}
 
@@ -86,7 +86,7 @@ Principle Component Analysis (PCA), 主成分分析, 是一种最人们的降维
 总共, 需要存储$k\times (1+n+m)$个数. 压缩率为$r=\frac{k(1+n+m)}{n\times m}$. 下面是一张表示压缩前和压缩后显著差异的图示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/1d81b1fece181e54d0828d3358f0b458.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/1d81b1fece181e54d0828d3358f0b458.png){ loading=lazy width='500' }
 </figure>
 
 [^1]: 郑之杰. (2011, April 20). 主成分分析(Principal Component Analysis, PCA). 郑之杰的个人网站. https://0809zheng.github.io/2020/04/11/PCA.html

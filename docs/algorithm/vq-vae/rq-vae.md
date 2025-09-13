@@ -13,8 +13,8 @@ addi: https://arxiv.org/pdf/2203.01941
 ## 介绍
 
 <figure markdown='1' id='fig1'>
-![](https://img.ricolxwz.asia/25e4f8ab2eccb9ff9a3b7157b7f2f74c.webp#only-light){ loading=lazy width='600' }
-![](https://img.ricolxwz.asia/25e4f8ab2eccb9ff9a3b7157b7f2f74c_inverted.webp#only-dark){ loading=lazy width='600' }
+![](http://img.ricolxwz.asia/25e4f8ab2eccb9ff9a3b7157b7f2f74c.webp#only-light){ loading=lazy width='600' }
+![](http://img.ricolxwz.asia/25e4f8ab2eccb9ff9a3b7157b7f2f74c_inverted.webp#only-dark){ loading=lazy width='600' }
 <figcaption>图1: 256×256图像条件生成示例. 第一行图像根据ImageNet类别进行生成. 第二行图像基于文本条件生成, 分别为"A cheeseburger in front of a mountain range covered with snow."与"a cherry blossom tree on the blue ocean"; 这些文本条件在训练阶段未出现.</figcaption>
 </figure>
 
@@ -39,8 +39,8 @@ addi: https://arxiv.org/pdf/2203.01941
 本文提出包含RQ-VAE与RQ-Transformer的两阶段框架, 用于图像的AR建模(见[图2](#fig2)). RQ-VAE利用码本将图像表示为$D$个离散编码的堆叠映射. 随后, RQ-Transformer以自回归方式预测下一空间位置的$D$个编码. 此外, 作者阐述了RQ-Transformer在AR模型训练中如何缓解曝光偏置(exposure bias)的问题.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/18c69acd3a64e43d09ada8199b5cd210.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/18c69acd3a64e43d09ada8199b5cd210_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/18c69acd3a64e43d09ada8199b5cd210.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/18c69acd3a64e43d09ada8199b5cd210_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图2: 本文提出的两阶段图像生成框架概述如下: 框架由RQ-VAE和RQ-Transformer组成. 在第一阶段, RQ-VAE利用残差量化器将图像表示为$D=4$个离散编码的堆叠. 当该编码堆叠映射被reshape后, RQ-Transformer预测下一空间位置的$D$个编码.</figcaption>
 </figure>
 

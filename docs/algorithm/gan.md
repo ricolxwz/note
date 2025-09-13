@@ -12,8 +12,8 @@ GAN的基本思想是, 首先我们有一个"生成器", Generator, 其实就是
 那为什么需要这两个组件呢? GAN在结构上受到了博弈论中的二人[零和博弈](https://zh.wikipedia.org/zh-hans/零和博弈)(即二人的利益之和为0, 一方的所得是另一方的所失)的启发, 系统由一个生成模型(G)和一个判别模型(D)构成. G捕捉真实数据样本的潜在分布, 并生成新的数据样本; D是一个二分类器, 判别输入是真实数据还是生成的样本. 生成器和判别器均可以采用深度神经网络. GAN的优化过程是一个极小极大博弈问题, 优化目标是达到[纳什平衡](https://wiki.mbalib.com/wiki/纳什均衡).
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/e84be7219f469337dba9997250d8fbeb.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.asia/e84be7219f469337dba9997250d8fbeb_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/e84be7219f469337dba9997250d8fbeb.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/e84be7219f469337dba9997250d8fbeb_inverted.webp#only-dark){ loading=lazy width='500' }
 </figure>
 
 首先, 我们有两个关键组件, 生成器(G)和判别器(D), 一开始G-V1生成了一些手写体的图片, 然后丢给D-V1, 同时我们也需要把真实图片也送给D-V1, 然后D-V1根据自己的"经验"(其实就是当前的网络参数)结合真实图片数据, 来判断G-V1生成的图片是否符合要求.
@@ -23,8 +23,8 @@ GAN的基本思想是, 首先我们有一个"生成器", Generator, 其实就是
 那么具体它们是怎么互相学习的呢? 首先是D的学习:
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/96f9f3dd69247dea84c045d5217213d5.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.asia/96f9f3dd69247dea84c045d5217213d5_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/96f9f3dd69247dea84c045d5217213d5.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/96f9f3dd69247dea84c045d5217213d5_inverted.webp#only-dark){ loading=lazy width='500' }
 </figure>
 
 首先, 我们随机初始化生成器G, 并输入一组随机向量, 以此产生一些图片, 并把这些图片标注为0(假图片). 同时把来自真实分布中的图片标注为1(真图片). 两者同时丢到判别器D中, 以此来训练判别器. 实现当输入是真图片的时候, 判别器给出的是接近于1的分数, 而输入假图片的时候, 判别器给出接近于0的低分.
@@ -32,8 +32,8 @@ GAN的基本思想是, 首先我们有一个"生成器", Generator, 其实就是
 接着是G的学习:
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/d1eca8cec0744fe585304e99a3db549b.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.asia/d1eca8cec0744fe585304e99a3db549b_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/d1eca8cec0744fe585304e99a3db549b.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/d1eca8cec0744fe585304e99a3db549b_inverted.webp#only-dark){ loading=lazy width='500' }
 </figure>
 
 对于生成网络, 目的是生成尽可能逼真的样本. 所以在训练生成网络的时候, 我们需要联合判别网络才能达到训练的目的. 也就是说, 通过将两者串接起来的方式来产生误差从而得以训练生成网络. 步骤是: 我们通过随机向量(噪声数据)经由生成网络产生一组假数据, 并将这些假数据都标记为1. 然后将这些假数据输入到判别网络里面, 判别器肯定会发现这些标榜为真实数据(标记为1)的输入都是假数据(给出低分), 这样就产生了误差, 在训练这个串接的网络的时候, 一个很重要的操作是不要让判别网络的参数发生变化, 只是把误差一直传, 传到生成网络那块后更新网络的参数. 这样就完成了对生成网络的训练了.
@@ -111,8 +111,8 @@ $$\begin{align*}
 那么要怎么找到一个比较好的$p_{model}(x;\theta)$呢? 传统的生成模型(例如GMM或者其他统计模型)无法很好地处理复杂的高维数据分布, 而生成对抗网络(GAN)引入了神经网络来建模数据分布, 从而生成更加复杂和逼真的数据, 所以$p_{model}(x;\theta)$在GAN里面是一个神经网络产生的分布(和VAE里面的解码器差不多).
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/2dc8d471d0117149df27695828605bcf.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.asia/2dc8d471d0117149df27695828605bcf_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/2dc8d471d0117149df27695828605bcf.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/2dc8d471d0117149df27695828605bcf_inverted.webp#only-dark){ loading=lazy width='500' }
 </figure>
 
 假设$z$是从高斯分布$p_{prior}(z)$中采样而来, 然后通过一个神经网络(也就是G)得到$x$, 这个$x$满足另一个分布$p_{model}(x;\theta)$, 然后我们要找到这个分布的参数$\theta$使得它和真实分布越相近越好, 这里的$p_{model}(x;\theta)$可以写作: $p_G(x) = \int p_{prior}(z) I(G(z) = x) dz$, 这个公式的含义是, 生成的样本$x$是通过输入噪声$z$生成的, 而$z$是一个已知的先验分布$p_{prior}(z)$中采样得到的, 生成$x$的概率是所有可能的$z$贡献的概率总和, $I(G(z)=x)$是指示函数, 当$G(z)$的输出等于$x$的时候, $I(G(z)=x)$的值为$1$, 否则为$0$, 它的作用是筛选出哪些$z$能生成特定的$x$.
@@ -262,8 +262,8 @@ L=-(\tilde{V}=\frac{1}{m}\sum_{i=1}^{m}\log D\!\bigl(x^{(i)}\bigr)
 在训练生成器的过程中, 实际上我们想要最小化的并不是$E_{x\sim p_G}[\log (1-D(x))]$, 因为如果最小化这个, $\log (1-D(x))$一开始就是一个很接近于$0$的负数, 导致产生的梯度较小, 训练速度较慢, 但是如果改为最小化$E_{x\sim p_G}[-\log (D(x))]$, 一开始是一个很大的整数, 那么产生的梯度就较大, 便于训练.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/6349b54a8fd51a2b2a87dff5e9f80f74.webp#only-light){ loading=lazy width='500' }
-![](https://img.ricolxwz.asia/6349b54a8fd51a2b2a87dff5e9f80f74_inverted.webp#only-dark){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/6349b54a8fd51a2b2a87dff5e9f80f74.webp#only-light){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/6349b54a8fd51a2b2a87dff5e9f80f74_inverted.webp#only-dark){ loading=lazy width='500' }
 </figure>
 
 ## GAN训练的问题
@@ -286,8 +286,8 @@ L=-(\tilde{V}=\frac{1}{m}\sum_{i=1}^{m}\log D\!\bigl(x^{(i)}\bigr)
 1. 判别器$D$太强, 过拟合
 
     <figure markdown='1' id='fig'>
-    ![](https://img.ricolxwz.asia/20094716bda5e41ab69ade05c8241c36.webp#only-light){ loading=lazy width='300' }
-    ![](https://img.ricolxwz.asia/20094716bda5e41ab69ade05c8241c36_inverted.webp#only-dark){ loading=lazy width='300' }
+    ![](http://img.ricolxwz.asia/20094716bda5e41ab69ade05c8241c36.webp#only-light){ loading=lazy width='300' }
+    ![](http://img.ricolxwz.asia/20094716bda5e41ab69ade05c8241c36_inverted.webp#only-dark){ loading=lazy width='300' }
     </figure>
 
     上图蓝色和橙色分别是两个分布, 我们能发现分布之间确实有一些重叠, 所以按理来说JSD不应该是$\log 2$ . 但由于我们是采样一部分样本(图中的圆点)进行训练, 所以当判别器足够"强"的时候, 就很有可能找到一条分界线强行将两类样本分开, 从而让两类样本之间被认为完全不存在重叠. 我们可以尝试传统的正则化方法(regularization等), 也可以减少模型的参数让它变得弱一些. 但是我们训练的目的就是要找到一个"很强"的判别器, 我们在实际操作中是很难界定到底要将判别器调整到什么水平才能满足我们的需要: 既不会太强, 也不会太弱. 还有一点就是我们之前曾经认为这个判别器应该能够测量JSD, 但它能测量JSD的前提就是它必须非常强, 能够拟合任何数据. 这就跟我们"不想让它太强"的想法有矛盾了, 所以实际操作中用regularization等方法很难做到好的效果.
@@ -297,15 +297,15 @@ L=-(\tilde{V}=\frac{1}{m}\sum_{i=1}^{m}\log D\!\bigl(x^{(i)}\bigr)
     一般来说, 生成器产生的数据都是一个映射到高维空间的低维流型. 而低维流型之间本身就"不是那么容易"产生重叠的. 如下图所示.
 
     <figure markdown='1' id='fig'>
-    ![](https://img.ricolxwz.asia/4f67c7a2945489fb8fa894e748b366f4.webp#only-light){ loading=lazy width='300' }
-    ![](https://img.ricolxwz.asia/4f67c7a2945489fb8fa894e748b366f4_inverted.webp#only-dark){ loading=lazy width='300' }
+    ![](http://img.ricolxwz.asia/4f67c7a2945489fb8fa894e748b366f4.webp#only-light){ loading=lazy width='300' }
+    ![](http://img.ricolxwz.asia/4f67c7a2945489fb8fa894e748b366f4_inverted.webp#only-dark){ loading=lazy width='300' }
     </figure>
 
     解决的方法有两种, 一种是给数据添加噪声, 让生成器和真实分布的低维流形更容易重叠在一起, 如下图所示.
 
     <figure markdown='1' id='fig'>
-    ![](https://img.ricolxwz.asia/a77eed271091ba5d3f1fbf006748ad35.webp#only-light){ loading=lazy width='300' }
-    ![](https://img.ricolxwz.asia/a77eed271091ba5d3f1fbf006748ad35_inverted.webp#only-dark){ loading=lazy width='300' }
+    ![](http://img.ricolxwz.asia/a77eed271091ba5d3f1fbf006748ad35.webp#only-light){ loading=lazy width='300' }
+    ![](http://img.ricolxwz.asia/a77eed271091ba5d3f1fbf006748ad35_inverted.webp#only-dark){ loading=lazy width='300' }
     </figure>
 
     这个方法的缺点在于, 我们的目标是训练准确的数据(例如高清图等), 加入噪声会影响我们生成数据的质量, 一个简单的做法是让噪声的幅度随着时间缩小, 不过操作起来比较困难.
@@ -321,22 +321,22 @@ L=-(\tilde{V}=\frac{1}{m}\sum_{i=1}^{m}\log D\!\bigl(x^{(i)}\bigr)
 假设我们要学习的真实分布是这个样子:
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/5e013f9a1986d51f076bfb156b66af1d.webp#only-light){ loading=lazy width='300' }
-![](https://img.ricolxwz.asia/5e013f9a1986d51f076bfb156b66af1d_inverted.webp#only-dark){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/5e013f9a1986d51f076bfb156b66af1d.webp#only-light){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/5e013f9a1986d51f076bfb156b66af1d_inverted.webp#only-dark){ loading=lazy width='300' }
 </figure>
 
 而我们设想的学习过程应该是这个样子:
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/2b98445d236baf686d2c620cf5d901bb.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/2b98445d236baf686d2c620cf5d901bb_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/2b98445d236baf686d2c620cf5d901bb.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/2b98445d236baf686d2c620cf5d901bb_inverted.webp#only-dark){ loading=lazy width='800' }
 </figure>
 
 但是实际上却事与愿违:
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/b31e399acd905b22889956cd2460f70c.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/b31e399acd905b22889956cd2460f70c_inverted.webp#only-dark){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/b31e399acd905b22889956cd2460f70c.webp#only-light){ loading=lazy width='800' }
+![](http://img.ricolxwz.asia/b31e399acd905b22889956cd2460f70c_inverted.webp#only-dark){ loading=lazy width='800' }
 </figure>
 
 模型在学习到一个真实分布的模式之后, 并不会继续学习其他模式, 而是尝试立刻将这个模式忘掉, 转而去学习其他模式. 并且在迭代过程中不断在各个模式中跳跃. 但是关于这个情况产生的原因, 并没有太好的定论.

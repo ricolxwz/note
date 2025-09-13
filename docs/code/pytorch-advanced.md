@@ -339,7 +339,7 @@ torch.dist(a, b, p=2)  # 计算 L^2 距离
 ???+ note "PCA和LDA的区别图例"
 
     <figure markdown='1'>
-    ![](https://img.ricolxwz.asia/0b2064409573b415daa687b04e429fcf.webp#only-light){ loading=lazy width='800' }
-    ![](https://img.ricolxwz.asia/0b2064409573b415daa687b04e429fcf_inverted.webp#only-dark){ loading=lazy width='800' }
+    ![](http://img.ricolxwz.asia/0b2064409573b415daa687b04e429fcf.webp#only-light){ loading=lazy width='800' }
+    ![](http://img.ricolxwz.asia/0b2064409573b415daa687b04e429fcf_inverted.webp#only-dark){ loading=lazy width='800' }
     <figcaption></figcaption>
     </figure>

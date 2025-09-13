@@ -28,8 +28,8 @@ Momentum Contrast(MoCo)是一种**自监督视觉表征学习方法**. 它的核
 作者提出了MoCo, 用于构建大型且一致的字典, 用于基于对比损失的自监督学, 如下图所示.
 
 <figure markdown='1'>
-  ![](https://img.ricolxwz.asia/0749763f0af77bcc0e453e77775b0204.webp#only-light){ loading=lazy width='300' }
-  ![](https://img.ricolxwz.asia/0749763f0af77bcc0e453e77775b0204_inverted.webp#only-dark){ loading=lazy width='300' }
+  ![](http://img.ricolxwz.asia/0749763f0af77bcc0e453e77775b0204.webp#only-light){ loading=lazy width='300' }
+  ![](http://img.ricolxwz.asia/0749763f0af77bcc0e453e77775b0204_inverted.webp#only-dark){ loading=lazy width='300' }
   <figcaption>动量对比(MoCo)通过计算查询$q$和一个动态字典中的所有key$k_0, k_1, k_2, ...$的对比损失, 来训练一个视觉表示encoder. 这个动态字典的key是从一组数据样本中即时定义的(defined on-the-fly). 该字典以队列的形式构建: 将当前的小批量数据加入队列, 同时移除最旧的小批量数据, 使其和小批量数据的大小解耦. 这些key由一个逐步更新(slowly-progressing)的编码器进行编码, 该编码器(又叫做动量编码器)通过和锚点编码器之间的动量更新来驱动. 这个方法能够为学习视觉表示提供一个大且一致的字典</figcaption>
 </figure>
 
@@ -126,8 +126,8 @@ $$\theta_k\leftarrow m\theta_k+(1-m)\theta_q$$
 MoCo是一个通用的使用对比损失的机制. 作者将其和显存的通用机制比较, 在字典大小和一致性上, 展现了不同的设置. 如下图所示.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/97c82f262e093f50074fd74bd53ea734.webp#only-light){ loading=lazy width='700' }
-![](https://img.ricolxwz.asia/97c82f262e093f50074fd74bd53ea734_inverted.webp#only-dark){ loading=lazy width='700' }
+![](http://img.ricolxwz.asia/97c82f262e093f50074fd74bd53ea734.webp#only-light){ loading=lazy width='700' }
+![](http://img.ricolxwz.asia/97c82f262e093f50074fd74bd53ea734_inverted.webp#only-dark){ loading=lazy width='700' }
 <figcaption>三种对比损失机制在理念上的比较. 这里只展示了一对query和key. 三种机制的主要区别是在key如何维护和key编码器如何更新上. (a) query和key的编码器是端到端反向传播更新的 (b) key是从一个记忆池中采样的 (c) MoCo使用动量编码器即时对key进行编码, 维护key的一个队列</figcaption>
 </figure>
 

@@ -14,22 +14,22 @@ Git LFS会将仓库中的大文件替换为微小的指针文件. 在正常使�
 1. 当你添加一个LFS文件到暂存区的时候(`git add xxx`), LFS用一个指针替换其内容, 并将文件内容存储在本地LFS的缓存中(本地LFS缓存位于仓库的`.git/lfs/objects`目录中).
 
     <figure markdown='1' id='$figid'>
-    ![](https://img.ricolxwz.asia/a45ca0cb2280cf91e367a707c2144fbf.webp#only-light){ loading=lazy width='400' }
-    ![](https://img.ricolxwz.asia/a45ca0cb2280cf91e367a707c2144fbf_inverted.webp#only-dark){ loading=lazy width='400' }
+    ![](http://img.ricolxwz.asia/a45ca0cb2280cf91e367a707c2144fbf.webp#only-light){ loading=lazy width='400' }
+    ![](http://img.ricolxwz.asia/a45ca0cb2280cf91e367a707c2144fbf_inverted.webp#only-dark){ loading=lazy width='400' }
     </figure>
 
 2. 当你推送新的提交到远程仓库的时候, 新推送的提交引用的所有LFS文件都会从本地LFS缓存传输到绑定到远程仓库的LFS服务器上.
 
     <figure markdown='1' id='fig'>
-    ![](https://img.ricolxwz.asia/0f922d9b8285033cc5cbab2fa9488268.webp#only-light){ loading=lazy width='400' }
-    ![](https://img.ricolxwz.asia/0f922d9b8285033cc5cbab2fa9488268_inverted.webp#only-dark){ loading=lazy width='400' }
+    ![](http://img.ricolxwz.asia/0f922d9b8285033cc5cbab2fa9488268.webp#only-light){ loading=lazy width='400' }
+    ![](http://img.ricolxwz.asia/0f922d9b8285033cc5cbab2fa9488268_inverted.webp#only-dark){ loading=lazy width='400' }
     </figure>
 
 3. 当你checkout一个包含LFS指针的提交的时候, 指针文件将替换为本地LFS缓存中的文件, 或者从LFS服务器中下载到本地LFS缓存中, 然后再替换为缓存中的文件.
 
     <figure markdown='1' id='fig'>
-    ![](https://img.ricolxwz.asia/7b0183ae420925418631567277bda825.webp#only-light){ loading=lazy width='400' }
-    ![](https://img.ricolxwz.asia/7b0183ae420925418631567277bda825_inverted.webp#only-dark){ loading=lazy width='400' }
+    ![](http://img.ricolxwz.asia/7b0183ae420925418631567277bda825.webp#only-light){ loading=lazy width='400' }
+    ![](http://img.ricolxwz.asia/7b0183ae420925418631567277bda825_inverted.webp#only-dark){ loading=lazy width='400' }
     </figure>
 
 LFS的指针文件是一个文本文件夹, 存储在仓库中, 对应大文件的内容存储在本地LFS缓存里面或者LFS服务器中, 例如, 下面是一个图片LFS文件的指针文件内容:

@@ -441,15 +441,15 @@ for epoch in range(401):
 这是一开始随机初始化后, `h`在空间中的分布(还未进行训练):
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/4130ba9c496734f38415c1f0f6a3ec51.webp#only-light){ loading=lazy width='400' }
-![](https://img.ricolxwz.asia/4130ba9c496734f38415c1f0f6a3ec51_inverted.webp#only-dark){ loading=lazy width='400' }
+![](http://img.ricolxwz.asia/4130ba9c496734f38415c1f0f6a3ec51.webp#only-light){ loading=lazy width='400' }
+![](http://img.ricolxwz.asia/4130ba9c496734f38415c1f0f6a3ec51_inverted.webp#only-dark){ loading=lazy width='400' }
 </figure>
 
 这是400个epoch之后, `h`在空间中的分布:
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/9f811a555cb71fab0c3e50084f55ced9.webp#only-light){ loading=lazy width='400' }
-![](https://img.ricolxwz.asia/9f811a555cb71fab0c3e50084f55ced9_inverted.webp#only-dark){ loading=lazy width='400' }
+![](http://img.ricolxwz.asia/9f811a555cb71fab0c3e50084f55ced9.webp#only-light){ loading=lazy width='400' }
+![](http://img.ricolxwz.asia/9f811a555cb71fab0c3e50084f55ced9_inverted.webp#only-dark){ loading=lazy width='400' }
 </figure>
 
 ## GAT
@@ -570,8 +570,8 @@ Temporal Graph Networks(TGN)是一种针对动态图的深度学习框架, 它�
 可以看到, 它的做法和LSTM其实是很像的, 除了第一步不用参考记忆之外, 其它的步骤都要参考之前的记忆和当前时间步的消息, 如图所示.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/9bab934f0627f79b644debe9ac5b2c56.webp#only-light){ loading=lazy width='600' }
-![](https://img.ricolxwz.asia/9bab934f0627f79b644debe9ac5b2c56_inverted.webp#only-dark){ loading=lazy width='600' }
+![](http://img.ricolxwz.asia/9bab934f0627f79b644debe9ac5b2c56.webp#only-light){ loading=lazy width='600' }
+![](http://img.ricolxwz.asia/9bab934f0627f79b644debe9ac5b2c56_inverted.webp#only-dark){ loading=lazy width='600' }
 </figure>
 
 [^1]: 唐宇迪带你学AI的个人空间-唐宇迪带你学AI个人主页-哔哩哔哩视频. (n.d.). From https://space.bilibili.com/1876980149

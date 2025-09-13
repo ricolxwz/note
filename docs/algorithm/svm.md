@@ -14,13 +14,13 @@ comments: true
 在左图中, 找到一个线性的决策边界(直线, 超平面)使得数据能够分开, 这道题的答案有很多, 如右图.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/cd68b93ab0d32d042943c2abf2e34230.png){ loading=lazy width="600" }
+![](http://img.ricolxwz.asia/cd68b93ab0d32d042943c2abf2e34230.png){ loading=lazy width="600" }
 </figure>
 
 支持向量, support vector是离决策边界最近的样本(数据点). 边际, margin是指正负超平面(什么是正负超平面下面有讲到)之间的距离, 如左图. 当然, 也可能同时出现多个支持向量, 因为它们都是最靠近决策边界的样本点, 如右图.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/99a4ec08371a005d310d24a6805747b0.png){ loading=lazy width="625" }
+![](http://img.ricolxwz.asia/99a4ec08371a005d310d24a6805747b0.png){ loading=lazy width="625" }
 </figure>
 
 支持向量之所以被称为向量是因为给的样本就是一个向量, 试想, 样本有很多的特征, 这些特征构成了向量... 支持向量是所有样本点(向量)的子集.
@@ -28,7 +28,7 @@ comments: true
 下面来看, 哪一个超平面(决策边界)更优呢? B1还是B2? 哪个超平面能够更准确地分类新数据?
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/6209988905535c0d38422ae82d63dbed.png){ loading=lazy width="300" }
+![](http://img.ricolxwz.asia/6209988905535c0d38422ae82d63dbed.png){ loading=lazy width="300" }
 </figure>
 
 答案是B1, 因为它的边际更大. 拥有最大边际的超平面我们称之为边际最大超平面. 按照这个超平面(决策边界)分类的数据准度会更高. 如果边际过小, 意味着决策边界和支持向量非常接近, 在这种情况下, 即使是很小的变化都可能导致分类结果发生显著变化, 这意味着模型对数据扰动很敏感, 容易出现过拟合现象; 如果边际较大, 意味着模型对于数据的微小变化更具有鲁棒性, 有较好的泛化性能. 这种选择大边际的策略在统计理论中也得到了支持, 称为"结构风险最小化原理".
@@ -50,7 +50,7 @@ comments: true
 回到超平面方程式的向量形式, 对于任意一个样本点, 它到超平面$\boldsymbol{w}\cdot \boldsymbol{x} + b=0$的垂直距离可以通过公式$\frac{|\boldsymbol{w}\cdot \boldsymbol{x} + b|}{||\boldsymbol{w}||}$计算. 因此, 支持向量之间的垂直距离可以计算为$d=\frac{|(\boldsymbol{w}\cdot \boldsymbol{x_1}+b)-(\boldsymbol{w}\cdot \boldsymbol{x_2}+b)|}{||\boldsymbol{w}||}$, 由于$\boldsymbol{w}\cdot \boldsymbol{x_1}+b=1$, $\boldsymbol{w}\cdot \boldsymbol{x_2}+b=-1$, 我们可以将其代入上述公式, 得到$d=\frac{2}{||\boldsymbol{w}||}$.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/71e7706ae085c0fcaf7714a519c50a24.png){ loading=lazy width="400" }
+![](http://img.ricolxwz.asia/71e7706ae085c0fcaf7714a519c50a24.png){ loading=lazy width="400" }
 </figure>
 
 我们的目标就是要最大化这个$d$, 也就是最小化$||\boldsymbol{w}||$, 等同于最小化函数$\frac{1}{2}||\boldsymbol{w}||^2.$ 所以线性支持向量机将$\frac{1}{2}||\boldsymbol{w}||^2$作为代价函数, 前提条件是所有的样本必须被正确分类(即硬边际), 即对于任意的$y_i$, 有$y_i(\boldsymbol{w}\cdot \boldsymbol{x_i}+b)\geq 1$. 这是一个凸二次优化问题.
@@ -92,7 +92,7 @@ comments: true
 上面我们提到的约束条件是"所有的样本必须正确分类", 这属于硬边际, hard-margin分类问题. 对应的还有软边际, soft-margin分类问题, 我们可以允许一些错误的分类. 软边际分类问题通俗的理解就是允许在正超平面和负超平面之间存在一些样本点. 如下图.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/8e1f2f2544ec9ab1e218e350cc14322b.png){ loading=lazy width="300" }
+![](http://img.ricolxwz.asia/8e1f2f2544ec9ab1e218e350cc14322b.png){ loading=lazy width="300" }
 </figure>
 
 我们发现, 在边际的距离上B1远胜B2, 但是B1中正负超平面之间存在着两个样本点. 这是否意味着B2就好于B1呢? 其实, 是需要衡量一下的, 相当于边际的距离是加分项, 错误分类是减分项, 要做的就是根据情况掂量掂量最后的收益如何. 一般情况下, 边际的距离更重要, 因为大的边际距离能够让模型更少受噪音干扰, 防止过拟合.
@@ -104,19 +104,19 @@ comments: true
 更为普遍的情况是, 大多数的问题都不是线性可分的, 如图.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/773f22a1b5e7aad0f4df6bb4707b9bda.png){ loading=lazy width='300' }
+![](http://img.ricolxwz.asia/773f22a1b5e7aad0f4df6bb4707b9bda.png){ loading=lazy width='300' }
 </figure>
 
 SVM可以被进一步延伸用来处理这一类问题. 一种思路就是将数据从原始特征空间转换到一个新的特征空间(通常是高纬度的空间). 在新的特征空间中, 学习一个线性决策边界来分离不同类别的数据. 新特征空间中的线性决策边界可以通过逆变换映射回原始特征空间. 在原始特征空间中, 这个映射回来的决策边界通常表现为非线性的决策边界. 例如变换$\phi=(x_1, x_2)\rightarrow(x_1^2-x_1, x_2^2-x_2)$.
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/98b72e6d433d72105d5ada984603dddd.png){ loading=lazy width='600' }
+![](http://img.ricolxwz.asia/98b72e6d433d72105d5ada984603dddd.png){ loading=lazy width='600' }
 </figure>
 
 再如:
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/db91d70ec41da7485030a459910b2849.png){ loading=lazy width='550' }
+![](http://img.ricolxwz.asia/db91d70ec41da7485030a459910b2849.png){ loading=lazy width='550' }
 </figure>
 
 所以, 我们应该用什么样的映射函数$\phi$? 就算我们知道了映射函数, 我们怎么在新的特征空间里面高效的计算? 因为在新的特征空间里面做点积是非常消耗计算机资源的. 要计算的是$\sum_{i=1}^N\lambda_i-\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j\boldsymbol{\phi(x_i)}\cdot\boldsymbol{\phi(x_j)}$的最大值, 而$\boldsymbol{\phi(x_i)}$和$\boldsymbol{\phi(x_j)}$都是更高维的向量, 点积非常耗时间.
@@ -148,7 +148,7 @@ SVM可以被进一步延伸用来处理这一类问题. 一种思路就是将数
 我们来看一种比较常用的核函数: RBF核函数, 这种表达式的函数为$K(\bm{x}, \bm{y})=exp(-\frac{||\bm{x}-\bm{y}||^2}{2\sigma^2})$. 这个函数有一个超参数, Hyper Parameter, 即$\sigma$, 结合我们在[软边际和硬边际](#软边际和硬边际)中讲到的另一个超参数$C$. 我们在训练中常常会调节这两个参数, 尝试将它们组合, 然后评估结果, 如:
 
 <figure markdown='1'>
-![](https://img.ricolxwz.asia/ffe1d1b4c630060d2bd2b23def06a62f.png){ loading=lazy width='500' }
+![](http://img.ricolxwz.asia/ffe1d1b4c630060d2bd2b23def06a62f.png){ loading=lazy width='500' }
 </figure>
 
 - 超参数$\sigma$控制核函数的曲线形状, 决定了每个点的"影响范围". 当$\sigma$很小的时候, RBF曲线的半径较大, 意味着每个点的影响范围更广, 导致决策边界更加平滑, 接近线性, 这种情况下, 模型可能会欠拟合, 因为它没有捕捉数据中的细节. 当$\sigma$很大的时候, RBF曲线的半径较小, 每个点的影响范围较窄, 模型会试图过多地你和训练数据中的细节, 导致决策边界在个别实例周围出现波动和不规则形, 可能会导致过拟合
