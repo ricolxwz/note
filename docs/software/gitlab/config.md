@@ -35,6 +35,7 @@ services:
         gitlab_pages['listen_proxy'] = nil
         gitlab_pages['inplace_chroot'] = true
         gitlab_pages['gitlab_server'] = 'https://git.ricolxwz.download'
+        pages_nginx['enable'] = false
     volumes:
       - /root/gitlab/config:/etc/gitlab
       - /root/gitlab/logs:/var/log/gitlab
