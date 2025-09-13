@@ -62,4 +62,44 @@ networks:
 
 ## Caddy反代设置
 
-需要使用`xcaddy`进行编译, 参考: https://caddyserver.com/docs/modules/dns.providers.cloudflare. 然后配置Cloudflare API, 修改caddyfile acme, 然后加上`*.pages.ricolxwz.download`和`pages.ricolxwz.download`.
+需要使用`xcaddy`进行编译, 参考: https://caddyserver.com/docs/modules/dns.providers.cloudflare. 然后配置Cloudflare API, 修改caddyfile acme, 然后加上`*.pages.ricolxwz.download`和`pages.ricolxwz.download`. 类似于:
+
+```
+{
+  email ricol.xwz@outlook.com
+  acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+}
+
+git.ricolxwz.download {
+	reverse_proxy 127.0.0.1:65502
+}
+
+*.pages.ricolxwz.download {
+	reverse_proxy localhost:65510
+}
+
+pages.ricolxwz.download {
+	reverse_proxy localhost:65510
+}
+```
+
+然后, 如果我们要添加github pages的自定义域名, 我们需要将自定义域名加入到Caddyfile中, 因为自定义域名也需要证书:
+
+```
+note.ricolxwz.cc {
+    reverse_proxy localhost:65510
+}
+```
+
+!!! warning "特别注意"
+
+    获取自定义域名证书的时候, 可以移除掉:
+
+    ```
+    {
+        email ricol.xwz@outlook.com
+        acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
+    ```
+
+    因为这个域名`ricolxwz.cc`我没有给API的权限, 所以不能通过这种方式验证.
