@@ -1,6 +1,6 @@
 ---
 title: Argparse
-comments: true
+comments: false
 ---
 
 ```py
