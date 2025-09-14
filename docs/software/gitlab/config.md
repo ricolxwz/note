@@ -61,7 +61,7 @@ networks:
     driver: bridge
 ```
 
-这里, 我们把容器内的nginx关掉了, 因为我们在外部使用了caddy反代, 然后trusted_proxies设置为局域网段, 或者设置为frpc的ip.
+记得上面的目录的uid和gid修改为git用户的uid和gid. 这里, 我们把容器内的nginx关掉了, 因为我们在外部使用了caddy反代, 然后trusted_proxies设置为局域网段, 或者设置为frpc的ip.
 
 ## Caddy反代设置
 
