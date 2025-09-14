@@ -1,48 +1,47 @@
-# .gitlab-ci.yml
-# 定义CI/CD的各个阶段.
 stages:
   - deploy
 
-# 为所有作业设置全局变量.
 variables:
-  # 将pip的缓存目录配置在项目目录内, 以便我们可以缓存它.
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-  # 设置GIT_DEPTH为0来获取所有git历史记录, 某些MkDocs插件可能需要它.
-  GIT_DEPTH: 0
+  GIT_DEPTH: 1
 
-# 定义全局缓存以加速后续的流水线运行.
 cache:
   key:
-    # 基于依赖文件的内容为缓存创建一个唯一的键.
-    # 如果requirements.txt发生变化, 缓存将失效.
     files:
       - requirements.txt
   paths:
-    # 缓存pip的依赖包目录.
     - .cache/pip
+    - .cache/wheels
+    - .venv
 
-# 'pages'是一个特殊的作业名称, 它会告诉GitLab将构建产物部署到GitLab Pages.
 pages:
   stage: deploy
+  image: python:3.12-slim
 
-  # 使用最新的Python Docker镜像来执行作业.
-  image: python:latest
+  before_script:
+    - python -V
+    - python -m venv .venv
+    - . .venv/bin/activate
+    - pip install --upgrade pip
+    - pip config set global.cache-dir "$PIP_CACHE_DIR"
 
   script:
-    # 从requirements.txt文件中安装Python依赖.
-    - pip install -r requirements.txt
-    # 构建MkDocs网站. --site-dir public参数是必须的,
-    # 因为GitLab Pages会从一个名为'public'的目录中提供内容.
+    # 第一次构建生成wheel并缓存. 后续直接从wheel安装
+    - pip wheel -r requirements.txt -w .cache/wheels --disable-pip-version-check --no-compile
+    - pip install --no-index --find-links=.cache/wheels -r requirements.txt --disable-pip-version-check --no-compile
     - mkdocs build --site-dir public
 
   artifacts:
-    # 指定要发布到GitLab Pages的目录.
     paths:
       - public
     expire_in: 1 week
 
-  # 定义此作业的运行规则.
   rules:
-    # 此作业仅在代码被推送到项目的默认分支时运行 (通常是 'main' 或 'master').
+    # 仅默认分支且文档相关改动才运行
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-    
+      changes:
+        - docs/**/*.{md,markdown}
+        - mkdocs.yml
+        - mkdocs.yaml
+        - requirements.txt
+
