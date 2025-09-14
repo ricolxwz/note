@@ -40,6 +40,9 @@ services:
       - /root/gitlab/config:/etc/gitlab
       - /root/gitlab/logs:/var/log/gitlab
       - /root/gitlab/data:/var/opt/gitlab
+      - /mnt/hdd/shared:/var/opt/gitlab/gitlab-rails/shared
+      - /mnt/hdd/uploads:/var/opt/gitlab/gitlab-rails/uploads
+      - /mnt/hdd/backups:/var/opt/gitlab/backups
   gitlab-runner:
     container_name: gitlab-runner
     hostname: gitlab-runner
