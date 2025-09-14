@@ -39,6 +39,7 @@ pages:
     # 指定要发布到GitLab Pages的目录.
     paths:
       - public
+    expire_in: 1 week
 
   # 定义此作业的运行规则.
   rules:
