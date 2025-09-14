@@ -7,6 +7,7 @@ theme:
   name: material
   logo_light_mode: https://cdn.ricolxwz.cn/favicon-black-mc-be1517f676f6767b821a61dee1fe0de1.svg
   logo_dark_mode: https://cdn.ricolxwz.cn/favicon-white-mc-9874bcbf2890db92e65db16e14c4edb4.svg
+  favicon: https://cdn.ricolxwz.cn/favicon-white-mc-9874bcbf2890db92e65db16e14c4edb4.svg
   language: zh
   custom_dir: overrides
   font: false
