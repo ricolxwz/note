@@ -3,8 +3,6 @@ title: 数据库:SQL
 comments: true
 ---
 
-[关系代数](/general/database/relational-algebra)是一种理论基础的过程式的查询语言, 可能比较难以理解并且不是专家的话使用起来非常困难. 这个时候, SQL来了, 它是一种高阶的声明式的查询语句, 即它只描述我们感兴趣的数据, 而不是怎么取到它. 它基于SEQUEL, 作为IBM公司的查询语句在1970年中期发明. SQL在内部会将查询语句映射到相应的关系代数表达式, 见[结构图](/general/database/relational-algebra/#RA在RDBMS中的角色).
-
 ## SQL构成
 
 数据库管理系统(DBMS)中的操作通常分为三大类:
