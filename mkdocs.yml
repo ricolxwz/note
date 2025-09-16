@@ -136,8 +136,8 @@ markdown_extensions:
   - toc:
       permalink: true
       title: 目录
-  - pymdownx.arithmatex:
-      generic: true
+  # - pymdownx.arithmatex:
+  #     generic: true
   - pymdownx.highlight:
       anchor_linenums: false
       guess_lang: false
