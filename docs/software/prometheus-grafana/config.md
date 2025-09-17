@@ -81,6 +81,50 @@ scrape_configs:
   - job_name: 'overleaf'
     static_configs:
       - targets: ['192.168.100.137:9100']
+  - job_name: redis
+    static_configs:
+      - targets:
+        - 192.168.100.138:9121
+  - job_name: postgres
+    static_configs:
+      - targets:
+        - 192.168.100.138:9187
+  - job_name: node
+    static_configs:
+      - targets:
+        - 192.168.100.138:9100
+  - job_name: gitlab-workhorse
+    static_configs:
+      - targets:
+        - 192.168.100.138:9229
+  - job_name: gitlab-rails
+    metrics_path: "/-/metrics"
+    scheme: https
+    static_configs:
+      - targets:
+        - 192.168.100.138
+  - job_name: gitlab-sidekiq
+    static_configs:
+      - targets:
+        - 192.168.100.138:8082
+  - job_name: gitlab_exporter_database
+    metrics_path: "/database"
+    static_configs:
+      - targets:
+        - 192.168.100.138:9168
+  - job_name: gitlab_exporter_sidekiq
+    metrics_path: "/sidekiq"
+    static_configs:
+      - targets:
+        - 192.168.100.138:9168
+  - job_name: gitaly
+    static_configs:
+      - targets:
+        - 192.168.100.138:9236
+  - job_name: registry
+    static_configs:
+      - targets:
+        - 192.168.100.138:5001
 ```
 
 ## Grafana
