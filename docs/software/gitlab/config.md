@@ -46,7 +46,6 @@ services:
         pages_nginx['enable'] = false
         prometheus['enable'] = false
         alertmanager['enable'] = false
-        grafana['enable'] = false
         gitlab_kas['enable'] = false
         puma['worker_processes'] = 2
         puma['threads_min'] = 1
