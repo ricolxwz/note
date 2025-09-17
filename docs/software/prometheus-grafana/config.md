@@ -64,4 +64,17 @@ node_exporter:
       - '/:/host:ro,rslave'
 ```
 
+### 配置
+
+```yml
+---
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'overleaf'
+    static_configs:
+      - targets: ['192.168.100.137:9100']
+```
+
 ## Grafana
