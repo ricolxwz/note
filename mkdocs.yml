@@ -577,6 +577,8 @@ nav:
       - Https: software/portainer/https.md
       - 安装: software/portainer/install.md
       - 栈: software/portainer/stack.md
+    - Prometheus&Grafana:
+      - 配置: software/prometheus-grafana/config.md
     - SearXNG:
       - 启动: software/searxng/setup.md
     - SSH:
