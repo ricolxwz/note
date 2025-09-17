@@ -18,8 +18,7 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - /root/prometheus/config:/etc/prometheus
-      - /root/prometheus/data:/prometheus
+      - /root/prometheus:/etc/prometheus
     restart: unless-stopped
     networks:
       - monitor-net
