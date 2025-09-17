@@ -15,19 +15,26 @@ services:
     networks:
       - net
     ports:
-      - 8090:8090
-      - 8181:8181
-      - 2222:22
+      - 8080:8080 # puma exporter
+      - 9168:9168 # gitlab exporter
+      - 9100:9100 # node exporter
+      - 9121:9121 # redis exporter
+      - 9187:9187 # postgres exporter
+      - 8181:8181 # gitlab-workhorse
+      - 2222:22 # ssh
     environment:
       GITLAB_ROOT_EMAIL: <填写>
       GITLAB_ROOT_PASSWORD: <填写>
       GITLAB_OMNIBUS_CONFIG: |
         external_url "https://git.ricolxwz.download"
+        # 关闭内置的nginx和letsencrypt
         nginx['enable'] = false
         letsencrypt['enable'] = false
+        # Gitlab Workhorse 配置
         gitlab_workhorse['listen_network'] = "tcp"
         gitlab_workhorse['listen_addr'] = "0.0.0.0:8181"
         gitlab_rails['trusted_proxies'] = [ '192.168.0.0/16' ]
+        # Gitlab Pages 配置
         pages_external_url 'https://pages.ricolxwz.download'
         gitlab_pages['enable'] = true
         gitlab_pages['access_control'] = true
@@ -35,11 +42,22 @@ services:
         gitlab_pages['listen_proxy'] = nil
         gitlab_pages['inplace_chroot'] = true
         gitlab_pages['gitlab_server'] = 'https://git.ricolxwz.download'
+        # 禁用不必要的服务提高性能
         pages_nginx['enable'] = false
+        prometheus['enable'] = false
+        alertmanager['enable'] = false
+        grafana['enable'] = false
+        gitlab_kas['enable'] = false
+        puma['worker_processes'] = 2
+        puma['threads_min'] = 1
+        puma['threads_max'] = 4
+        sidekiq['max_concurrency'] = 5
+        postgresql['max_connections'] = 200
     volumes:
       - /root/gitlab/config:/etc/gitlab
       - /root/gitlab/logs:/var/log/gitlab
       - /root/gitlab/data:/var/opt/gitlab
+      # 大文件存储和备份目录
       - /mnt/hdd/shared:/var/opt/gitlab/gitlab-rails/shared
       - /mnt/hdd/uploads:/var/opt/gitlab/gitlab-rails/uploads
       - /mnt/hdd/backups:/var/opt/gitlab/backups
