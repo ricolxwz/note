@@ -47,6 +47,12 @@ networks:
   monitor-net:
 ```
 
+```sh
+alias d="docker compose up -d"
+alias dr="docker compose down && docker compose up -d"
+alias vi="nvim
+```
+
 ## Prometheus
 
 ### node exporter
