@@ -15,14 +15,8 @@ services:
     networks:
       - net
     ports:
-      - 443:443 # gitlab-rails exporter
-      - 9168:9168 # gitlab database & sidekiq exporter
-      - 9229:9229 # gitlab workhorse prometheus exporter
-      - 9100:9100 # node exporter
-      - 5001:5001 # registry exporter
-      - 9121:9121 # redis exporter
-      - 9187:9187 # postgres exporter
       - 8181:8181 # gitlab-workhorse
+      - 8090:8090 # gitlab-pages
       - 2222:22 # ssh
     environment:
       GITLAB_ROOT_EMAIL: <填写>
@@ -54,20 +48,6 @@ services:
         puma['threads_max'] = 4
         sidekiq['max_concurrency'] = 5
         postgresql['max_connections'] = 200
-        # Prometheus Exporter配置
-        node_exporter['listen_address'] = '0.0.0.0:9100'
-        gitlab_workhorse['prometheus_listen_addr'] = "0.0.0.0:9229"
-        gitlab_exporter['listen_address'] = '0.0.0.0'
-        gitlab_exporter['listen_port'] = '9168'
-        registry['debug_addr'] = '0.0.0.0:5001'
-        sidekiq['listen_address'] = '0.0.0.0'
-        redis_exporter['listen_address'] = '0.0.0.0:9121'
-        postgres_exporter['listen_address'] = '0.0.0.0:9187'
-        gitaly['configuration'] = {
-        prometheus_listen_addr: '0.0.0.0:9236',
-        }
-        pgbouncer_exporter['listen_address'] = '0.0.0.0:9188'
-        gitlab_rails['monitoring_whitelist'] = ['0.0.0.0/0']
     volumes:
       - /root/gitlab/config:/etc/gitlab
       - /root/gitlab/logs:/var/log/gitlab

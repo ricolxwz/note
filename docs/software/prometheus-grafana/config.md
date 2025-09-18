@@ -70,6 +70,23 @@ node_exporter:
       - '/:/host:ro,rslave'
 ```
 
+### cadvisor
+
+```yml
+cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+```
+
 ### 配置
 
 ```yml
