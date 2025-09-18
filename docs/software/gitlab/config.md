@@ -23,6 +23,7 @@ services:
       GITLAB_ROOT_PASSWORD: <填写>
       GITLAB_OMNIBUS_CONFIG: |
         external_url "https://git.ricolxwz.download"
+        gitlab_rails['time_zone'] = 'Australia/Sydney'
         # 关闭内置的nginx和letsencrypt
         nginx['enable'] = false
         letsencrypt['enable'] = false
