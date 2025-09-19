@@ -439,6 +439,7 @@ nav:
       - AutoDL使用说明: code/autodl.md
       - 注意力计算: code/attn.md
       - LFS存储: code/lfs.md
+      - vLLM: code/vllm.md
   - 词典:
       - 反向传播: dicts/backpropagation.md
       - 自动微分: dicts/autograd.md

@@ -9,3 +9,4 @@ comments: true
 * [网络层2](https://share.ricolxwz.download/77df0969ce8880ee288c9f3ef52b7de3.pdf)
 * [网络层3](https://share.ricolxwz.download/cc573b29848872bd5f096d7a3af74893.pdf)
 * [网络层4&链路层1](https://share.ricolxwz.download/c1b250ad37b2bbfab6c2308b6ab49274.pdf)
+* [链路层2](https://share.ricolxwz.download/471a64334f64a98f8e38ff078072f52c.pdf)
