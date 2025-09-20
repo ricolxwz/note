@@ -11,3 +11,4 @@ comments: true
 * [网络层4&链路层1](https://share.ricolxwz.download/c1b250ad37b2bbfab6c2308b6ab49274.pdf)
 * [链路层2](https://share.ricolxwz.download/471a64334f64a98f8e38ff078072f52c.pdf)
 * [应用层1](https://share.ricolxwz.download/bff6df81e91eb87dde486bfc7a7f7510.pdf)
+* [应用层2&网络安全1](https://share.ricolxwz.download/4cdac29c705c2bb3ff82d9f46aa1d2a2.pdf)
