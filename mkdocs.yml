@@ -292,6 +292,8 @@ nav:
           - 文件: language/cpp/foundation/io.md
           - 异步: language/cpp/foundation/sync.md
           - 其他: language/cpp/foundation/others.md
+      - Go:
+        - 开发环境: language/go/env.md
   - 基石:
     - 数据库:
       - 数据模型: general/database/conceptual-model.md
