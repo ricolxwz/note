@@ -17,6 +17,7 @@ services:
     ports:
       - 8181:8181 # gitlab-workhorse
       - 8090:8090 # gitlab-pages
+      - 5000:5000 # gitlab-registry
       - 2222:22 # ssh
     environment:
       GITLAB_ROOT_EMAIL: <填写>
@@ -49,6 +50,9 @@ services:
         puma['threads_max'] = 4
         sidekiq['max_concurrency'] = 5
         postgresql['max_connections'] = 200
+        # Github Registry设置
+        registry_external_url 'https://registry.ricolxwz.download'
+        registry['registry_http_addr'] = "0.0.0.0:5000"
     volumes:
       - /root/gitlab/config:/etc/gitlab
       - /root/gitlab/logs:/var/log/gitlab
