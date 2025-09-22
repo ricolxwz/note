@@ -298,6 +298,7 @@ nav:
         - 类型: language/go/type.md
         - 容器: language/go/container.md
         - 函数: language/go/function.md
+        - 对象: language/go/object.md
   - 基石:
     - 数据库:
       - 数据模型: general/database/conceptual-model.md

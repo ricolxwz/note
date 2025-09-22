@@ -481,3 +481,161 @@ func main() {
 输出: `test panic`
 
 7. 结论: 使用 panic/recover 处理不可恢复的异常, 业务错误请返回 error.
+
+## 方法
+
+方法定义简要说明:
+
+1. 基本语法
+   `func (receiver type) MethodName(params) (results) { … }`
+   *receiver* 只能是当前包内定义的类型或其指针, 不能是接口或指针.
+   接收者可以是值 `T` 也可以是指针 `*T`.
+
+2. 示例
+   ```go
+   type Test struct{}
+   // 无参数, 无返回
+   func (t Test) method0() {}
+
+   // 单参数, 无返回
+   func (t Test) method1(i int) {}
+
+   // 多参数, 无返回
+   func (t Test) method2(x, y int) {}
+
+   // 无参数, 单返回
+   func (t Test) method3() (i int) { return }
+
+   // 多参数, 多返回
+   func (t Test) method4(x, y int) (z int, err error) { return }
+   ```
+
+3. 值接收者 vs 指针接收者
+   * 值接收者: 方法内部操作的是副本, 修改不会影响原对象.
+   * 指针接收者: 方法接收对象指针, 内部修改会改变原对象.
+
+4. 调用方式
+   ```go
+   u := User{Name:"go", Email:"go@go.com"}
+   u.Notify()          // 值调用, 编译器会自动取地址调用指针方法
+   p := &u
+   p.Notify()          // 指针调用
+   ```
+
+5. 关键点
+   - 同一类型可以同时拥有值接收者和指针接收者的方法.
+   - 方法只能在同一包内为自定义类型定义, 不能为内置类型或接口添加方法.
+   - 编译器在调用时会自动在值与指针之间做转换(满足条件时).
+
+### 匿名字段
+
+匿名字段是 Go 结构体的一种嵌入方式, 能够让外部结构体直接访问嵌入结构体的字段和方法, 类似于继承但没有显式的子类关系. 代码示例和解释如下:
+
+```go
+package main
+
+import "fmt"
+
+type User struct {
+    id   int
+    name string
+}
+type Manager struct {
+    User               // 匿名字段, 嵌入 User
+    title string
+}
+
+// User 方法
+func (self *User) ToString() string {
+    return fmt.Sprintf("User: %p, %v", self, self)
+}
+
+// Manager 自己的 ToString 方法会覆盖嵌入的 User 方法
+func (self *Manager) ToString() string {
+    return fmt.Sprintf("Manager: %p, %v", self, self)
+}
+
+func main() {
+    m := Manager{
+        User:  User{1, "Tom"},
+        title: "Administrator",
+    }
+    fmt.Println(m.ToString())            // 调用 Manager 的 ToString
+    fmt.Println(m.User.ToString())        // 调用 User 的 ToString
+}
+```
+
+输出:
+
+```
+Manager: 0xc420074180, &{{1 Tom} Administrator}
+User: 0xc420074180, &{1 Tom}
+```
+
+要点:
+- 匿名字段使嵌入结构体的字段和方法可以被外层结构体直接访问.
+- 外层结构体可以自行实现同名方法, 这会覆盖嵌入结构体的方法(实现 override).
+- 通过 `m.User` 可以显式访问嵌入结构体的成员或方法.
+
+### 方法集
+
+方法集是指为结构体或指针类型定义的所有方法, 规则如下:
+
+1. 类型 T(值)只拥有使用 T 作为接收者的方法;
+2. 类型 *T(指针)拥有使用 T 与 *T 作为接收者的方法;
+3. 若结构体 S 嵌入了匿名字段 T, 则 S 与 *S 都拥有 T 的方法;
+4. 若结构体 S 嵌入了匿名字段 *T, 则 S 与 *S 都拥有 T 与 *T 的方法;
+5. 对于嵌套结构体, 编译器会提升(promote)内部字段的方法到外层结构体, 使得外层结构体也能直接调用这些方法.
+
+### 表达式
+
+表达式章节内容概述如下:
+
+1. 表达式
+   - Go 方法有两种调用形式: method value 与 method expression.
+   - `instance.method(args...)` 实际转换为 `<type>.func(instance, args...)`.
+   - 前者称为 method value, 后者称为 method expression.
+   - 两者都像普通函数一样可赋值和传参, 但区别在于:
+     * method value 会绑定实例(receiver)并复制, 之后再修改实例不影响已绑定的函数.
+     * method expression 不绑定实例, 需要在调用时显式传递 receiver.
+
+2. 示例代码
+   ```go
+   type User struct {
+       id   int
+       name string
+   }
+
+   func (self *User) Test() {
+       fmt.Printf("%p, %v\n", self, self)
+   }
+
+   func main() {
+       u := User{1, "Tom"}
+       u.Test()                     // 直接调用
+
+       // method value: 绑定 receiver
+       mv := u.Test
+       mv()                         // receiver 已经绑定
+
+       // method expression: 不绑定, 需要显式传递 receiver
+       me := (*User).Test
+       me(&u)                       // 显式传递 receiver
+   }
+   ```
+
+3. 关键点
+   - method value 会捕获当前 receiver 的拷贝, 后续对原实例的修改不影响该函数.
+   - method expression 只是在编译期产生函数指针, 不绑定实例, 调用时必须显式传递 receiver.
+   - 对值接收者(非指针)的方法, method value 会复制 receiver 的值; 对指针接收者的方法, method value 绑定指针地址.
+
+4. 其它说明
+   - 将方法"还原"为普通函数后, 更容易理解其内部实现.
+   - 方法表达式可用于泛型或函数式编程场景, 如传递给高阶函数.
+   - 方法值在闭包环境中常用于延迟执行或回调.
+
+### 自定义error
+
+1. **系统 panic**: 直接调用 panic 抛出错误, 适用于不可恢复的异常.
+2. **返回 error**: 函数返回 (value, error) 形式, 由调用方检查 error 并处理, 适用于可恢复的错误.
+3. **自定义 error 类型**: 实现 error 接口的结构体, 包含 path, op, createTime, message 等字段, 可在调用方通过 type assertion 捕获并获取详细信息.
