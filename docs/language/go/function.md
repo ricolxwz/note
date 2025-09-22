@@ -313,3 +313,171 @@ for idx, val := range arr {
    在同一作用域内不能声明同名的局部变量遮蔽返回值变量, 否则需要显式返回遮蔽的变量或改名.
 
 通过这些要点, 开发者可以灵活地在 Go 中使用返回值来简化代码结构并提升可读性.
+
+## 匿名函数
+
+- 匿名函数指没有函数名的函数, 可直接在代码中定义并使用
+- 在 Go 中使用 `func` 关键字定义匿名函数, 常用于一次性调用或作为变量赋值
+- 示例: `getSqrt := func(a float64) float64 { return math.Sqrt(a) }` 调用 `getSqrt(4)` 输出 2
+- 匿名函数可以赋值给变量, 存入切片, 作为结构体字段, 放入 channel 等
+- 常见用法包括函数变量, 函数集合, 结构体字段, channel 传递等示例展示
+- 匿名函数的优势在于可以直接使用外部变量, 无需显式声明函数名
+
+## 闭包
+
+Go 语言的闭包是指函数可以捕获并引用其外部作用域中的变量, 即使外部函数已经返回, 内部函数仍然可以访问这些变量.
+
+关键点:
+
+- 闭包本质上是一个匿名函数或具名函数, 内部引用了外部函数的局部变量.
+- 每次调用外部函数都会生成一个新的闭包实例, 捕获的变量会保持独立.
+- 闭包常用于延迟执行, 状态保存, 函数式编程等场景.
+
+示例代码
+
+```go
+package main
+
+import "fmt"
+
+func counter() func() int {
+    i := 0               // i 属于外部函数的局部变量
+    return func() int { // 匿名函数形成闭包, 捕获 i
+        i++
+        return i
+    }
+}
+
+func main() {
+    inc := counter() // 获得闭包实例
+    fmt.Println(inc()) // 1
+    fmt.Println(inc()) // 2
+
+    // 再生成一个独立的闭包
+    another := counter()
+    fmt.Println(another()) // 1
+}
+```
+
+解释:
+
+- `counter` 返回一个匿名函数, 该函数在执行时会访问并修改 `i`.
+- `inc` 和 `another` 分别是两个闭包实例, 它们各自持有独立的 `i`, 因此计数不互相影响.
+
+### 逃逸分析
+
+在 Go 中, 闭包会捕获外部函数的局部变量. 编译器需要保证这些变量在闭包存活期间仍然有效, 于是会把它们从栈"逃逸"到堆.
+
+**逃逸分析的关键点**:
+
+- 当一个局部变量的地址被闭包返回或被传递到另一个 goroutine 时, 编译器判定该变量可能在函数返回后仍被使用.
+- 此时变量会在堆上分配, 闭包持有对堆对象的引用.
+- 逃逸的决定在编译阶段完成, `go build -gcflags="-m"` 可以查看具体的逃逸报告.
+
+**示例**
+
+```go
+package main
+
+import "fmt"
+
+func makeAdder(x int) func(int) int {
+    // x 的地址被返回的匿名函数引用, x 必须逃逸到堆
+    return func(y int) int {
+        return x + y
+    }
+}
+
+func main() {
+    add5 := makeAdder(5)
+    fmt.Println(add5(3)) // 8
+}
+```
+
+运行 `go build -gcflags="-m"` 会得到类似 "x escapes to heap".
+
+**为什么要逃逸**:
+
+- 栈的生命周期随函数调用结束而销毁, 不能保证闭包在函数外部仍能访问.
+- 堆的生命周期由垃圾回收管理, 闭包持有的引用可以在任何时刻安全使用.
+
+**性能注意**:
+
+- 堆分配比栈分配稍慢, 且会增加 GC 压力.
+- 如果闭包在函数内部立即调用且不返回, 可以使用 `func(){}` 直接捕获局部变量, 编译器通常会继续把它们放在栈上, 从而避免逃逸.
+
+总结: 闭包捕获的变量如果在函数返回后仍被使用, 就会触发逃逸分析, 被分配到堆上, 以保证闭包的正确性和内存安全.
+
+## 延迟调用
+
+延迟调用(defer)在 Go 中用于在函数返回前执行清理操作. 特性包括: 1. defer 注册的函数在 return 前执行; 2. 多个 defer 按后进先出顺序执行; 3. defer 参数在注册时就确定.
+
+使用场景:
+
+- 关闭文件或网络连接
+- 释放锁
+- 事务提交或回滚
+
+注意事项:
+
+- defer 会产生性能开销, 循环中大量使用需慎重
+- 若在错误路径未成功获取资源, 需检查后再 defer
+- 使用闭包时, 变量在 defer 注册时已捕获, 避免闭包陷阱
+
+示例:
+
+```go
+func main() {
+    f, err := os.Open("file.txt")
+    if err != nil { log.Fatal(err) }
+    defer f.Close()        // 确保文件关闭
+
+    // 业务代码
+}
+```
+
+## 异常
+
+异常处理概述
+
+1. Go 没有结构化异常, 使用 panic 抛出异常, recover 捕获异常.
+
+2. panic 与 defer:
+   - panic 触发后, 当前函数立即停止执行, 随后执行已注册的 defer.
+   - defer 按注册顺序逆序执行, 若其中再次 panic, 则后续的 defer 仍会执行.
+
+3. recover 用法:
+   - 必须在 defer 中调用, 否则无效.
+   - recover 捕获到的异常为 interface{}, 可转型为具体错误类型或 string.
+
+4. 常见场景:
+   - 向已关闭的通道发送数据会 panic: `send on closed channel`.
+   - 延迟函数内部 panic, 只会被外层的 defer recover 捕获.
+
+5. 推荐做法:
+   - 用 error 返回值表示可预期错误; 仅在不可恢复的错误或程序员错误时使用 panic.
+   - 可封装 Try/ Catch 结构:
+
+```go
+func Try(fn func(), handler func(interface{})) {
+    defer func() {
+        if err := recover(); err != nil {
+            handler(err)
+        }
+    }()
+    fn()
+}
+```
+
+6. 示例:
+
+```go
+func main() {
+    Try(func() { panic("test panic") },
+        func(e interface{}) { fmt.Println(e) })
+}
+```
+
+输出: `test panic`
+
+7. 结论: 使用 panic/recover 处理不可恢复的异常, 业务错误请返回 error.
