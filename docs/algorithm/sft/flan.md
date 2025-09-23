@@ -8,8 +8,8 @@ comments: false
 本文探究了一种提升语言模型零样本学习能力的简单方法. 作者证明了指令微调, 即在通过指令描述的数据集集合上微调语言模型, 能够显著提升其在未见过的任务上的零样本性能. 他们采用一个137B参数的预训练语言模型, 并在超过60个通过自然语言指令模板表述的NLP数据集上对其进行指令微调. 他们将这个经过指令微调的模型命名为FLAN, 并在未见过的任务类型上对其进行评估. FLAN的性能相较于其未经修改的对应模型有显著提升, 并且在他们评估的25个数据集中有20个超过了零样本的175B GPT-3. 在ANLI, RTE, BoolQ, AI2-ARC, OpenbookQA和StoryCloze等任务上, FLAN甚至大幅领先于少样本的GPT-3. 消融实验表明, 微调数据集的数量, 模型规模以及自然语言指令是指令微调成功的关键.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/674af058e82f465121e6d4eb19620cbd.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/674af058e82f465121e6d4eb19620cbd_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/674af058e82f465121e6d4eb19620cbd.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/674af058e82f465121e6d4eb19620cbd_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图1: FLAN 是一个应用了指令调优的模型. 实验结果表明, 即使在零样本 (zero-shot) 的情况下, FLAN 在自然语言推断, 阅读理解和闭卷问答等未曾训练过的任务上, 其性能也显著优于强大的 GPT-3 模型.</figcaption>
 </figure>
 
@@ -32,8 +32,8 @@ comments: false
 作者的评估表明, FLAN显著提升了137B参数基础模型的零样本性能. 在作者评估的25个数据集中, FLAN的零样本性能在其中20个上超过了175B参数GPT-3的零样本性能, 甚至在ANLI, RTE, BoolQ, AI2-ARC, OpenbookQA和StoryCloze上大幅领先于GPT-3的少样本性能. 在消融实验中, 作者发现增加指令微调中任务簇的数量("任务簇的数量" 指的就是在指令微调(instruction tuning)过程中, 使用了多少种不同类别的任务.)可以提升在未见过任务上的性能, 并且指令微调的益处只有在模型规模足够大时才会显现.
 
 <figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/23ae68234d0b3fe8c3bab4667f19675f.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/23ae68234d0b3fe8c3bab4667f19675f_inverted.webp#only-dark){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/23ae68234d0b3fe8c3bab4667f19675f.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/23ae68234d0b3fe8c3bab4667f19675f_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图2: 指令调整与预训练-微调和提示的比较</figcaption>
 </figure>
 
@@ -45,8 +45,32 @@ comments: false
 
 由于从头创建包含许多任务的指令调优数据集会耗费大量资源, 他们将研究界现有的数据集转换为指令格式. 他们聚合了 Tensorflow Datasets 上公开的 62 个文本数据集, 将它们整合成一个单一的混合体, 其中包括语言理解和语言生成任务. 如[图3](#fig3)所示, 每个数据集被归类到 12 个任务集群中的一个, 同一集群内的数据集任务类型相同.
 
-<figure markdown='1' id='fig'>
-![](https://img.ricolxwz.asia/04ae700bca2871b37fd90a56067db2e6.webp#only-light){ loading=lazy width='800' }
-![](https://img.ricolxwz.asia/04ae700bca2871b37fd90a56067db2e6_inverted.webp#only-dark){ loading=lazy width='800' }
+<figure markdown='1' id='fig3'>
+![](https://img.ricolxwz.cn/04ae700bca2871b37fd90a56067db2e6.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/04ae700bca2871b37fd90a56067db2e6_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>图3: 本文使用的数据集和任务集群</figcaption>
 </figure>
+
+研究人员为每个数据集手动编写了十个独特的自然语言指令模板. 大多数模板描述了数据集的原始任务 (例如, 判断情感). 为了增加任务多样性, 其中最多三个模板被设计成"逆向任务" (例如, 不是判断情感, 而是生成一条带有特定情感的评论).  他们将所有数据集混合在一起, 用这些指令模板来格式化数据, 然后对一个预训练语言模型进行调优. 在训练过程中, 每个样本会从其对应数据集的十个模板中随机选择一个来格式化. [图4](#fig4)展示了用于自然语言推理 (NLI) 数据集的多个不同指令模板.
+
+> 所以总共有620个模板.
+
+<figure markdown='1' id='fig4'>
+![](https://img.ricolxwz.cn/4e1961b72f63154626bef1a6ed77082a.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/4e1961b72f63154626bef1a6ed77082a_inverted.webp#only-dark){ loading=lazy width='800' }
+<figcaption>图4: 描述自然语言推理任务的多个指令模板</figcaption>
+</figure>
+
+### 评估
+
+他们将所有任务根据类型分成不同的组(例如, "情感分析"组, "问答"组). 为了测试模型在某一类任务上的零样本(zero-shot)能力, 他们会训练一个新模型. 这个新模型在训练时会使用除了那一类任务之外的所有其他类型的任务数据. 最后, 他们用这个训练好的模型去直接测试那个被完全排除在外的任务类型, 以此来评估模型的泛化能力.
+
+### 如何处理分类任务
+
+FLAN模型本质上是一个生成自由文本的模型. 对于分类任务(比如判断题答案是"是"或"否"), 如果只看模型生成"是"或"否"的概率, 可能会有问题. 因为模型可能把概率分散到许多意思相同的词上(比如"对的", "没错"都表示"是"), 导致单个词"是"的概率降低. 为了解决这个问题, 他们在指令的末尾加上一个"选项"列表. 例如, 在问题后面明确地加上 "选项: 是, 否". 这样做能让模型明确知道答案必须从这个列表中选择, 从而让分类更准确.
+
+### 训练细节
+
+实验中使用的模型是LaMDA-PT, 这是一个包含1370亿参数的密集型从左到右解码器专用Transformer语言模型. 该模型在一个包含2.49万亿BPE词元的数据集上进行了预训练, 这个数据集涵盖了网页文档(包括代码), 对话数据和维基百科, 并使用SentencePiece库构建了一个32000词的词汇表. 预训练数据中约有10%为非英语内容, 且需要注意的是LaMDA-PT只经过了语言模型预训练, 这与专为对话进行微调的LaMDA不同.
+
+FLAN是LaMDA-PT的指令微调版本, 其训练过程混合了所有数据集并从中随机抽样. 为了平衡不同大小的数据集, 他们将每个数据集的训练样本数限制为3万, 并采用与样本数成比例的混合方案, 最大混合率为3000. 他们使用Adafactor优化器和3e-5的学习率对所有模型进行了3万步梯度更新, 批处理大小为8192个词元, 输入和输出序列长度分别为1024和256. 训练中他们使用打包技术将多个样本合并到单一序列中, 并用一个特殊的EOS符号分隔输入和目标. 整个指令微调过程在拥有128个核心的TPUv3上耗时约60小时, 所有评估结果均基于训练了3万步后得到的最终模型检查点.
