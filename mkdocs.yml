@@ -632,3 +632,4 @@ nav:
   - 金融:
     - 交易策略: finance/proxy.md
     - 现货交易: finance/spot.md
+    - 合约交易: finance/future.md
