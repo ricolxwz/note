@@ -50,7 +50,7 @@ services:
         puma['threads_max'] = 4
         sidekiq['max_concurrency'] = 5
         postgresql['max_connections'] = 200
-        # Github Registry设置
+        # gitlab Registry设置
         registry_external_url 'https://registry.ricolxwz.download'
         registry['registry_http_addr'] = "0.0.0.0:5000"
     volumes:
@@ -104,7 +104,7 @@ pages.ricolxwz.download {
 }
 ```
 
-然后, 如果我们要添加github pages的自定义域名, 我们需要将自定义域名加入到Caddyfile中, 因为自定义域名也需要证书(因为我们的Github pages它只负责http, https是由Caddy来处理的):
+然后, 如果我们要添加gitlab pages的自定义域名, 我们需要将自定义域名加入到Caddyfile中, 因为自定义域名也需要证书(因为我们的gitlab pages它只负责http, https是由Caddy来处理的):
 
 ```
 note.ricolxwz.cc {
