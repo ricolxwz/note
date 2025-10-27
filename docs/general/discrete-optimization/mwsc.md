@@ -14,4 +14,8 @@ comments: false
 
 虽然贪心算法不一定能找到绝对最优解, 但是它能给出一个足够好的近似解, 设$\mathcal{X}_i$为算法经过$i$次迭代后已经覆盖的元素集合, 满足$|\mathcal{X}_i|\geq |\mathcal{U}|\times (1-(1-\frac{1}{OPT})^i)$.
 
-证明:
+证明: 我们先做一个问题的转换, 将当前的最小集合覆盖问题转换为一个最大覆盖问题的实例. 新实例: 从集合$S$中挑选出$OPT$个集合, $OPT$是原问题最优解所用的集合数量, 目的是最大化这$OPT$个集合所覆盖的元素数量. 这个问题的最优覆盖数量是$|\mathcal{U}|$, 此时, 应用一个上周关于最大覆盖问题贪心算法的已知性能保证: 对于最大覆盖问题, 贪心算法在选择$i$个集合后, 其覆盖的元素数量至少为最优解覆盖数量的$(1-(1-1/k)^i)$倍. 在我们的新实例中, $k$就是$OPT$, 将这些值带入到上述性能保证公式, 我们就能得到11.1.
+
+GREEDY-CARDINALITY算法是一个$\ln |\mathcal{U}|$近似算法, 即它在$\lceil \ln |\mathcal{U}|\rceil\times OPT$次迭代之后必然会终止, 即覆盖所有元素.
+
+证明: 从刚才推导出的不等式$|\mathcal{X}_i|\geq |\mathcal{U}|\times (1-(1-\frac{1}{OPT})^i)$开始, 我们将迭代次数$i$设置为$\lceil \ln |\mathcal{U}|\rceil\times OPT$, 并带入这个公式, 得到: $|\mathcal{X}_{\lceil \ln |\mathcal{U}|\rceil\times OPT}|\geq |\mathcal{U}|\times (1-(1-\frac{1}{OPT})^{\lceil \ln |\mathcal{U}|\rceil\times OPT})$, 经过化简, 我们可以得到: $|\mathcal{X}_{\lceil \ln |\mathcal{U}|\rceil\times OPT}|\geq |\mathcal{U}|-1$.
