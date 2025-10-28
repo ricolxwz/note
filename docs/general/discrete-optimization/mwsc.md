@@ -57,3 +57,5 @@ $\frac{w(A_i)}{\left|A_i \setminus X_i\right|} \le \frac{w(O)}{\left|O \setminus
 定理11.2: 该贪心算法是一个$1+\ln \Delta$近似算法.
 
 定理11.3: 如果$f$的值域是整数, 那么该贪心算法是一个$H_{\Delta}$近似算法, $\Delta = \max_{j\in \mathcal{U}} \rho_j(\emptyset)$.
+
+我们将最小次模覆盖问题写为一个整数规划模型, 目标是最小化$\sum_{j\in \mathcal{U}} w_j x_j$, 其中, $w_j$表示某个元素的权重, $x_j$表示一个二元变量, 表示是否选择该元素. $S$是$\mathcal{U}$中的任何一个子集, $f(\mathcal{U})-f(S)$表示从集合$S$到全集$\mathcal{U}$所需的额外价值. $\sum_{j\notin S} \rho_j(S) x_j$表示我们所选择的那些不在$S$中的元素$j$, 它们各自能够为$S$带来的边际效应的总和. 约束条件要求, $\sum_{j\notin S}\rho_j(S)x_j$必须大于等于$f(\mathcal{U}) - f(S)$, 这表示, 我们选择的新元素能够提供的额外价值的总和必须大于等于从$S$到$\mathcal{U}$还需要的价值.
