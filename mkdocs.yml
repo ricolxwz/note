@@ -91,16 +91,16 @@ extra:
 extra_css:
   # - https://cdn.ricolxwz.cn/katex.min.css
   - stylesheets/extra.css
-  # - https://unpkg.com/katex@0/dist/katex.min.css
-  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css
+  - https://unpkg.com/katex@0/dist/katex.min.css
+  # - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css
 extra_javascript:
   - javascripts/favicon.js
   - javascripts/katex.js
-  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js
-  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js
+  - https://unpkg.com/katex@0/dist/katex.min.js
+  - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+  # - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js
+  # - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js
   - javascripts/analysis.js
-  # - https://unpkg.com/katex@0/dist/katex.min.js
-  # - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
 markdown_extensions:
   - meta
   - pymdownx.inlinehilite
@@ -136,8 +136,8 @@ markdown_extensions:
   - toc:
       permalink: true
       title: 目录
-  # - pymdownx.arithmatex:
-  #     generic: true
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.highlight:
       anchor_linenums: false
       guess_lang: false
