@@ -102,6 +102,10 @@ git.ricolxwz.download {
 pages.ricolxwz.download {
 	reverse_proxy localhost:65510
 }
+
+registry.ricolxwz.download {
+	reverse_proxy localhost:65534
+}
 ```
 
 然后, 如果我们要添加gitlab pages的自定义域名, 我们需要将自定义域名加入到Caddyfile中, 因为自定义域名也需要证书(因为我们的gitlab pages它只负责http, https是由Caddy来处理的):
