@@ -12,13 +12,12 @@ services:
     hostname: gitlab
     image: gitlab/gitlab-ce:latest
     restart: unless-stopped
-    networks:
-      - net
-    ports:
-      - 8181:8181 # gitlab-workhorse
-      - 8090:8090 # gitlab-pages
-      - 5000:5000 # gitlab-registry
-      - 2222:22 # ssh
+    network_mode: "host"
+    # ports:
+    #   - 8181:8181 # gitlab-workhorse
+    #   - 8090:8090 # gitlab-pages
+    #   - 5000:5000 # gitlab-registry
+    #   - 2222:22 # ssh
     environment:
       GITLAB_ROOT_EMAIL: <填写>
       GITLAB_ROOT_PASSWORD: <填写>
@@ -66,17 +65,20 @@ services:
     hostname: gitlab-runner
     image: gitlab/gitlab-runner:latest
     restart: unless-stopped
+    network_mode: "host"
     depends_on:
       - gitlab
     volumes:
       - /root/gitlab-runner/config:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - net
-
-networks:
-  net:
-    driver: bridge
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    command:
+      - --cleanup
 ```
 
 记得上面的目录的uid和gid修改为git用户的uid和gid. 这里, 我们把容器内的nginx关掉了, 因为我们在外部使用了caddy反代, 然后trusted_proxies设置为局域网段, 或者设置为frpc的ip.
