@@ -113,7 +113,7 @@ registry.ricolxwz.download {
 然后, 如果我们要添加gitlab pages的自定义域名, 我们需要将自定义域名加入到Caddyfile中, 因为自定义域名也需要证书(因为我们的gitlab pages它只负责http, https是由Caddy来处理的):
 
 ```
-note.ricolxwz.cc {
+n.ricolxwz.cn {
     reverse_proxy localhost:65510
 }
 ```
@@ -129,7 +129,7 @@ note.ricolxwz.cc {
     }
     ```
 
-    因为这个域名`ricolxwz.cc`我没有给API的权限, 所以不能通过这种方式验证.
+    因为这个域名`ricolxwz.cn`我没有给API的权限, 所以不能通过这种方式验证.
 
 ## CDN加速设置
 

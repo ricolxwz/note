@@ -558,7 +558,7 @@ icon = "fontawesome/mug-hot-solid"
 link = "https://buymeacoffee.com/ricolxwz"
 [[project.extra.social]]
 icon = "fontawesome/compass-solid"
-link = "https://ricolxwz.cc"
+link = "https://ricolxwz.cn"
 [[project.extra.social]]
 icon = "fontawesome/brands/github"
 link = "https://github.com/ricolxwz"
@@ -570,7 +570,7 @@ icon = "fontawesome/at-solid"
 link = "mailto:ricol.xwz@outlook.com"
 [[project.extra.social]]
 icon = "fontawesome/rss-solid"
-link = "https://note.ricolxwz.cc/feed_rss_created.xml"
+link = "https://n.ricolxwz.cn/feed_rss_created.xml"
 
 [markdown]
 extensions = [
