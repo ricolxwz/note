@@ -1,0 +1,644 @@
+[project]
+site_name = "机器蝉"
+site_author = "ricolxwz"
+site_url = "https://note.ricolxwz.cc"
+edit_uri = "https://github.com/ricolxwz/note/edit/master/docs"
+copyright = """<p xmlns:cc="https://creativecommons.org/ns#" >版权所有 &copy 由 <span property="cc:attributionName">麦旋风超好吃</span> 采用 <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0&nbsp</a>许可证发布 | 浙ICP备2025190393号-2</p>"""
+
+extra_css = [
+  "stylesheets/extra.css",
+  "https://unpkg.com/katex@0/dist/katex.min.css",
+]
+
+extra_javascript = [
+  "javascripts/favicon.js",
+  "javascripts/katex.js",
+  "https://unpkg.com/katex@0/dist/katex.min.js",
+  "https://unpkg.com/katex@0/dist/contrib/auto-render.min.js",
+  "javascripts/analysis.js",
+]
+
+[project.theme]
+language = "zh"
+custom_dir = "overrides"
+favicon = "https://cdn.ricolxwz.cn/favicon-black-mc-be1517f676f6767b821a61dee1fe0de1.svg"
+
+features = [
+    "content.code.annotate",
+    "content.code.copy",
+    "content.code.select",
+    "content.tabs.link",
+    "content.footnote.tooltips",
+    "content.tooltips",
+    "content.action.edit",
+    "content.action.view",
+    "navigation.tabs",
+    "navigation.sections", # YAML 中的 "navitation.sections" 已修正
+    "navigation.expand",
+    "navigation.indexes",
+    "navigation.top",
+    "navigation.tracking",
+    "search.suggest",
+    "search.highlight",
+    "search.share",
+    "announce.dismiss",
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle = { icon = "material/brightness-auto", name = "Switch to light mode" }
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "white"
+accent = "indigo"
+toggle = { icon = "material/brightness-7", name = "Switch to dark mode" }
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+accent = "indigo"
+toggle = { icon = "material/brightness-4", name = "Switch to system preference" }
+
+
+[project.theme.icon]
+logo = "https://cdn.ricolxwz.cn/favicon-black-mc-be1517f676f6767b821a61dee1fe0de1.svg"
+# 注: 原配置包含暗色模式 logo (`logo_dark_mode`). Zensical 可能不支持此方式.
+# 暗色模式 URL: https://cdn.ricolxwz.cn/favicon-white-mc-9874bcbf2890db92e65db16e14c4edb4.svg
+annotation = "material/star-four-points-circle"
+repo = "fontawesome/brands/github"
+
+
+[[project.extra.social]]
+icon = "fontawesome/mug-hot-solid"
+link = "https://buymeacoffee.com/ricolxwz"
+[[project.extra.social]]
+icon = "fontawesome/compass-solid"
+link = "https://ricolxwz.cc"
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/ricolxwz"
+[[project.extra.social]]
+icon = "fontawesome/telegram-brands-solid"
+link = "https://t.me/ricolxwz"
+[[project.extra.social]]
+icon = "fontawesome/at-solid"
+link = "mailto:ricol.xwz@outlook.com"
+[[project.extra.social]]
+icon = "fontawesome/rss-solid"
+link = "https://note.ricolxwz.cc/feed_rss_created.xml"
+
+
+# ----------------------------------------------------------------------------
+# Markdown 扩展 (已验证无冲突版本)
+# ----------------------------------------------------------------------------
+[markdown]
+extensions = [
+  "meta",
+  "pymdownx.inlinehilite",
+  "pymdownx.snippets",
+  "pymdownx.superfences",
+  "pymdownx.details",
+  "pymdownx.critic",
+  "pymdownx.caret",
+  "pymdownx.keys",
+  "pymdownx.mark",
+  "pymdownx.tilde",
+  "pymdownx.magiclink",
+  "pymdownx.b64",
+  "pymdownx.betterem",
+  "pymdownx.blocks.definition",
+  "pymdownx.blocks.html",
+  "pymdownx.blocks.caption",
+  "pymdownx.escapeall",
+  "pymdownx.striphtml",
+  "pymdownx.fancylists",
+  "pymdownx.progressbar",
+  "pymdownx.saneheaders",
+  "pymdownx.smartsymbols",
+  "admonition",
+  "abbr",
+  "attr_list",
+  "md_in_html",
+  "footnotes",
+  "def_list",
+  "tables",
+  "toc"
+]
+
+[markdown.extensions_config.toc]
+permalink = true
+title = "目录"
+
+[markdown.extensions_config.pymdownx-arithmatex]
+generic = true
+
+[markdown.extensions_config.pymdownx-highlight]
+anchor_linenums = false
+guess_lang = false
+linenums = false
+default_lang = "python"
+
+[markdown.extensions_config.pymdownx-tabbed]
+alternate_style = true
+
+[markdown.extensions_config.pymdownx-tasklist]
+custom_checkbox = true
+
+[markdown.extensions_config.pymdownx-emoji]
+emoji_index = "material.extensions.emoji.twemoji"
+emoji_generator = "material.extensions.emoji.to_svg"
+
+[markdown.extensions_config.pymdownx-emoji.options]
+custom_icons = [
+    "overrides/.icons"
+]
+
+
+
+# ----------------------------------------------------------------------------
+# 导航栏
+# ----------------------------------------------------------------------------
+nav = [
+    { "数学" = [
+        { "随机事件和概率" = "math/random-event-and-probability.md" },
+        { "一维随机变量及其分布" = "math/one-dimensional-random-variable-distribution.md" },
+        { "多维随机变量及其分布" = "math/multi-dimensional-random-variable-distribution.md" },
+        { "随机变量的数字特征" = "math/numerical-characteristics-of-random-variable.md" },
+        { "大数定律与中心极限定理" = "math/large-number-central-limit-theorem.md" },
+        { "贝叶斯方法" = "math/bayesian.md" },
+    ]},
+    { "语言" = [
+        { "Python" = [
+            { "基础" = [
+                { "容器" = "language/python/foundation/container.md" },
+                { "函数" = "language/python/foundation/function.md" },
+                { "对象" = "language/python/foundation/object.md" },
+                { "文件" = "language/python/foundation/io.md" },
+                { "模块/包/库" = "language/python/foundation/module.md" },
+                { "网络" = "language/python/foundation/network.md" },
+                { "多进程/多线程" = "language/python/foundation/threading.md" },
+                { "异步" = "language/python/foundation/async.md" },
+                { "数据库" = "language/python/foundation/database.md" },
+                { "错误/调试/测试" = "language/python/foundation/debug.md" },
+                { "编码" = "language/python/foundation/encoding.md" },
+                { "PVM" = "language/python/foundation/pvm.md" },
+                { "其他" = "language/python/foundation/misc.md" },
+            ]},
+            { "常用库" = [
+                { "datetime" = "language/python/basic-package/datetime.md" },
+                { "collections" = "language/python/basic-package/collections.md" },
+                { "argparse" = "language/python/basic-package/argparse.md" },
+                { "base64" = "language/python/basic-package/base64.md" },
+                { "hashlib" = "language/python/basic-package/hashlib.md" },
+                { "hmac" = "language/python/basic-package/hmac.md" },
+                { "itertools" = "language/python/basic-package/itertools.md" },
+                { "contextlib" = "language/python/basic-package/contextlib.md" },
+                { "requests" = "language/python/basic-package/requests.md" },
+            ]},
+            { "Numpy" = [
+                { "数据类型" = "language/python/numpy/datatype.md" },
+                { "数组构建" = "language/python/numpy/array-creation.md" },
+                { "视图/副本" = "language/python/numpy/view-copy.md" },
+                { "数组广播" = "language/python/numpy/broadcast.md" },
+                { "结构化数组" = "language/python/numpy/structured-array.md" },
+                { "数组索引" = "language/python/numpy/array-index.md" },
+                { "文件存取" = "language/python/numpy/io.md" },
+            ]},
+            { "Pandas" = [
+                { "预备知识" = "language/python/pandas/preliminary-knowledge.md" },
+                { "基础知识" = "language/python/pandas/foundation.md" },
+                { "数据索引" = "language/python/pandas/data-index.md" },
+                { "数据分组" = "language/python/pandas/grouping.md" },
+            ]},
+            { "Matplotlib" = [
+                { "language/python/matplotlib/index.md" = "language/python/matplotlib/index.md" },
+                { "基础知识" = "language/python/matplotlib/foundation.md" },
+                { "散点图" = "language/python/matplotlib/scatter-chart.md" },
+                { "柱形图" = "language/python/matplotlib/column-chart.md" },
+                { "饼图" = "language/python/matplotlib/pie-chart.md" },
+                { "直方图" = "language/python/matplotlib/histogram.md" },
+                { "热力图" = "language/python/matplotlib/heat-map.md" },
+            ]},
+            { "Seaborn" = [
+                { "简要介绍" = "language/python/seaborn/introduction.md" },
+            ]},
+        ]},
+        { "CPP" = [
+            { "基础" = [
+                { "language/cpp/foundation/index.md" = "language/cpp/foundation/index.md" },
+                { "构建" = "language/cpp/foundation/build.md" },
+                { "类型" = "language/cpp/foundation/type.md" },
+                { "函数" = "language/cpp/foundation/function.md" },
+                { "容器" = "language/cpp/foundation/container.md" },
+                { "算法" = "language/cpp/foundation/algorithm.md" },
+                { "指针" = "language/cpp/foundation/pointer.md" },
+                { "对象" = "language/cpp/foundation/object.md" },
+                { "模版" = "language/cpp/foundation/template.md" },
+                { "调试" = "language/cpp/foundation/debug.md" },
+                { "文件" = "language/cpp/foundation/io.md" },
+                { "异步" = "language/cpp/foundation/sync.md" },
+                { "其他" = "language/cpp/foundation/others.md" },
+            ]},
+        ]},
+        { "Go" = [
+            { "language/go/index.md" = "language/go/index.md" },
+            { "开发环境" = "language/go/env.md" },
+            { "类型" = "language/go/type.md" },
+            { "容器" = "language/go/container.md" },
+            { "函数" = "language/go/function.md" },
+            { "对象" = "language/go/object.md" },
+        ]},
+    ]},
+    { "基石" = [
+        { "数据库" = [
+            { "数据模型" = "general/database/conceptual-model.md" },
+            { "关系模型" = "general/database/relational-model.md" },
+            { "关系代数" = "general/database/relational-algebra.md" },
+            { "SQL" = "general/database/sql.md" },
+            { "完整性约束" = "general/database/integrity-constraints.md" },
+            { "高级SQL" = "general/database/advanced-sql.md" },
+            { "应用开发" = "general/database/app-dev.md" },
+            { "规范化" = "general/database/normalization.md" },
+            { "事务" = "general/database/transaction.md" },
+            { "存储与索引" = "general/database/storage-indexing.md" },
+            { "查询处理" = "general/database/query-processing.md" },
+        ]},
+        { "信息论" = [
+            { "不确定性和熵" = "general/information-theory/uncertainty-and-entropy.md" },
+            { "什么是信息" = "general/information-theory/what-is-information.md" },
+            { "JIDT" = "general/information-theory/jidt.md" },
+            { "估计器" = "general/information-theory/estimator.md" },
+            { "统计显著性" = "general/information-theory/statistical-significance.md" },
+            { "自组织" = "general/information-theory/self-organisation.md" },
+            { "信息处理" = "general/information-theory/information-processing.md" },
+            { "信息存储" = "general/information-theory/information-storage.md" },
+            { "信息传递" = "general/information-theory/information-transfer.md" },
+            { "有效网络推断" = "general/information-theory/effective-network-inference.md" },
+        ]},
+        { "版本控制" = [
+            { "区域和状态" = "general/version-control/area-and-status.md" },
+            { "添加和提交" = "general/version-control/add-and-commit.md" },
+            { "回退" = "general/version-control/revert.md" },
+            { "配置" = "general/version-control/config.md" },
+            { "账户" = "general/version-control/account.md" },
+            { "LFS" = "general/version-control/lfs.md" },
+        ]},
+        { "容器" = [
+            { "dockerfile" = "general/containerization/dockerfile.md" },
+        ]},
+        { "k8s" = [
+            { "架构" = "general/k8s/architecture.md" },
+            { "命令" = "general/k8s/command.md" },
+            { "示例" = "general/k8s/example.md" },
+        ]},
+        { "随机算法" = [
+            { "general/randomised-algorithm/index.md" = "general/randomised-algorithm/index.md" },
+            { "一些基础" = "general/randomised-algorithm/basic.md" },
+            { "随机性, 概率和算法" = "general/randomised-algorithm/randomness.md" },
+            { "集中界限" = "general/randomised-algorithm/concentration-bounds-tricks.md" },
+            { "冲突问题" = "general/randomised-algorithm/balls-in-bins.md" },
+            { "反随机化" = "general/randomised-algorithm/derandomization.md" },
+            { "图算法" = "general/randomised-algorithm/graph.md" },
+            { "哈希" = "general/randomised-algorithm/hashing.md" },
+            { "最近邻" = "general/randomised-algorithm/nearest-neighbor.md" },
+            { "流处理" = "general/randomised-algorithm/streaming.md" },
+            { "线性规划问题" = "general/randomised-algorithm/linear-programming.md" },
+            { "学习与检测未知分布" = "general/randomised-algorithm/distribution-learning.md" },
+            { "专家学习" = "general/randomised-algorithm/learn-from-experts.md" },
+        ]},
+        { "网络" = "general/network/ind.md" },
+        { "离散优化" = "general/discrete-optimization/ind.md" },
+    ]},
+    { "算法" = [
+        { "人工智能" = [
+            { "algorithm/index.md" = "algorithm/index.md" },
+            { "线性回归" = "algorithm/linear-regression.md" },
+            { "预处理" = "algorithm/preprocessing.md" },
+            { "最邻近" = "algorithm/knn.md" },
+            { "朴素贝叶斯" = "algorithm/naive-bayes.md" },
+            { "评估" = "algorithm/evaluation.md" },
+            { "决策树" = "algorithm/decision-tree.md" },
+            { "集成学习" = "algorithm/ensemble-learning.md" },
+            { "支持向量机" = "algorithm/svm.md" },
+            { "降维" = "algorithm/dimensional-reduction.md" },
+            { "聚类" = "algorithm/clustering.md" },
+            { "马尔可夫链" = "algorithm/markov-chain.md" },
+            { "强化学习" = "algorithm/reinforcement-learning.md" },
+            { "深度学习" = "algorithm/dl.md" },
+            { "FNN" = "algorithm/fnn.md" },
+            { "CNN" = "algorithm/cnn.md" },
+            { "RNN" = "algorithm/rnn.md" },
+            { "Transformer" = "algorithm/transformer.md" },
+            { "Adapter" = "algorithm/adapter.md" },
+            { "LoRA" = "algorithm/lora.md" },
+            { "知识蒸馏" = "algorithm/knowledge-distillation.md" },
+            { "提示词调优" = "algorithm/prompt-tuning.md" },
+            { "AlexNet" = "algorithm/alexnet.md" },
+            { "ResNet" = "algorithm/resnet.md" },
+            { "NiN" = "algorithm/nin.md" },
+            { "GoogLeNet" = "algorithm/googlenet.md" },
+            { "ViT" = "algorithm/vit.md" },
+            { "Swin" = "algorithm/swin.md" },
+            { "MoCo" = "algorithm/moco.md" },
+            { "Embedding" = "algorithm/word-embedding.md" },
+            { "GPT" = "algorithm/gpt.md" },
+            { "BERT" = "algorithm/bert.md" },
+            { "AE" = "algorithm/ae.md" },
+            { "VAE" = "algorithm/vae.md" },
+            { "CLIP" = "algorithm/clip.md" },
+            { "MAE" = "algorithm/mae.md" },
+            { "YOLO" = "algorithm/yolo.md" },
+            { "LLaMA" = "algorithm/llama.md" },
+            { "VQ-VAE" = [
+                { "algorithm/vq-vae/index.md" = "algorithm/vq-vae/index.md" },
+                { "VQ-GAN" = "algorithm/vq-vae/vq-gan.md" },
+                { "Reg-VQ" = "algorithm/vq-vae/reg-vq.md" },
+                { "VQ-VAE-2" = "algorithm/vq-vae/vq-vae2.md" },
+                { "FSQ" = "algorithm/vq-vae/fsq.md" },
+                { "RQ-VAE" = "algorithm/vq-vae/rq-vae.md" },
+                { "PQ-VAE" = "algorithm/vq-vae/pq-vae.md" },
+                { "SQ-VAE" = "algorithm/vq-vae/sq-vae.md" },
+                { "CVQ-VAE" = "algorithm/vq-vae/cvq-vae.md" },
+                { "VQGAN-LC" = "algorithm/vq-vae/vqgan-lc.md" },
+                { "GRFSQ" = "algorithm/vq-vae/grfsq.md" },
+                { "VQRT" = "algorithm/vq-vae/vqrt.md" },
+            ]},
+            { "LLaVA" = "algorithm/llava.md" },
+            { "BLIP" = "algorithm/blip.md" },
+            { "GAN" = "algorithm/gan.md" },
+            { "Diffusion" = [
+                { "algorithm/diffusion/index.md" = "algorithm/diffusion/index.md" },
+                { "DiT" = "algorithm/diffusion/dit.md" },
+            ]},
+            { "InternVL" = "algorithm/internvl.md" },
+            { "Flamingo" = "algorithm/flamingo.md" },
+            { "Whisper" = "algorithm/whisper.md" },
+            { "DeepSeek-R1" = "algorithm/deepseek-r1.md" },
+            { "GNN" = "algorithm/gnn.md" },
+            { "U-Net" = "algorithm/u-net.md" },
+            { "RAG" = "algorithm/rag.md" },
+            { "SFT" = [
+                { "FLAN" = "algorithm/sft/flan.md" },
+                { "T0" = "algorithm/sft/t0.md" },
+                { "Self-Instruct" = "algorithm/sft/self-instruct.md" },
+                { "Alpaca" = "algorithm/sft/alpaca.md" },
+                { "Vicuna" = "algorithm/sft/vicuna.md" },
+            ]},
+            { "RLHF" = [
+                { "HP" = "algorithm/rlhf/hp.md" },
+                { "InstructGPT" = "algorithm/rlhf/instructgpt.md" },
+                { "DPO" = "algorithm/rlhf/dpo.md" },
+                { "PPO" = "algorithm/rlhf/ppo.md" },
+                { "ORPO" = "algorithm/rlhf/orpo.md" },
+                { "KTO" = "algorithm/rlhf/kto.md" },
+                { "Constitutional AI" = "algorithm/rlhf/constitutional-ai.md" },
+                { "RLAIF" = "algorithm/rlhf/rlaif.md" },
+            ]},
+        ]},
+    ]},
+    { "代码" = [
+        { "PyTorch快速入门" = "code/pytorch.md" },
+        { "Transformer品尝" = "code/transformer.md" },
+        { "WSL2配置容器环境" = "code/configure-wsl-dev.md" },
+        { "PyTorch尝试进阶" = "code/pytorch-advanced.md" },
+        { "在VSCode中使用调试" = "code/vscode-debugger.md" },
+        { "Argparse" = "code/argparse.md" },
+        { "Logger" = "code/logger.md" },
+        { "SummaryWriter" = "code/summary-writer.md" },
+        { "一键部署深度学习环境" = "code/deploy-dl-env.md" },
+        { "AutoDL使用说明" = "code/autodl.md" },
+        { "注意力计算" = "code/attn.md" },
+        { "LFS存储" = "code/lfs.md" },
+        { "vLLM" = "code/vllm.md" },
+    ]},
+    { "词典" = [
+        { "反向传播" = "dicts/backpropagation.md" },
+        { "自动微分" = "dicts/autograd.md" },
+        { "判别式模型和生成式模型" = "dicts/discriminative-and-generative-model.md" },
+        { "主干网络" = "dicts/backbone.md" },
+        { "归纳式/直推式学习" = "dicts/inductive-transductive-learning.md" },
+        { "视觉实体在尺度上的差异" = "dicts/large-variation-in-scale-visual-entities.md" },
+        { "ADE20K" = "dicts/ade20k.md" },
+        { "COCO" = "dicts/coco.md" },
+        { "异质交互" = "dicts/heterogeneous-interactions.md" },
+        { "采样" = "dicts/sampling.md" },
+        { "提示设计" = "dicts/discrete-text-prompt.md" },
+        { "Few-Shot学习" = "dicts/few-shot-learning.md" },
+        { "端到端学习" = "dicts/end-to-end-learning.md" },
+        { "消融" = "dicts/ablation.md" },
+        { "条件化" = "dicts/conditioning.md" },
+        { "提示集成" = "dicts/prompt-ensembling.md" },
+        { "Token/嵌入/编码" = "dicts/token-embedding-encoding.md" },
+        { "对比学习" = "dicts/contrastive-learning.md" },
+        { "前置任务" = "dicts/pretext-task.md" },
+        { "流形学习" = "dicts/manifold-learning.md" },
+        { "词袋" = "dicts/bow.md" },
+        { "监督学习" = "dicts/supervision.md" },
+        { "线性探测" = "dicts/linear-probe.md" },
+        { "众包数据" = "dicts/crowd-labeled-datasets.md" },
+        { "可扩展性" = "dicts/scalability.md" },
+        { "动作单元" = "dicts/action-unit.md" },
+        { "效价" = "dicts/valence.md" },
+        { "唤醒强度" = "dicts/arousal-intensity.md" },
+        { "毒性" = "dicts/toxicity.md" },
+        { "后验坍缩" = "dicts/posterior-collapse.md" },
+        { "用户研究" = "dicts/user-studies.md" },
+        { "先验和后验" = "dicts/prior-posterior.md" },
+        { "对齐" = "dicts/alignment.md" },
+        { "指令跟随数据" = "dicts/instruction-following-data.md" },
+        { "指令跟随代理" = "dicts/instruction-following-agent.md" },
+        { "自举" = "dicts/bootstrapping.md" },
+        { "标签平滑" = "dicts/label-smoothing.md" },
+        { "上下文学习" = "dicts/in-context-learning.md" },
+        { "数据集" = "dicts/set.md" },
+        { "教师强迫" = "dicts/teacher-forcing.md" },
+        { "模式奔溃" = "dicts/mode-collapse.md" },
+        { "重参数化技巧" = "dicts/reparameterization.md" },
+        { "码本奔溃" = "dicts/codebook-collapse.md" },
+        { "Gumbel-Softmax" = "dicts/gumbel-softmax.md" },
+    ]},
+    { "综述" = [
+        { "多模态大模型" = "survey/mllm.md" },
+        { "思维链" = "survey/cot.md" },
+    ]},
+    { "系统" = [
+        { "Linux" = [
+            { "Archlinux" = [
+                { "X86安装" = "os/linux/archlinux/x86-install.md" },
+                { "声音卡顿" = "os/linux/archlinux/voice-frozen.md" },
+                { "Zed编辑器无法启动问题" = "os/linux/archlinux/zed-cannot-start.md" },
+                { "Thinkbook下没有声音问题" = "os/linux/archlinux/no-sound-under-thinkbook.md" },
+                { "内核安装更换" = "os/linux/archlinux/kernel-install.md" },
+                { "雷蛇驱动安装" = "os/linux/archlinux/razer-driver.md" },
+                { "快照" = "os/linux/archlinux/snapshots.md" },
+                { "配置触控板" = "os/linux/archlinux/configure-touchpad.md" },
+                { "自动重命名文件为md5" = "os/linux/archlinux/auto-md5-generation.md" },
+                { "申请SSL证书" = "os/linux/archlinux/apply-cert.md" },
+                { "Nginx反代小服务" = "os/linux/archlinux/nginx-reverse-service.md" },
+                { "自签证书" = "os/linux/archlinux/self-signed-cert.md" },
+            ]},
+        ]},
+        { "Macos" = [
+            { "基础配置" = "os/macos/config.md" },
+            { "md5图片" = "os/macos/md5.md" },
+            { "宝藏软件" = "os/macos/software.md" },
+        ]},
+        { "Windows" = [
+            { "Powershell教程" = "os/windows/powershell.md" },
+            { "md5图片" = "os/windows/md5.md" },
+            { "切换系统字体" = "os/windows/change-font.md" },
+            { "宝藏软件" = "os/windows/software.md" },
+            { "WSL" = "os/windows/wsl.md" },
+            { "配置" = "os/windows/config.md" },
+        ]},
+    ]},
+    { "软件" = [
+        { "Alist" = [
+            { "无法预览PDF" = "software/alist/cannot-preview-pdf.md" },
+            { "改变Logo大小" = "software/alist/change-logo-size.md" },
+        ]},
+        { "AutoHotkey" = [
+            { "配置" = "software/autohotkey/config.md" },
+        ]},
+        { "Cloudflare" = [
+            { "R2对象存储防盗链" = "software/cloudflare/r2-waf.md" },
+        ]},
+        { "Cloudfront" = [
+            { "配置" = "software/cloudfront/config.md" },
+            { "cloudfront配合nginx反向代理" = "software/cloudfront/nginx-502.md" },
+        ]},
+        { "DO" = [
+            { "配置" = "software/do/config.md" },
+        ]},
+        { "Filebrowser" = [
+            { "配置" = "software/filebrowser/config.md" },
+        ]},
+        { "FontCreater" = [
+            { "合并字体" = "software/fontcreator/merge.md" },
+        ]},
+        { "Fontforge" = [
+            { "合并字体" = "software/fontforge/merge.md" },
+        ]},
+        { "Frp" = [
+            { "安装" = "software/frp/install.md" },
+            { "安全" = "software/frp/tls.md" },
+        ]},
+        { "Gitea" = [
+            { "常用配置" = "software/gitea/config.md" },
+        ]},
+        { "Gitlab" = [
+            { "备份" = "software/gitlab/backup.md" },
+            { "迁移" = "software/gitlab/migrate.md" },
+            { "runner" = "software/gitlab/runner.md" },
+            { "升级" = "software/gitlab/upgrade.md" },
+            { "配置" = "software/gitlab/config.md" },
+        ]},
+        { "Jellyfin" = [
+            { "自签证书" = "software/jellyfin/ssl.md" },
+        ]},
+        { "Jetbrains" = [
+            { "配置" = "software/jetbrains/basic-config.md" },
+            { "无法调整MD单元格内的文字大小" = "software/jetbrains/cannot-addjust-font-in-md-cell.md" },
+        ]},
+        { "KDE" = [
+            { "配置" = "software/kde/config.md" },
+        ]},
+        { "LiteLLM" = [
+            { "配置" = "software/litellm/config.md" },
+        ]},
+        { "Minio" = [
+            { "virtual host 风格" = "software/minio/virtual-host-style.md" },
+            { "无法加载桶" = "software/minio/can-not-load-bucket.md" },
+            { "无法启动容器" = "software/minio/can-not-start.md" },
+            { "awscli" = "software/minio/aws-cli.md" },
+            { "自定义权限" = "software/minio/policy-to-one-bucket.md" },
+        ]},
+        { "Mkdocs" = [
+            { "mkdocs-git-committers-plugin-2配置" = "software/mkdocs/git-committers2.md" },
+            { "内嵌视频" = "software/mkdocs/video.md" },
+            { "加密内容" = "software/mkdocs/encryptcontent.md" },
+            { "Git Hooks" = "software/mkdocs/git-hooks.md" },
+        ]},
+        { "Nezha" = [
+            { "美化" = "software/nezha/beautify.md" },
+            { "DDNS" = "software/nezha/ddns.md" },
+            { "安装" = "software/nezha/install.md" },
+            { "迁移" = "software/nezha/migrate.md" },
+            { "服务" = "software/nezha/service.md" },
+            { "Telegram机器人通知" = "software/nezha/telebot.md" },
+            { "警告" = "software/nezha/warning.md" },
+        ]},
+        { "Open-WebUI" = [
+            { "配置" = "software/open-webui/config.md" },
+        ]},
+        { "Portainer" = [
+            { "Https" = "software/portainer/https.md" },
+            { "安装" = "software/portainer/install.md" },
+            { "栈" = "software/portainer/stack.md" },
+        ]},
+        { "Prometheus&Grafana" = [
+            { "配置" = "software/prometheus-grafana/config.md" },
+        ]},
+        { "SearXNG" = [
+            { "启动" = "software/searxng/setup.md" },
+        ]},
+        { "SSH" = [
+            { "SSH使用谷歌验证器2FA" = "software/ssh/use-google-2fa.md" },
+            { "限制IP登录" = "software/ssh/restrict-ip-login.md" },
+            { "端口转发" = "software/ssh/port-forwarding.md" },
+        ]},
+        { "Sublime" = [
+            { "配置" = "software/sublime/config.md" },
+        ]},
+        { "Torrent" = [
+            { "qBittorrent管理页面显示unauthorized" = "software/torrent/qbittorrent-unauthorized.md" },
+        ]},
+        { "Vmware" = [
+            { "选项优化" = "software/vmware/choice.md" },
+            { "CPU优化" = "software/vmware/cpu.md" },
+            { "存储优化" = "software/vmware/storage.md" },
+            { "网络优化" = "software/vmware/network.md" },
+            { "VMWare Tools" = "software/vmware/vmware-tools.md" },
+            { "鼠标抓取问题" = "software/vmware/mouse-grub.md" },
+            { "鼠标滚动迟缓" = "software/vmware/mouse-scroll-delay.md" },
+            { "鼠标侧边按键" = "software/vmware/mouse-side-tools.md" },
+            { "无法找到共享文件夹" = "software/vmware/shared-cannot-find.md" },
+            { "磁盘格式切换" = "software/vmware/disk-switch-allocation.md" },
+        ]},
+        { "Vscode" = [
+            { "基础配置" = "software/vscode/config.md" },
+            { "使用CapsLock作为Escape" = "software/vscode/capslock-as-esc.md" },
+            { "Vim模式下自动切换输入法" = "software/vscode/vim-switch-ime.md" },
+            { "Snippets" = "software/vscode/snippets.md" },
+        ]},
+        { "XChange" = [
+            { "配置" = "software/xchange/config.md" },
+        ]},
+        { "Xray" = [
+            { "申请证书" = "software/xray/apply-cert.md" },
+            { "无缝切换ip" = "software/xray/switch-ip.md" },
+        ]},
+        { "Xshell" = [
+            { "配置" = "software/xshell/config.md" },
+        ]},
+        { "Zed" = [
+            { "配置" = "software/zed/config.md" },
+        ]},
+    ]},
+    { "其他" = [
+        { "个人使用的prompt" = "others/prompt.md" },
+        { "科研神器" = "others/research-god-tool.md" },
+        { "配置Latex-Workshop" = "others/latex-workshop.md" },
+        { "Zotero配置" = "others/zotero.md" },
+        { "颜色标注推荐" = "others/annotation-color.md" },
+        { "IT创新" = "others/it-innovation.md" },
+    ]},
+    { "金融" = [
+        { "交易策略" = "finance/proxy.md" },
+        { "现货交易" = "finance/spot.md" },
+        { "合约交易" = "finance/future.md" },
+        { "K线" = "finance/k.md" },
+    ]},
+]
