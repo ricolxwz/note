@@ -34,7 +34,7 @@ features = [
     "content.action.edit",
     "content.action.view",
     "navigation.tabs",
-    "navigation.sections", # YAML 中的 "navitation.sections" 已修正
+    "navigation.sections",
     "navigation.expand",
     "navigation.indexes",
     "navigation.top",
@@ -65,6 +65,9 @@ scheme = "slate"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to system preference"
 
+[project.extra]
+generator = false
+
 [[project.extra.social]]
 icon = "fontawesome/mug-hot-solid"
 link = "https://buymeacoffee.com/ricolxwz"
@@ -84,10 +87,6 @@ link = "mailto:ricol.xwz@outlook.com"
 icon = "fontawesome/rss-solid"
 link = "https://note.ricolxwz.cc/feed_rss_created.xml"
 
-
-# ----------------------------------------------------------------------------
-# Markdown 扩展 (已验证无冲突版本)
-# ----------------------------------------------------------------------------
 [markdown]
 extensions = [
   "meta",
@@ -208,7 +207,7 @@ nav = [
                 { "数据分组" = "language/python/pandas/grouping.md" },
             ]},
             { "Matplotlib" = [
-                { "language/python/matplotlib/index.md" = "language/python/matplotlib/index.md" },
+                { "Matplotlib概览" = "language/python/matplotlib/index.md" }, # 已修改
                 { "基础知识" = "language/python/matplotlib/foundation.md" },
                 { "散点图" = "language/python/matplotlib/scatter-chart.md" },
                 { "柱形图" = "language/python/matplotlib/column-chart.md" },
@@ -222,7 +221,7 @@ nav = [
         ]},
         { "CPP" = [
             { "基础" = [
-                { "language/cpp/foundation/index.md" = "language/cpp/foundation/index.md" },
+                { "CPP基础概览" = "language/cpp/foundation/index.md" }, # 已修改
                 { "构建" = "language/cpp/foundation/build.md" },
                 { "类型" = "language/cpp/foundation/type.md" },
                 { "函数" = "language/cpp/foundation/function.md" },
@@ -238,7 +237,7 @@ nav = [
             ]},
         ]},
         { "Go" = [
-            { "language/go/index.md" = "language/go/index.md" },
+            { "Go语言概览" = "language/go/index.md" }, # 已修改
             { "开发环境" = "language/go/env.md" },
             { "类型" = "language/go/type.md" },
             { "容器" = "language/go/container.md" },
@@ -289,7 +288,7 @@ nav = [
             { "示例" = "general/k8s/example.md" },
         ]},
         { "随机算法" = [
-            { "general/randomised-algorithm/index.md" = "general/randomised-algorithm/index.md" },
+            { "随机算法概览" = "general/randomised-algorithm/index.md" }, # 已修改
             { "一些基础" = "general/randomised-algorithm/basic.md" },
             { "随机性, 概率和算法" = "general/randomised-algorithm/randomness.md" },
             { "集中界限" = "general/randomised-algorithm/concentration-bounds-tricks.md" },
@@ -308,7 +307,7 @@ nav = [
     ]},
     { "算法" = [
         { "人工智能" = [
-            { "algorithm/index.md" = "algorithm/index.md" },
+            { "算法概览" = "algorithm/index.md" }, # 已修改
             { "线性回归" = "algorithm/linear-regression.md" },
             { "预处理" = "algorithm/preprocessing.md" },
             { "最邻近" = "algorithm/knn.md" },
@@ -347,7 +346,7 @@ nav = [
             { "YOLO" = "algorithm/yolo.md" },
             { "LLaMA" = "algorithm/llama.md" },
             { "VQ-VAE" = [
-                { "algorithm/vq-vae/index.md" = "algorithm/vq-vae/index.md" },
+                { "VQ-VAE概览" = "algorithm/vq-vae/index.md" }, # 已修改
                 { "VQ-GAN" = "algorithm/vq-vae/vq-gan.md" },
                 { "Reg-VQ" = "algorithm/vq-vae/reg-vq.md" },
                 { "VQ-VAE-2" = "algorithm/vq-vae/vq-vae2.md" },
@@ -364,7 +363,7 @@ nav = [
             { "BLIP" = "algorithm/blip.md" },
             { "GAN" = "algorithm/gan.md" },
             { "Diffusion" = [
-                { "algorithm/diffusion/index.md" = "algorithm/diffusion/index.md" },
+                { "Diffusion概览" = "algorithm/diffusion/index.md" }, # 已修改
                 { "DiT" = "algorithm/diffusion/dit.md" },
             ]},
             { "InternVL" = "algorithm/internvl.md" },

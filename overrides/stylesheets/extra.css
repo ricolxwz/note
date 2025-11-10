@@ -23,6 +23,7 @@
     --md-footer-bg-color: white;
     --md-footer-bg-color--dark: white;
     --md-footer-fg-color: var(--md-typeset-color);
+    --md-default-fg-color--lightest: white;
     --md-footer-fg-color--light: rgba(18, 19, 23, 0.6);
     --md-footer-border-color: rgba(0, 0, 0, 0.1);
     --md-top-custom: rgba(256, 256, 256, 0.2);
@@ -37,6 +38,7 @@
     --md-header-bg-color: var(--md-primary-color-dark);
     --md-footer-bg-color: var(--md-primary-color-dark);
     --md-footer-bg-color--dark: var(--md-primary-color-dark);
+    --md-default-fg-color--lightest: var(--md-primary-color-dark);
     --md-default-bg-color: rgba(18, 19, 23, 1);
     --md-footer-border-color: rgba(256, 256, 256, 0.2);
     --md-shadow-z2: 0 0.2rem 0.5rem #000, 0 0 0.05rem #ffffff40;
