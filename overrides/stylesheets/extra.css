@@ -23,11 +23,11 @@
     --md-footer-bg-color: white;
     --md-footer-bg-color--dark: white;
     --md-footer-fg-color: var(--md-typeset-color);
-    --md-default-fg-color--lightest: white;
     --md-footer-fg-color--light: rgba(18, 19, 23, 0.6);
     --md-footer-border-color: rgba(0, 0, 0, 0.1);
     --md-top-custom: rgba(256, 256, 256, 0.2);
     --md-banner-color: rgba(18, 19, 23, 0.6);
+    --md-footer-additional-bg-color: white;
 }
 
 [data-md-color-scheme="slate"] {
@@ -38,12 +38,12 @@
     --md-header-bg-color: var(--md-primary-color-dark);
     --md-footer-bg-color: var(--md-primary-color-dark);
     --md-footer-bg-color--dark: var(--md-primary-color-dark);
-    --md-default-fg-color--lightest: var(--md-primary-color-dark);
     --md-default-bg-color: rgba(18, 19, 23, 1);
     --md-footer-border-color: rgba(256, 256, 256, 0.2);
     --md-shadow-z2: 0 0.2rem 0.5rem #000, 0 0 0.05rem #ffffff40;
     --md-top-custom: rgba(18, 19, 23, 0.6);
     --md-banner-color: var(--md-typeset-color);
+    --md-footer-additional-bg-color: var(--md-primary-color-dark);
 }
 
 /* 设置左边的sidebar中的item上下间距不要太宽 */
@@ -61,6 +61,10 @@
 
 .md-footer {
     border-top: 1px solid var(--md-footer-border-color);
+}
+
+.md-footer-meta {
+    background-color: var(--md-footer-additional-bg-color);
 }
 
 /* 设置横幅主题 */
