@@ -1,7 +1,7 @@
 [project]
 site_name = "机器蝉"
 site_author = "ricolxwz"
-site_url = "https://note.ricolxwz.cc"
+site_url = "https://note.ricolxwz.cn"
 edit_uri = "https://github.com/ricolxwz/note/edit/master/docs"
 copyright = """<p xmlns:cc="https://creativecommons.org/ns#" >版权所有 &copy 由 <span property="cc:attributionName">麦旋风超好吃</span> 采用 <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0&nbsp</a>许可证发布 | 浙ICP备2025190393号-2</p>"""
 
@@ -18,142 +18,6 @@ extra_javascript = [
   "javascripts/analysis.js",
 ]
 
-[project.theme]
-language = "zh"
-custom_dir = "overrides"
-variant = "modern"
-favicon = "https://cdn.ricolxwz.cn/favicon-black-mc-be1517f676f6767b821a61dee1fe0de1.svg"
-
-features = [
-    "content.code.annotate",
-    "content.code.copy",
-    "content.code.select",
-    "content.tabs.link",
-    "content.footnote.tooltips",
-    "content.tooltips",
-    "content.action.edit",
-    "content.action.view",
-    "navigation.tabs",
-    "navigation.sections",
-    "navigation.expand",
-    "navigation.indexes",
-    "navigation.top",
-    "navigation.tracking",
-    "search.suggest",
-    "search.highlight",
-    "search.share",
-    "announce.dismiss",
-]
-
-# Palette toggle for automatic mode
-[[project.theme.palette]]
-media = "(prefers-color-scheme)"
-toggle.icon = "lucide/sun-moon"
-toggle.name = "Switch to light mode"
-
-# Palette toggle for light mode
-[[project.theme.palette]]
-media = "(prefers-color-scheme: light)"
-scheme = "default"
-toggle.icon = "lucide/sun"
-toggle.name = "Switch to dark mode"
-
-# Palette toggle for dark mode
-[[project.theme.palette]]
-media = "(prefers-color-scheme: dark)"
-scheme = "slate"
-toggle.icon = "lucide/moon"
-toggle.name = "Switch to system preference"
-
-[project.extra]
-generator = false
-
-[[project.extra.social]]
-icon = "fontawesome/mug-hot-solid"
-link = "https://buymeacoffee.com/ricolxwz"
-[[project.extra.social]]
-icon = "fontawesome/compass-solid"
-link = "https://ricolxwz.cc"
-[[project.extra.social]]
-icon = "fontawesome/brands/github"
-link = "https://github.com/ricolxwz"
-[[project.extra.social]]
-icon = "fontawesome/telegram-brands-solid"
-link = "https://t.me/ricolxwz"
-[[project.extra.social]]
-icon = "fontawesome/at-solid"
-link = "mailto:ricol.xwz@outlook.com"
-[[project.extra.social]]
-icon = "fontawesome/rss-solid"
-link = "https://note.ricolxwz.cc/feed_rss_created.xml"
-
-[markdown]
-extensions = [
-  "meta",
-  "pymdownx.inlinehilite",
-  "pymdownx.snippets",
-  "pymdownx.superfences",
-  "pymdownx.details",
-  "pymdownx.critic",
-  "pymdownx.caret",
-  "pymdownx.keys",
-  "pymdownx.mark",
-  "pymdownx.tilde",
-  "pymdownx.magiclink",
-  "pymdownx.b64",
-  "pymdownx.betterem",
-  "pymdownx.blocks.definition",
-  "pymdownx.blocks.html",
-  "pymdownx.blocks.caption",
-  "pymdownx.escapeall",
-  "pymdownx.striphtml",
-  "pymdownx.fancylists",
-  "pymdownx.progressbar",
-  "pymdownx.saneheaders",
-  "pymdownx.smartsymbols",
-  "admonition",
-  "abbr",
-  "attr_list",
-  "md_in_html",
-  "footnotes",
-  "def_list",
-  "tables",
-  "toc"
-]
-
-[markdown.extensions_config.toc]
-permalink = true
-title = "目录"
-
-[markdown.extensions_config.pymdownx-arithmatex]
-generic = true
-
-[markdown.extensions_config.pymdownx-highlight]
-anchor_linenums = false
-guess_lang = false
-linenums = false
-default_lang = "python"
-
-[markdown.extensions_config.pymdownx-tabbed]
-alternate_style = true
-
-[markdown.extensions_config.pymdownx-tasklist]
-custom_checkbox = true
-
-[markdown.extensions_config.pymdownx-emoji]
-emoji_index = "material.extensions.emoji.twemoji"
-emoji_generator = "material.extensions.emoji.to_svg"
-
-[markdown.extensions_config.pymdownx-emoji.options]
-custom_icons = [
-    "overrides/.icons"
-]
-
-
-
-# ----------------------------------------------------------------------------
-# 导航栏
-# ----------------------------------------------------------------------------
 nav = [
     { "数学" = [
         { "随机事件和概率" = "math/random-event-and-probability.md" },
@@ -635,4 +499,136 @@ nav = [
         { "合约交易" = "finance/future.md" },
         { "K线" = "finance/k.md" },
     ]},
+]
+
+[project.theme]
+language = "zh"
+custom_dir = "overrides"
+variant = "modern"
+favicon = "https://cdn.ricolxwz.cn/favicon-black-mc-be1517f676f6767b821a61dee1fe0de1.svg"
+
+features = [
+    "content.code.annotate",
+    "content.code.copy",
+    "content.code.select",
+    "content.tabs.link",
+    "content.footnote.tooltips",
+    "content.tooltips",
+    "content.action.edit",
+    "content.action.view",
+    "navigation.tabs",
+    "navigation.sections",
+    "navigation.expand",
+    "navigation.indexes",
+    "navigation.top",
+    "navigation.tracking",
+    "navigation.path",
+    "search.suggest",
+    "search.highlight",
+    "search.share",
+    "announce.dismiss",
+]
+
+# Palette toggle for automatic mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+# Palette toggle for light mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+# Palette toggle for dark mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
+
+[project.extra]
+generator = false
+
+[[project.extra.social]]
+icon = "fontawesome/mug-hot-solid"
+link = "https://buymeacoffee.com/ricolxwz"
+[[project.extra.social]]
+icon = "fontawesome/compass-solid"
+link = "https://ricolxwz.cc"
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/ricolxwz"
+[[project.extra.social]]
+icon = "fontawesome/telegram-brands-solid"
+link = "https://t.me/ricolxwz"
+[[project.extra.social]]
+icon = "fontawesome/at-solid"
+link = "mailto:ricol.xwz@outlook.com"
+[[project.extra.social]]
+icon = "fontawesome/rss-solid"
+link = "https://note.ricolxwz.cc/feed_rss_created.xml"
+
+[markdown]
+extensions = [
+  "meta",
+  "pymdownx.inlinehilite",
+  "pymdownx.snippets",
+  "pymdownx.superfences",
+  "pymdownx.details",
+  "pymdownx.critic",
+  "pymdownx.caret",
+  "pymdownx.keys",
+  "pymdownx.mark",
+  "pymdownx.tilde",
+  "pymdownx.magiclink",
+  "pymdownx.b64",
+  "pymdownx.betterem",
+  "pymdownx.blocks.definition",
+  "pymdownx.blocks.html",
+  "pymdownx.blocks.caption",
+  "pymdownx.escapeall",
+  "pymdownx.striphtml",
+  "pymdownx.fancylists",
+  "pymdownx.progressbar",
+  "pymdownx.saneheaders",
+  "pymdownx.smartsymbols",
+  "admonition",
+  "abbr",
+  "attr_list",
+  "md_in_html",
+  "footnotes",
+  "def_list",
+  "tables",
+  "toc"
+]
+
+[markdown.extensions_config.toc]
+permalink = true
+title = "目录"
+
+[markdown.extensions_config.pymdownx-arithmatex]
+generic = true
+
+[markdown.extensions_config.pymdownx-highlight]
+anchor_linenums = false
+guess_lang = false
+linenums = false
+default_lang = "python"
+
+[markdown.extensions_config.pymdownx-tabbed]
+alternate_style = true
+
+[markdown.extensions_config.pymdownx-tasklist]
+custom_checkbox = true
+
+[markdown.extensions_config.pymdownx-emoji]
+emoji_index = "material.extensions.emoji.twemoji"
+emoji_generator = "material.extensions.emoji.to_svg"
+
+[markdown.extensions_config.pymdownx-emoji.options]
+custom_icons = [
+    "overrides/.icons"
 ]
