@@ -100,7 +100,7 @@
 }
 
 .md-tabs {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 0px solid rgba(255, 255, 255, 0.2);
 }
 
 /* 设置katex样式 */
