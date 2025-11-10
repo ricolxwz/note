@@ -13,7 +13,7 @@ comments: true
 
 <div class="grid cards" markdown>
 
--   :aff-wise:{ .lg .middle } __Wise 国际汇款__
+-   __Wise 国际汇款__
 
     ---
 
@@ -21,7 +21,7 @@ comments: true
 
     [:octicons-arrow-right-24: 前往注册](https://wise.com/invite/dic/wenzex)
 
--   :material-server:{ .lg .middle } __DMIT 高性能主机__
+-   __DMIT 高性能主机__
 
     ---
 
