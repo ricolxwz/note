@@ -11,10 +11,22 @@ comments: true
 
 欢迎使用我的邀请码注册各类服务:
 
-- Wise
-    - 介绍: Wise是一家国际汇款服务商, 提供低手续费和实时汇率的跨境汇款服务. 在基本上每个国家和地区都给你一个 **当地** 银行账号, 例如新加坡, 英国, 澳洲, 欧洲, 美国等, 可以用来给券商出入金, 在自己的同名账户之间转账.
-    - 优惠: 免费获取一笔金额高达US$600的免手续费汇款机会
-    - 注册链接: https://wise.com/invite/dic/wenzex
-- DMIT
-    - 介绍: Dmit是一个虚拟主机平台, 提供高性能的VPS主机, 适合搭建代理服务器, 提供CN2 GIA, CMIN2等高端线路. 建议购买洛杉矶Pro机房, 对于电信用户比较稳定.
-    - 注册链接: https://www.dmit.io/aff.php?aff=11247
+<div class="grid cards" markdown>
+
+-   :aff-wise:{ .lg .middle } __Wise 国际汇款__
+
+    ---
+
+    Wise提供低手续费的国际汇款, 并为你开设多国本地银行账户, 方便给券商出入金或同名转账. 新用户可享高达US$600的免手续费汇款.
+
+    [:octicons-arrow-right-24: 前往注册](https://wise.com/invite/dic/wenzex)
+
+-   :material-server:{ .lg .middle } __DMIT 高性能主机__
+
+    ---
+
+    DMIT提供高性能VPS主机, 拥有CN2 GIA, CMIN2等优质线路, 适合搭建代理或网站. 推荐洛杉矶Pro机房, 对电信用户很稳定.
+
+    [:octicons-arrow-right-24: 前往注册](https://www.dmit.io/aff.php?aff=11247)
+
+</div>
