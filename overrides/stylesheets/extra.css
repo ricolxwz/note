@@ -46,6 +46,12 @@
     --md-banner-color: var(--md-typeset-color);
 }
 
+/* 设置左边的sidebar中的item上下间距不要太宽 */
+.md-nav__link {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
 /* 设置页脚和返回按钮主题 */
 .md-top {
     backdrop-filter: blur(20px);
