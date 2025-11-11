@@ -13,7 +13,7 @@ comments: true
 
 <div class="grid cards" markdown>
 
--   __Wise 国际汇款__
+-   <img src="https://cdn.brandfetch.io/idk6fxo1w1/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1714558173299"/>
 
     ---
 
@@ -21,12 +21,12 @@ comments: true
 
     [:octicons-arrow-right-24: 前往注册](https://wise.com/invite/dic/wenzex)
 
--   __DMIT 高性能主机__
+-   <img src="https://cdn.brandfetch.io/idcopfO_tZ/w/360/h/192/theme/dark/logo.png?c=1bxid64Mup7aczewSAYMX&t=1736635935107"/>
 
     ---
 
-    DMIT提供高性能VPS主机, 拥有CN2 GIA, CMIN2等优质线路, 适合搭建代理或网站. 推荐洛杉矶Pro机房, 对电信用户很稳定.
+    币安是全球最大的加密货币交易所, 提供丰富的币种和交易对, 适合进行数字资产的买卖和投资. 通过邀请链接注册, 入金并交易, 有机会获得最高25 USDT的盲盒奖励.
 
-    [:octicons-arrow-right-24: 前往注册](https://www.dmit.io/aff.php?aff=11247)
+    [:octicons-arrow-right-24: 前往注册](https://www.maxweb.red/referral/mystery-box/anmbrc25/claim?ref=1162258099)
 
 </div>
