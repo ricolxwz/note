@@ -1,5 +1,5 @@
 ---
-title: 数据库:考点
+title: 考点
 comments: true
 ---
 

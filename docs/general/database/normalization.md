@@ -1,5 +1,5 @@
 ---
-title: 数据库:规范化
+title: 规范化
 comments: true
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: k8s:命令
+title: 命令
 comments: true
 ---
 

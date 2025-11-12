@@ -1,5 +1,5 @@
 ---
-title: 随机算法:反随机化
+title: 反随机化
 comments: true
 ---
 

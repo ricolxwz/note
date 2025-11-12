@@ -1,5 +1,5 @@
 ---
-title: 数据库:应用开发
+title: 应用开发
 comments: true
 ---
 

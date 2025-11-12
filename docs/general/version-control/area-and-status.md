@@ -1,5 +1,5 @@
 ---
-title: 版本控制:区域和状态
+title: 区域和状态
 comments: true
 ---
 

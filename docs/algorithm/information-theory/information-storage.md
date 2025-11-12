@@ -1,5 +1,5 @@
 ---
-title: 信息论:信息存储
+title: 信息存储
 comments: true
 ---
 
@@ -21,7 +21,7 @@ comments: true
 
 整个过去状态对未来的贡献可以被表示为$A_X = \lim_{k\rightarrow \infty}I(\bm{X}_n^{(k)};X_{n+1})$, 其中$\bm{X}_n^{(k)}=\{X_{n-k+1}, ..., X_{n-1}, X_n\}$, 表示过去的$k$个状态, $k$趋近于无穷大表示我们考虑的是整个过去的状态, 最终得到的互信息表示的就是整个过去状态对未来的贡献. 或者也可以写为$k$个过去状态对未来的贡献, 这个时候$k$就不是趋近于无穷了, 是一个值, $A_X(k)=I(\bm{X}_n^{(k)};X_{n+1})$.
 
-$A_X$还可以表示为$A_X=H(X_{n+1})-H_{\mu X}$, 其中, $H_{\mu X}$是[熵率](/general/information-theory/information-processing/#entropy-rate), 表示的是每个时间步所带来的平均熵, 或者说是单位块长度的熵增量; $H(X_{n+1})$表示的是对未来状态的全部不确定性. 这个公式可以理解为去掉预测的不确定性后, 所带来的信息增益.
+$A_X$还可以表示为$A_X=H(X_{n+1})-H_{\mu X}$, 其中, $H_{\mu X}$是[熵率](/algorithm/information-theory/information-processing/#entropy-rate), 表示的是每个时间步所带来的平均熵, 或者说是单位块长度的熵增量; $H(X_{n+1})$表示的是对未来状态的全部不确定性. 这个公式可以理解为去掉预测的不确定性后, 所带来的信息增益.
 
 $A_X(k)$可以表示在有限的历史长度$k$下, 当前状态对未来状态的预测能力的平均值, 还可以被表示为$A_X(k)=<\log_2 (\frac{p(x_{n+1}|x_n^{(k)})}{p(x_{n+1})})>$, 其中$a_X(k)=\log_2 (\frac{p(x_{n+1}|x_n^{(k)})}{p(x_{n+1})})$, 表示的是在特定过去状态$x_n^{(k)}$下, 对未来状态$x_{n+1}$的贡献(pointwise).
 
@@ -52,13 +52,13 @@ Ragwitz准则用于最小化系统预测的误差.
 
 #### 最大化偏差矫正的AIS
 
-这种思想其实和[统计性检验](/general/information-theory/statistical-significance/#significance-test)那里的思想差不多.
+这种思想其实和[统计性检验](/algorithm/information-theory/statistical-significance/#significance-test)那里的思想差不多.
 
 公式为$A_X' =A_X-<A_X^S>$. 其中, $A_X$表示的是AIS的原始值, $A_X^S$是一种替代值, 通过打破过去和未来之间的关系生成, $<A_X^S>$是多个替代值的平均. 通过减去这些替代值的平均, 可以消除由高纬度和复杂性带来的偏差, 最大化得到的偏差矫正后的AIS. 我们可以通过在不同的历史长度和延迟组合下计算偏差矫正的AIS, 选择能够最大化$A'_X$的参数的组合.
 
 ???+ tip "Tip"
 
-    [KSG估计器](/general/information-theory/estimator/#ksg). 已经内置了偏差矫正功能, 因此使用的时候无需额外矫正.
+    [KSG估计器](/algorithm/information-theory/estimator/#ksg). 已经内置了偏差矫正功能, 因此使用的时候无需额外矫正.
 
 #### 非均匀嵌入
 

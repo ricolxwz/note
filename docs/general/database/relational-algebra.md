@@ -1,5 +1,5 @@
 ---
-title: 数据库:关系代数
+title: 关系代数
 comments: true
 ---
 

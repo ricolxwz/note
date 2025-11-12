@@ -1,5 +1,5 @@
 ---
-title: 版本控制:LFS
+title: LFS
 comments: true
 ---
 

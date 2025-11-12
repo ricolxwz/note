@@ -1,5 +1,5 @@
 ---
-title: 信息论:绪论
+title: 绪论
 comments: true
 ---
 
@@ -45,32 +45,32 @@ comments: true
 |大作业1|考试周(11月11日)|✅|||
 
 ### 惩罚措施
- 
-没有特殊情况不接受迟交小评估和汇报, 所有的作业若因为特殊情况迟交的话应该重做. 
+
+没有特殊情况不接受迟交小评估和汇报, 所有的作业若因为特殊情况迟交的话应该重做.
 
 ### 课程内容
 
 |周数|主题|
 |-|-|
-|第一周|[不确定性和熵](/general/information-theory/uncertainty-and-entropy)|
-|第二周|[不确定性和熵](/general/information-theory/uncertainty-and-entropy)|
-|第三周|[什么是信息](/general/information-theory/what-is-information)|
-|第四周|[什么是信息](/general/information-theory/what-is-information)|
-|第五周|[JIDT](/general/information-theory/jidt)|
-|第六周|[估计器](/general/information-theory/estimator)|
-|第七周|[统计显著性](/general/information-theory/statistical-significance)|
-|第八周|[自组织](/general/information-theory/self-organisation)|
-|第九周|[信息处理](/general/information-theory/information-processing)|
-|第十周|[信息存储](/general/information-theory/information-storage)|
-|第十一周|[信息传递](/general/information-theory/information-transfer)|
-|第十二周|[有效网络推断](/general/information-theory/effective-network-inference)|
+|第一周|[不确定性和熵](/algorithm/information-theory/uncertainty-and-entropy)|
+|第二周|[不确定性和熵](/algorithm/information-theory/uncertainty-and-entropy)|
+|第三周|[什么是信息](/algorithm/information-theory/what-is-information)|
+|第四周|[什么是信息](/algorithm/information-theory/what-is-information)|
+|第五周|[JIDT](/algorithm/information-theory/jidt)|
+|第六周|[估计器](/algorithm/information-theory/estimator)|
+|第七周|[统计显著性](/algorithm/information-theory/statistical-significance)|
+|第八周|[自组织](/algorithm/information-theory/self-organisation)|
+|第九周|[信息处理](/algorithm/information-theory/information-processing)|
+|第十周|[信息存储](/algorithm/information-theory/information-storage)|
+|第十一周|[信息传递](/algorithm/information-theory/information-transfer)|
+|第十二周|[有效网络推断](/algorithm/information-theory/effective-network-inference)|
 
 ### 备注
 
 - 这是一个翻转课堂模式. 在参加研讨会之前, 需要完成预习工作, 包括阅读指定的材料, 观看视频讲座, 并至少阅读各种教程任务. 研讨会的主要目的是帮助学生解决问题, 解答对讲座材料的疑问, 并在有时间的前提下深入讨论解释
 - 可以选择使用Matlab或者Python来完成教程任务. 会根据大多数人的选择来演示相应的工具. 如果选择是少数人使用的工具, 不用担心, 教师团队会提供两种工具的解决方案. 教室里的电脑支持这两种工具, 学生也可以自己携带笔记本电脑, 以确保在同一环境下进行操作
 
-## 总览 
+## 总览
 
 ### 概念
 
@@ -85,11 +85,11 @@ comments: true
 
 #### 低概率状态
 
-低概率状态在系统中出现的概率很低, 但是携带大量信息. 由于这些状态的出现是非常罕见和意外的, 因此信息量较高. 他们在有序系统和无序系统中都有可能出现. 如极端天气事件, 金融市场中的黑天鹅事件等. 
+低概率状态在系统中出现的概率很低, 但是携带大量信息. 由于这些状态的出现是非常罕见和意外的, 因此信息量较高. 他们在有序系统和无序系统中都有可能出现. 如极端天气事件, 金融市场中的黑天鹅事件等.
 
 #### 自组织
 
-自组织指在没有外部控制的情况下, 随着时间的推移, 系统内部秩序的增加. 
+自组织指在没有外部控制的情况下, 随着时间的推移, 系统内部秩序的增加.
 
 #### 涌现
 
@@ -101,4 +101,4 @@ comments: true
 
     "Although they (complex adpative systems) differ widely in their physical attributes, they resemble one another in the way they handle information. That common feature is perhaps the best starting point for exploring how they operate." --- Murray Gell-Mann
 
-尽管复杂系统在具体表现形式上可能千差万别, 如生物系统, 生态系统, 社会系统等. 但它们在信息处理方面具有很多的共性. 系统通过接收, 传递和处理信息来适应环境变化, 进行自我调整和优化. 为了量化和分析这些概念, 信息论提供了有力的工具和方法. 
+尽管复杂系统在具体表现形式上可能千差万别, 如生物系统, 生态系统, 社会系统等. 但它们在信息处理方面具有很多的共性. 系统通过接收, 传递和处理信息来适应环境变化, 进行自我调整和优化. 为了量化和分析这些概念, 信息论提供了有力的工具和方法.

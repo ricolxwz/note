@@ -1,5 +1,5 @@
 ---
-title: 信息论:信息处理
+title: 信息处理
 comments: true
 ---
 

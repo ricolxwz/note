@@ -1,5 +1,5 @@
 ---
-title: 数据库:查询处理
+title: 查询处理
 comments: true
 ---
 

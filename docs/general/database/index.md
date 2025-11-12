@@ -1,5 +1,5 @@
 ---
-title: 数据库:绪论
+title: 绪论
 comments: true
 ---
 
@@ -75,7 +75,7 @@ comments: true
 
 ### 考试
 
-题型: 
+题型:
 
 - 3个MCQ, 6分
 - 9个简答题, 44分

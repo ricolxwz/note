@@ -1,5 +1,5 @@
 ---
-title: 金融:现货
+title: 现货
 comments: true
 ---
 

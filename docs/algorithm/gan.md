@@ -72,7 +72,7 @@ $$\theta_{ML} = \arg \max_{\theta} \sum_{i=1}^{m} \log p_{model}(x^{(i)}; \theta
 
 一种解释最大似然估计的观点是将其看作是最小化训练集上的经验分布$\hat{p}_{data}$和模型分布$p_{model}(x;\theta)$之间的差异, 两者之间的差异程度可以用KL散度来度量, KL散度的含义是分布保留了多少原始分布的信息.
 
-关于KL散度, 在信息论中[提到](/general/information-theory/what-is-information/#KL散度)过.
+关于KL散度, 在信息论中[提到](/algorithm/information-theory/what-is-information/#KL散度)过.
 
 KL散度在这里被定义为$D_{KL}(\hat{p}_{data}||p_{model})=E_{x\sim \hat{p}_{data}}[\log \hat{p}_{data}(x)-\log p_{model}(x)]$. 注意到, 这里的公式其实是和在信息论中所写的公式有一点出入, 这是因为期望和加权求和的等价性.
 

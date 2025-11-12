@@ -1,5 +1,5 @@
 ---
-title: k8s:示例
+title: 示例
 comments: true
 ---
 

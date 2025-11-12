@@ -1,5 +1,5 @@
 ---
-title: 数据库:存储与索引
+title: 存储与索引
 comments: true
 ---
 

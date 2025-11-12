@@ -1,5 +1,5 @@
 ---
-title: 信息论:什么是信息
+title: 什么是信息
 comments: true
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: 数据库:事务
+title: 事务
 comments: true
 ---
 

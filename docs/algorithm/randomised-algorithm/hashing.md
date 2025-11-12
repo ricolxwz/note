@@ -1,5 +1,5 @@
 ---
-title: 随机算法:哈希
+title: 哈希
 comments: true
 ---
 

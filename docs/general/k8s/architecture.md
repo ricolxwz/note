@@ -1,5 +1,5 @@
 ---
-title: k8s:架构
+title: 架构
 comments: true
 ---
 
@@ -15,7 +15,7 @@ k8s的最小单元是pod. pod是容器外的一层抽象, 通常是一些容器�
 
 ### volumes
 
-如果你要你的数据persist, 可以使用k8s提供的volumes, 这个volumes可以是在k8s集群内, 也可以在k8s集群外, 如云端存储. 当pod重启的时候, 你声明的数据就会persist. 
+如果你要你的数据persist, 可以使用k8s提供的volumes, 这个volumes可以是在k8s集群内, 也可以在k8s集群外, 如云端存储. 当pod重启的时候, 你声明的数据就会persist.
 
 ### deployment
 

@@ -346,7 +346,7 @@ $x_n=\frac{x_n-\mu_n}{s_n}$
 
 从图中可以看出, 在过拟合的情况下, 训练集的偏差很小, 方差很大. 在欠拟合的情况下, 训练集的偏差很大, 方差很小.
 
-关于偏差和方差的更详细解释和应用, 请见[估计器](/general/information-theory/estimator).
+关于偏差和方差的更详细解释和应用, 请见[估计器](/algorithm/information-theory/estimator).
 
 ## 正则化[^6] {#regularization}
 

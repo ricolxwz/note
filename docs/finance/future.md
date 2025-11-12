@@ -1,5 +1,5 @@
 ---
-title: 金融:合约
+title: 合约
 comments: true
 ---
 

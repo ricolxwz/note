@@ -1,5 +1,5 @@
 ---
-title: 信息论:不确定性和熵
+title: 不确定性和熵
 comments: true
 ---
 

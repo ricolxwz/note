@@ -1,5 +1,5 @@
 ---
-title: 数据库:高级SQL
+title: 高级SQL
 comments: true
 ---
 

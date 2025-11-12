@@ -1,5 +1,5 @@
 ---
-title: 数据库:关系模型
+title: 关系模型
 comments: true
 ---
 

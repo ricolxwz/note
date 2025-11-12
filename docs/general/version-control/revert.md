@@ -1,5 +1,5 @@
 ---
-title: 版本控制:回退
+title: 回退
 comments: true
 ---
 

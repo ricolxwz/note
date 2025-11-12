@@ -1,5 +1,5 @@
 ---
-title: 金融:交易策略
+title: 交易策略
 comments: true
 ---
 

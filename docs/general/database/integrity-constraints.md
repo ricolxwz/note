@@ -1,5 +1,5 @@
 ---
-title: 数据库:完整性约束
+title: 完整性约束
 comments: true
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: 随机算法:随机性, 概率和算法
+title: 随机性, 概率和算法
 comments: true
 ---
 
@@ -69,4 +69,3 @@ Require: Input array A of size n
 T(n) = c n + \frac{1}{n} \sum_{k=1}^n \Bigl(T(k-1) + T(n-k)\Bigr)
  = c n + \frac{1}{n} \sum_{k=0}^{n-1} T(k) + \frac{1}{n} \sum_{\ell=0}^{n-1} T(\ell)
 =c n + \frac{2}{n} \sum_{k=0}^{n-1} T(k)\), 那么, 怎么才能解出$T(n)=c n + \frac{2}{n} \sum_{k=0}^{n-1} T(k)$呢?
-

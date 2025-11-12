@@ -1,5 +1,5 @@
 ---
-title: 随机算法:最近邻问题
+title: 最近邻问题
 comments: true
 ---
 

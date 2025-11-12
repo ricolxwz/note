@@ -1,5 +1,5 @@
 ---
-title: 信息论:自组织
+title: 自组织
 comments: true
 ---
 

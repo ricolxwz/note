@@ -1,5 +1,5 @@
 ---
-title: 数据库:数据模型
+title: 数据模型
 comments: true
 ---
 

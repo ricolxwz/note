@@ -1,5 +1,5 @@
 ---
-title: 版本控制:账户
+title: 账户
 comments: true
 ---
 
@@ -28,7 +28,7 @@ git config user.email <useremail>
 
 注意, 这里设置的邮箱和用户名仅仅影响的是提交记录中的作者信息, 不会影响代码克隆/推送等操作的时候用到的Git账户, 克隆/推送等时候用到的Git账户完全由SSH配置时候的密钥和Host和仓库名决定.
 
-如我现在要以`wexu0327`的身份克隆`ricolxwz`下的`5318`仓库. 首先, 必须确认`wexu0327`拥有`ricolxwz`的`5318`仓库的访问权. 然后, 使用`wexu0327`的私钥`~/.ssh/id_ed25519_2`和`github.com`服务器建立连接, 然后, 再克隆仓库: `git clone gh2:ricolxwz/5318.git`. 这个时候, 我们可以在克隆好的`5318`仓库内设置Git邮箱用户名: 
+如我现在要以`wexu0327`的身份克隆`ricolxwz`下的`5318`仓库. 首先, 必须确认`wexu0327`拥有`ricolxwz`的`5318`仓库的访问权. 然后, 使用`wexu0327`的私钥`~/.ssh/id_ed25519_2`和`github.com`服务器建立连接, 然后, 再克隆仓库: `git clone gh2:ricolxwz/5318.git`. 这个时候, 我们可以在克隆好的`5318`仓库内设置Git邮箱用户名:
 
 ```bash
 git config user.name wenzexu # 可以注意到, Git账户名是和Github账户名两个完全不同的概念
@@ -37,7 +37,7 @@ git config user.email ricol.xwz@hotmail.com
 
 ## 配置Git-SSH
 
-Git-SSH是建立在SSH之上的一种加密通讯方式, 它的底层使用的是SSH, 但是在上层有所不同. 
+Git-SSH是建立在SSH之上的一种加密通讯方式, 它的底层使用的是SSH, 但是在上层有所不同.
 
 ### 原理
 

@@ -1,5 +1,5 @@
 ---
-title: 版本控制:添加和提交
+title: 添加和提交
 comments: true
 ---
 

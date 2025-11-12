@@ -1,5 +1,5 @@
 ---
-title: 随机算法:线性规划
+title: 线性规划
 comments: true
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: 数据库:SQL课程
+title: SQL课程
 comments: true
 ---
 
