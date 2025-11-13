@@ -68,3 +68,36 @@ sego类的字体可以通过wefount-给定字体切换, msyh类和其他的一�
 只要把ttf放到assets文件夹里就行了. 之后在body等标签里面使用font-family: "maplefont";就行了. 还有一种应用是直接用存储在它文件夹下的字体的, 这种直接使用weifont把它的字体替换掉就行了.
 
 一般Electron应用更新后字体会被覆盖, 需要重新替换字体.
+
+### 长桥专业版
+
+```
+asar extract app.asar app
+```
+
+```css
+/* 放在最前面 */
+@import url("https://fontsapi.zeoseven.com/442/main/result.css");
+body {
+    font-family: "Maple Mono NF CN" !important;
+}
+pre {
+    font-family: "Maple Mono NF CN" !important;
+}
+.va .crypto-text {
+    font-family: Crypto, "Maple Mono NF CN" !important;
+}
+```
+
+
+```css
+/* 放在最前面 */
+@import url("https://fontsapi.zeoseven.com/442/main/result.css");
+.login-wrap .login-content {
+    font-family: "Maple Mono NF CN" !important;
+}
+```
+
+```
+asar pack app app.asar
+```
