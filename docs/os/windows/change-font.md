@@ -84,3 +84,7 @@ asar extract app.asar app
 ```
 asar pack app app.asar
 ```
+
+!!! note "tradingview修改字体"
+
+    找到`TradingView.widget`代码或者`tvWidget = new`代码所在地, 然后再属性中加上`custom_font_family: "[电脑本地字体]"`.
