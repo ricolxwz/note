@@ -88,3 +88,5 @@ asar pack app app.asar
 !!! note "tradingview修改字体"
 
     找到`TradingView.widget`代码或者`tvWidget = new`代码所在地, 然后再属性中加上`custom_font_family: "[电脑本地字体]"`. 例如: `custom_font_family: "Maple Mono Normal NL NF CN"`.
+
+    其实上述方法只能修改刻度上的字体, 其他的比如说标题在windows下用的是`Trebuchet MS`, 在苹果下用的是`-apple-system, BlinkMacSystemFont`, 我们只需要将所有文件中`-apple-system`替换为`"Maple Mono Normal NL NF CN"`即可.
