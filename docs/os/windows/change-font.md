@@ -53,3 +53,16 @@ sego类的字体可以通过wefount-给定字体切换, msyh类和其他的一�
 ## 替换
 
 转换好想要的字体后, 重启进入Bios, 启动WePE, 然后将准备好的字体拷贝到Fonts文件夹里. 重启, 就可以了.
+
+## 修改应用字体
+
+就目前来讲, Electron应用可以用asar解包app.asar, 然后修改dist/renderer/assets里面的css文件(可以打开那个文件夹, 然后用全局搜索font-family), 找到body等标签的font-family修改. 注意, 字体可以添加为:
+
+```css
+@font-face {
+    font-family: "maplefont";
+    src: url('./MapleMonoNormalNL-NF-CN-Regular.ttf') format('truetype');
+}
+``
+
+只要把ttf放到assets文件夹里就行了. 之后在body等标签里面使用font-family: "maplefont";就行了. 还有一种应用是直接用存储在它文件夹下的字体的, 这种直接使用weifont把它的字体替换掉就行了.
