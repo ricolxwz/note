@@ -69,8 +69,6 @@ sego类的字体可以通过wefount-给定字体切换, msyh类和其他的一�
 
 一般Electron应用更新后字体会被覆盖, 需要重新替换字体.
 
-### 长桥专业版
-
 ```
 asar extract app.asar app
 ```
@@ -78,22 +76,7 @@ asar extract app.asar app
 ```css
 /* 放在最前面 */
 @import url("https://fontsapi.zeoseven.com/442/main/result.css");
-body {
-    font-family: "Maple Mono NF CN" !important;
-}
-pre {
-    font-family: "Maple Mono NF CN" !important;
-}
-.va .crypto-text {
-    font-family: Crypto, "Maple Mono NF CN" !important;
-}
-```
-
-
-```css
-/* 放在最前面 */
-@import url("https://fontsapi.zeoseven.com/442/main/result.css");
-.login-wrap .login-content {
+* {
     font-family: "Maple Mono NF CN" !important;
 }
 ```
