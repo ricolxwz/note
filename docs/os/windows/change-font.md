@@ -63,7 +63,7 @@ sego类的字体可以通过wefount-给定字体切换, msyh类和其他的一�
     font-family: "maplefont";
     src: url('./MapleMonoNormalNL-NF-CN-Regular.ttf') format('truetype');
 }
-``
+```
 
 只要把ttf放到assets文件夹里就行了. 之后在body等标签里面使用font-family: "maplefont";就行了. 还有一种应用比如富途牛牛是直接用存储在它文件夹下的字体的, 这种直接使用weifont把它的字体替换掉就行了.
 
