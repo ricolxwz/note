@@ -525,6 +525,7 @@ nav = [
         { "长桥" = "aff/longbridge.md" },
         { "币安" = "aff/binance.md" },
         { "Wise" = "aff/wise.md" },
+        { "moomoo" = "aff/moomoo.md" }
     ]},
 ]
 
