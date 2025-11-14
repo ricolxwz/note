@@ -1,5 +1,6 @@
 ---
 title: Wise
+description: Wise国际汇款服务注册邀请
 comments: true
 ---
 

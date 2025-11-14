@@ -1,5 +1,6 @@
 ---
 title: Binance
+description: 币安加密货币交易平台注册邀请
 comments: true
 ---
 
