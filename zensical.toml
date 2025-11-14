@@ -520,6 +520,7 @@ nav = [
         { "交易策略" = "finance/proxy.md" },
         { "现货交易" = "finance/spot.md" },
         { "合约交易" = "finance/future.md" },
+        { "基本面分析" = "finance/fundamental-analysis.md" }
     ]},
     { "推荐" = [
         { "长桥" = "aff/longbridge.md" },
