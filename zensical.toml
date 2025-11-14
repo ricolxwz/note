@@ -521,6 +521,11 @@ nav = [
         { "现货交易" = "finance/spot.md" },
         { "合约交易" = "finance/future.md" },
     ]},
+    { "推荐" = [
+        { "长桥" = "aff/longbridge.md" },
+        { "币安" = "aff/binance.md" },
+        { "Wise" = "aff/wise.md" },
+    ]},
 ]
 
 [project.theme]
