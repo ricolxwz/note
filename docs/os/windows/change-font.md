@@ -14,18 +14,18 @@ comments: true
 
 核心要替换的字体包含:
 
-- segoeuil.ttf: Light
-- seguili.ttf: Light Italic
-- segoeuisl.ttf: SemiLight
-- seguisli.ttf: SemiLight Italic
+- segoeuil.ttf: Light -> ExtraLight
+- seguili.ttf: Light Italic -> ExtraLight Italic
+- segoeuisl.ttf: SemiLight -> Light
+- seguisli.ttf: SemiLight Italic -> Light Italic
 - segoeui.ttf: Regular
 - segoeuii.ttf: Italic
 - seguisb.ttf: SemiBold
 - seguisbi.ttf: SemiBold Italic
 - segoeuib.ttf: Bold
 - segoeuiz.ttf: Bold Italic
-- seguibl.ttf: Black
-- seguibli.ttf: Black Italic
+- seguibl.ttf: Black -> ExtraBold
+- seguibli.ttf: Black Italic -> ExtraBold Italic
 - SegUIVar.ttf: 根据不同的屏幕分辨率和尺寸调整动态字形
 - seguihis.ttf: 不再使用但是对学者和历史爱好者有研究价值的文字
 - msyh.ttc: Regular
@@ -36,6 +36,10 @@ comments: true
 - msyhbd.ttc: Bold
 - consolas: VSCode某些插件如debuggy会使用这个字体
 - WeiFont推荐的其他字体
+- segoepr: Regular
+- segoeprb: Bold
+- segoesc: Regular
+- segoescb: Bold
 
 不需要替换的字体包含:
 
