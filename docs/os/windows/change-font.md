@@ -12,7 +12,7 @@ comments: true
 
 ## 核心要替换的字体
 
-核心要替换的字体包含:
+核心要替换的字体包含 (->右侧为Maple Font中的对应字重):
 
 - segoeuil.ttf: Light -> ExtraLight
 - seguili.ttf: Light Italic -> ExtraLight Italic
@@ -26,8 +26,8 @@ comments: true
 - segoeuiz.ttf: Bold Italic
 - seguibl.ttf: Black -> ExtraBold
 - seguibli.ttf: Black Italic -> ExtraBold Italic
-- SegUIVar.ttf: 根据不同的屏幕分辨率和尺寸调整动态字形
-- seguihis.ttf: 不再使用但是对学者和历史爱好者有研究价值的文字
+- SegUIVar.ttf: Regular, 根据不同的屏幕分辨率和尺寸调整动态字形
+- seguihis.ttf: Regular, 不再使用但是对学者和历史爱好者有研究价值的文字
 - msyh.ttc: Regular
 - msyhhIt.ttc: Italic
 - msyhIt.ttc: Light Italic
