@@ -29,8 +29,8 @@ comments: true
 - SegUIVar.ttf: Regular, 根据不同的屏幕分辨率和尺寸调整动态字形
 - seguihis.ttf: Regular, 不再使用但是对学者和历史爱好者有研究价值的文字
 - msyh.ttc: Regular
-- msyhhIt.ttc: Italic
-- msyhIt.ttc: Light Italic
+- msyhlIt.ttc: Light Italic
+- msyhIt.ttc: Italic
 - msyhbdIt.ttc: Bold Italic
 - msyhl.ttc: Light
 - msyhbd.ttc: Bold
