@@ -150,7 +150,8 @@ nav = [
             { "链路层2" = "https://share.ricolxwz.download/471a64334f64a98f8e38ff078072f52c.pdf" },
             { "应用层1" = "https://share.ricolxwz.download/bff6df81e91eb87dde486bfc7a7f7510.pdf" },
             { "应用层2&网络安全1" = "https://share.ricolxwz.download/4cdac29c705c2bb3ff82d9f46aa1d2a2.pdf" },
-            { "网络安全2" = "general/network/security2.md" }
+            { "网络安全2" = "general/network/security2.md" },
+            { "复习" = "general/network/review.md" }
     ]}
     ]},
     { "算法" = [
