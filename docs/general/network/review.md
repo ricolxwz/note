@@ -239,7 +239,7 @@ IPv4过度到IPv6: 互联网太大了, 我们不可能命令全世界所有人�
 
 第一件事情: 每个节点会周期性地向网络中的所有节点发送Link State Advertisement(LSA), 里面包含它的邻居列表和到每个邻居的链路代价. 每个节点收到LSA后, 会更新自己的拓扑数据库, 并将这个LSA转发给其他节点(除了发送者). 这样, 所有节点最终都会得到一张完整的网络拓扑图. 这个叫做flooding(泛洪).
 
-第二件事情: 每个节点使用Dijkstra算法计算出从自己到所有其他节点的最短路径. 见PPT16-26🌟🌟
+第二件事情: 每个节点使用Dijkstra算法计算出从自己到所有其他节点的最短路径. 见PPT16-26🌟🌟. 核心思想就是找到离当前的tree的只差一条的节点中离origin最近的节点, 加入tree.
 
 对链路故障的反应: 当网络中的一条链路断开的时候, 路由器会立即将该链路的距离设置为无穷大, 并向全网广播一个更新信息, 所有路由器收到这个消息之后, 会立即更新自己的链路数据库, 并重新计算最短路径, 这个恢复过程非常迅速. 为了防止过时的更新信息造成的干扰, 每个更新包都会加上一个时间戳序号, 路由器只处理比自己记录更新的信息.
 
@@ -261,3 +261,17 @@ IPv4过度到IPv6: 互联网太大了, 我们不可能命令全世界所有人�
 - $D_5 = \min\{4+D_2, 3+D_4, 2\}$
 
 列出上面的这些等式之后, 我们就可以开始算法, 这是一个消息传播的过程. 详情见36-40. 我们的目标就是要一直迭代, 直到上面等式中的所有部分都被解出.
+
+对链路故障的反应: 链路故障后, 收到影响的节点会排除那条链路(也就是从Bellman-Ford等式中去掉那条链路对应的项), 然后重新计算距离. 这样可能导致一个问题, 叫做counting to infinity problem, 例如下图:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/39eda786eaa2501074922f36522f54f6.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/39eda786eaa2501074922f36522f54f6_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+可以通过毒性反转来解决这个问题, 也就是节点B告诉节点A: "去往节点Z的最佳路径是经过我. "节点A收到后, 更新了自己的路由表. 当节点A向邻居B广播路由表时, 它会特意包含一条去往Z的路由, 但成本(metric)设置为无穷大(例如, 在RIP协议中是16). 这样, B收到信息后就会明确知道: "绝对不能通过A去往Z. "
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/f17757f42ef1b99b52bf1e701862183c.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/f17757f42ef1b99b52bf1e701862183c_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
