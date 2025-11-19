@@ -246,3 +246,18 @@ IPv4过度到IPv6: 互联网太大了, 我们不可能命令全世界所有人�
 在一个有 n 个节点的网络中, 其基础实现的复杂度是 O(n²), 因为每次迭代都需要检查所有节点.
 
 #### Distance Vector算法
+
+这个算法的精髓就是要列出$n$的距离等式. 例如: 对于下图这样的网络, 我们有:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/7cb2090c10a7ae298eb54608569cd87a.webp#only-light){ loading=lazy width='400' }
+![](https://img.ricolxwz.cn/7cb2090c10a7ae298eb54608569cd87a_inverted.webp#only-dark){ loading=lazy width='400' }
+</figure>
+
+- $D_1 = \min\{3+D_2, 2+D_3, 5+D_4\}$
+- $D_2 = \min\{3+D_1, 1+D_4, 4+D_5\}$
+- $D_3 = \min\{2+D_1, 2+D_4, 1\}$
+- $D_4 = \min\{5+D_1, 1+D_2, 2+D_3, 3+D_5\}$
+- $D_5 = \min\{4+D_2, 3+D_4, 2\}$
+
+列出上面的这些等式之后, 我们就可以开始算法, 这是一个消息传播的过程. 详情见36-40. 我们的目标就是要一直迭代, 直到上面等式中的所有部分都被解出.
