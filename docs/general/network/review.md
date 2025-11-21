@@ -716,3 +716,63 @@ Web 缓存(通常是代理服务器)的目标是: 在不访问源服务器的情
 #### 条件化GET
 
 条件 GET 的目标是: 如果客户端(或代理缓存)中已经有了最新的版本, 就不要重复发送整个对象.  这样做可以: 消除不必要的文件传输延迟. 降低网络链路的带宽占用. 
+
+### DNS
+
+DNS 是一个分布式, 分层的数据库系统, 同时也是一个应用层协议. 它的核心功能是将人类易于记忆的域名(如 www.google.com)解析为机器可以识别的 IP 地址(如 142.251.42.228), 反之亦然. 你可以把它想象成互联网的"电话簿". 
+
+DNS不使用集中的服务器是为了避免以下问题: 
+
+- 单点故障: 如果唯一的中央服务器宕机, 整个互联网的域名解析服务就会瘫痪. 
+- 访问延迟: 全球用户访问一个中心点, 距离远的用户延迟会很高. 
+- 可扩展性差: 单一服务器难以处理全球海量的查询请求. 
+
+除了最核心的主机名到IP的转换之外, DNS还提供:
+
+- 主机别名 (Host Aliasing): 允许一个主机拥有多个域名. 
+- 邮件服务器别名 (Mail Server Aliasing): 为域名指定邮件服务器. 
+- 负载均衡 (Load Distribution): 将一个域名解析到多个不同的 IP 地址, 从而将访问流量分散到多个服务器上, 提高网站的可用性. 
+
+#### 层级结构
+
+- 本地DNS服务器: 这是上网接触的第一台DNS服务器, 它会缓存最近查询过的域名-IP映射记录, 以加快后续查询速度. 如果缓存中没有记录, 它会代替你的电脑, 向互联网的其他DNS服务器发起查询. 
+- 根DNS服务器: 根DNS服务器位于层级结构的顶端, 全球一共有13个逻辑根服务器(实际有数百台物理服务器). 它们知道所有顶级域 (TLD, 如 .com, .org, .net) 的位置.
+- 顶级域DNS服务器 (TLD DNS Servers): 这些服务器负责管理特定顶级域下的所有二级域名. 例如, .com 顶级域的 TLD 服务器知道所有以 .com 结尾的域名的权威DNS服务器的位置.
+- 权威DNS服务器 (Authoritative DNS Servers): 这些服务器存储了特定域名的最终IP地址映射记录. 当查询到达权威DNS服务器时, 它会返回该域名对应的IP地址.
+
+#### 查询方式🌟
+
+DNS的查询方式可以分为迭代和递归. 
+
+iterated query:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/170a656280e185ea327e2127493c0cf5.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.cn/170a656280e185ea327e2127493c0cf5_inverted.webp#only-dark){ loading=lazy width='300' }
+</figure>
+
+recursive query:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/5070897cb376e393cbde4ecbe72bc409.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.cn/5070897cb376e393cbde4ecbe72bc409_inverted.webp#only-dark){ loading=lazy width='300' }
+</figure>
+
+#### 缓存
+
+为了提高效率, 任何 DNS 服务器在获得一次查询结果后, 都会将其缓存起来. 
+
+- 目的: 下次再有相同的请求时, 可以直接从缓存中返回结果, 无需再走一遍完整的查询流程, 从而大大加快速度并减少网络流量. 
+- TTL (Time To Live, 生存时间): 缓存的记录不会永久保存. 每条记录都有一个 TTL 值, 它决定了这条记录可以在缓存中存放多久. 时间一到, 记录就会被丢弃. 
+- 缺点: 缓存可能导致数据过期 (out-of-date). 如果一个网站更换了 IP 地址, 但全球各地的 DNS 服务器缓存尚未过期, 那么在 TTL 失效前, 用户仍会被导向旧的 IP 地址. 
+
+#### DNS记录
+
+DNS 的核心是其数据库, 数据库中存储的就是各种资源记录 (Resource Records, RR). 每条记录都包含四个主要部分: (名称, 值, 类型, TTL). 
+
+常见的记录类型 (Type) 包括: 
+
+- A 记录 (Type=A): 最常见的记录, 用于将一个主机名 (name) 映射到一个 IPv4 地址 (value). gaia.cs.umass.edu -> 128.119.245.12
+- NS 记录 (Type=NS): 指定某个域 (name) 的权威名称服务器 (value) 是谁. 这是实现 DNS 分层查询的关键. umass.edu -> dns.umass.edu
+- CNAME 记录 (Type=CNAME): 将一个别名 (name) 映射到一个规范名(真正的名字)(value). www.ibm.com -> servereast.backup2.ibm.com
+- MX 记录 (Type=MX): 邮件交换记录, 指定一个域 (name) 的邮件服务器 (value) 是谁. 这决定了发送到 @example.com 的邮件应该被投递到哪台服务器. example.com -> mail.example.com
