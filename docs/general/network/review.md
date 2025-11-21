@@ -345,8 +345,8 @@ AS3会将左侧的这个"other networks"的可达性信息(前缀)通过eBGP从3
 
 | 通信目标 | ARP请求查询的IP地址 | 最终数据帧的目标MAC地址 |
 | :--- | :--- | :--- |
-| **在同一子网** | 目标主机B的IP地址 | 目标主机B的MAC地址 |
-| **在不同子网** | **默认网关R**的IP地址 | **默认网关R**的MAC地址 |
+| 在同一子网 | 目标主机B的IP地址 | 目标主机B的MAC地址 |
+| 在不同子网 | 默认网关R的IP地址 | 默认网关R的MAC地址 |
 
 1. 在同一子网: 假设主机A想给同一网络下的主机B发送数据. A首先会查看自己的ARP缓存表(ARP cache), 看里面有没有记录B的IP地址与MAC地址的对应关系. ARP缓存表像一个临时通讯录, 有时效性(TTL, 通常20分钟), 过期会删除. 如果缓存里没有, A就会向局域网内的所有设备发送一个广播(Broadcast)性质的ARP请求. 这个请求包的目标MAC地址是特殊的 FF:FF:FF:FF:FF:FF, 表示"局域网里的每个人都听一下". 请求的内容是: "谁的IP地址是 137.196.7.23(B的IP)? 请告诉 137.196.7.78(A的IP). "局域网内所有其他设备(除了B)收到请求后, 发现要找的IP不是自己的, 就直接丢弃不管. 主机B收到请求, 发现找的就是自己! 于是它会准备一个ARP响应. 这个响应是单播(Unicast)的, 直接发回给A(因为请求包里有A的IP和MAC地址). 响应内容是: "我是 137.196.7.23, 我的MAC地址是 71-65-F7-2B-08-53. "A收到B的响应后, 就把这个IP-MAC对应关系存入自己的ARP缓存表, 然后就可以愉快地向B的MAC地址发送数据了.
 2. 在不同子网: 假设主机A (111.111.111.111) 要给另一个网络的主机B (222.222.222.222) 发数据. A通过IP地址和子网掩码计算, 发现B和自己不在同一个网络. 因此, A确定, 这包数据必须先发给默认网关R(IP地址为 111.111.111.220). 此时, A需要知道的不是B的MAC地址, 而是默认网关R的MAC地址. A会发送一个ARP广播请求, 内容是: "谁的IP地址是 111.111.111.220(网关的IP)? "网关R收到请求后, 会单播回复自己的MAC地址给A. A现在可以发送数据了. 它会创建一个数据帧(Frame), 其中: 目标IP地址: 仍然是最终目的地 B的IP地址 (222.222.222.222). 目标MAC地址: 是下一跳 网关R的MAC地址. 网关R收到这个数据帧后, 会拆开查看目标IP, 然后根据自己的路由表, 决定下一步该把数据包发给谁, 并重复类似的过程, 直到数据包最终到达B所在的局域网.
@@ -466,4 +466,152 @@ rdt2.1的核心是引入一个序列号, 为每个数据包添加序列号, 如�
 
 ### 高效传输
 
-尽管RDT3.0在逻辑上是正确的, 但是在长距离, 高带宽的线路中, 它的性能非常糟糕. 例如, 假设一个网络的带宽是1 Gbps = 10^9 bits/sec, 单向传播的延迟是15ms, 数据包大小为8000bits, 即1KB, 将数据包推送到链路上需要的时间为8000/10^9=8μs=0.008ms. 传播延迟远大于传输延迟, 这意味着发送方在发送完一个包后, 需要等待很长时间才能收到ACK(30ms), 这段时间链路基本处于闲置状态, 带宽利用率非常低. 利用率 = 0.008ms / 30ms = 0.00027 = 0.027%. 这意味着发送方只有0.03%的时间在发送数据, 其余99.97%的时间都在等待ACK. 所以我们不能直接使用RDT3.0, 必须引入流水线机制.
+尽管RDT3.0在逻辑上是正确的, 但是在长距离, 高带宽的线路中, 它的性能非常糟糕. 例如, 假设一个网络的带宽是1 Gbps = 10^9 bits/sec, 单向传播的延迟是15ms, 数据包大小为8000bits, 即1KB, 将数据包推送到链路上需要的时间为8000/10^9=8μs=0.008ms. 传播延迟远大于传输延迟, 这意味着发送方在发送完一个包后, 需要等待很长时间才能收到ACK(30ms), 这段时间链路基本处于闲置状态, 带宽利用率非常低. 利用率 = 0.008ms / 30ms = 0.00027 = 0.027%. 这意味着发送方只有0.03%的时间在发送数据, 其余99.97%的时间都在等待ACK. 所以我们不能直接使用RDT3.0, 必须引入流水线机制. 如下图所示:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/2fef038ba7678414ec66f1c5c636a8d2.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/2fef038ba7678414ec66f1c5c636a8d2_inverted.webp#only-dark){ loading=lazy width='800' }
+<figcaption>需要的时间是RTT+L/R</figcaption>
+</figure>
+
+为了解决RDT3.0的效率问题, 我们引入流水线技术.  核心概念是发送方不再是一个接一个地停-等, 而是允许发送多个在途且尚未被确认地数据包. 流水线的改进带来两个问题: 
+
+1. 序列号范围必须增加: 因为我们需要确认多个数据包, 所以我们再使用之前那种0和1之间交替的序列.
+2. 缓存: 发送方需要缓存已经发送但是没有确认的包, 接收方可能需要缓存乱序到达的包
+
+解决上述问题, 有两种方式: 
+
+1. GBN
+2. Selective Repeat
+
+| 特性 | Go-Back-N (GBN, 回退 N 步) | Selective Repeat (SR, 选择重传) |
+| :--- | :--- | :--- |
+| 发送窗口 | 最多允许 $N$ 个未确认的包.  | 最多允许 $N$ 个未确认的包.  |
+| 确认机制<br>(ACK) | 累积确认 (Cumulative ACK): <br>接收方发送 `ACK n`, 表示序列号 $n$ 及之前的所有包都已正确收到. <br>如果中间有包丢失, 不会确认后续的包.  | 独立确认 (Individual ACK): <br>接收方对每一个正确收到的包单独发送 ACK. <br>不管顺序如何, 收一个确认一个.  |
+| 接收方缓存 | 不需要缓存乱序包(丢弃乱序包).  | 需要 缓存 乱序到达的包, 这也是其复杂性的来源.  |
+| 计时器 | 发送方只为 最早 的那个未确认包设定一个计时器.  | 发送方为 每一个 未确认的包单独设定计时器.  |
+| 超时重传 | 一旦超时, 重传 所有 (ALL) 已发送但未确认的包. <br>(即使有些包接收方其实收到了, 也要重传, 比较浪费).  | 一旦超时, 只重传 (ONLY) 那个特定的丢失包. <br>(效率更高, 但逻辑更复杂).  |
+
+#### GBN
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/7118829870c6bdcddac77c84788391a1.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/7118829870c6bdcddac77c84788391a1_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+#### Selective Repeat
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/7ac3d35961ae7cbdb07443403b757dbe.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/7ac3d35961ae7cbdb07443403b757dbe_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+### TCP🌟 
+
+TCP的主要特征: 
+
+- 点对点: 一个发送方, 一个接收方
+- 可靠, 有序的字节流: 应用层只要把数据扔进TCP, TCP保证数据不丢, 不乱, 不出错. 
+- 流水线: TCP发送的窗口是动态变化的, 基于拥塞控制和流量控制机制调整窗口大小.
+- 全双工: 数据可以同时在两个方向传输.
+- MSS: 最大报文段长度, 通常是1460字节 (以太网MTU 1500 - IP头20 - TCP头20).
+- 面向连接: 通过三次握手建立连接, 四次挥手断开连接.
+- 流量控制: 使用滑动窗口机制, 避免发送方过快发送数据淹没接收方缓冲区.
+
+#### 序列号和ACK机制
+
+TCP使用序列号 (Sequence Number) 和确认号 (Acknowledgment Number) 来实现可靠传输. 每个字节的数据都有一个唯一的序列号. 发送方在发送数据时, 会为每个数据段分配一个起始序列号. 接收方在收到数据后, 会发送一个确认号, 表示它期望下一个接收的字节的序列号.
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/91098a8728cf9a8fafe536e0fe5f778e.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/91098a8728cf9a8fafe536e0fe5f778e_inverted.webp#only-dark){ loading=lazy width='500' }
+</figure>
+
+#### 重传时间
+
+TCP必须设置一个超时计时器来决定什么时候重传, 但是这个时间比较难确定. 核心问题是因为RTT是波动的, 超时太短会导致不必要的重传, 超时太长会导致丢包后反应太慢, 用户体验差.  解决方案是: 测量从发出报文到收到确认的时间, 作为SampleRTT, 如果发生了重传, 就不要把时间算进去, 单词测量不稳定, TCP会计算一个加权平均的EstimatedRTT: EstimatedRTT = (1 - α) * EstimatedRTT + α * SampleRTT.  有了平均值还不够, 还得考虑安全边际, 这是因为如果网络波动幅度非常大, 安全边际就要留大一点, 我们会计算一个波动幅度(DevRTT): DevRTT = (1 - β) * DevRTT + β * |SampleRTT - EstimatedRTT|.  最后, 我们就可以计算出最终的超时重传时间: TimeoutInterval = EstimatedRTT + 4 * DevRTT.  这里α通常取0.125, β取0.25.
+
+#### 可靠性
+
+这里, TCP总结了GBN, RDT3.0的特性, 衍生出了自己的可靠性传输机制. 它采用的是流水线, 累积确认, 单一重传计时器的结构. 触发重传的条件有两种: 一种是超时; 另一种是重复ACK(快速重传). 但是它和GBN的一个最大的不同就是: TCP允许接收方缓存乱序到达的包, 这样就不会因为一个包丢失而需要发送方重传后续所有包. 举个例子:  包1 丢了, 但是 包2, 3, 4, 5 都成功到达了接收方. 
+
+- 如果是GBN: 接收方收到 包2,3,4,5, 因为没有收到 包1, 它会把 2,3,4,5 全部扔掉(因为它是死板的按序接收), 并不断重复发送 ACK 1. 发送方超时后, 必须重传 1, 2, 3, 4, 5(全部重来). 浪费带宽. 
+- 如果是TCP: 接收方收到 包2,3,4,5, 它会把它们缓存起来, 并重复发送 ACK 1(告诉发送方我还在等1). 发送方超时后, 只重传 包1. 接收方收到重传的 包1 后, 发现 2,3,4,5 已经在缓存里了, 于是直接发送 ACK 6. 节省带宽. 
+
+重传的情况(3种):
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/7dcc923f346712ac05f432d338bf9020.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/7dcc923f346712ac05f432d338bf9020_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/250a988112f848c8f21186a18230e10c.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.cn/250a988112f848c8f21186a18230e10c_inverted.webp#only-dark){ loading=lazy width='300' }
+</figure>
+
+##### 快速重传
+
+超时等待往往很长. 若仅靠超时重传 会延迟恢复. 通过重复ACK检测丢包. 管道化发送使接收方在缺失某段时会对后续乱序段反复回ACK同一序号. 发送方收到3个重复ACK时 认为最小未确认段很可能丢失 不等超时 立即重传该段. 右图示例. 丢失Seq=100的段 后续段到达触发多次ACK=100. 当出现3个重复ACK时发送方立刻重传Seq=100.
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/c39cd1b17729dd1c9bc384be079c8fc5.webp#only-light){ loading=lazy width='300' }
+![](https://img.ricolxwz.cn/c39cd1b17729dd1c9bc384be079c8fc5_inverted.webp#only-dark){ loading=lazy width='300' }
+</figure>
+
+##### 连接管理
+
+TCP连接的建立会经理三次握手的过程.  
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/1904a51a2ffce368aad1808ede320dee.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/1904a51a2ffce368aad1808ede320dee_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+关闭会经历四次挥手的过程.
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/0740b445627c68ee3381e93d4debab1b.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/0740b445627c68ee3381e93d4debab1b_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+##### 流量控制
+
+注意, 流量控制和拥塞控制是不一样的, 
+
+| 场景 | Flow Control (流量控制) | Congestion Control (拥塞控制) |
+| :--- | :--- | :--- |
+| 问题 | 朋友家的车库满了.  | 去朋友家的路上堵车了.  |
+| 原因 | 你的车开得太快, 朋友倒车入库太慢, 车库没空位了.  | 路上车太多了, 高速公路堵死了.  |
+| 为了谁 | 保护 朋友(接收方) 不被挤爆.  | 保护 道路(整个网络) 不瘫痪.  |
+| 谁让你慢 | 朋友直接告诉你: "我家车库满了, 你在门口等会儿".  | 你自己觉察到的: "我看前面不动了/或者交警拦路了", 于是你自己减速.  |
+
+| 特性 | 流量控制 (Flow Control) | 拥塞控制 (Congestion Control) |
+| :--- | :--- | :--- |
+| 保护对象 | 接收方 (Receiver) | 网络 (The Internet/IP Network) |
+| 瓶颈位置 | 接收端的缓冲区 (Receiver Buffer).  | 中间的路由器, 链路 (Routers, Links).  |
+| 控制变量 | rwnd (Receive Window) | cwnd (Congestion Window) |
+| 反馈机制 | 显式通知: 接收方在 ACK 包里明确写着 `rwnd` 的大小.  | 隐式推断: 发送方通过丢包, RTT 变大等迹象, 猜测网络堵了.  |
+| 关注点 | 点对点 (End-to-End) 的处理能力.  | 全局 (Global) 的网络负载.  |
+
+流量控制是通过接收方根据自己的情况在报文中设置一个窗口大小rwnd来实现的. 发送方在发送数据时, 必须确保未被确认的数据量不超过rwnd. 这样可以防止发送方发送过快, 导致接收方缓冲区溢出.
+
+##### 拥塞控制🌟
+
+太多的发送方, 发了太多的数据, 且速度太快, 导致网络处理不过来. 这个和流量控制不同, 流量控制是为了照顾发送方, 而拥塞控制是为了保护网络. 面对拥塞, 网络设计者有两种流派, 一种是端到端拥塞控制, 特点是, 没有来自网络的显示反馈, 路由器不会告诉你我堵了, 发送方自己去猜, 如果你发现丢包了, 或者延迟变大了, 就推断可能有拥塞, 然后自己减速. 传统的TCP/IP协议主要采用这种方式, 因为这样路由器就可以很简单; 另一种是网络辅助拥塞控制, 路由器会主动告诉你拥塞情况, 路由器可能在包里面标记一个bit, 或者直接发消息告诉发送方, 请以X mbps的速度发送. 
+
+拥塞窗口(cwnd)定义了发送方在收到 ACK 之前, 最多能往网络里发多少数据(即"在途数据 / in-flight data"). 公式为LastByteSent−LastByteAcked≤cwnd, 也就是说, 发送方发送的数据量不能超过拥塞窗口的大小.  发送最大速率为: = cwnd / RTT.
+
+TCP的控制算法如下图:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/d38ef22c9283ee59784f6d9da5dcba5f.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/d38ef22c9283ee59784f6d9da5dcba5f_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+TCP丢包有两种情况, 反应的激烈程度不同:
+
+- 情况A: 发出去很久都没回音, 连重复的 ACK 都没有, 说明网络可能断了或者极度拥堵. 直接把 cwnd 重置为 1 MSS. 一切从头开始(重新进入慢启动). 
+- 情况B: 收到3个重复的 ACK, 说明网络只是有点拥堵, 但是还能收到数据.
+    - TCP Tahoe (老版本): 不管三七二十一, 处理方式和超时一样: cwnd 归 1, 重新慢启动. (激进的清零). 
+    - TCP Reno (改进版): 认为网络只是轻微拥塞, 于是把 cwnd 减半 (乘以0.5), 然后进入拥塞避免阶段 (线性增长). 这种方式更温和一些, 避免了频繁的清零.
