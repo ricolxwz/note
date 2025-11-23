@@ -277,7 +277,8 @@ nav = [
             { "大规模优化" = "algorithm/discrete-optimization/lso.md" },
             { "拉格朗日松弛" = "algorithm/discrete-optimization/lr.md" },
             { "最大次模覆盖" = "algorithm/discrete-optimization/msc.md" },
-            { "最小权重次模覆盖" = "algorithm/discrete-optimization/mwsc.md" }
+            { "最小权重次模覆盖" = "algorithm/discrete-optimization/mwsc.md" },
+            { "习题" = "algorithm/discrete-optimization/review.md" }
         ]}
     ]},
     { "代码" = [
