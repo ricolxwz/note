@@ -140,3 +140,7 @@ b) 由于该对偶问题的约束条件很多, 所以属于大规模优化问题
 a) 我们通过边际效应递减来证明, 我们要证明对于$A\subseteq B$, 有$g(A\cup \{x\})-g(A)\geq g(B\cup \{x\})-g(B)$. 写出表达式, $g(S\cup \{x\})-g(S) = \log(f(S\cup \{x\}))-\log(f(S)) = \log(\frac{f(S\cup \{x\})}{f(S)})$, 我们令$f(S\cup \{x\}) = f(S) + \Delta$, 代入, 有$\log(1+\frac{\Delta}{f(S)})$. 那么, 我们实际上要比较的是$\frac{\Delta}{f(S)}$ , 也就是比较$\frac{\Delta_A}{f(A)}$和$\frac{\Delta_B}{f(B)}$. 由于$f$是递增的, 所以$f(B)\geq f(A)$, 因为$f$是次模的, 所以$\Delta_A\geq \Delta_B$, 所以$\frac{\Delta_B}{f(B)}$更小, 所以有$g(A\cup \{x\})-g(A)\geq g(B\cup \{x\})-g(B)$, 所以g满足边际效应递减, 所以g是次模函数. 
 
 b) 其实很简单, 随便举一个反例就行了. 例如, 设$f(S) = |S|$, $|S|$是集合元素的个数, 构造集合$A=\{1\}$, $B = \{1, 2\}$, 所以$f(A) = 1$, $f(B) = 2$, $g(A) = 2, g(B) = 4$. 现在新加入一个元素, $f(A\cup x) = 2, f(B\cup x) = 3$, $g(A\cup x) = 4, g(B\cup x) = 9$. $f(A\cup x) - f(A) = 1, f(B\cup x)-f(B) = 1$, 符合次模性, 但是$g(A\cup x)- g(A) = 2<g(B\cup x) - g(B) = 5$, 所以不符合次模性. 
+
+### Problem5
+
+这个问题的b)问考察的就是对于TUM的理解, 如果$\{x\in R^n: Ax\leq b, x\geq 0\}$这个形式中的$A$是TUM的话, 并且$b$是一个整数的话, 那么他的解一定是一个整数解. 
