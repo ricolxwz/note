@@ -63,12 +63,39 @@ c) 看a)中的例子, 它有两个optimal solutions, 但是没有degenerate basi
 
 ### Problem1
 
+因为原始问题为minimize所以对偶问题为maximize, $s$这个变量可以消去, 变为$Ax>=b$, 所以对偶问题中变量的符号为$>=$; 由于$x$为free, 所以对偶问题中的约束符号为$=$, $cx$变为$by$, $Ax>=b$变为$A^Ty=c, y>=0$.  
+
+所以, 问题的对偶形式为maximize $by$, subject to $A^Ty=c$, $y\geq 0$. 
+
+强对偶定理的意思是说原始问题(LP)和他的对偶问题(DL)的最优解是相同的. 这里我们用了一个巧妙的方式, 将(LP)中的$x$替换为$-x$, 令$\tilde{x}=-x$. 原始问题变成了maximize $c\tilde{x}$. subject to $\tilde{x}$ free, $A\tilde{x}\leq -b$, 我们将这个定义为(LP'), (LP)和(LP')的最优解是一样的, 因为他们是完全相同的问题. 我们在求(LP')的dual, minimize $-b\tilde{y}$, subject to $\bar{y}\geq 0$, $A^T\tilde{y} = c$, 记为(DP'). 根据强对偶定理, (LP')和(DP')的最优解是一样的, 所以(LP)和(DP')的最优解是一样的. 这个时候, 我们发现(DL)和(DP')其实是同一个问题, 所以(DL)和(DP')的最优解是一样的 , 所以(LP)和(DL)的最优解是一样的, 所以符合强对偶定理. 
+
 ## Practice Final Exam
 
-对偶中"变量的符号"由原始问题的"约束方向"决定. 对偶中"约束的不等号方向"由原始问题"变量的符号"决定
+| 原始问题(Minimize) | $\rightarrow$ | 对偶问题(Maximize) |
+| :--- | :---: | :--- |
+| **目标函数** | | **目标函数** |
+| Minimize $c^T x$ | $\rightarrow$ | Maximize $b^T y$ |
+| **原始约束($i$)** | | **对偶变量($y_i$)** |
+| $\ge b_i$ | $\rightarrow$ | $\ge 0$ |
+| $\le b_i$ | $\rightarrow$ | $\le 0$ |
+| $= b_i$ | $\rightarrow$ | free(无限制) |
+| **原始变量($x_j$)** | | **对偶约束($j$)** |
+| $\ge 0$ | $\rightarrow$ | $\le c_j$ |
+| $\le 0$ | $\rightarrow$ | $\ge c_j$ |
+| free(无限制) | $\rightarrow$ | $= c_j$ |
 
-- 标准最大化问题 (≤ 约束, ≥ 0 变量) 的对偶是标准最小化问题 (≥ 约束, ≥ 0 变量). 
-- 标准最小化问题 (≥ 约束, ≥ 0 变量) 的对偶是标准最大化问题 (≤ 约束, ≥ 0 变量). 
+| 原始问题(Maximize) | $\rightarrow$ | 对偶问题(Minimize) |
+| :--- | :---: | :--- |
+| **目标函数** | | **目标函数** |
+| Maximize $c^T x$ | $\rightarrow$ | Minimize $b^T y$ |
+| **原始约束($i$)** | | **对偶变量($y_i$)** |
+| $\le b_i$ | $\rightarrow$ | $\ge 0$ |
+| $\ge b_i$ | $\rightarrow$ | $\le 0$ |
+| $= b_i$ | $\rightarrow$ | free(无限制) |
+| **原始变量($x_j$)** | | **对偶约束($j$)** |
+| $\ge 0$ | $\rightarrow$ | $\ge c_j$ |
+| $\le 0$ | $\rightarrow$ | $\le c_j$ |
+| free(无限制) | $\rightarrow$ | $= c_j$ |
 
 !!! tip "free变量怎么办"
 
