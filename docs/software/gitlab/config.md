@@ -85,7 +85,7 @@ services:
 
 ## Caddy反代设置
 
-需要使用`xcaddy`进行编译, 参考: https://caddyserver.com/docs/modules/dns.providers.cloudflare. 然后配置Cloudflare API, 修改caddyfile acme, 然后加上`*.pages.ricolxwz.download`和`pages.ricolxwz.download`. 类似于:
+需要使用`xcaddy`进行编译, 参考: https://caddyserver.com/docs/modules/dns.providers.cloudflare (或者直接从 https://caddyserver.com/download 这个页面add features, 下载预编译版本). 然后配置Cloudflare API, 修改caddyfile acme, 然后加上`*.pages.ricolxwz.download`和`pages.ricolxwz.download`. 类似于:
 
 ```
 {
