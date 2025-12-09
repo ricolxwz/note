@@ -5,6 +5,7 @@ comments: true
 
 ## Docker Compose配置
 
+
 ```yaml
 services:
   gitlab:
