@@ -295,6 +295,8 @@ nav = [
         { "注意力计算" = "code/attn.md" },
         { "LFS存储" = "code/lfs.md" },
         { "vLLM" = "code/vllm.md" },
+        { "DeepSpeed" = "code/deepspeed.md" },
+        { "Megatron-LM" = "code/megatron-lm.md" },
     ]},
     { "词典" = [
         { "反向传播" = "dicts/backpropagation.md" },
