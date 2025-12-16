@@ -71,3 +71,6 @@ Embedding是一种将高维, 离散的数据例如词语, 句子, 图像, 用户
 
 1. 基于Transformer架构的上下文敏感Embedding模型: 包括像BERT, RoBERTa, GPT系列(虽然GPT更加注重生成, 但是他内部的表示可以用作Embedding), 以及专门为Embedding设计的模型如OpenAI的text-embedding-ada-002, Google的LaMDA/PaLM/Gemini系列提供的高质量Embedding API. 这些模型通常是通过预训练学习得到的, 能够根据词语在句子中的具体上下文, 生成不同的Embedding向量. 预训练在海量的文本的数据上, 具备强大的语义理解能力, 适用于多种下游任务. 通常用于语义搜索, 文本匹配, 推荐系统, 智能问答召回等需要精确语义理解的场景.
 2. 专门优化的亲两级或者特定的域Embedding模型: 如sentence-transformers库中的模型, 如Sentence-BERT, MPNet等. 这些模型在Siamese网络或者Triplet网络架构下, 被专门训练来生成语义丰富的句子Embedding. 如果我们的应用在某个非常专业的领域(如医疗, 法律), 我们会考虑使用该领域的大量文本数据对通用Embedding模型进行二次微调, 或者训练全新的Embedding模型, 以捕捉领域特有的术语和关系. 对于句子或短文本的Embedding, 这类模型通常比大型的通用LLM推理更快, 资源消耗更低. 效果好:  在特定任务(如句子语义相似度)上, 可能比直接从通用LLM中提取的Embedding表现更好. 通常用于大规模的文本聚类, 分类, 相似度查询, 以及对实时性或资源消耗有较高要求的场景. 
+
+## 什么是A2A
+
