@@ -44,3 +44,17 @@ LiteLLM是LLM的中间件, 主要有以下的功能:
 1. 统一接口: 业务代码里面不仅要使用OpenAI, 还有Claude, Azure, 甚至还要切换到本地的模型(Ollama/vLLM), 导致代码里面充斥着大量的if-else和不同的SDK调用. LiteLLM提供了统一的OpenAI格式的API, 无论后端是哪个模型, 业务层代码只需要维护一套逻辑, 切换模型只需要改配置, 不用改代码. 
 2. 成本控制和可观测性: 之前难以统计每个部门, 每个key到底花了多少钱, 且无法预警Token消耗异常. LiteLLM可以给不同的key设置预算上限, 可以统一记录所有请求的输入输出, Latency和Token消耗, 方便后续做评估和微调数据收集.
 3. 高可用和负载均衡: 公有云API通常有Rate Limit, 或者偶尔挂掉. LiteLLM提供了Fallback和Load Balance策略, 如果GPT-4报错, 会自动降级到GPT-3.5或者是Cluade; 可以配置多个API Key或者多个Azure部署点, 通过轮询分摊流量, 突破并发限制. 
+
+## 介绍一下LangChain
+
+LangChain是一个用于构建LLM应用的开源编排框架, 它的核心作用是将LLM和外部数据源, 计算能力连接起来, 帮助开发者快速从单纯调用API进化到构建复杂的应用. 
+
+为了解决复杂的任务, LangChain抽象出了几个核心组件, 最常用的有:
+
+* Chains: 将多个组件(Prompt -> LLM -> Output Parser)串联起来, 形成标准工作流.
+* Prompt Templates: 管理和复用Prompt, 支持参数动态替换.
+* Memory: 解决LLM无状态的问题, 让AI记住对话历史(如WindowBuffer, SummaryBuffer).
+* Retrieval/RAG: 包含Document Loaders(加载文档), Text Splitters(切分), Vector Stores(向量库), 是构建知识库问答的标配.
+* Agents: 让LLM充当大脑, 自主决定调用什么工具来完成任务.
+
+LangChain是大模型时代的胶水层, 它复杂编排模型, 数据和工具, 让LLM从单纯的聊天机器人进化为能解决实际问题的智能应用. 
