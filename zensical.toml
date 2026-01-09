@@ -532,6 +532,11 @@ nav = [
         { "Wise" = "aff/wise.md" },
         { "moomoo" = "aff/moomoo.md" }
     ]},
+    { "面试" = [
+        { "深度学习总结" = "int/dl.md" },
+        { "PY总结" = "int/py.md" },
+        { "力扣" = "int/leetcode.md" },
+    ]},
 ]
 
 [project.theme]
