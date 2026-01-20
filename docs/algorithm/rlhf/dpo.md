@@ -24,3 +24,26 @@ RLHF分为三个阶段. 第一个阶段是SFT, Supervised Fine-Tuning, 在高质
 RLHF的第三个阶段是强化学习微调. 这是最复杂, 也是最容易出错的一步. 训练目标是找到一个模型(策略)$\pi_{\theta}$. 最大化以下函数: $\max_{\pi_\theta} \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta(y|x)} [r_\phi(x, y)] - \beta \mathbb{D}_{\text{KL}} [\pi_\theta(y|x) \,\|\, \pi_{\text{ref}}(y|x)]$. 这个第一部分希望模型生成的内容在奖励模型那里拿到尽可能高的分. 第二部分(KL散度约束)限制当前正在训练的模型$\pi_{\theta}$不要偏离原始SFT模型$\pi_{ref}$太远以防止模型退化. 因为没有标准答案, PPO首先要求模型针对同一个问题$x$, 生成很多个不同的回答$y$, 模型会根据当前的概率分布, 随机采样出不同的词序列, 有些回答可能逻辑严密, 有些可能胡言乱语, 把这些生成的回答全部丢给奖励模型, 然后PPO有一个"策略梯度"法则, 既然全句比如说得了5分, PPO就假设这个句子里的每一个词都对这5分有贡献, 对于得分高的句子A, PPO下令, 把生成A中的这些词的概率上调; 对于得分低的句子B, PPO会下令, 把生成B中这些词的概率下调.
 
 ## 方法
+
+### $Z(x)$很难算
+
+在RLHF中, 通常需要最大化奖励$r(x, y)$并限制策略偏离参考策略$\pi_{ref}$. $\max_{\pi_\theta} \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta(y|x)} [r_\phi(x, y)] - \beta \mathbb{D}_{\text{KL}} [\pi_\theta(y|x) \,\|\, \pi_{\text{ref}}(y|x)]$这个函数是可以求出理论上的最优解(策略)$\pi_r$的, $\pi_r(y | x) \propto \pi_{\text{ref}}(y | x) \exp \left(\frac{1}{\beta} r(x, y)\right)$. $Z(x) = \sum_y \pi_{\text{ref}}(y | x) \exp \left(\frac{1}{\beta} r(x, y)\right)$是一个归一化常数, 为了保证策略$\pi_r(y|x)$在所有可能的回复$y$上面的概率之和等于1. 要计算$Z(x)$, 必须遍历所有可能的回复$y$, 对于大预言模型来说, $y$的组合是天文数字, 因此在实践过程中根本无法计算. 即使我们通过极大似然估计训练出了一个接近真实的奖励模型$r_{\phi}$, 由于$Z(x)$的存在, 我们依然无法直接写出最优策略$\pi_r$的具体数值, 这使得传统的, 依赖显式奖励的方法在工程上非常笨重. 
+
+### 抵消掉$Z(x)$
+
+由于$Z(x)$无法计算, 作者想到了一个数学上的"跳板": 不再尝试计算$Z(x)$, 而是想办法把它抵消掉. 对于上述最优策略公式两边同时取log, 然后会得到:  $r(x, y) = \beta \log \frac{\pi_r(y | x)}{\pi_{\text{ref}}(y | x)} + \beta \log Z(x)$ (5). **这个公式的精妙之处在于, $Z(x)$之和输入$x$相关, 和生成的回复$y$无关. 在对比两个回复$y_w$和$y_l$的时候, 我们通常只关心奖励的差值, 即$r(x, y_w) - r(x, y_l)$, 当你计算这个差值的时候, 含$Z(x)$的那一项就被抵消掉了**. 
+
+BT模型是RLHF中处理偏好数据的标准模型, 它认为人类觉得$y_1$比$y_2$好的概率为$P(y_1 \succ y_2 | x) = \sigma(r^*(x, y_1) - r^*(x, y_2))$. 我们将上面的公式(5)带入到BT模型, 得到$P^*(y_1 \succ y_2 | x) = \frac{1}{1 + \exp\left( \beta \log \frac{\pi^*(y_2 | x)}{\pi_{\text{ref}}(y_2 | x)} - \beta \log \frac{\pi^*(y_1 | x)}{\pi_{\text{ref}}(y_1 | x)} \right)}$ (6), 可以发现, $Z(x)$消失了.  
+
+### 损失函数
+
+公式(6)告诉我们, 理想模型下, $y_w$优于$y_l$的概率, 我们用极大似然估计, 让模型$\pi_{\theta}$的结果, 尽可能符合数据集中人类的偏好. $\mathcal{L}_{\text{DPO}}(\pi_\theta; \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w | x)}{\pi_{\text{ref}}(y_w | x)} - \beta \log \frac{\pi_\theta(y_l | x)}{\pi_{\text{ref}}(y_l | x)} \right) \right]$ (7), 可以发现, 这个损失函数里面只有两个模型, 完全开不到奖励函数$r(x, y)$, 这只是一个简单的二分类交叉熵损失, 可以使用标准的深度学习优化器直接训练. 
+
+DPO并没有彻底摒弃奖励的概念, 而是通过一种重参数化的方法, 将奖励函数藏在了策略函数里面, 虽然是在优化$\pi_{\theta}$, 但是在数学上等同于你和一个奖励模型. 在DPO框架下, 训练得到的那个$\pi_{\theta}$模型, 就是原本RLHF目标的精准最优解. DPO训练过程在数学上完全等价于, 先用人类偏好数据你和一个符合BT模型的奖励函数, 然后再根据这个奖励函数求解最优策略. 
+
+### 梯度公式
+
+DPO的梯度公式为$\nabla_\theta \mathcal{L}_{\text{DPO}} = -\beta \mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[ \underbrace{\sigma\left(\hat{r}_\theta(x, y_l) - \hat{r}_\theta(x, y_w)\right)}_{\text{权重项：模型错得越离谱，权重越大}} \underbrace{\left( \nabla_\theta \log \pi_\theta(y_w | x) - \nabla_\theta \log \pi_\theta(y_l | x) \right)}_{\text{更新方向：拉高 } y_w \text{ 概率，压低 } y_l \text{ 概率}} \right]$. $\nabla_\theta \mathcal{L}_{\text{DPO}} = -\beta \mathbb{E} [ \text{权重项} \times \text{方向项} ]$, 左侧的权重项, 当隐式奖励预测错误的时候, 赋予更高的权重. 如果模型错误的认为坏回复$y_l$比好回复$y_w$更好, 这个差值就是正的, Sigmoid就接近1, 如果模型已经分得很清楚, 权重就趋近于0. 右侧的方向项的正值项增加好回复的概率, 负值项减少坏回复的概率. $\hat{r}_\theta(x, y) = \beta \log \frac{\pi_\theta(y | x)}{\pi_{\text{ref}}(y | x)}$这个就是隐式奖励. DPO更新不仅仅是简单的好加坏减, 而是根据模型对隐式奖励的评分高低来自动缩放梯度大小, 这种加权系数很重要, 实验发现, 如果去掉这个加权项, 模型会发生退化, $\beta$是奖励的缩放因子. 
+
+### 操作细节
+
