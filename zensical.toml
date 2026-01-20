@@ -222,22 +222,11 @@ nav = [
             { "GNN" = "algorithm/gnn.md" },
             { "U-Net" = "algorithm/u-net.md" },
             { "RAG" = "algorithm/rag.md" },
-            { "SFT" = [
-                { "FLAN" = "algorithm/sft/flan.md" },
-                { "T0" = "algorithm/sft/t0.md" },
-                { "Self-Instruct" = "algorithm/sft/self-instruct.md" },
-                { "Alpaca" = "algorithm/sft/alpaca.md" },
-                { "Vicuna" = "algorithm/sft/vicuna.md" },
-            ]},
-            { "RLHF" = [
-                { "HP" = "algorithm/rlhf/hp.md" },
-                { "InstructGPT" = "algorithm/rlhf/instructgpt.md" },
-                { "DPO" = "algorithm/rlhf/dpo.md" },
-                { "PPO" = "algorithm/rlhf/ppo.md" },
-                { "ORPO" = "algorithm/rlhf/orpo.md" },
-                { "KTO" = "algorithm/rlhf/kto.md" },
-                { "Constitutional AI" = "algorithm/rlhf/constitutional-ai.md" },
-                { "RLAIF" = "algorithm/rlhf/rlaif.md" },
+            { "强化学习" = [
+                { "FLAN" = "algorithm/rl/flan.md" },
+                { "T0" = "algorithm/rl/t0.md" },
+                { "DPO" = "algorithm/rl/dpo.md" },
+                { "PPO" = "algorithm/rl/ppo.md" },
             ]},
         ]},
         { "信息论" = [
