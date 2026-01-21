@@ -230,6 +230,7 @@ nav = [
             ]},
             { "语音" = [
                 { "Whisper" = "algorithm/audio/whisper.md" },
+                { "CTC" = "algorithm/audio/ctc.md" },
             ]},
         ]},
         { "信息论" = [
