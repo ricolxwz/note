@@ -228,6 +228,9 @@ nav = [
                 { "DPO" = "algorithm/rl/dpo.md" },
                 { "PPO" = "algorithm/rl/ppo.md" },
             ]},
+            { "语音" = [
+                { "Whisper" = "algorithm/audio/whisper.md" },
+            ]},
         ]},
         { "信息论" = [
             { "不确定性和熵" = "algorithm/information-theory/uncertainty-and-entropy.md" },
