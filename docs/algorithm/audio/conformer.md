@@ -22,3 +22,7 @@ Conformer是Google在2020年提出的语音识别模型, 基于Transformer改进
 ![](https://img.ricolxwz.cn/41997665bec8818bcb728299310d4c55.webp#only-light){ loading=lazy width='500' }
 ![](https://img.ricolxwz.cn/41997665bec8818bcb728299310d4c55_inverted.webp#only-dark){ loading=lazy width='500' }
 </figure>
+
+### 卷积模块
+
+首先, 先做一个gating, 
