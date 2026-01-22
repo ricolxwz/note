@@ -1,5 +1,5 @@
 ---
-title: 常见问题
+title: 八股文
 comments: false
 ---
 

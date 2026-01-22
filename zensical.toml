@@ -527,7 +527,17 @@ nav = [
         { "moomoo" = "aff/moomoo.md" }
     ]},
     { "面试" = [
-        { "常见问题" = "int/dl.md" },
+        { "八股文" = [
+            { "深度学习" = "int/bg-dl.md" },
+            { "Python" = "int/bg-py.md" }
+        ]},
+        { "专业相关" = [
+            { "Whisper" = "algorithm/audio/whisper.md" },
+            { "CTC" = "algorithm/audio/ctc.md" },
+            { "Conformer" = "algorithm/audio/conformer.md" }
+        ]},
+        { "代码" = [
+        ]}
     ]},
 ]
 
