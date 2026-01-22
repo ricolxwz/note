@@ -13,3 +13,12 @@ Conformer是Google在2020年提出的语音识别模型, 基于Transformer改进
 ![](https://img.ricolxwz.cn/a205bc356e40f680189d58a873ecfb9a.webp#only-light){ loading=lazy width='500' }
 ![](https://img.ricolxwz.cn/a205bc356e40f680189d58a873ecfb9a_inverted.webp#only-dark){ loading=lazy width='500' }
 </figure>
+
+### 多头自注意力模块
+
+他们采用了一个来自Transformer-XL的multi-headed self-attention(MSHA), 具体来说他们用的是相对正弦位置编码, 它能让elf-attention模块在边长输入上有更好的表现, 所得到的编码器对语音长度的变化具有更强的鲁棒性. 
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/41997665bec8818bcb728299310d4c55.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/41997665bec8818bcb728299310d4c55_inverted.webp#only-dark){ loading=lazy width='500' }
+</figure>
