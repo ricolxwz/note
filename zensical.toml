@@ -229,6 +229,7 @@ nav = [
                 { "PPO" = "algorithm/rl/ppo.md" },
             ]},
             { "语音" = [
+                { "HMM" = "algorithm/audio/hmm.md" },
                 { "Whisper" = "algorithm/audio/whisper.md" },
                 { "CTC" = "algorithm/audio/ctc.md" },
                 { "Conformer" = "algorithm/audio/conformer.md" },
