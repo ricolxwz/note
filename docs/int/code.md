@@ -76,7 +76,7 @@ comments: false
                     res.append(path[:])
                     return
                 for j in range(i, n):
-                    t = s[i:j+1]
+                    t = s[i:j+1]  # i是上一次选中的位置, j是这一次选中的位置, 中间的就是截的字符串
                     if t == t[::-1]:
                         path.append(t)
                         dfs(j+1)
@@ -97,10 +97,10 @@ comments: false
                     return
                 if i < n - 1:
                     dfs(i+1, start)
-                t = s[start:i+1]
+                t = s[start:i+1]  # start用于记录上一次选中的位置
                 if t == t[::-1]:
                     path.append(t)
-                    dfs(i+1, i+1)
+                    dfs(i+1, i+1)  # start赋值为i+1, 作为下一次选中的起点
                     path.pop()
             dfs(0, 0)
             return res
