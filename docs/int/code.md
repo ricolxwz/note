@@ -107,3 +107,5 @@ comments: false
     ```
 
 ### 组合型回溯
+
+组合型回溯其实是子集型回溯的一种特殊情况. 子集回溯需要所有规模的集合, 组合回溯需要满足某个约束的集合. 子集回溯自然结束, 组合回溯满足条件就停, 可以剪枝.  [原题](https://leetcode.cn/problems/uUsW3B/solutions/2087261/hui-su-bu-hui-xie-tao-lu-zai-ci-pythonja-6zca/)
