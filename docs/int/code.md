@@ -149,3 +149,32 @@ comments: false
         bt(1)
         return res
     ```
+
+### 排序型回溯
+
+排序型回溯就不是选/不选了, 是都要选, 但是顺序不同.  
+
+```py
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        path = []
+        n = len(nums)
+        used = [False] * n
+
+        def dfs(i):
+            if i == n:
+                res.append(path[:])
+                return
+            for j in range(n):
+                if used[j]:
+                    continue
+                used[j] = True
+                path.append(nums[j])
+                dfs(i + 1)
+                path.pop()
+                used[j] = False
+
+        dfs(0)
+        return res
+```
