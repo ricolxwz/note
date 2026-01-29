@@ -109,3 +109,43 @@ comments: false
 ### 组合型回溯
 
 组合型回溯其实是子集型回溯的一种特殊情况. 子集回溯需要所有规模的集合, 组合回溯需要满足某个约束的集合. 子集回溯自然结束, 组合回溯满足条件就停, 可以剪枝.  [原题](https://leetcode.cn/problems/uUsW3B/solutions/2087261/hui-su-bu-hui-xie-tao-lu-zai-ci-pythonja-6zca/)
+
+* 选/不选写法
+
+    ```py
+    class Solution:
+        def combine(self, n: int, k: int) -> List[List[int]]:
+            res = []
+            path = []
+            def bt(i):
+                if len(path) == k:  # 返回满足约束的集合
+                    res.append(path[:])
+                    return
+                if i == n + 1:  # 剪枝
+                    return
+                bt(i+1)
+                path.append(i)
+                bt(i+1)
+                path.pop()
+            bt(1)
+            return res
+    ```
+
+* 枚举选哪个写法
+
+    ```py
+    class Solution:
+    def combine(self, n: int, k: int) -> List[List[int]]:
+        res = []
+        path = []
+        def bt(i):
+            if len(path) == k:  # 返回满足约束的集合
+                res.append(path[:])
+                return
+            for j in range(i, n-(k-len(path))+2):  # 剪枝
+                path.append(j)
+                bt(j+1)
+                path.pop()
+        bt(1)
+        return res
+    ```
