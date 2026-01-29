@@ -159,22 +159,20 @@ class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
         res = []
         path = []
-        n = len(nums)
-        used = [False] * n
+        used = [False] * len(nums)
 
         def dfs(i):
-            if i == n:
+            if i == len(nums):
                 res.append(path[:])
                 return
-            for j in range(n):
-                if used[j]:
+            for j in range(len(nums)):
+                if used[j] == True:
                     continue
                 used[j] = True
                 path.append(nums[j])
-                dfs(i + 1)
+                dfs(i+1)
                 path.pop()
                 used[j] = False
-
         dfs(0)
         return res
 ```
