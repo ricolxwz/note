@@ -241,4 +241,4 @@ class Solution:
             return [start, left-1]
 ```
 
-[搜索旋转排序数组](https://leetcode.cn/problems/search-in-rotated-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked). 
+[搜索旋转排序数组](https://leetcode.cn/problems/search-in-rotated-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked). 旋转数组本来是整体递增的, 只是某个位置断开之后拼到了后面, 对于任意区间, 总有一边是完整的. 
