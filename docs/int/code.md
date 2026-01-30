@@ -195,3 +195,24 @@ class Solution:
                 right = mid - 1
         return left
 ```
+
+如果`target`存在, 则`left`停在第一个`target`的位置; 如果不存在, 则`left`停在第一个大于`target`的位置(有可能越界, 这是需要处理的) 
+
+[搜索二维矩阵](https://leetcode.cn/problems/search-a-2d-matrix/description/?envType=study-plan-v2&envId=top-100-liked): 这道题里面的二维矩阵展平了之后其实就是一个一维数组, 所以可以使用一维数组的思维来解决这道题. 
+
+```py
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        m, n = len(matrix), len(matrix[0])
+        left, right = 0, m * n - 1
+        while left <= right:
+            mid = left + (right - left) // 2
+            if matrix[mid // n][mid % n] < target:
+                left = mid + 1
+            else:
+                right = mid - 1
+        if left == m * n or matrix[left // n][left % n] != target:
+            return False
+        else:
+            return True
+```
