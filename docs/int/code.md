@@ -218,3 +218,25 @@ class Solution:
 ```
 
 `if left == m * n or matrix[left // n][left % n] != target:`这一行表示无法找到`target`, 三种情况, 所有元素都大于`target`, 对应`left == m * n`; 所有元素都小于`target`或者在序列中找不到, 对应`matrix[left // n][left % n] != target`. 
+
+[在排序数组中查找元素的第一个和最后一个位置
+](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked):  因为我们之前的模板找到的是`target`的第一个位置(如果存在), 所以我们如果找到的话可以直接`while`一下, 判断结束的位置. 
+
+```py
+class Solution:
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        left, right = 0, len(nums) - 1
+        while left <= right:
+            mid = left + (right - left) // 2
+            if nums[mid] < target:
+                left = mid + 1
+            else:
+                right = mid - 1
+        if left == len(nums) or nums[left] != target:
+            return [-1, -1]
+        else:
+            start = left
+            while left < len(nums) and nums[left] == target:
+                left += 1
+            return [start, left-1]
+```
