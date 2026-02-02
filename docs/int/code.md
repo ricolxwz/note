@@ -7,7 +7,9 @@ comments: false
 
 ### 子集型回溯
 
-子集型回溯对应的是: **每个元素都可以选或者不选**. [原题](https://leetcode.cn/problems/subsets/?envType=study-plan-v2&envId=top-100-liked)
+#### [78.子集](https://leetcode.cn/problems/subsets/?envType=study-plan-v2&envId=top-100-liked)
+
+子集型回溯对应的是: **每个元素都可以选或者不选**. 
 
 * 枚举选哪个写法:  
 
@@ -61,9 +63,9 @@ comments: false
 
     每个`i`上都要二叉判断选/不选, 所以总共有`2^n`中选择. 或者说有`2^n`个叶子, 在每个叶子碰到边界要复制路径为`O(n)`. 所以时间复杂度为`O(n*2^n)`. 
 
-衍生题目: 
+#### [131.分割回文串](https://leetcode.cn/problems/palindrome-partitioning/?envType=study-plan-v2&envId=top-100-liked) 
 
-* [分割回文串](https://leetcode.cn/problems/palindrome-partitioning/?envType=study-plan-v2&envId=top-100-liked): 换一个视角, 假设每两个字符之间都有一个逗号, 我们可以选它或者不选它, 这就是一个子集型回溯问题. 
+* 换一个视角, 假设每两个字符之间都有一个逗号, 我们可以选它或者不选它, 这就是一个子集型回溯问题. 
 
     ```py
     class Solution:
@@ -108,7 +110,9 @@ comments: false
 
 ### 组合型回溯
 
-组合型回溯其实是子集型回溯的一种特殊情况. 子集回溯需要所有规模的集合, 组合回溯需要满足某个约束的集合. 子集回溯自然结束, 组合回溯满足条件就停, 可以剪枝.  [原题](https://leetcode.cn/problems/uUsW3B/solutions/2087261/hui-su-bu-hui-xie-tao-lu-zai-ci-pythonja-6zca/)
+#### [77.组合](https://leetcode.cn/problems/combinations/description/)
+
+组合型回溯其实是子集型回溯的一种特殊情况. 子集回溯需要所有规模的集合, 组合回溯需要满足某个约束的集合. 子集回溯自然结束, 组合回溯满足条件就停, 可以剪枝. 
 
 * 选/不选写法
 
@@ -152,7 +156,9 @@ comments: false
 
 ### 排序型回溯
 
-排序型回溯就不是选/不选了, 是都要选, 但是顺序不同. [原题](https://leetcode.cn/problems/permutations/?envType=study-plan-v2&envId=top-100-liked)
+#### [46.全排列](https://leetcode.cn/problems/permutations/?envType=study-plan-v2&envId=top-100-liked)
+
+排序型回溯就不是选/不选了, 是都要选, 但是顺序不同.
 
 ```py
 class Solution:
@@ -181,7 +187,9 @@ class Solution:
 
 ## 二分查找
 
-下面是闭区间写法. 为什么不找到`target`就立刻返回, 是因为这种写法的适用范围比较窄, 为什么返回第一个等于`target`的数的下表更好呢? 因为这可以解决更加复杂的题目, 比如给你一个有序数组, 让你计算有多少个数字小于`target`. [原题](https://leetcode.cn/problems/search-insert-position/?envType=study-plan-v2&envId=top-100-liked)
+### [35.搜索插入位置](https://leetcode.cn/problems/search-insert-position/?envType=study-plan-v2&envId=top-100-liked)
+
+下面是闭区间写法. 为什么不找到`target`就立刻返回, 是因为这种写法的适用范围比较窄, 为什么返回第一个等于`target`的数的下表更好呢? 因为这可以解决更加复杂的题目, 比如给你一个有序数组, 让你计算有多少个数字小于`target`. 
 
 ```py
 class Solution:
@@ -198,7 +206,9 @@ class Solution:
 
 如果`target`存在, 则`left`停在第一个`target`的位置; 如果不存在, 则`left`停在第一个大于`target`的位置(有可能越界, 这是需要处理的) 
 
-[搜索二维矩阵](https://leetcode.cn/problems/search-a-2d-matrix/description/?envType=study-plan-v2&envId=top-100-liked): 这道题里面的二维矩阵展平了之后其实就是一个一维数组, 所以可以使用一维数组的思维来解决这道题. 
+### [74.搜索二维矩阵](https://leetcode.cn/problems/search-a-2d-matrix/description/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题里面的二维矩阵展平了之后其实就是一个一维数组, 所以可以使用一维数组的思维来解决这道题. 
 
 ```py
 class Solution:
@@ -219,8 +229,9 @@ class Solution:
 
 `if left == m * n or matrix[left // n][left % n] != target:`这一行表示无法找到`target`, 三种情况, 所有元素都大于`target`, 对应`left == m * n`; 所有元素都小于`target`或者在序列中找不到, 对应`matrix[left // n][left % n] != target`. 
 
-[在排序数组中查找元素的第一个和最后一个位置
-](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked):  因为我们之前的模板找到的是`target`的第一个位置(如果存在), 所以我们如果找到的话可以直接`while`一下, 判断结束的位置. 
+### [34.在排序数组中查找元素的第一个和最后一个位置](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked)
+
+因为我们之前的模板找到的是`target`的第一个位置(如果存在), 所以我们如果找到的话可以直接`while`一下, 判断结束的位置. 
 
 ```py
 class Solution:
@@ -241,7 +252,9 @@ class Solution:
             return [start, left-1]
 ```
 
-[搜索旋转排序数组](https://leetcode.cn/problems/search-in-rotated-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked). 旋转数组本来是整体递增的, 只是某个位置断开之后拼到了后面, 对于任意区间, 总有一边是有序的. 此时有序部分使用二分法查找. 无序部分再一分为二, 其中一个一定有序, 另一个可能有序, 可能无序, 如此循环. 
+### [33.搜索旋转排序数组](https://leetcode.cn/problems/search-in-rotated-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked)
+
+旋转数组本来是整体递增的, 只是某个位置断开之后拼到了后面, 对于任意区间, 总有一边是有序的. 此时有序部分使用二分法查找. 无序部分再一分为二, 其中一个一定有序, 另一个可能有序, 可能无序, 如此循环. 
 
 ```py
 class Solution:
@@ -268,7 +281,7 @@ class Solution:
         return -1
 ```
 
-[寻找旋转排序数组中的最小值](https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array/?envType=study-plan-v2&envId=top-100-liked): 
+### [153.寻找旋转排序数组中的最小值](https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array/?envType=study-plan-v2&envId=top-100-liked)
 
 ```py
 class Solution:
@@ -282,3 +295,34 @@ class Solution:
                 right = mid
         return nums[left]
 ```
+
+## 栈
+
+### [20.有效的括号](https://leetcode.cn/problems/valid-parentheses/description/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题是经典的栈题目, 三种情况: 
+
+1. 字符串遍历完成后, 栈里面还有元素: 左括号多余
+2. 遇到右括号, 取出栈顶元素发现不配对: 左右括号不配对
+3. 遇到右括号, 发现栈空: 右括号多余
+
+```py
+class Solution:
+    def isValid(self, s: str) -> bool:
+        stack = []
+        for c in s:
+            if c in ["(", "[", "{"]:
+                stack.append(c)
+            else:
+                if len(stack) == 0:
+                    return False
+                t = stack.pop()
+                if c == ")" and t != "(" or c == "]" and t != "[" or c == "}" and t != "{":
+                    return False
+        if len(stack) != 0: 
+            return False
+        return True
+```
+
+### [155.最小栈](https://leetcode.cn/problems/min-stack/?envType=study-plan-v2&envId=top-100-liked)
+
