@@ -152,7 +152,7 @@ comments: false
 
 ### 排序型回溯
 
-排序型回溯就不是选/不选了, 是都要选, 但是顺序不同.  
+排序型回溯就不是选/不选了, 是都要选, 但是顺序不同. [原题](https://leetcode.cn/problems/permutations/?envType=study-plan-v2&envId=top-100-liked)
 
 ```py
 class Solution:
@@ -181,7 +181,7 @@ class Solution:
 
 ## 二分查找
 
-下面是闭区间写法. 为什么不找到`target`就立刻返回, 是因为这种写法的适用范围比较窄, 为什么返回第一个等于`target`的数的下表更好呢? 因为这可以解决更加复杂的题目, 比如给你一个有序数组, 让你计算有多少个数字小于`target`.
+下面是闭区间写法. 为什么不找到`target`就立刻返回, 是因为这种写法的适用范围比较窄, 为什么返回第一个等于`target`的数的下表更好呢? 因为这可以解决更加复杂的题目, 比如给你一个有序数组, 让你计算有多少个数字小于`target`. [原题](https://leetcode.cn/problems/search-insert-position/?envType=study-plan-v2&envId=top-100-liked)
 
 ```py
 class Solution:
@@ -241,4 +241,29 @@ class Solution:
             return [start, left-1]
 ```
 
-[搜索旋转排序数组](https://leetcode.cn/problems/search-in-rotated-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked). 旋转数组本来是整体递增的, 只是某个位置断开之后拼到了后面, 对于任意区间, 总有一边是完整的. 
+[搜索旋转排序数组](https://leetcode.cn/problems/search-in-rotated-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked). 旋转数组本来是整体递增的, 只是某个位置断开之后拼到了后面, 对于任意区间, 总有一边是有序的. 此时有序部分使用二分法查找. 无序部分再一分为二, 其中一个一定有序, 另一个可能有序, 可能无序, 如此循环. 
+
+```py
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        left, right = 0, len(nums) - 1
+        while left <= right:
+            mid = left + (right - left) // 2
+            if nums[mid] == target:
+                return mid
+            if nums[left] <= nums[mid]:  # [left, mid]有序
+                if target < nums[left]:  # 说明发生旋转
+                    left = mid + 1
+                elif target < nums[mid]:  # 常规情况
+                    right = mid - 1
+                else:
+                    left = mid + 1  # 常规情况
+            else:  # [mid, right]有序
+                if target > nums[right]:  # 说明发生旋转
+                    right = mid - 1
+                elif target > nums[mid]:  # 常规情况
+                    left = mid + 1
+                else:
+                    right = mid - 1  # 常规情况
+        return -1
+```
