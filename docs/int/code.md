@@ -326,3 +326,15 @@ class Solution:
 
 ### [155.最小栈](https://leetcode.cn/problems/min-stack/?envType=study-plan-v2&envId=top-100-liked)
 
+这道题需要一个辅助栈. 
+
+* 当一个元素要入栈的时候, 我们取当前辅助栈顶存储的最小值, 和当前元素比较得到最小值, 将这个最小值插入到辅助栈中. 
+* 当一个元素要出栈的时候, 我们把辅助栈的栈顶元素也一样弹出. 
+
+在任意一个时刻, 栈内元素的最小值就是存储在辅助栈的栈顶元素中. 
+
+
+
+<figure markdown='1'>
+![](https://img.ricolxwz.cn/874b5527da92bbaac0e46964c850650c){ loading=lazy width='400' }
+</figure>
