@@ -333,8 +333,35 @@ class Solution:
 
 在任意一个时刻, 栈内元素的最小值就是存储在辅助栈的栈顶元素中. 
 
+```py
+class MinStack:
 
+    def __init__(self):
+        self.stack = []
+        self.min_stack = [float('inf')]
 
-<figure markdown='1'>
-![](https://img.ricolxwz.cn/874b5527da92bbaac0e46964c850650c){ loading=lazy width='400' }
-</figure>
+    def push(self, val: int) -> None:
+        self.stack.append(val)
+        if self.min_stack[-1] > val:
+            self.min_stack.append(val)
+        else:
+            self.min_stack.append(self.min_stack[-1])
+
+    def pop(self) -> None:
+        self.stack.pop()
+        self.min_stack.pop()
+
+    def top(self) -> int:
+        return self.stack[-1]
+
+    def getMin(self) -> int:
+        return self.min_stack[-1]
+```
+
+### [394.字符串解码](https://leetcode.cn/problems/decode-string/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题的复杂点在于, `s`有多种类型:
+
+* 基础: 不含括号, 没有数字, 此时, 只包含字母, 例如`s = abc`.
+* 嵌套: 结构为数字+左括号+括号中的字符串+右括号, 例如`s = 2[abc]`, `s = 2[3[ab]]`
+* 组合: 多个`k[str]`并在一起, 例如`s=2[ab]3[xy]`
