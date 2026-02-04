@@ -441,7 +441,27 @@ class Solution:
             i += 1
         return False
 ```
-x
+
 ### [45.跳跃游戏 II](https://leetcode.cn/problems/jump-game-ii/description/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题比55更进一步, 需要求出到达最后一个元素的最小跳跃次数.
+这道题比55更进一步, 需要求出到达最后一个元素的最小跳跃次数. 其核心思想是, 在当前的跳跃范围内(`i < border`), 选择让下一跳到达更远的位置, 不需要真的跳到`border`. 
+
+```py
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        max_reach = 0
+        border = 0
+        steps = 0
+        i = 0
+        while i < len(nums) - 1:
+            max_reach = max(max_reach, i + nums[i])
+            if i == border:
+                border = max_reach
+                steps += 1
+            i += 1
+        return steps
+```
+
+### [763.划分字母区间](https://leetcode.cn/problems/partition-labels/?envType=study-plan-v2&envId=top-100-liked)
+
+
