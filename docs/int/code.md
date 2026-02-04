@@ -405,3 +405,22 @@ class Solution:
             stack.append(i)
         return res
 ```
+
+## 贪心算法
+
+贪心算法的核心思想是每一步都做出当前看起来最优的选择, 期望通过局部最优达到全局最优. 
+
+### [121.买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/?envType=study-plan-v2&envId=top-100-liked)
+
+买入日期必须在卖出日期的前面, 从`prices[0]`到`prices[i-1]`, 我们维护一个最小值`minprice`, 对于每一个`prices[i]`, 我们都计算卖出获利值`prices[i] - minprice`, 如果该值优于现有的最优值, 那么确定在这里卖出. 
+
+```py
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        res = 0
+        min_price = prices[0]
+        for i in range(len(prices)):
+            res = max(res, prices[i] - min_price)
+            min_price = min(min_price, prices[i])
+        return res
+```
