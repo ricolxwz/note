@@ -424,3 +424,22 @@ class Solution:
             min_price = min(min_price, prices[i])
         return res
 ```
+
+### [55.跳跃游戏](https://leetcode.cn/problems/jump-game/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题的关键不是跳几步, 而是跳多远. 维护变量`max_reach`, 记录当前能达到的最远位置, 然后, **最关键的是, 我们只遍历可达范围内的位置`i<=max_reach`.** 随后, 更新当前可达的最远距离`max_reach = max(max_reach, i + nums[i])`, 如果`max_reach >= 数组末尾`, 返回true. 
+
+```py
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        max_reach = 0
+        i = 0
+        while i <= max_reach:
+            max_reach = max(max_reach, i + nums[i])
+            if max_reach >= len(nums) - 1:
+                return True
+            i += 1
+        return False
+```
+
+### [45.跳跃游戏 II](https://leetcode.cn/problems/jump-game-ii/description/?envType=study-plan-v2&envId=top-100-liked)
