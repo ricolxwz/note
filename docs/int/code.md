@@ -391,7 +391,8 @@ class Solution:
 
 ### [739.每日温度](https://leetcode.cn/problems/daily-temperatures/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题的解法是单调栈. 
+这道题的解法是单调栈. 维护一个从栈底到栈顶温度递减的单调栈, 当遇到比栈顶温度更高的温度的时候, 就找到了栈顶元素的答案. 弹出栈顶, 计算天数差, 直到栈为空或者栈顶温度>=当前温度. 将当前索引压入栈中. 
+
 ```py
 class Solution:
     def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
