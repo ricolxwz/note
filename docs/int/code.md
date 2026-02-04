@@ -441,5 +441,7 @@ class Solution:
             i += 1
         return False
 ```
-
+x
 ### [45.跳跃游戏 II](https://leetcode.cn/problems/jump-game-ii/description/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题比55更进一步, 需要求出到达最后一个元素的最小跳跃次数.
