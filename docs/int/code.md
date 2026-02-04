@@ -388,3 +388,19 @@ class Solution:
                 res = pre_res + res * pre_k
         return res
 ```
+
+### [739.每日温度](https://leetcode.cn/problems/daily-temperatures/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题的解法是单调栈. 
+```py
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        res = [0] * len(temperatures)
+        stack = []
+        for i, t in enumerate(temperatures):
+            while stack and t > temperatures[stack[-1]]:
+                j = stack.pop()
+                res[j] = i - j
+            stack.append(i)
+        return res
+```
