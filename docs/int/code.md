@@ -365,3 +365,26 @@ class MinStack:
 * 基础: 不含括号, 没有数字, 此时, 只包含字母, 例如`s = abc`.
 * 嵌套: 结构为数字+左括号+括号中的字符串+右括号, 例如`s = 2[abc]`, `s = 2[3[ab]]`
 * 组合: 多个`k[str]`并在一起, 例如`s=2[ab]3[xy]`
+
+用栈模拟递归: 
+
+```py
+class Solution:
+    def decodeString(self, s: str) -> str:
+        stack = []
+        res = ''
+        k = 0
+        for c in s:
+            if c.isalpha():
+                res += c
+            elif c.isdigit():
+                k = k * 10 + int(c)
+            elif c == '[':
+                stack.append((res, k))
+                res = ''  # 当开始[的时候, 我们需要清空res来存放此次递归的结果, 之前的结果已经被压入到stack中. 
+                k = 0
+            else:
+                pre_res, pre_k = stack.pop()
+                res = pre_res + res * pre_k
+        return res
+```
