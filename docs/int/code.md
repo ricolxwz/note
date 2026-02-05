@@ -646,3 +646,7 @@ class Solution:
                     res += 1
         return res
 ```
+
+### [994.腐烂的橘子](https://leetcode.cn/problems/rotting-oranges/?envType=study-plan-v2&envId=top-100-liked)
+
+
