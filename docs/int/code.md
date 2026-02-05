@@ -549,3 +549,100 @@ class MedianFinder:
         else:
             return (self.min_heap[0] - self.max_heap[0]) / 2
 ```
+
+## 图论
+
+### [200.岛屿数量](https://leetcode.cn/problems/number-of-islands/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题考察的是图的DFS遍历. 网格问题是由`m*n`个小方格组成的一个网格, 每个小方格与其上下左右四个方格认为是相邻的, 要在这样的网格上进行某种搜索. 岛屿问题是一种典型的网格问题, 每个格子中的数字可能是0或者1, 我们把数字为0的格子看为是海洋格子, 数字为1的格子看为是陆地格子. 这样相邻的陆地格子就连接成一个岛屿. 在这样的设定下, 就出现了各种岛屿问题的变种, 包括数量, 面积, 周长等, 基本都可以用DFS解决. 
+
+对于网格上的DFS, 我们可以参考二叉树的DFS:
+
+1. 首先, 网格结构中的格子有多少相邻节点可以类比于二叉树的子节点数量, 在网格中, 每个格子有4个相邻的格子. 对于格子`(i, j)`, 其上下左右的格子分别是`(i-1, j)`, `(i+1, j)`, `(i, j-1)`, `(i, j+1)`. 换句话说, 网络结构是四叉树.
+
+    <figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.cn/d058b0f5bd2ea79445b1689a4bb88dd1.webp#only-light){ loading=lazy width='600' }
+    ![](https://img.ricolxwz.cn/d058b0f5bd2ea79445b1689a4bb88dd1_inverted.webp#only-dark){ loading=lazy width='600' }
+    </figure>
+
+2. 其次, DFS的Base case应该是网格中不需要继续递归, `grid[r][c]`会出现异常的格子, 也就是那些超出网格范围的格子. 
+
+    <figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.cn/10aee5d759bfb2b5fecd485d28e8cb6d.webp#only-light){ loading=lazy width='600' }
+    ![](https://img.ricolxwz.cn/10aee5d759bfb2b5fecd485d28e8cb6d_inverted.webp#only-dark){ loading=lazy width='600' }
+    </figure>
+
+    这一点和二叉树中是一样的, 都是"先污染, 后治理", 甭管当前是在哪个格子, 先往四个方向走一步再说, 如果发现走出了网格范围再赶紧返回. 
+
+    这样, 我们有了网格DFS的框架:
+
+    ```py
+    def dfs(grid: list[list[int]], r: int, c: int) -> None:
+        # 判断 base case：坐标 (r, c) 超出网格范围则直接返回
+        if not in_area(grid, r, c):
+            return
+        # 访问上、下、左、右四个相邻格子
+        dfs(grid, r - 1, c)
+        dfs(grid, r + 1, c)
+        dfs(grid, r, c - 1)
+        dfs(grid, r, c + 1)
+
+
+    def in_area(grid: list[list[int]], r: int, c: int) -> bool:
+        """判断坐标 (r, c) 是否在网格内"""
+        return 0 <= r < len(grid) and 0 <= c < len(grid[0])
+    ```
+
+3. 网格结构的DFS和二叉树DFS最大的不同之处在于, 遍历中可能遇到遍历过的节点. 这个时候, DFS可能会不停的兜圈子, 永远停不下来, 如图所示. 
+
+    <figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.cn/2a5682635bda405caaf0e888e2a76244.gif#only-light){ loading=lazy width='600' }
+    ![](https://img.ricolxwz.cn/2a5682635bda405caaf0e888e2a76244_inverted.gif#only-dark){ loading=lazy width='600' }
+    </figure>
+
+    如何避免这样的重复遍历呢? 答案是标记已经遍历过的格子. 以岛屿问题为例, 我们需要在所有值为1的格子上做DFS遍历, 每走过一个陆地格子, 我们就把格子的值改为2, 这样我们遇到2的时候, 就知道这是遍历过的格子了, 需要终止递归, 直接返回. 每个格子可能取三个值: 0表示海洋格子, 1表示陆地格子, 2表示已遍历过的陆地格子. 
+
+    我们在框架代码中加入避免重复遍历的语句: 
+
+    ```py
+    def dfs(grid: list[list[int]], r: int, c: int) -> None:
+        if not in_area(grid, r, c):
+            return
+        if grid[r][c] != 1:
+            return
+        grid[r][c] = 2
+        dfs(grid, r - 1, c)
+        dfs(grid, r + 1, c)
+        dfs(grid, r, c - 1)
+        dfs(grid, r, c + 1)
+    ```
+
+    <figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.cn/d2bbbca5f382c18b662915c3353dc561.gif#only-light){ loading=lazy width='600' }
+    ![](https://img.ricolxwz.cn/d2bbbca5f382c18b662915c3353dc561_inverted.gif#only-dark){ loading=lazy width='600' }
+    </figure>
+
+所以, 本题的代码为: 
+
+```py
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        def dfs(r, c):
+            if r < 0 or r >= len(grid) or c < 0 or c >= len(grid[0]):
+                return
+            if grid[r][c] != '1':
+                return
+            grid[r][c] = '2'
+            dfs(r-1, c)
+            dfs(r+1, c)
+            dfs(r, c-1)
+            dfs(r, c+1)
+
+        res = 0
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j] == '1':
+                    dfs(i, j)
+                    res += 1
+        return res
+```
