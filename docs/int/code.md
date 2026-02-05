@@ -464,4 +464,42 @@ class Solution:
 
 ### [763.划分字母区间](https://leetcode.cn/problems/partition-labels/?envType=study-plan-v2&envId=top-100-liked)
 
+## 堆
 
+### [215.数组中的第K个最大元素](https://leetcode.cn/problems/kth-largest-element-in-an-array/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题题目里面说了要求时间复杂度为`O(n)`, 但是官方题解里面用的是堆算法. 那我们就先来看一下Python的堆是怎么写的, Python的堆用的是`heapq`库, 堆顶元素是列表中的最小元素. 使用`heapq.heappush(heap, val)`将元素压入堆中, 使用`heapq.heappop(heap)`将堆顶元素弹出. 使用`heapq.heapify(heap)`将列表转换为堆. 这道题的思路就是当`heap`的大小大于`k`的时候, 弹出堆顶元素, 最后剩下的就是第`k`个最大元素. 
+
+```py
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        import heapq
+        heap = []
+        for num in nums:
+            heapq.heappush(heap, num)
+            if len(heap) > k:
+                heapq.heappop(heap)
+        return heap[0]
+```
+
+### [347.前K个高频元素](https://leetcode.cn/problems/top-k-frequent-elements/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题需要使用哈希表来统计每个元素出现的次数, 然后使用堆来找出前`k`个高频元素. 和215类似, 当`heap`的大小大于`k`的时候, 弹出堆顶元素. 最后剩余的就是前`k`个高频元素. 要注意, 这里我们存储的是`(val, key)`, 而不是`(key, val)`, 因为我们要按照频率排序, 而频率是第一个元素. 
+
+```py
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        import heapq
+        ht = dict()
+        for num in nums:
+            ht[num] = ht.get(num, 0) + 1
+        heap = []
+        for key, val in ht.items():
+            heapq.heappush(heap, (val, key))
+            if len(heap) > k:
+                heapq.heappop(heap)
+        res = []
+        for item in heap:
+            res.append(item[1])
+        return res
+```
