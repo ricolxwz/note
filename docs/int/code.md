@@ -503,3 +503,49 @@ class Solution:
             res.append(item[1])
         return res
 ```
+
+### [295.数据流的中位数](https://leetcode.cn/problems/find-median-from-data-stream/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题用到的技术是 _对顶堆_. 用一个大顶堆+一个小顶堆, 将数据分为较小的一半和较大的一半. 
+
+* 大顶堆: 存较小的一半, 堆顶是这一半里面的最大值
+* 小顶堆: 存较大的一半, 堆顶是这一半里面的最小值
+
+约定两堆大小不能超过1, 这样中位数就是:
+
+* 总数为奇数: 元素多的那堆为堆顶
+* 总数为偶数: 两堆堆顶的平均值
+
+要点:
+
+* `addNum(num)`: 根据`num`和当前堆顶的关系, 决定放进哪一个堆, 必要时将一个堆的堆顶移动到另一个堆, 保持大小平衡
+* `findMedian()`: 只读两个堆顶并做简单运算, 时间复杂度`O(1)`
+
+```py
+import heapq
+class MedianFinder:
+
+    def __init__(self):
+        self.min_heap = []
+        self.max_heap = []
+
+    def addNum(self, num: int) -> None:
+        if not self.min_heap or num >= self.min_heap[0]:
+            heapq.heappush(self.min_heap, num)
+        else:
+            heapq.heappush(self.max_heap, -num)
+        if len(self.min_heap) - len(self.max_heap) > 1:
+            e = heapq.heappop(self.min_heap)
+            heapq.heappush(self.max_heap, -e)
+        elif len(self.max_heap) - len(self.min_heap) > 1:
+            e = -heapq.heappop(self.max_heap)
+            heapq.heappush(self.min_heap, e)
+
+    def findMedian(self) -> float:
+        if len(self.min_heap) > len(self.max_heap):
+            return self.min_heap[0]
+        elif len(self.min_heap) < len(self.max_heap):
+            return -self.max_heap[0]
+        else:
+            return (self.min_heap[0] - self.max_heap[0]) / 2
+```
