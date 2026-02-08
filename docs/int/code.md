@@ -746,3 +746,27 @@ class Solution:
 4. 重复: 检查谁变成了新的入度=0的节点, 继续下一轮
 
 如果最后图里面还有节点, 但是没有入度=0的, 说明图中存在环. 
+
+```py
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        indeg = [0] * numCourses  # 用于统计每一个节点的入度
+        g = [[] for _ in range(numCourses)]  # 用于记录每个节点的相邻节点
+
+        for a, b in prerequisites:  # b -> a
+            g[b].append(a)
+            indeg[a] += 1
+
+        from collections import deque
+        q = deque(i for i in range(numCourses) if indeg[i] == 0)  # 最开始先把所有入度已经是0的节点放进来
+        cnt = 0
+        while q:
+            u = q.popleft()
+            cnt += 1
+            for v in g[u]:
+                indeg[v] -= 1
+                if indeg[v] == 0:
+                    q.append(v)
+        
+        return cnt == numCourses
+```
