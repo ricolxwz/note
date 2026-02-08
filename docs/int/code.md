@@ -681,3 +681,57 @@ while queue 非空:
             if m 未被访问过:
                 queue.push(m)
 ```
+
+有了计算最短路径的层序BFS框架, 这道题就很简单了:
+
+1. 一开始, 我们找出所有腐烂的橘子, 将它们放入队列, 作为第0层的节点
+2. 然后进行BFS遍历, 每个节点的相邻节点可能是上, 下, 左, 右四个方向的节点, 注意判断节点位于网格边界的特殊情况
+3. 由于可能存在未被污染的橘子, 我们需要记录新鲜橘子的数量, 在BFS中, 每遍历一个橘子(污染了一个橘子), 就将新鲜橘子的数量-1, 如果BFS结束之后这个数量仍然没有归0, 说明存在无法被污染的橘子. 
+
+本题的代码为:
+
+```py
+from collections import deque
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        M = len(grid)
+        N = len(grid[0])
+        queue = deque()
+        count = 0
+
+        # 统计新鲜橘子的数量, 并将腐烂的橘子加入到队列
+        for r in range(M):
+            for c in range(N):
+                if grid[r][c] == 1:  # 新鲜橘子
+                    count += 1
+                elif grid[r][c] == 2:  # 腐烂橘子
+                    queue.append((r, c))
+
+        round = 0   # 层数, 或者分钟数
+        while count > 0 and len(queue) > 0:  # count需要大于0, 是因为如果全部都是腐烂的橘子, 那么会进入循环导致round + 1, 实际上round需要为0
+            round += 1
+            n = len(queue)  
+            for i in range(n):  # 这一层的全部都放进来
+                r, c = queue.popleft()
+                if r - 1 >= 0 and grid[r-1][c] == 1:
+                    grid[r-1][c] = 2
+                    count -= 1
+                    queue.append((r-1, c))
+                if r + 1 < M and grid[r+1][c] == 1:
+                    grid[r+1][c] = 2
+                    count -= 1
+                    queue.append((r+1, c))
+                if c - 1 >= 0 and grid[r][c-1] == 1:
+                    grid[r][c-1] = 2
+                    count -= 1
+                    queue.append((r, c-1))
+                if c + 1 < N and grid[r][c+1] == 1:
+                    grid[r][c+1] = 2
+                    count -= 1
+                    queue.append((r, c+1))
+                
+        if count > 0:
+            return -1
+        else:
+            return round
+```
