@@ -649,4 +649,21 @@ class Solution:
 
 ### [994.腐烂的橘子](https://leetcode.cn/problems/rotting-oranges/?envType=study-plan-v2&envId=top-100-liked)
 
+不同于上一道题考察DFS, 这道题考察的是BFS. 
 
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/ddf4f9777e1782890f72f265f729000d.gif#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/ddf4f9777e1782890f72f265f729000d_inverted.gif#only-dark){ loading=lazy width='500' }
+</figure>
+
+BFS其实就是层序遍历, 从某个节点出发, BFS首先遍历距离为1的节点, 然后是距离为2, 3, 4的节点.  这道题要返回直到单元格中没有新鲜橘子为止必须经过的最小分钟数, 翻译一下, 实际上就是求腐烂橘子到所有新鲜橘子的最短路径. 
+
+BFS的代码框架在二叉树中就见过, 需要使用队列:
+
+```py
+while queue 非空:
+    node = queue.pop()
+    for node 的所有相邻节点 m:
+        if m 未被访问过:
+            queue.push(m)
+```
