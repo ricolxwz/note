@@ -859,6 +859,38 @@ class Solution:
 
 线性DP的关注点是解决问题的前i个元素组成的子问题, 状态主要沿序列线性推进, 当前值通常直接依赖于前一个或者前几个位置的最优值. 走到第`i`步, 只在乎结果, 不在乎处于什么姿态. 
 
+#### [70.爬楼梯](https://leetcode.cn/problems/climbing-stairs/description/?envType=study-plan-v2&envId=top-100-liked)
+
+`dp[i]`的状态只能从`i-1`迈一步或者从`i-2`迈两步转移过来. 因此, `dp[i] = dp[i-1] + dp[i-2]`.
+
+```py
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n <= 2:
+            return n
+        dp = [0] * (n+1)
+        dp[1] = 1
+        dp[2] = 2
+        for i in range(3, n+1):
+            dp[i] = dp[i-1] + dp[i-2]
+        return dp[n]
+```
+
+#### [118.杨辉三角](https://leetcode.cn/problems/pascals-triangle/?envType=study-plan-v2&envId=top-100-liked)
+
+```py
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        res = []
+        for i in range(numRows):
+            lel = [1] * (i+1)
+            if i >= 2:
+                for j in range(1, i):
+                    lel[j] = res[i-1][j-1] + res[i-1][j]
+            res.append(lel)
+        return res
+```
+
 ### 状态机动态规划
 
 状态机DP的关注点是在第`i`步的时候, 处于某种特定内部状态下的最优解. 状态序列在推进的同时, 还在有限个内部状态之间跳转. `dp[i][当前状态]`依赖于`dp[i-1][来源状态]`. 走到第`i`步, 必须明确当前处于什么姿态. 
