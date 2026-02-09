@@ -895,4 +895,27 @@ class Solution:
 
 状态机DP的关注点是在第`i`步的时候, 处于某种特定内部状态下的最优解. 状态序列在推进的同时, 还在有限个内部状态之间跳转. `dp[i][当前状态]`依赖于`dp[i-1][来源状态]`. 走到第`i`步, 必须明确当前处于什么姿态. 
 
+#### [198.打家劫舍](https://leetcode.cn/problems/house-robber/description/?envType=study-plan-v2&envId=top-100-liked)
+
+`dp[i][0]`表示第`i`个房子没偷的最大收益, `dp[i][1]`表示第`i`个房子偷了的最大收益. 如果第`i`个房子没偷, 那么第`i-1`个房子偷或者不偷都行, `dp[i][0] = max(dp[i-1][0], dp[i-1][1])`. 如果第`i`个房子偷了, 那么第`i-1`个房子就不能偷了, `dp[i][1] = dp[i-1][0] + nums[i]`. 
+
+```py
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        if not nums:
+            return 0
+        n = len(nums)
+
+        dp = [[0] * 2 for _ in range(n)]
+        dp[0][0] = 0  # 第一家不偷，收益为 0
+        dp[0][1] = nums[0]  # 第一家偷了，收益为 nums[0]
+
+        for i in range(1, n):
+            # 状态机
+            dp[i][0] = max(dp[i-1][0], dp[i-1][1])
+            dp[i][1] = dp[i-1][0] + nums[i]
+
+        return max(dp[n-1][0], dp[n-1][1])  # 最后一家有可能偷了也有可能没有偷
+```
+
 ### 区间动态规划
