@@ -891,6 +891,43 @@ class Solution:
         return res
 ```
 
+#### [279.完全平方数](https://leetcode.cn/problems/perfect-squares/?envType=study-plan-v2&envId=top-100-liked)
+
+完全平方数是一类典型的背包问题. `dp[i]`表示组成数字`i`的完全平方数的最少数量. `dp[i]`的状态转移方程是: `dp[i] = min(dp[i], dp[i - j*j] + 1)`, 其中`j*j`是小于等于`i`的完全平方数. 
+
+假设你现在已经在第`i=12`层, 那么到这个状态, 有这么几种可能, 最后一步迈的是`1^2`, 那么之前在11, 最后一步迈的是`2^2`, 那么之前在8, 最后一步迈的是`3^2`, 那么之前在3. 所以可以表示为`dp[12] = min(dp[11]+1, dp[8]+1, dp[3]+1)`.
+
+```py
+class Solution:
+    def numSquares(self, n: int) -> int:
+        dp = [float('inf')] * (n+1)
+        dp[0] = 0
+        for i in range(1, n+1):
+            j = 1
+            while j * j <= n:
+                dp[i] = min(dp[i], dp[i-j*j]+1)
+                j += 1
+        return dp[n]
+```
+
+#### [322.零钱兑换](https://leetcode.cn/problems/coin-change/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题也是典型的背包问题. `dp[i]`表示组成金额`i`的最少硬币数量. `dp[i]`的状态转移方程是: `dp[i] = min(dp[i], dp[i - coin] + 1)`, 其中`coin`是小于等于`i`的硬币面额. 
+
+```py
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        dp = [float('inf')] * (amount + 1)
+        dp[0] = 0
+        sorted_coins = sorted(coins)
+        for i in range(1, amount + 1):
+            j = 0
+            while j < len(sorted_coins) and i - sorted_coins[j] >= 0:
+                dp[i] = min(dp[i], dp[i-sorted_coins[j]]+1)
+                j += 1
+        return dp[amount] if dp[amount] != float('inf') else -1
+```   
+
 ### 状态机动态规划
 
 状态机DP的关注点是在第`i`步的时候, 处于某种特定内部状态下的最优解. 状态序列在推进的同时, 还在有限个内部状态之间跳转. `dp[i][当前状态]`依赖于`dp[i-1][来源状态]`. 走到第`i`步, 必须明确当前处于什么姿态. 
