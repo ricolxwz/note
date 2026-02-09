@@ -578,10 +578,10 @@ class MedianFinder:
 
     ```py
     def dfs(grid: list[list[int]], r: int, c: int) -> None:
-        # 判断 base case：坐标 (r, c) 超出网格范围则直接返回
+        # 判断 base case: 坐标 (r, c) 超出网格范围则直接返回
         if not in_area(grid, r, c):
             return
-        # 访问上、下、左、右四个相邻格子
+        # 访问上, 下, 左, 右四个相邻格子
         dfs(grid, r - 1, c)
         dfs(grid, r + 1, c)
         dfs(grid, r, c - 1)
@@ -928,6 +928,25 @@ class Solution:
         return dp[amount] if dp[amount] != float('inf') else -1
 ```   
 
+#### [139.单词拆分](https://leetcode.cn/problems/word-break/?envType=study-plan-v2&envId=top-100-liked)
+
+定义 `dp[i]` 表示字符串前 `i` 个字符 (`s[0:i]`) 能否用字典中的单词拆分. 状态转移: 遍历所有可能的断点 `j < i`, 如果 `dp[j]` 为真且 `s[j:i]` 在字典中, 则 `dp[i]` 为真. 
+
+```py
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        dp = [False] * (len(s) + 1)
+        wordSet = set(wordDict)
+        dp[0] = True
+        for i in range(1, len(s) + 1):
+            for j in range(i):
+                if dp[j] and s[j:i] in wordSet:
+                    dp[i] = True
+                    break
+        return dp[len(s)]
+```
+
+
 ### 状态机动态规划
 
 状态机DP的关注点是在第`i`步的时候, 处于某种特定内部状态下的最优解. 状态序列在推进的同时, 还在有限个内部状态之间跳转. `dp[i][当前状态]`依赖于`dp[i-1][来源状态]`. 走到第`i`步, 必须明确当前处于什么姿态. 
@@ -944,8 +963,8 @@ class Solution:
         n = len(nums)
 
         dp = [[0] * 2 for _ in range(n)]
-        dp[0][0] = 0  # 第一家不偷，收益为 0
-        dp[0][1] = nums[0]  # 第一家偷了，收益为 nums[0]
+        dp[0][0] = 0  # 第一家不偷, 收益为 0
+        dp[0][1] = nums[0]  # 第一家偷了, 收益为 nums[0]
 
         for i in range(1, n):
             # 状态机
