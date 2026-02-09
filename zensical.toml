@@ -539,6 +539,7 @@ nav = [
         ]},
         { "代码" = "int/code.md" },
         { "简历" = "int/pro.md" },
+        { "DeepSeed" = "int/deepspeed.md" },
     ]},
 ]
 
