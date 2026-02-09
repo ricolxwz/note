@@ -948,7 +948,46 @@ class Solution:
 
 #### [300.最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/?envType=study-plan-v2&envId=top-100-liked)
 
+`dp[i]`表示以`nums[i]`结尾的LIS的长度. 对于所有的`i`, 枚举所有`j<i`, 如果`nums[j] < nums[i]`, 说明可以接在后面, 那么`dp[i] = max(dp[i], dp[j] + 1)`. 
 
+```py
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        n = len(nums)
+        if n == 0:
+            return 0
+        dp = [1] * n
+        for i in range(n):
+            for j in range(i):
+                if nums[j] < nums[i]:
+                    dp[i] = max(dp[i], dp[j] + 1)
+        return max(dp)
+```
+
+#### [152.乘积最大子数组](https://leetcode.cn/problems/maximum-product-subarray/?envType=study-plan-v2&envId=top-100-liked)
+
+
+这道题也是线性DP, 但是有点阴险, 因为负数可能会让最大变为最小, 最小变为最大. `max_dp[i]`表示的是以`nums[i]`结尾的, 非空的, 连续子数组的最大乘积, 这一道题和上一道题的不同点是, 他要求子数组必须是连续的, 所以, `max_dp[i]`只能从`max_dp[i-1]`或者`min_dp[i-1]`转移过来. 而不能从`max_dp[j]`或者`min_dp[j]`转移过来, 其中`j < i-1`. 
+
+```py
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        n = len(nums)
+        max_dp = [0] * n
+        min_dp = [0] * n
+        max_dp[0] = min_dp[0] = nums[0]
+        result = nums[0]
+
+        for i in range(1, n):
+            if nums[i] >= 0:
+                max_dp[i] = max(nums[i], max_dp[i-1]*nums[i])
+                min_dp[i] = min(nums[i], min_dp[i-1]*nums[i])
+            else:
+                max_dp[i] = max(nums[i], min_dp[i-1]*nums[i])
+                min_dp[i] = min(nums[i], max_dp[i-1]*nums[i])
+            result = max(result, max_dp[i])
+        return result
+```
 
 ### 状态机动态规划
 
