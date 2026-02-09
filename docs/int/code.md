@@ -946,6 +946,9 @@ class Solution:
         return dp[len(s)]
 ```
 
+#### [300.最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/?envType=study-plan-v2&envId=top-100-liked)
+
+
 
 ### 状态机动态规划
 
