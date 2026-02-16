@@ -1056,3 +1056,16 @@ def inorder(root):
 ```
 
 对于后续遍历, 其实就是先序遍历`inverse`一下, 没什么区别.
+
+#### 递归写法
+
+对于先序, 中序, 后序, 都是一样的.
+
+```py
+def inorder(root):
+    if not root:
+        return
+    inorder(root.left)
+    print(root.val)
+    inorder(root.right)
+```
