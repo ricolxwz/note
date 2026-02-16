@@ -1054,3 +1054,5 @@ def inorder(root):
         print(cur.val)
         cur = cur.right
 ```
+
+对于后续遍历, 其实就是先序遍历`inverse`一下, 没什么区别.
