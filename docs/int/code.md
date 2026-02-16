@@ -9,13 +9,13 @@ comments: false
 
 #### [78.子集](https://leetcode.cn/problems/subsets/?envType=study-plan-v2&envId=top-100-liked)
 
-子集型回溯对应的是: **每个元素都可以选或者不选**. 
+子集型回溯对应的是: **每个元素都可以选或者不选**.
 
-* 枚举选哪个写法:  
+* 枚举选哪个写法:
 
-    枚举子集(答案)的第一个数选谁, 第二个数选谁, 第三个数选谁, 依次类推... `i`表示现在要枚举`nums[i]`到`nums[n-1]`中的一个数, 添加到`path`末尾. 如果选`nums[j]`添加到`path`末尾, 那么下一个要添加到`path`末尾的数, 就要在`nums[j+1]`到`nums[n-1]`中枚举了. 
+    枚举子集(答案)的第一个数选谁, 第二个数选谁, 第三个数选谁, 依次类推... `i`表示现在要枚举`nums[i]`到`nums[n-1]`中的一个数, 添加到`path`末尾. 如果选`nums[j]`添加到`path`末尾, 那么下一个要添加到`path`末尾的数, 就要在`nums[j+1]`到`nums[n-1]`中枚举了.
 
-    注意, 不需要在回溯中处理`i==n`的边界情况, 因为此时不会进入循环, 会直接`return`, 所以`if i==n: return`不用写. 
+    注意, 不需要在回溯中处理`i==n`的边界情况, 因为此时不会进入循环, 会直接`return`, 所以`if i==n: return`不用写.
 
     ```py
     class Solution:
@@ -35,9 +35,9 @@ comments: false
             return res
     ```
 
-* 选/不选写法: 
+* 选/不选写法:
 
-    对于输入的`nums`, 考虑每个`nums[i]`是选还是不选. 
+    对于输入的`nums`, 考虑每个`nums[i]`是选还是不选.
 
     ```py
     class Solution:
@@ -61,11 +61,11 @@ comments: false
             return res
     ```
 
-    每个`i`上都要二叉判断选/不选, 所以总共有`2^n`中选择. 或者说有`2^n`个叶子, 在每个叶子碰到边界要复制路径为`O(n)`. 所以时间复杂度为`O(n*2^n)`. 
+    每个`i`上都要二叉判断选/不选, 所以总共有`2^n`中选择. 或者说有`2^n`个叶子, 在每个叶子碰到边界要复制路径为`O(n)`. 所以时间复杂度为`O(n*2^n)`.
 
-#### [131.分割回文串](https://leetcode.cn/problems/palindrome-partitioning/?envType=study-plan-v2&envId=top-100-liked) 
+#### [131.分割回文串](https://leetcode.cn/problems/palindrome-partitioning/?envType=study-plan-v2&envId=top-100-liked)
 
-* 换一个视角, 假设每两个字符之间都有一个逗号, 我们可以选它或者不选它, 这就是一个子集型回溯问题. 
+* 换一个视角, 假设每两个字符之间都有一个逗号, 我们可以选它或者不选它, 这就是一个子集型回溯问题.
 
     ```py
     class Solution:
@@ -112,7 +112,7 @@ comments: false
 
 #### [77.组合](https://leetcode.cn/problems/combinations/description/)
 
-组合型回溯其实是子集型回溯的一种特殊情况. 子集回溯需要所有规模的集合, 组合回溯需要满足某个约束的集合. 子集回溯自然结束, 组合回溯满足条件就停, 可以剪枝. 
+组合型回溯其实是子集型回溯的一种特殊情况. 子集回溯需要所有规模的集合, 组合回溯需要满足某个约束的集合. 子集回溯自然结束, 组合回溯满足条件就停, 可以剪枝.
 
 * 选/不选写法
 
@@ -183,13 +183,13 @@ class Solution:
         return res
 ```
 
-`i`: 当前要填的是排列的第`i`个位置(递归深度), `j`: 遍历`nums[0..n-1]`的下标, 尝试把还没用过的`nums[j]`放到当前位置. 如果`i==n`, 那么在回溯的时候, 会把路径上的`j`都置为`False`. 
+`i`: 当前要填的是排列的第`i`个位置(递归深度), `j`: 遍历`nums[0..n-1]`的下标, 尝试把还没用过的`nums[j]`放到当前位置. 如果`i==n`, 那么在回溯的时候, 会把路径上的`j`都置为`False`.
 
 ## 二分查找
 
 ### [35.搜索插入位置](https://leetcode.cn/problems/search-insert-position/?envType=study-plan-v2&envId=top-100-liked)
 
-下面是闭区间写法. 为什么不找到`target`就立刻返回, 是因为这种写法的适用范围比较窄, 为什么返回第一个等于`target`的数的下表更好呢? 因为这可以解决更加复杂的题目, 比如给你一个有序数组, 让你计算有多少个数字小于`target`. 
+下面是闭区间写法. 为什么不找到`target`就立刻返回, 是因为这种写法的适用范围比较窄, 为什么返回第一个等于`target`的数的下表更好呢? 因为这可以解决更加复杂的题目, 比如给你一个有序数组, 让你计算有多少个数字小于`target`.
 
 ```py
 class Solution:
@@ -204,11 +204,11 @@ class Solution:
         return left
 ```
 
-如果`target`存在, 则`left`停在第一个`target`的位置; 如果不存在, 则`left`停在第一个大于`target`的位置(有可能越界, 这是需要处理的) 
+如果`target`存在, 则`left`停在第一个`target`的位置; 如果不存在, 则`left`停在第一个大于`target`的位置(有可能越界, 这是需要处理的)
 
 ### [74.搜索二维矩阵](https://leetcode.cn/problems/search-a-2d-matrix/description/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题里面的二维矩阵展平了之后其实就是一个一维数组, 所以可以使用一维数组的思维来解决这道题. 
+这道题里面的二维矩阵展平了之后其实就是一个一维数组, 所以可以使用一维数组的思维来解决这道题.
 
 ```py
 class Solution:
@@ -227,11 +227,11 @@ class Solution:
             return True
 ```
 
-`if left == m * n or matrix[left // n][left % n] != target:`这一行表示无法找到`target`, 三种情况, 所有元素都大于`target`, 对应`left == m * n`; 所有元素都小于`target`或者在序列中找不到, 对应`matrix[left // n][left % n] != target`. 
+`if left == m * n or matrix[left // n][left % n] != target:`这一行表示无法找到`target`, 三种情况, 所有元素都大于`target`, 对应`left == m * n`; 所有元素都小于`target`或者在序列中找不到, 对应`matrix[left // n][left % n] != target`.
 
 ### [34.在排序数组中查找元素的第一个和最后一个位置](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked)
 
-因为我们之前的模板找到的是`target`的第一个位置(如果存在), 所以我们如果找到的话可以直接`while`一下, 判断结束的位置. 
+因为我们之前的模板找到的是`target`的第一个位置(如果存在), 所以我们如果找到的话可以直接`while`一下, 判断结束的位置.
 
 ```py
 class Solution:
@@ -254,7 +254,7 @@ class Solution:
 
 ### [33.搜索旋转排序数组](https://leetcode.cn/problems/search-in-rotated-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked)
 
-旋转数组本来是整体递增的, 只是某个位置断开之后拼到了后面, 对于任意区间, 总有一边是有序的. 此时有序部分使用二分法查找. 无序部分再一分为二, 其中一个一定有序, 另一个可能有序, 可能无序, 如此循环. 
+旋转数组本来是整体递增的, 只是某个位置断开之后拼到了后面, 对于任意区间, 总有一边是有序的. 此时有序部分使用二分法查找. 无序部分再一分为二, 其中一个一定有序, 另一个可能有序, 可能无序, 如此循环.
 
 ```py
 class Solution:
@@ -300,7 +300,7 @@ class Solution:
 
 ### [20.有效的括号](https://leetcode.cn/problems/valid-parentheses/description/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题是经典的栈题目, 三种情况: 
+这道题是经典的栈题目, 三种情况:
 
 1. 字符串遍历完成后, 栈里面还有元素: 左括号多余
 2. 遇到右括号, 取出栈顶元素发现不配对: 左右括号不配对
@@ -319,19 +319,19 @@ class Solution:
                 t = stack.pop()
                 if c == ")" and t != "(" or c == "]" and t != "[" or c == "}" and t != "{":
                     return False
-        if len(stack) != 0: 
+        if len(stack) != 0:
             return False
         return True
 ```
 
 ### [155.最小栈](https://leetcode.cn/problems/min-stack/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题需要一个辅助栈. 
+这道题需要一个辅助栈.
 
-* 当一个元素要入栈的时候, 我们取当前辅助栈顶存储的最小值, 和当前元素比较得到最小值, 将这个最小值插入到辅助栈中. 
-* 当一个元素要出栈的时候, 我们把辅助栈的栈顶元素也一样弹出. 
+* 当一个元素要入栈的时候, 我们取当前辅助栈顶存储的最小值, 和当前元素比较得到最小值, 将这个最小值插入到辅助栈中.
+* 当一个元素要出栈的时候, 我们把辅助栈的栈顶元素也一样弹出.
 
-在任意一个时刻, 栈内元素的最小值就是存储在辅助栈的栈顶元素中. 
+在任意一个时刻, 栈内元素的最小值就是存储在辅助栈的栈顶元素中.
 
 ```py
 class MinStack:
@@ -366,7 +366,7 @@ class MinStack:
 * 嵌套: 结构为数字+左括号+括号中的字符串+右括号, 例如`s = 2[abc]`, `s = 2[3[ab]]`
 * 组合: 多个`k[str]`并在一起, 例如`s=2[ab]3[xy]`
 
-用栈模拟递归: 
+用栈模拟递归:
 
 ```py
 class Solution:
@@ -381,7 +381,7 @@ class Solution:
                 k = k * 10 + int(c)
             elif c == '[':
                 stack.append((res, k))
-                res = ''  # 当开始[的时候, 我们需要清空res来存放此次递归的结果, 之前的结果已经被压入到stack中. 
+                res = ''  # 当开始[的时候, 我们需要清空res来存放此次递归的结果, 之前的结果已经被压入到stack中.
                 k = 0
             else:
                 pre_res, pre_k = stack.pop()
@@ -391,7 +391,7 @@ class Solution:
 
 ### [739.每日温度](https://leetcode.cn/problems/daily-temperatures/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题的解法是单调栈. 维护一个从栈底到栈顶温度递减的单调栈, 当遇到比栈顶温度更高的温度的时候, 就找到了栈顶元素的答案. 弹出栈顶, 计算天数差, 直到栈为空或者栈顶温度>=当前温度. 将当前索引压入栈中. 
+这道题的解法是单调栈. 维护一个从栈底到栈顶温度递减的单调栈, 当遇到比栈顶温度更高的温度的时候, 就找到了栈顶元素的答案. 弹出栈顶, 计算天数差, 直到栈为空或者栈顶温度>=当前温度. 将当前索引压入栈中.
 
 ```py
 class Solution:
@@ -408,11 +408,11 @@ class Solution:
 
 ## 贪心算法
 
-贪心算法的核心思想是每一步都做出当前看起来最优的选择, 期望通过局部最优达到全局最优. 
+贪心算法的核心思想是每一步都做出当前看起来最优的选择, 期望通过局部最优达到全局最优.
 
 ### [121.买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/?envType=study-plan-v2&envId=top-100-liked)
 
-买入日期必须在卖出日期的前面, 从`prices[0]`到`prices[i-1]`, 我们维护一个最小值`minprice`, 对于每一个`prices[i]`, 我们都计算卖出获利值`prices[i] - minprice`, 如果该值优于现有的最优值, 那么确定在这里卖出. 
+买入日期必须在卖出日期的前面, 从`prices[0]`到`prices[i-1]`, 我们维护一个最小值`minprice`, 对于每一个`prices[i]`, 我们都计算卖出获利值`prices[i] - minprice`, 如果该值优于现有的最优值, 那么确定在这里卖出.
 
 ```py
 class Solution:
@@ -427,7 +427,7 @@ class Solution:
 
 ### [55.跳跃游戏](https://leetcode.cn/problems/jump-game/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题的关键不是跳几步, 而是跳多远. 维护变量`max_reach`, 记录当前能达到的最远位置, 然后, **最关键的是, 我们只遍历可达范围内的位置`i<=max_reach`.** 随后, 更新当前可达的最远距离`max_reach = max(max_reach, i + nums[i])`, 如果`max_reach >= 数组末尾`, 返回true. 
+这道题的关键不是跳几步, 而是跳多远. 维护变量`max_reach`, 记录当前能达到的最远位置, 然后, **最关键的是, 我们只遍历可达范围内的位置`i<=max_reach`.** 随后, 更新当前可达的最远距离`max_reach = max(max_reach, i + nums[i])`, 如果`max_reach >= 数组末尾`, 返回true.
 
 ```py
 class Solution:
@@ -444,7 +444,7 @@ class Solution:
 
 ### [45.跳跃游戏 II](https://leetcode.cn/problems/jump-game-ii/description/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题比55更进一步, 需要求出到达最后一个元素的最小跳跃次数. 其核心思想是, 在当前的跳跃范围内(`i < border`), 选择让下一跳到达更远的位置, 不需要真的跳到`border`. 
+这道题比55更进一步, 需要求出到达最后一个元素的最小跳跃次数. 其核心思想是, 在当前的跳跃范围内(`i < border`), 选择让下一跳到达更远的位置, 不需要真的跳到`border`.
 
 ```py
 class Solution:
@@ -468,7 +468,7 @@ class Solution:
 
 ### [215.数组中的第K个最大元素](https://leetcode.cn/problems/kth-largest-element-in-an-array/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题题目里面说了要求时间复杂度为`O(n)`, 但是官方题解里面用的是堆算法. 那我们就先来看一下Python的堆是怎么写的, Python的堆用的是`heapq`库, 堆顶元素是列表中的最小元素. 使用`heapq.heappush(heap, val)`将元素压入堆中, 使用`heapq.heappop(heap)`将堆顶元素弹出. 使用`heapq.heapify(heap)`将列表转换为堆. 这道题的思路就是当`heap`的大小大于`k`的时候, 弹出堆顶元素, 最后剩下的就是第`k`个最大元素. 
+这道题题目里面说了要求时间复杂度为`O(n)`, 但是官方题解里面用的是堆算法. 那我们就先来看一下Python的堆是怎么写的, Python的堆用的是`heapq`库, 堆顶元素是列表中的最小元素. 使用`heapq.heappush(heap, val)`将元素压入堆中, 使用`heapq.heappop(heap)`将堆顶元素弹出. 使用`heapq.heapify(heap)`将列表转换为堆. 这道题的思路就是当`heap`的大小大于`k`的时候, 弹出堆顶元素, 最后剩下的就是第`k`个最大元素.
 
 ```py
 class Solution:
@@ -484,7 +484,7 @@ class Solution:
 
 ### [347.前K个高频元素](https://leetcode.cn/problems/top-k-frequent-elements/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题需要使用哈希表来统计每个元素出现的次数, 然后使用堆来找出前`k`个高频元素. 和215类似, 当`heap`的大小大于`k`的时候, 弹出堆顶元素. 最后剩余的就是前`k`个高频元素. 要注意, 这里我们存储的是`(val, key)`, 而不是`(key, val)`, 因为我们要按照频率排序, 而频率是第一个元素. 
+这道题需要使用哈希表来统计每个元素出现的次数, 然后使用堆来找出前`k`个高频元素. 和215类似, 当`heap`的大小大于`k`的时候, 弹出堆顶元素. 最后剩余的就是前`k`个高频元素. 要注意, 这里我们存储的是`(val, key)`, 而不是`(key, val)`, 因为我们要按照频率排序, 而频率是第一个元素.
 
 ```py
 class Solution:
@@ -506,7 +506,7 @@ class Solution:
 
 ### [295.数据流的中位数](https://leetcode.cn/problems/find-median-from-data-stream/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题用到的技术是 _对顶堆_. 用一个大顶堆+一个小顶堆, 将数据分为较小的一半和较大的一半. 
+这道题用到的技术是 _对顶堆_. 用一个大顶堆+一个小顶堆, 将数据分为较小的一半和较大的一半.
 
 * 大顶堆: 存较小的一半, 堆顶是这一半里面的最大值
 * 小顶堆: 存较大的一半, 堆顶是这一半里面的最小值
@@ -554,7 +554,7 @@ class MedianFinder:
 
 ### [200.岛屿数量](https://leetcode.cn/problems/number-of-islands/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题考察的是图的DFS遍历. 网格问题是由`m*n`个小方格组成的一个网格, 每个小方格与其上下左右四个方格认为是相邻的, 要在这样的网格上进行某种搜索. 岛屿问题是一种典型的网格问题, 每个格子中的数字可能是0或者1, 我们把数字为0的格子看为是海洋格子, 数字为1的格子看为是陆地格子. 这样相邻的陆地格子就连接成一个岛屿. 在这样的设定下, 就出现了各种岛屿问题的变种, 包括数量, 面积, 周长等, 基本都可以用DFS解决. 
+这道题考察的是图的DFS遍历. 网格问题是由`m*n`个小方格组成的一个网格, 每个小方格与其上下左右四个方格认为是相邻的, 要在这样的网格上进行某种搜索. 岛屿问题是一种典型的网格问题, 每个格子中的数字可能是0或者1, 我们把数字为0的格子看为是海洋格子, 数字为1的格子看为是陆地格子. 这样相邻的陆地格子就连接成一个岛屿. 在这样的设定下, 就出现了各种岛屿问题的变种, 包括数量, 面积, 周长等, 基本都可以用DFS解决.
 
 对于网格上的DFS, 我们可以参考二叉树的DFS:
 
@@ -565,14 +565,14 @@ class MedianFinder:
     ![](https://img.ricolxwz.cn/d058b0f5bd2ea79445b1689a4bb88dd1_inverted.webp#only-dark){ loading=lazy width='600' }
     </figure>
 
-2. 其次, DFS的Base case应该是网格中不需要继续递归, `grid[r][c]`会出现异常的格子, 也就是那些超出网格范围的格子. 
+2. 其次, DFS的Base case应该是网格中不需要继续递归, `grid[r][c]`会出现异常的格子, 也就是那些超出网格范围的格子.
 
     <figure markdown='1' id='fig'>
     ![](https://img.ricolxwz.cn/10aee5d759bfb2b5fecd485d28e8cb6d.webp#only-light){ loading=lazy width='600' }
     ![](https://img.ricolxwz.cn/10aee5d759bfb2b5fecd485d28e8cb6d_inverted.webp#only-dark){ loading=lazy width='600' }
     </figure>
 
-    这一点和二叉树中是一样的, 都是"先污染, 后治理", 甭管当前是在哪个格子, 先往四个方向走一步再说, 如果发现走出了网格范围再赶紧返回. 
+    这一点和二叉树中是一样的, 都是"先污染, 后治理", 甭管当前是在哪个格子, 先往四个方向走一步再说, 如果发现走出了网格范围再赶紧返回.
 
     这样, 我们有了网格DFS的框架:
 
@@ -593,16 +593,16 @@ class MedianFinder:
         return 0 <= r < len(grid) and 0 <= c < len(grid[0])
     ```
 
-3. 网格结构的DFS和二叉树DFS最大的不同之处在于, 遍历中可能遇到遍历过的节点. 这个时候, DFS可能会不停的兜圈子, 永远停不下来, 如图所示. 
+3. 网格结构的DFS和二叉树DFS最大的不同之处在于, 遍历中可能遇到遍历过的节点. 这个时候, DFS可能会不停的兜圈子, 永远停不下来, 如图所示.
 
     <figure markdown='1' id='fig'>
     ![](https://img.ricolxwz.cn/2a5682635bda405caaf0e888e2a76244.gif#only-light){ loading=lazy width='600' }
     ![](https://img.ricolxwz.cn/2a5682635bda405caaf0e888e2a76244_inverted.gif#only-dark){ loading=lazy width='600' }
     </figure>
 
-    如何避免这样的重复遍历呢? 答案是标记已经遍历过的格子. 以岛屿问题为例, 我们需要在所有值为1的格子上做DFS遍历, 每走过一个陆地格子, 我们就把格子的值改为2, 这样我们遇到2的时候, 就知道这是遍历过的格子了, 需要终止递归, 直接返回. 每个格子可能取三个值: 0表示海洋格子, 1表示陆地格子, 2表示已遍历过的陆地格子. 
+    如何避免这样的重复遍历呢? 答案是标记已经遍历过的格子. 以岛屿问题为例, 我们需要在所有值为1的格子上做DFS遍历, 每走过一个陆地格子, 我们就把格子的值改为2, 这样我们遇到2的时候, 就知道这是遍历过的格子了, 需要终止递归, 直接返回. 每个格子可能取三个值: 0表示海洋格子, 1表示陆地格子, 2表示已遍历过的陆地格子.
 
-    我们在框架代码中加入避免重复遍历的语句: 
+    我们在框架代码中加入避免重复遍历的语句:
 
     ```py
     def dfs(grid: list[list[int]], r: int, c: int) -> None:
@@ -622,7 +622,7 @@ class MedianFinder:
     ![](https://img.ricolxwz.cn/d2bbbca5f382c18b662915c3353dc561_inverted.gif#only-dark){ loading=lazy width='600' }
     </figure>
 
-所以, 本题的代码为: 
+所以, 本题的代码为:
 
 ```py
 class Solution:
@@ -649,14 +649,14 @@ class Solution:
 
 ### [994.腐烂的橘子](https://leetcode.cn/problems/rotting-oranges/?envType=study-plan-v2&envId=top-100-liked)
 
-不同于上一道题考察DFS, 这道题考察的是BFS. 
+不同于上一道题考察DFS, 这道题考察的是BFS.
 
 <figure markdown='1' id='fig'>
 ![](https://img.ricolxwz.cn/ddf4f9777e1782890f72f265f729000d.gif#only-light){ loading=lazy width='500' }
 ![](https://img.ricolxwz.cn/ddf4f9777e1782890f72f265f729000d_inverted.gif#only-dark){ loading=lazy width='500' }
 </figure>
 
-BFS其实就是层序遍历, 从某个节点出发, BFS首先遍历距离为1的节点, 然后是距离为2, 3, 4的节点.  这道题要返回直到单元格中没有新鲜橘子为止必须经过的最小分钟数, 翻译一下, 实际上就是求腐烂橘子到所有新鲜橘子的最短路径. 
+BFS其实就是层序遍历, 从某个节点出发, BFS首先遍历距离为1的节点, 然后是距离为2, 3, 4的节点.  这道题要返回直到单元格中没有新鲜橘子为止必须经过的最小分钟数, 翻译一下, 实际上就是求腐烂橘子到所有新鲜橘子的最短路径.
 
 BFS的代码框架在二叉树中就见过, 需要使用队列(注意, 这里需要`m`未被访问过是因为图和二叉树不一样, 图的节点可能会被多次访问):
 
@@ -668,7 +668,7 @@ while queue 非空:
             queue.push(m)
 ```
 
-但是在这种框架下, 当你从队列中取出一个节点的时候, 如果你不做额外处理, 你无法从队列本身一眼看出这个节点到底是属于"距离起点1步"还是"距离起点2步"的. 所以, 我们需要稍微修改一下框架, 一次性处理完每一层的所有节点. 
+但是在这种框架下, 当你从队列中取出一个节点的时候, 如果你不做额外处理, 你无法从队列本身一眼看出这个节点到底是属于"距离起点1步"还是"距离起点2步"的. 所以, 我们需要稍微修改一下框架, 一次性处理完每一层的所有节点.
 
 ```py
 depth = 0
@@ -686,7 +686,7 @@ while queue 非空:
 
 1. 一开始, 我们找出所有腐烂的橘子, 将它们放入队列, 作为第0层的节点
 2. 然后进行BFS遍历, 每个节点的相邻节点可能是上, 下, 左, 右四个方向的节点, 注意判断节点位于网格边界的特殊情况
-3. 由于可能存在未被污染的橘子, 我们需要记录新鲜橘子的数量, 在BFS中, 每遍历一个橘子(污染了一个橘子), 就将新鲜橘子的数量-1, 如果BFS结束之后这个数量仍然没有归0, 说明存在无法被污染的橘子. 
+3. 由于可能存在未被污染的橘子, 我们需要记录新鲜橘子的数量, 在BFS中, 每遍历一个橘子(污染了一个橘子), 就将新鲜橘子的数量-1, 如果BFS结束之后这个数量仍然没有归0, 说明存在无法被污染的橘子.
 
 本题的代码为:
 
@@ -710,7 +710,7 @@ class Solution:
         round = 0   # 层数, 或者分钟数
         while count > 0 and len(queue) > 0:  # count需要大于0, 是因为如果全部都是腐烂的橘子, 那么会进入循环导致round + 1, 实际上round需要为0
             round += 1
-            n = len(queue)  
+            n = len(queue)
             for i in range(n):  # 这一层的全部都放进来
                 r, c = queue.popleft()
                 if r - 1 >= 0 and grid[r-1][c] == 1:
@@ -729,7 +729,7 @@ class Solution:
                     grid[r][c+1] = 2
                     count -= 1
                     queue.append((r, c+1))
-                
+
         if count > 0:
             return -1
         else:
@@ -745,7 +745,7 @@ class Solution:
 3. 解锁: 该节点消失之后, 原本指向它的节点, 依赖数-1
 4. 重复: 检查谁变成了新的入度=0的节点, 继续下一轮
 
-如果最后图里面还有节点, 但是没有入度=0的, 说明图中存在环. 
+如果最后图里面还有节点, 但是没有入度=0的, 说明图中存在环.
 
 ```py
 class Solution:
@@ -767,20 +767,20 @@ class Solution:
                 indeg[v] -= 1
                 if indeg[v] == 0:
                     q.append(v)
-        
+
         return cnt == numCourses
 ```
 
 ## 动态规划
 
-动态规划是一种算法设计方法, 用于解决具有重叠子问题特性和最优子结构的问题. 他有两种实现方式, 自顶向下和自底向上. 
+动态规划是一种算法设计方法, 用于解决具有重叠子问题特性和最优子结构的问题. 他有两种实现方式, 自顶向下和自底向上.
 
 * 重叠子问题: 问题可以分解为多个子问题, 这些子问题会被重复计算
 * 最优子结构: 问题的最优解能由子问题的最优解组合得到
 * 自顶向下: 从原始问题出发, 递归求解并缓存结果
 * 自底向上: 从最小子问题开始, 逐步构建到原问题
 
-动态规划的关键是找到状态定义和状态转移方程. 
+动态规划的关键是找到状态定义和状态转移方程.
 
 === "自底向上"
 
@@ -821,7 +821,7 @@ class Solution:
             return memo[n]
         if n <= 1:
             return n
-        
+
         # 递归计算并缓存
         memo[n] = fib(n-1, memo) + fib(n-2, memo)
         return memo[n]
@@ -849,15 +849,15 @@ class Solution:
         fib(3) → 计算完,存入 memo[3] = 2
         fib(2) → 计算完,存入 memo[2] = 1
     返回 fib(4) = 3,存入 memo[4]
-    
+
     fib(3) → 直接从 memo[3] 取值 = 2 ✅ (不用重算!)
-    
+
     返回 fib(5) = 5
     ```
 
 ### 线性动态规划
 
-线性DP的关注点是解决问题的前i个元素组成的子问题, 状态主要沿序列线性推进, 当前值通常直接依赖于前一个或者前几个位置的最优值. 走到第`i`步, 只在乎结果, 不在乎处于什么姿态. 
+线性DP的关注点是解决问题的前i个元素组成的子问题, 状态主要沿序列线性推进, 当前值通常直接依赖于前一个或者前几个位置的最优值. 走到第`i`步, 只在乎结果, 不在乎处于什么姿态.
 
 #### [70.爬楼梯](https://leetcode.cn/problems/climbing-stairs/description/?envType=study-plan-v2&envId=top-100-liked)
 
@@ -893,7 +893,7 @@ class Solution:
 
 #### [279.完全平方数](https://leetcode.cn/problems/perfect-squares/?envType=study-plan-v2&envId=top-100-liked)
 
-完全平方数是一类典型的背包问题. `dp[i]`表示组成数字`i`的完全平方数的最少数量. `dp[i]`的状态转移方程是: `dp[i] = min(dp[i], dp[i - j*j] + 1)`, 其中`j*j`是小于等于`i`的完全平方数. 
+完全平方数是一类典型的背包问题. `dp[i]`表示组成数字`i`的完全平方数的最少数量. `dp[i]`的状态转移方程是: `dp[i] = min(dp[i], dp[i - j*j] + 1)`, 其中`j*j`是小于等于`i`的完全平方数.
 
 假设你现在已经在第`i=12`层, 那么到这个状态, 有这么几种可能, 最后一步迈的是`1^2`, 那么之前在11, 最后一步迈的是`2^2`, 那么之前在8, 最后一步迈的是`3^2`, 那么之前在3. 所以可以表示为`dp[12] = min(dp[11]+1, dp[8]+1, dp[3]+1)`.
 
@@ -912,7 +912,7 @@ class Solution:
 
 #### [322.零钱兑换](https://leetcode.cn/problems/coin-change/?envType=study-plan-v2&envId=top-100-liked)
 
-这道题也是典型的背包问题. `dp[i]`表示组成金额`i`的最少硬币数量. `dp[i]`的状态转移方程是: `dp[i] = min(dp[i], dp[i - coin] + 1)`, 其中`coin`是小于等于`i`的硬币面额. 
+这道题也是典型的背包问题. `dp[i]`表示组成金额`i`的最少硬币数量. `dp[i]`的状态转移方程是: `dp[i] = min(dp[i], dp[i - coin] + 1)`, 其中`coin`是小于等于`i`的硬币面额.
 
 ```py
 class Solution:
@@ -926,11 +926,11 @@ class Solution:
                 dp[i] = min(dp[i], dp[i-sorted_coins[j]]+1)
                 j += 1
         return dp[amount] if dp[amount] != float('inf') else -1
-```   
+```
 
 #### [139.单词拆分](https://leetcode.cn/problems/word-break/?envType=study-plan-v2&envId=top-100-liked)
 
-定义 `dp[i]` 表示字符串前 `i` 个字符 (`s[0:i]`) 能否用字典中的单词拆分. 状态转移: 遍历所有可能的断点 `j < i`, 如果 `dp[j]` 为真且 `s[j:i]` 在字典中, 则 `dp[i]` 为真. 
+定义 `dp[i]` 表示字符串前 `i` 个字符 (`s[0:i]`) 能否用字典中的单词拆分. 状态转移: 遍历所有可能的断点 `j < i`, 如果 `dp[j]` 为真且 `s[j:i]` 在字典中, 则 `dp[i]` 为真.
 
 ```py
 class Solution:
@@ -948,7 +948,7 @@ class Solution:
 
 #### [300.最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/?envType=study-plan-v2&envId=top-100-liked)
 
-`dp[i]`表示以`nums[i]`结尾的LIS的长度. 对于所有的`i`, 枚举所有`j<i`, 如果`nums[j] < nums[i]`, 说明可以接在后面, 那么`dp[i] = max(dp[i], dp[j] + 1)`. 
+`dp[i]`表示以`nums[i]`结尾的LIS的长度. 对于所有的`i`, 枚举所有`j<i`, 如果`nums[j] < nums[i]`, 说明可以接在后面, 那么`dp[i] = max(dp[i], dp[j] + 1)`.
 
 ```py
 class Solution:
@@ -967,7 +967,7 @@ class Solution:
 #### [152.乘积最大子数组](https://leetcode.cn/problems/maximum-product-subarray/?envType=study-plan-v2&envId=top-100-liked)
 
 
-这道题也是线性DP, 但是有点阴险, 因为负数可能会让最大变为最小, 最小变为最大. `max_dp[i]`表示的是以`nums[i]`结尾的, 非空的, 连续子数组的最大乘积, 这一道题和上一道题的不同点是, 他要求子数组必须是连续的, 所以, `max_dp[i]`只能从`max_dp[i-1]`或者`min_dp[i-1]`转移过来. 而不能从`max_dp[j]`或者`min_dp[j]`转移过来, 其中`j < i-1`. 
+这道题也是线性DP, 但是有点阴险, 因为负数可能会让最大变为最小, 最小变为最大. `max_dp[i]`表示的是以`nums[i]`结尾的, 非空的, 连续子数组的最大乘积, 这一道题和上一道题的不同点是, 他要求子数组必须是连续的, 所以, `max_dp[i]`只能从`max_dp[i-1]`或者`min_dp[i-1]`转移过来. 而不能从`max_dp[j]`或者`min_dp[j]`转移过来, 其中`j < i-1`.
 
 ```py
 class Solution:
@@ -991,11 +991,11 @@ class Solution:
 
 ### 状态机动态规划
 
-状态机DP的关注点是在第`i`步的时候, 处于某种特定内部状态下的最优解. 状态序列在推进的同时, 还在有限个内部状态之间跳转. `dp[i][当前状态]`依赖于`dp[i-1][来源状态]`. 走到第`i`步, 必须明确当前处于什么姿态. 
+状态机DP的关注点是在第`i`步的时候, 处于某种特定内部状态下的最优解. 状态序列在推进的同时, 还在有限个内部状态之间跳转. `dp[i][当前状态]`依赖于`dp[i-1][来源状态]`. 走到第`i`步, 必须明确当前处于什么姿态.
 
 #### [198.打家劫舍](https://leetcode.cn/problems/house-robber/description/?envType=study-plan-v2&envId=top-100-liked)
 
-`dp[i][0]`表示第`i`个房子没偷的最大收益, `dp[i][1]`表示第`i`个房子偷了的最大收益. 如果第`i`个房子没偷, 那么第`i-1`个房子偷或者不偷都行, `dp[i][0] = max(dp[i-1][0], dp[i-1][1])`. 如果第`i`个房子偷了, 那么第`i-1`个房子就不能偷了, `dp[i][1] = dp[i-1][0] + nums[i]`. 
+`dp[i][0]`表示第`i`个房子没偷的最大收益, `dp[i][1]`表示第`i`个房子偷了的最大收益. 如果第`i`个房子没偷, 那么第`i-1`个房子偷或者不偷都行, `dp[i][0] = max(dp[i-1][0], dp[i-1][1])`. 如果第`i`个房子偷了, 那么第`i-1`个房子就不能偷了, `dp[i][1] = dp[i-1][0] + nums[i]`.
 
 ```py
 class Solution:
@@ -1017,3 +1017,40 @@ class Solution:
 ```
 
 ### 区间动态规划
+
+## 二叉树
+
+### 遍历
+
+#### 迭代写法
+
+对于先序遍历和后续遍历, 是一种写法:
+
+```py
+def preorder(root):
+    if not root:
+        return
+    stack = [root]
+    while stack:
+        node = stack.pop()
+        print(node.val)
+        if node.right:
+            stack.append(node.right)
+        if node.left:
+            stack.append(node.left)
+```
+
+对于中序遍历, 是另一种写法:
+
+```py
+def inorder(root):
+    stack = []
+    cur = root
+    while cur or stack:
+        while cur:
+            stack.append(cur)
+            cur = cur.left
+        cur = stack.pop()
+        print(cur.val)
+        cur = cur.right
+```
