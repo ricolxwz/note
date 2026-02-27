@@ -105,3 +105,11 @@ OT和attention的区别: Attention是先计算相似度$QK^T$, 再按照行softm
 ### 为什么说CTC supervision是indirect? 
 
 CTC 的 supervision 主要是对齐到 离散 label 序列(字符/子词), 它优化的是"预测 label 的概率", 而不是"speech embeddings 在 LLM 的 embedding metric space 上接近 transcript embeddings". 结果就是: 即使 CTC WER 不错, speech embedding 仍可能不在 LLM 的语义几何里——这就是"监督信号与最终目标(embedding-level alignment)之间有鸿沟". 
+
+### 为什么用uniform marginal?
+
+uniform的含义是: 把source与target当作均匀质量分布, 每个speech embdding, 每个unique transcript enbedding都分到等量质量. 优点是简单, 无需额外超参/先验, 不需要token时长或者对齐标注. 减少了对于重复token的先验偏置. 
+
+### 为什么cost用1 - cosine?
+
+
