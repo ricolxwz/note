@@ -186,3 +186,5 @@ OT 只根据 embedding 相似度 做匹配, 它不会看:
 但是, 这篇论文的目标不是做严格 ASR alignment. 它的目标是: 减少 modality gap, 让 speech embedding 落在 transcript embedding 的语义空间里. 也就是说, 它不在乎: 这个语音帧是不是对应第 5 个 token, 或第 8 个 token. 它只在乎: 这个语音 embedding 看起来像不像某个正确的文本 token embedding. 
 
 ### unique阈值怎么选, 影响是什么?
+
+在做OT对齐的时候, target用的是unique transcript embeddings, 这个unique是通过consine similarity阈值来判断的. 如果阈值很高, 很少embedding会被合并, unique token数量多, OT target更细, transport更严格, 对齐更加精细, 但是可能有更多的噪声, 更加敏感. 阈值低的话, 很多embedding被认为是等价, unique token少, OT target更加粗, 对齐更加宽松, 更加鲁棒, 但是语义可能会被过度合并. 
