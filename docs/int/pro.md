@@ -191,5 +191,12 @@ OT 只根据 embedding 相似度 做匹配, 它不会看:
 
 ### $L_{\text{cost}}$和$L_{\text{spr}}$各自优化的是什么?
 
-* L_cost: 让 transport 发生在高相似度对上(speech embedding 靠近 transcript embedding 集合). 
+* L_cost: 让 transport 发生在高相似度对上(speech embedding 靠近 transcript embedding 集合). 让模型产生的optimal transport plan更加好. 
 * L_spr: 让每个 speech embedding 的对齐分布更集中(趋向一对一), 减少"平均对齐/糊成一团". 
+
+### 去掉sparsity会怎么样?
+
+transport plan 会更平滑(尤其在 entropy 正则下), 导致: 
+
+* speech embedding 被"同时拉向多个 token 原型", 产生语义模糊; 
+* alignment 变成"distribution matching"而不是"token-like anchoring", 对减少 modality gap 不如带 sparsity 明显. (如果alignment只是让speech embedding的**整体分布**接近transcript embedding的分布, 那本质上是一种global distribution-level alignment; token-like anchoring的意思是每个speech token都被锚定到某个具体的transcript embedding).  
