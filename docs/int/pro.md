@@ -62,7 +62,9 @@ async def asr(file: UploadFile = File(...)):
 uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
-## 多模态融合方法
+## 语音文本对齐的最优传输正则化面试
+
+### 多模态融合方法
 
 先记主线: **早-中-高-对-接-图**  
 `早`: 早期融合(拼接/加权/门控)  
@@ -80,3 +82,19 @@ uvicorn app:app --host 0.0.0.0 --port 8000
 | 对比对齐 | 先学共享语义空间 | CLIP / ALIGN / 双塔 | 可扩展, 零样本强 | 推理与组合能力有限 |
 | 接口式融合 | 强编码器 + 轻桥接 + 语言生成 | Q-Former / Adapter / LLM | 成本低, 产品化强 | 幻觉与一致性风险 |
 | 图结构融合 | 用图建模对象与关系 | GNN / Scene Graph | 关系推理强 | 构图成本高, 流程复杂 |
+
+### 什么是Optimal Transportation
+
+OT是一种在两个分布之间寻找最小搬运成本匹配方式的方法. 他解决的问题是: 如何把质量从A分布搬到B分布, 使得总成本最小. 给定两个分布: $a=(a_1, ..., a_T)$, $b=(b_1, ..., b_N)$, 给定cost矩阵: $C_{ij}=distance(x_i, y_j)$, OT求: $\min_{\pi}\sum_{i, j}\pi_{ij}C_{ij}$, 其中, $\pi_{ij}$是transport plan. 在speech-text场景里面, 每个frame有质量, 每个token有质量, cost是embedding距离, OT会算出$\pi_{ij}$表示第$i$个frame有多少概率质量对齐到第$j$个token. 
+
+### SLM generalization gap的本质原因是啥
+
+核心是 speech 与 text 表征分布不一致(modality gap): speech embedding 含大量与语言无关的变化(语速, 停顿, 能量, 说话人等), 模型在 in-domain 时容易学到**"捷径特征"**(spurious cues), 跨数据集这些 cues 失效就崩.  所以不是单纯 dataset bias, 而是__表示层面可被利用的多余自由度 + 训练目标缺少"对齐到 LLM embedding 空间"的直接约束共同导致.__
+
+### unintended variation在embedding space的几何结构是啥
+
+可以理解为: speech embedding 在 LLM embedding space 中出现额外的自由方向, 形成: 离散内容(linguistic)方向 + 连续扰动(paralinguistic)方向叠加; 表现为: 同一 token/词语对应的 speech embeddings 方差大, 簇拉长, 类间边界模糊; 模型可能用这些"容易拟合但不可迁移"的方向来降低 CE loss(捷径), 而不是学到"像文本那样"的语义轨迹. 
+
+### 为什么说CTC supervision是indirect? 
+
+CTC 的 supervision 主要是对齐到 离散 label 序列(字符/子词), 它优化的是"预测 label 的概率", 而不是"speech embeddings 在 LLM 的 embedding metric space 上接近 transcript embeddings". 结果就是: 即使 CTC WER 不错, speech embedding 仍可能不在 LLM 的语义几何里——这就是"监督信号与最终目标(embedding-level alignment)之间有鸿沟". 
