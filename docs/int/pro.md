@@ -87,6 +87,13 @@ uvicorn app:app --host 0.0.0.0 --port 8000
 
 OT是一种在两个分布之间寻找最小搬运成本匹配方式的方法. 他解决的问题是: 如何把质量从A分布搬到B分布, 使得总成本最小. 给定两个分布: $a=(a_1, ..., a_T)$, $b=(b_1, ..., b_N)$, 给定cost矩阵: $C_{ij}=distance(x_i, y_j)$, OT求: $\min_{\pi}\sum_{i, j}\pi_{ij}C_{ij}$, 其中, $\pi_{ij}$是transport plan. 在speech-text场景里面, 每个frame有质量, 每个token有质量, cost是embedding距离, OT会算出$\pi_{ij}$表示第$i$个frame有多少概率质量对齐到第$j$个token. 
 
+OT和contrasive的区别: contrasive拉近正样本, 推远负样本, 是pair-level. OT是全局匹配, 不需要负样本, 是distribution level, 允许many-to-many. 
+
+OT和attention的区别: Attention是先计算相似度$QK^T$, 再按照行softmax, 没有列约束, 不解一个全局优化问题; OT也是基于pairwise相似度矩阵, 但是要求同时满足行列边缘分布. 假设有2个query(q1, q2)和两个key(k1, k2), 如果q1和q2都非常喜欢k1: 
+
+* Attention: q1会给k1很高的权重; q2也会给k1很高的权重, 结果两个query都扎堆k1. 因为attention不限制k1总共能被分配多少
+* OT: 如果列边缘规定每个key总容量差不多, q1和q2不能都把质量塞给k1, 系统会全局协调, 把一部分质量分配k2. 
+
 ### SLM generalization gap的本质原因是啥
 
 核心是 speech 与 text 表征分布不一致(modality gap): speech embedding 含大量与语言无关的变化(语速, 停顿, 能量, 说话人等), 模型在 in-domain 时容易学到**"捷径特征"**(spurious cues), 跨数据集这些 cues 失效就崩.  所以不是单纯 dataset bias, 而是__表示层面可被利用的多余自由度 + 训练目标缺少"对齐到 LLM embedding 空间"的直接约束共同导致.__
