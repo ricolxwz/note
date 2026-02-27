@@ -108,8 +108,64 @@ CTC 的 supervision 主要是对齐到 离散 label 序列(字符/子词), 它�
 
 ### 为什么用uniform marginal?
 
-uniform的含义是: 把source与target当作均匀质量分布, 每个speech embdding, 每个unique transcript enbedding都分到等量质量. 优点是简单, 无需额外超参/先验, 不需要token时长或者对齐标注. 减少了对于重复token的先验偏置. 
+uniform的含义是: 把source与target当作均匀质量分布, 每个speech embdding, 每个unique transcript enbedding都分到等量质量. 优点是简单, 无需额外超参/先验, 不需要token时长或者对齐标注. 减少了对于重复token的先验偏置. 分别对应OT的两个约束: $\sum_{j}\gamma_{ij}=1/n_a, \sum_i \gamma_{ij}=1/n_g$.
 
 ### 为什么cost用1 - cosine?
 
+$f_i$是第i个speech embedding, $g_j$是第$j$个unique transcript embedding, cost其实就是OT矩阵里面的一项, 表示第$i$个frame有多少的概率质量对齐到第$j$个token, 这里被定义为$1=\cos(f_i, g_j)$. 为啥使用这个cosine, 是因为consine对scale不敏感, 适合不同模块输出的norm波动, 在高纬度embedding上比L2更加稳健. 在高维embedding上比L2更加稳健.
 
+### $\epsilon$太大/太小会怎样? 
+
+* $\epsilon$很小: transport plan 变得尖锐, 接近 hard assignment, 容易受噪声影响, 训练早期不稳定; 
+* $\epsilon$很大: plan 过于平滑, 接近平均分配, alignment 变弱, loss 约束变"软化", 对齐效果下降. 
+
+??? example "例子"
+
+    假设: 
+
+    * 3 个 speech embeddings
+    * 2 个 transcript tokens
+
+    === "情况 A: ε 很小(接近 hard assignment)"
+
+        可能 γ 是: 
+
+        |    | g1   | g2   |
+        | -- | ---- | ---- |
+        | f1 | 0.33 | 0    |
+        | f2 | 0.17 | 0.16 |
+        | f3 | 0    | 0.33 |
+
+        每列加起来都是 0.5(满足边际)
+
+        但注意: 
+
+        * 每行是尖的(接近 one-hot)
+        * 每个 speech frame 基本选一个 token
+
+        这叫 **sharp alignment**
+
+    === "情况 B: ε 很大(平滑)"
+
+        γ 可能变成: 
+
+        |    | g1   | g2   |
+        | -- | ---- | ---- |
+        | f1 | 0.16 | 0.17 |
+        | f2 | 0.16 | 0.17 |
+        | f3 | 0.18 | 0.16 |
+
+        仍然: 
+
+        * 每列总和 = 0.5
+        * 边际不变
+
+        但现在: 
+
+        > 每个 speech embedding 同时对齐多个 token
+
+        这叫 **模糊对齐**
+
+### 为什么必须去重 transcript embedding? 
+
+因为 transcript 中重复模式会导致 OT 产生多解/歧义: 例如 "banana banana", 两个 token embedding 非常接近, OT 会把大量 speech mass 分散到多个重复目标上, plan 变得不稳定. 用 unique embeddings 相当于把目标变成"词表集合", 让 speech 只需对齐到"出现过的语义原型", 更稳. 
