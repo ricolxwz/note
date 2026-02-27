@@ -169,3 +169,20 @@ $f_i$是第i个speech embedding, $g_j$是第$j$个unique transcript embedding, c
 ### 为什么必须去重 transcript embedding? 
 
 因为 transcript 中重复模式会导致 OT 产生多解/歧义: 例如 "banana banana", 两个 token embedding 非常接近, OT 会把大量 speech mass 分散到多个重复目标上, plan 变得不稳定. 用 unique embeddings 相当于把目标变成"词表集合", 让 speech 只需对齐到"出现过的语义原型", 更稳. 
+
+### OT不依赖temporal order, 会不会前半句对应到后半句
+
+在这篇论文里, OT 是在做: 
+
+* source: speech embeddings(语音特征)
+* target: unique transcript embeddings(文本特征)
+
+OT 只根据 embedding 相似度 做匹配, 它不会看: 
+
+* 这是第几个 token
+* 是不是时间上相邻
+* 是否单调递增
+
+但是, 这篇论文的目标不是做严格 ASR alignment. 它的目标是: 减少 modality gap, 让 speech embedding 落在 transcript embedding 的语义空间里. 也就是说, 它不在乎: 这个语音帧是不是对应第 5 个 token, 或第 8 个 token. 它只在乎: 这个语音 embedding 看起来像不像某个正确的文本 token embedding. 
+
+### unique阈值怎么选, 影响是什么?
