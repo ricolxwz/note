@@ -188,3 +188,8 @@ OT 只根据 embedding 相似度 做匹配, 它不会看:
 ### unique阈值怎么选, 影响是什么?
 
 在做OT对齐的时候, target用的是unique transcript embeddings, 这个unique是通过consine similarity阈值来判断的. 如果阈值很高, 很少embedding会被合并, unique token数量多, OT target更细, transport更严格, 对齐更加精细, 但是可能有更多的噪声, 更加敏感. 阈值低的话, 很多embedding被认为是等价, unique token少, OT target更加粗, 对齐更加宽松, 更加鲁棒, 但是语义可能会被过度合并. 
+
+### $L_{\text{cost}}$和$L_{\text{spr}}$各自优化的是什么?
+
+* L_cost: 让 transport 发生在高相似度对上(speech embedding 靠近 transcript embedding 集合). 
+* L_spr: 让每个 speech embedding 的对齐分布更集中(趋向一对一), 减少"平均对齐/糊成一团". 
