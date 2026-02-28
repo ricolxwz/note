@@ -312,3 +312,24 @@ speech 长带来的冗余通过:
 
 * OT sparsity 让每个 speech embedding 选一个语义原型; 
 * OT-based compression merge/drop 去冗余; 从而把多帧映射到更"token-like"的序列/集合. 
+
+### OT 复杂度是多少? 长语音怎么办? 
+
+na×ng 的 cost matrix 构建是 O(na·ng), Sinkhorn 是迭代缩放, 整体开销与迭代次数线性相关. 每次迭代都要对整个的矩阵$n_a\times n_g$做缩放/归一化(行列边缘约束), 所以总开销大致: $O(T\times n_a n_g)$. 
+
+我们的目的是将$n_a$或者$n_g$的长度压下去:
+
+* 降低$n_a$: 比如你提到 adapter 里k=5(等价于把时间长度缩短约 5 倍)这会把 OT 的成本几乎按比例降下来
+* 降低$n_g$: 通过 unique transcript embedding, 把重复的 token 合并成一个原型, 从而降低目标长度.
+
+### OT 能看作 soft CTC 吗? 
+
+
+可以作为一种直觉类比: 两者都在无显式对齐下建立"软对齐".  但差别关键在: 
+
+* CTC 在 label space 做路径求和; 
+* OT 在 embedding metric space 做全局运输; OTReg 的监督目标更接近"让 speech embeddings 贴近 LLM transcript embeddings", 而不是贴近离散 label classifier. 
+
+### 换成 Wasserstein-2 直接优化分布距离会怎样? 
+
+
