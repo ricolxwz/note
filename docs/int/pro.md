@@ -304,3 +304,11 @@ CTC 的 classifier 参数大, 容易过拟合. 而且 CTC 对齐的是 label, �
 
 跨语言/跨数据集时 speech variability 更大, domain shift 更明显. 
 OTReg 提供了"语言无关"的表示约束: 把 speech embedding 拉向 LLM 的 token 语义几何(而不是依赖某数据集的声学风格). 因此越是 shift 大的 setting, 收益越明显. 
+
+### speech 长 >> transcript 长, 会不会违背 monotonic? 
+
+你没有显式追求 monotonic, 对齐目标是"语义集合对齐"而非"严格时间对齐". 
+speech 长带来的冗余通过:  
+
+* OT sparsity 让每个 speech embedding 选一个语义原型; 
+* OT-based compression merge/drop 去冗余; 从而把多帧映射到更"token-like"的序列/集合. 
