@@ -284,3 +284,7 @@ transport plan 会更平滑(尤其在 entropy 正则下), 导致:
 2. 应用 OT-based Compression → \( K_S \)
 3. 输入 \( \text{Template}(E_P, K_S) \) 到 LLM
 4. 自回归生成文本
+
+### OT-based compression 为什么可微? 梯度怎么走? 
+
+因为使用的是熵正则OT++Sinkhorn算法, 这个算法的输出(transport plan)是输入(cost matrix)的连续可微函数. 所以梯度能从loss -> $\hat{\gamma}$ -> 相似度矩阵 $C$ -> speech embedding反传. compression的merge/drop实现为软门控/soft mask就同样可微. 
