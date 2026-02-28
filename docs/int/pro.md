@@ -285,3 +285,22 @@ transport plan 会更平滑(尤其在 entropy 正则下), 导致:
 ### 为什么OTReg不在stage1用?
 
 OTReg 依赖"cosine 相似度矩阵"来算 transport plan, 但 Stage 1 的 adapter 输出还没被训练到 LLM embedding 的同一语义空间, 所以此时算出来的 cosine 相似度基本是乱的 → Sinkhorn/OT 会得到噪声 transport plan → 反传的梯度也是错的, 训练容易不稳定/震荡 😵‍💫. 
+
+### CE和OT会conflict嘛?
+
+CE 和 OTReg 目标不完全一样, 局部可能"拉扯", 但整体是互补的. **CE(交叉熵)**管的是最终任务: 让模型输出的 token 序列/转写结果正确(直接决定 WER). OTReg更像是结构化对齐/表示约束: 让 speech 内部表示在分布上更接近对应文本表示(更"像文本那样组织"), 有助于减少 modality gap, 提升泛化. 当 OT 权重大, 可能损伤纯 WER; 当 OT 太小, generalization 改善有限. 你通过 λOT sweep 找到 sweet spot. 
+
+在文章里面, $\lambda_{OT}$设置为$0.3$.  
+
+### 为什么 Base+CTC cross-domain 反而变差? 
+
+CTC 的 classifier 参数大, 容易过拟合. 而且 CTC 对齐的是 label, 不保证 embedding-level 对齐到 LLM; 所以可能学到"CTC 好用的对齐捷径", 但对跨域的 speech variability 仍敏感, 导致泛化下降或收益不稳定. 
+
+### Fig.4 距离下降说明什么? 会不会只是 norm 变小? 
+
+你画的是 speech embeddings 与 transcript embeddings 的 pairwise distance/相似度结构, OTReg 后结构更清晰, 并且非信息段更集中对应到 pad. 同时你用 cosine cost, 本质上对 norm 不敏感, 所以很难用"norm 变小"解释整体结构改善. 
+
+### 为什么 multilingual 下 OTReg 提升更明显? 
+
+跨语言/跨数据集时 speech variability 更大, domain shift 更明显. 
+OTReg 提供了"语言无关"的表示约束: 把 speech embedding 拉向 LLM 的 token 语义几何(而不是依赖某数据集的声学风格). 因此越是 shift 大的 setting, 收益越明显. 
