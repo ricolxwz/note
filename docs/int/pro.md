@@ -324,7 +324,6 @@ na×ng 的 cost matrix 构建是 O(na·ng), Sinkhorn 是迭代缩放, 整体开�
 
 ### OT 能看作 soft CTC 吗? 
 
-
 可以作为一种直觉类比: 两者都在无显式对齐下建立"软对齐".  但差别关键在: 
 
 * CTC 在 label space 做路径求和; 
