@@ -200,3 +200,87 @@ transport plan 会更平滑(尤其在 entropy 正则下), 导致:
 
 * speech embedding 被"同时拉向多个 token 原型", 产生语义模糊; 
 * alignment 变成"distribution matching"而不是"token-like anchoring", 对减少 modality gap 不如带 sparsity 明显. (如果alignment只是让speech embedding的**整体分布**接近transcript embedding的分布, 那本质上是一种global distribution-level alignment; token-like anchoring的意思是每个speech token都被锚定到某个具体的transcript embedding).  
+
+### 这篇文章推理/训练的流程是啥?
+
+#### 训练阶段
+
+1. 仅使用CE的监督微调: 
+
+    1. 输入: \( \text{Template}(E_P, F_S) \)
+    2. 使用 LLM 进行自回归预测
+    3. 计算 Cross-Entropy(CE)loss
+    4. 仅更新 Adapter
+
+    特点:
+
+    - 不使用 OT
+    - 不使用 Compression
+    - 目标: 让 speech embedding 初步适配 LLM embedding 空间
+
+2. 引入OT Reg和Compression
+
+    在 Stage 1 基础上继续训练, 每次迭代包括: 
+
+
+    1. 前向传播
+
+        计算 speech embedding:  \( F_S = \text{Adapter}(\text{SpeechEncoder}(X_S)) \)
+
+    2. 计算OT对齐
+
+        - Source: speech embedding \( F_S \)
+        - Target: 去重后的 transcript embedding \( G_T \)
+        - 使用 Sinkhorn 算法求解 entropic OT, 得到最优 transport plan \( \hat{\gamma} \)
+
+    3. 计算OT正则化损失
+
+        \[
+        L_{OT} = L_{cost} + \lambda_{spr} L_{spr}
+        \]
+
+        作用: 
+
+        - 拉近 speech embedding 与 transcript embedding
+        - 促进稀疏的一对一对齐
+        - 减少 modality gap
+
+    4. OT-based Compression
+
+        \[
+        K_S = \text{OTCompression}(F_S)
+        \]
+
+        包括: 
+
+        - 合并相邻高相似 embedding
+        - 删除与 pad embedding 相似的无信息帧
+
+        目的: 去除冗余, 使 speech 表示更接近 text-like 结构
+
+    5. 计算CE损失
+
+        \[
+        L_{CE} = \text{CE}(\hat{Y}, Y)
+        \]
+    
+    6. 总损失
+
+        \[
+        L_{total} = L_{CE} + \lambda_{OT} L_{OT}
+        \]
+
+#### 推理阶段
+
+推理阶段: 
+
+- 没有 transcript
+- 不计算 OT plan
+- 不计算 OT loss
+
+流程如下: 
+
+1. Speech → Encoder → Adapter → \( F_S \)
+2. 应用 OT-based Compression → \( K_S \)
+3. 输入 \( \text{Template}(E_P, K_S) \) 到 LLM
+4. 自回归生成文本
