@@ -332,4 +332,22 @@ na×ng 的 cost matrix 构建是 O(na·ng), Sinkhorn 是迭代缩放, 整体开�
 
 ### 换成 Wasserstein-2 直接优化分布距离会怎样? 
 
+W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语义相似. 此外你需要的是可微且稳定的 plan(用于构造正则项与压缩), entropy-regularized OT + Sinkhorn 是工程上更合适的选择. W2 也可行, 但可能需要重新设计 cost/正则与实现细节(以及处理高维 embedding 的数值稳定). 
 
+### 方法能否用于 speech-to-speech / speech-to-vision / grounding? 
+
+可以迁移的部分是 "用 OT 在两模态 embedding 集合之间做软匹配, 并把 plan 变成训练正则". 
+
+前提是: 目标模态要有稳定的 embedding 表示(如 text token embeddings, vision token embeddings). speech-to-speech 需要定义"目标语音嵌入的语义原型", 否则会对齐到声学风格而不是语义. 
+
+### 能否做 token-level / multi-layer / hierarchical OT? 
+
+* token-level: 更细粒度, 但更噪; 
+* multi-layer: 对齐不同层的抽象语义(浅层更声学, 深层更语义); 
+* hierarchical: 先粗对齐(句级/词级), 再细对齐(token/帧). 
+
+这也是未来工作方向: 在不引入标注的前提下增强结构性. 
+
+### transcript 有错误怎么办? OT 会被误导吗? 
+
+会有风险, 因为 target 原型错了会把 speech embeddings 拉向错误 token manifold.  但你训练还有 CE loss(ASR 输出)作为主目标, OT 是正则项而不是唯一监督; 因此错误 transcript 的影响会被部分抵消. 
