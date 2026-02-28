@@ -233,11 +233,7 @@ transport plan 会更平滑(尤其在 entropy 正则下), 导致:
         - Target: 去重后的 transcript embedding \( G_T \)
         - 使用 Sinkhorn 算法求解 entropic OT, 得到最优 transport plan \( \hat{\gamma} \)
 
-    3. 计算OT正则化损失
-
-        \[
-        L_{OT} = L_{cost} + \lambda_{spr} L_{spr}
-        \]
+    3. 计算OT正则化损失: \( L_{OT} = L_{cost} + \lambda_{spr} L_{spr} \)
 
         作用: 
 
@@ -245,11 +241,7 @@ transport plan 会更平滑(尤其在 entropy 正则下), 导致:
         - 促进稀疏的一对一对齐
         - 减少 modality gap
 
-    4. OT-based Compression
-
-        \[
-        K_S = \text{OTCompression}(F_S)
-        \]
+    4. OT-based Compression: \( K_S = \text{OTCompression}(F_S) \)
 
         包括: 
 
@@ -258,17 +250,9 @@ transport plan 会更平滑(尤其在 entropy 正则下), 导致:
 
         目的: 去除冗余, 使 speech 表示更接近 text-like 结构
 
-    5. 计算CE损失
-
-        \[
-        L_{CE} = \text{CE}(\hat{Y}, Y)
-        \]
+    5. 计算CE损失: \( L_{CE} = \text{CE}(\hat{Y}, Y) \)
     
-    6. 总损失
-
-        \[
-        L_{total} = L_{CE} + \lambda_{OT} L_{OT}
-        \]
+    6. 总损失: \( L_{total} = L_{CE} + \lambda_{OT} L_{OT} \)
 
 #### 推理阶段
 
@@ -288,3 +272,16 @@ transport plan 会更平滑(尤其在 entropy 正则下), 导致:
 ### OT-based compression 为什么可微? 梯度怎么走? 
 
 因为使用的是熵正则OT++Sinkhorn算法, 这个算法的输出(transport plan)是输入(cost matrix)的连续可微函数. 所以梯度能从loss -> $\hat{\gamma}$ -> 相似度矩阵 $C$ -> speech embedding反传. compression的merge/drop实现为软门控/soft mask就同样可微. 
+
+### OT-based compression是如何实现的?
+
+1. Merge Step: 把序列$[f_0, f_1, ..., f_5, ...]$分为$(f_0, f_1), (f_2, f_3), (f_4, f_5), ...$, 然后计算相似度: $\cos(f_{2k}, f_{2k+1})$, 如果similarity > threshold, 那么认为, 这两个embedding的语义是一样的. 如何 merge? 最自然的可微实现方式是$f_{\text{merged}} = \frac{f_{2k} + f_{2k+1}}{2}$. 为什么只merge adjacent pairs? 为了防止过度压缩, 例如hheelllloo, 如果不是merge adjacent pairs, 可能会变为helo, 丢失了太多的重复信息.
+2. Drop Step: 因为在unique transcript embedding里面, 我们定义了一个pad token, 表示无信息, 我们可以drop掉那些与pad embedding相似度很高的speech embedding. 具体实现是: 计算$\cos(f_i, g_{\text{pad}})$, 如果 similarity > threshold, 那么这个frame就被认为是无信息的, 可以被drop. 但是, 为了保持可微, 我们不是真的把它丢掉, 而是给它一个soft mask.  
+
+### 用 pad embedding 判断 non-informative 合理吗? 
+
+训练里把 pad 当成"blank/非信息"锚点(augmented transcript 也包含 pad), OTReg 会把 静音/停顿的 speech embedding 拉近 pad embedding, 所以推理时"像 pad 的就 drop"在机制上自洽 ✅. 风险是 pad 在某些 LLM 里可能带点偏置会误删, 但用阈值控制, 删多了 CE 会把它纠回来. 
+
+### 为什么OTReg不在stage1用?
+
+OTReg 依赖"cosine 相似度矩阵"来算 transport plan, 但 Stage 1 的 adapter 输出还没被训练到 LLM embedding 的同一语义空间, 所以此时算出来的 cosine 相似度基本是乱的 → Sinkhorn/OT 会得到噪声 transport plan → 反传的梯度也是错的, 训练容易不稳定/震荡 😵‍💫. 
