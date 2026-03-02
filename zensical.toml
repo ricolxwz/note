@@ -455,6 +455,7 @@ nav = [
         ]},
         { "离线安装" = [
             { "人工智能编码" = "software/offline/coding-tool.md" },
+            { "代理" = "software/offline/proxy.md" },
         ]},
         { "Open-WebUI" = [
             { "配置" = "software/open-webui/config.md" },

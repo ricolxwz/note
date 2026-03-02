@@ -41,7 +41,7 @@ web_search = "disabled"
 
 [model_providers.openrouter]
 name = "OpenRouter"
-base_url = "https://localhost:65504/v1"
+base_url = "http://localhost:65504/v1"
 env_key = "NEW_API_KEY"
 
 [projects."/home/wenzexu"]
