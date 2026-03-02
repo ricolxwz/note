@@ -350,3 +350,6 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 ### transcript 有错误怎么办? OT 会被误导吗? 
 
 会有风险, 因为 target 原型错了会把 speech embeddings 拉向错误 token manifold.  但你训练还有 CE loss(ASR 输出)作为主目标, OT 是正则项而不是唯一监督; 因此错误 transcript 的影响会被部分抵消. 
+
+## 情感对话的双信息语音语言模型面试
+
