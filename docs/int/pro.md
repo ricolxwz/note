@@ -353,3 +353,59 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 
 ## 情感对话的双信息语音语言模型面试
 
+我主导设计并实现了Equivalence Replacement Regularization (ERR)的训练机制, 并系统性的验证其在避免adapter退化为task-specific vector中的作用(消融实验技术验证).  
+
+论文目标是把speech disentangle分成两部分, EC和EA, 分别是linguistic embedding, 一个是paralinguistic embedding. 然后分三类任务:
+
+| 任务类型                                | 主要依赖 | "另一种信息"是什么 |
+| ----------------------------------- | ---- | ---------- |
+| Linguistic task(ASR)                | EC   | EA         |
+| Paralinguistic task(emotion/gender) | EA   | EC         |
+| Dual task                           | 两者都用 | 无          |
+
+??? example "ERR例子"
+
+    === "训练 ASR(linguistic task)"
+
+        目标: 输出 transcript
+
+        主要依赖: 语义内容(EC)
+
+        👉 那"另一种信息"就是 paralinguistic embedding(EA)
+
+        所以 ERR 做的事情是: 
+
+        ```
+        ASR 任务中: 
+        随机替换 EA 的来源
+        ```
+
+        因为 transcript 不应该依赖情绪, 音调. 
+
+        如果 ASR 结果会因为 EA 来源不同而变化, 说明: 
+
+        > 模型偷偷用了不该用的信息. 
+
+    === "情况 2: 训练 emotion classification(paralinguistic task)"
+
+        目标: 输出情绪标签
+
+        主要依赖: EA
+
+        👉 那"另一种信息"就是 linguistic embedding(EC)
+
+        ERR 会: 
+
+        ```
+        emotion task 中: 
+        随机替换 EC 的来源
+        ```
+
+        因为情绪识别不应该依赖具体语义内容. 
+
+### ERR为什么必要?
+
+* 单 adapter 会 entangle linguistic 和 paralinguistic 信息
+* frozen LLM embedding space 偏向 linguistic
+* adapter 很容易退化成 task-specific prompt vector
+* 尤其 instruction tuning 会导致 overfitting
