@@ -403,9 +403,17 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 
         因为情绪识别不应该依赖具体语义内容. 
 
-### ERR为什么必要?
+### ERR架构
 
-* 单 adapter 会 entangle linguistic 和 paralinguistic 信息
-* frozen LLM embedding space 偏向 linguistic
-* adapter 很容易退化成 task-specific prompt vector
-* 尤其 instruction tuning 会导致 overfitting
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/c74cedfbe9523651177ae35d29001c33.webp#only-light){ loading=lazy width='500' }
+![](https://img.ricolxwz.cn/c74cedfbe9523651177ae35d29001c33_inverted.webp#only-dark){ loading=lazy width='500' }
+</figure>
+
+### Speech Caption和Speech Transcript的区别
+
+|                 | Speech Transcript       | Speech Caption                                                 |
+| --------------- | ----------------------- | -------------------------------------------------------------- |
+| 描述什么            | 说了什么                    | 怎么说的                                                           |
+| 信息类型            | Linguistic              | Paralinguistic                                                 |
+| **例子(对应同一段语音)** | `I can't believe this.` | `The speaker sounds angry and speaks quickly with high pitch.` |
