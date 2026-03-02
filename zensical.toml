@@ -453,6 +453,9 @@ nav = [
             { "Telegram机器人通知" = "software/nezha/telebot.md" },
             { "警告" = "software/nezha/warning.md" },
         ]},
+        { "离线安装" = [
+            { "人工智能编码" = "software/offline/coding-tool.md" },
+        ]},
         { "Open-WebUI" = [
             { "配置" = "software/open-webui/config.md" },
         ]},
