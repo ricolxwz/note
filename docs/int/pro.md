@@ -465,3 +465,15 @@ $E_A^{\text{test}}$表示从文本caption构造出来的paralinguistic embedding
 ### 整体pipeline是啥?
 
 方法的核心是将说话人拆解为多粒度动作离散token, 通过多模态LLM建模聆听行为, 再解码重建视频. 第一阶段是视频编码, 把视频从像素空间变成可控的动作空间, 提取眼睛动作, 头部姿态, 表情变化, 将他们解耦为细粒度的控制. 第二阶段是把每个动作特征做VQ-VAE, 得到各个动作的离散token. 第三阶段是一个可逆层, 这是因为动作token维度不等于LLM输入维度, 需要可逆层来做维度映射. 第四阶段是将这些token输入LLM, 输出聆听人的动作token序列. 第五阶段是新增一个video head, 将LLM的输出映射到视频特征空间. 第六阶段是将离散的token解码回眼睛连续特征, 头部连续特征, 表情连续特征; 第七阶段是使用PD-FGC解码器渲染为数字人视频. 
+
+### 为什么整体视频离散化不够好?
+
+原因有: 
+
+聆听行为是多因素叠加的, 眼睛, 头部姿态, 表情, 语音, 如果统一VQ, codebook必须同时编码所有因素, 不同因素之间产生统计耦合, 很容易学到场景特定pattern. 整体token无法单独控制: 只动眼神, 只改head nod, 只改微笑幅度, 模型只能整体替换. 但是聆听是subtle的, 局部的. 
+
+我们可以通过unified vs disentangled的abaltion study来验证FID是否降低, diversity是否提升, controllability是否增强, token mutual information是否降低. 
+
+### 为什么不能直接使用continuous embedding?
+
+因为continuous embedding分布漂移严重, LLM不擅长连续空间, 对长序列非常不稳定, 无法做自回归生成. 对于LLM, 离散token可以统一建模凡式(像text token), 可以做AR建模, 可以用cross-attention, 可以做token-level alignment. 
