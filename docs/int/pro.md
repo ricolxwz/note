@@ -478,4 +478,14 @@ $E_A^{\text{test}}$表示从文本caption构造出来的paralinguistic embedding
 
 因为continuous embedding分布漂移严重, LLM不擅长连续空间, 对长序列非常不稳定, 无法做自回归生成. 对于LLM, 离散token可以统一建模凡式(像text token), 可以做AR建模, 可以用cross-attention, 可以做token-level alignment. 
 
+### 为什么要用可逆层, 直接用线性投影不行吗?
 
+因为我们不仅要编码进LLM, 还要再解码回原动作空间. 如果是普通线性投影, 映射不可逆, 可逆层保证维度对齐的同时可精确回溯. 
+
+### LLM是如何融合三种模态的? 是拼接还是cross-attention?
+
+我们采用对齐投影 + 特征拼接作为统一输入.  LLM通过自注意力机制自动建模跨模态关系.  相比额外设计cross-attention模块, 我们保持结构轻量化.
+
+### 为什么新增video head? 而不是微调整个LLM?
+
+保持LLM结构冻结, 可以复用预训练能力. video head专门负责从隐空间映射回动作空间. 这样实现模块化解耦, 提升泛化能力. 
