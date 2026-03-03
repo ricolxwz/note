@@ -443,3 +443,15 @@ speech embedding的语义空间本来就是inherently entangled, 强行orthogona
 ### 如果没有ERR会发生什么?
 
 我们观察到adapter生成高度相似embedding, 不随输入变化.
+
+### ERR和Dropout的区别是啥?
+
+dropout是噪声正则, ERR是条件不变性约束.
+
+### ERR能完全保证disentangle吗?
+
+不能, 他只能保证功能层面的disentanglement, 不是严格的representation orthogonality.
+
+### 如果speech caption和真实speech embedding的分布差很大怎么办?
+
+$E_A^{\text{test}}$表示从文本caption构造出来的paralinguistic embedding, $E_A^{\text{speech}}$表示从真实语音encoder得到的paralinguistic embedding, 如果这两者的分布不匹配, 那么模型很容易会学习到一个捷径. 先判断embedding来源是speech还是text, 然后直接对某个来源忽略或者特殊处理, 结果就是, 训练的时候看起来loss能降低, 但是模型没有真正学习到情绪等paralinguistic信息, 而是学习到了source classifier.
