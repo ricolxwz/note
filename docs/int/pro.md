@@ -455,3 +455,7 @@ dropout是噪声正则, ERR是条件不变性约束.
 ### 如果speech caption和真实speech embedding的分布差很大怎么办?
 
 $E_A^{\text{test}}$表示从文本caption构造出来的paralinguistic embedding, $E_A^{\text{speech}}$表示从真实语音encoder得到的paralinguistic embedding, 如果这两者的分布不匹配, 那么模型很容易会学习到一个捷径. 先判断embedding来源是speech还是text, 然后直接对某个来源忽略或者特殊处理, 结果就是, 训练的时候看起来loss能降低, 但是模型没有真正学习到情绪等paralinguistic信息, 而是学习到了source classifier.
+
+### 如果sampling不均匀会怎样?
+
+模型会学习到偏置, 某种embedding source会成为shortcut, invariance被破坏. 
