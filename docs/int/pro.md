@@ -25,7 +25,7 @@ Whisper 的核心思想可以概括为: 统一建模 + 大规模弱监督 + 多�
 uv pip install faster-whisper fastapi uvicorn python-multipart
 ```
 
-`app.py` 示例: 
+`app.py` 示例:
 
 ```python
 from faster_whisper import WhisperModel
@@ -56,7 +56,7 @@ async def asr(file: UploadFile = File(...)):
     }
 ```
 
-启动: 
+启动:
 
 ```bash
 uvicorn app:app --host 0.0.0.0 --port 8000
@@ -66,12 +66,12 @@ uvicorn app:app --host 0.0.0.0 --port 8000
 
 ### 多模态融合方法
 
-先记主线: **早-中-高-对-接-图**  
-`早`: 早期融合(拼接/加权/门控)  
-`中`: 中期融合(跨模态注意力/Transformer)  
-`高`: 高阶融合(双线性/张量)  
-`对`: 对比对齐(共享嵌入空间)  
-`接`: 接口式融合(视觉编码器 + LLM + 桥接模块)  
+先记主线: **早-中-高-对-接-图**
+`早`: 早期融合(拼接/加权/门控)
+`中`: 中期融合(跨模态注意力/Transformer)
+`高`: 高阶融合(双线性/张量)
+`对`: 对比对齐(共享嵌入空间)
+`接`: 接口式融合(视觉编码器 + LLM + 桥接模块)
 `图`: 图结构融合(GNN, 场景图, 关系建模)
 
 | 路线 | 核心思路 | 代表关键词 | 主要优点 | 主要局限 |
@@ -85,14 +85,14 @@ uvicorn app:app --host 0.0.0.0 --port 8000
 
 ### 什么是Optimal Transportation
 
-OT是一种在两个分布之间寻找最小搬运成本匹配方式的方法. 他解决的问题是: 如何把质量从A分布搬到B分布, 使得总成本最小. 给定两个分布: $a=(a_1, ..., a_T)$, $b=(b_1, ..., b_N)$, 给定cost矩阵: $C_{ij}=distance(x_i, y_j)$, OT求: $\min_{\pi}\sum_{i, j}\pi_{ij}C_{ij}$, 其中, $\pi_{ij}$是transport plan. 在speech-text场景里面, 每个frame有质量, 每个token有质量, cost是embedding距离, OT会算出$\pi_{ij}$表示第$i$个frame有多少概率质量对齐到第$j$个token. 
+OT是一种在两个分布之间寻找最小搬运成本匹配方式的方法. 他解决的问题是: 如何把质量从A分布搬到B分布, 使得总成本最小. 给定两个分布: $a=(a_1, ..., a_T)$, $b=(b_1, ..., b_N)$, 给定cost矩阵: $C_{ij}=distance(x_i, y_j)$, OT求: $\min_{\pi}\sum_{i, j}\pi_{ij}C_{ij}$, 其中, $\pi_{ij}$是transport plan. 在speech-text场景里面, 每个frame有质量, 每个token有质量, cost是embedding距离, OT会算出$\pi_{ij}$表示第$i$个frame有多少概率质量对齐到第$j$个token.
 
-OT和contrasive的区别: contrasive拉近正样本, 推远负样本, 是pair-level. OT是全局匹配, 不需要负样本, 是distribution level, 允许many-to-many. 
+OT和contrasive的区别: contrasive拉近正样本, 推远负样本, 是pair-level. OT是全局匹配, 不需要负样本, 是distribution level, 允许many-to-many.
 
-OT和attention的区别: Attention是先计算相似度$QK^T$, 再按照行softmax, 没有列约束, 不解一个全局优化问题; OT也是基于pairwise相似度矩阵, 但是要求同时满足行列边缘分布. 假设有2个query(q1, q2)和两个key(k1, k2), 如果q1和q2都非常喜欢k1: 
+OT和attention的区别: Attention是先计算相似度$QK^T$, 再按照行softmax, 没有列约束, 不解一个全局优化问题; OT也是基于pairwise相似度矩阵, 但是要求同时满足行列边缘分布. 假设有2个query(q1, q2)和两个key(k1, k2), 如果q1和q2都非常喜欢k1:
 
 * Attention: q1会给k1很高的权重; q2也会给k1很高的权重, 结果两个query都扎堆k1. 因为attention不限制k1总共能被分配多少
-* OT: 如果列边缘规定每个key总容量差不多, q1和q2不能都把质量塞给k1, 系统会全局协调, 把一部分质量分配k2. 
+* OT: 如果列边缘规定每个key总容量差不多, q1和q2不能都把质量塞给k1, 系统会全局协调, 把一部分质量分配k2.
 
 ### SLM generalization gap的本质原因是啥
 
@@ -100,11 +100,11 @@ OT和attention的区别: Attention是先计算相似度$QK^T$, 再按照行softm
 
 ### unintended variation在embedding space的几何结构是啥
 
-可以理解为: speech embedding 在 LLM embedding space 中出现额外的自由方向, 形成: 离散内容(linguistic)方向 + 连续扰动(paralinguistic)方向叠加; 表现为: 同一 token/词语对应的 speech embeddings 方差大, 簇拉长, 类间边界模糊; 模型可能用这些"容易拟合但不可迁移"的方向来降低 CE loss(捷径), 而不是学到"像文本那样"的语义轨迹. 
+可以理解为: speech embedding 在 LLM embedding space 中出现额外的自由方向, 形成: 离散内容(linguistic)方向 + 连续扰动(paralinguistic)方向叠加; 表现为: 同一 token/词语对应的 speech embeddings 方差大, 簇拉长, 类间边界模糊; 模型可能用这些"容易拟合但不可迁移"的方向来降低 CE loss(捷径), 而不是学到"像文本那样"的语义轨迹.
 
-### 为什么说CTC supervision是indirect? 
+### 为什么说CTC supervision是indirect?
 
-CTC 的 supervision 主要是对齐到 离散 label 序列(字符/子词), 它优化的是"预测 label 的概率", 而不是"speech embeddings 在 LLM 的 embedding metric space 上接近 transcript embeddings". 结果就是: 即使 CTC WER 不错, speech embedding 仍可能不在 LLM 的语义几何里——这就是"监督信号与最终目标(embedding-level alignment)之间有鸿沟". 
+CTC 的 supervision 主要是对齐到 离散 label 序列(字符/子词), 它优化的是"预测 label 的概率", 而不是"speech embeddings 在 LLM 的 embedding metric space 上接近 transcript embeddings". 结果就是: 即使 CTC WER 不错, speech embedding 仍可能不在 LLM 的语义几何里——这就是"监督信号与最终目标(embedding-level alignment)之间有鸿沟".
 
 ### 为什么用uniform marginal?
 
@@ -114,21 +114,21 @@ uniform的含义是: 把source与target当作均匀质量分布, 每个speech em
 
 $f_i$是第i个speech embedding, $g_j$是第$j$个unique transcript embedding, cost其实就是OT矩阵里面的一项, 表示第$i$个frame有多少的概率质量对齐到第$j$个token, 这里被定义为$1=\cos(f_i, g_j)$. 为啥使用这个cosine, 是因为consine对scale不敏感, 适合不同模块输出的norm波动, 在高纬度embedding上比L2更加稳健. 在高维embedding上比L2更加稳健.
 
-### $\epsilon$太大/太小会怎样? 
+### $\epsilon$太大/太小会怎样?
 
-* $\epsilon$很小: transport plan 变得尖锐, 接近 hard assignment, 容易受噪声影响, 训练早期不稳定; 
-* $\epsilon$很大: plan 过于平滑, 接近平均分配, alignment 变弱, loss 约束变"软化", 对齐效果下降. 
+* $\epsilon$很小: transport plan 变得尖锐, 接近 hard assignment, 容易受噪声影响, 训练早期不稳定;
+* $\epsilon$很大: plan 过于平滑, 接近平均分配, alignment 变弱, loss 约束变"软化", 对齐效果下降.
 
 ??? example "例子"
 
-    假设: 
+    假设:
 
     * 3 个 speech embeddings
     * 2 个 transcript tokens
 
     === "情况 A: ε 很小(接近 hard assignment)"
 
-        可能 γ 是: 
+        可能 γ 是:
 
         |    | g1   | g2   |
         | -- | ---- | ---- |
@@ -138,7 +138,7 @@ $f_i$是第i个speech embedding, $g_j$是第$j$个unique transcript embedding, c
 
         每列加起来都是 0.5(满足边际)
 
-        但注意: 
+        但注意:
 
         * 每行是尖的(接近 one-hot)
         * 每个 speech frame 基本选一个 token
@@ -147,7 +147,7 @@ $f_i$是第i个speech embedding, $g_j$是第$j$个unique transcript embedding, c
 
     === "情况 B: ε 很大(平滑)"
 
-        γ 可能变成: 
+        γ 可能变成:
 
         |    | g1   | g2   |
         | -- | ---- | ---- |
@@ -155,57 +155,57 @@ $f_i$是第i个speech embedding, $g_j$是第$j$个unique transcript embedding, c
         | f2 | 0.16 | 0.17 |
         | f3 | 0.18 | 0.16 |
 
-        仍然: 
+        仍然:
 
         * 每列总和 = 0.5
         * 边际不变
 
-        但现在: 
+        但现在:
 
         > 每个 speech embedding 同时对齐多个 token
 
         这叫 **模糊对齐**
 
-### 为什么必须去重 transcript embedding? 
+### 为什么必须去重 transcript embedding?
 
-因为 transcript 中重复模式会导致 OT 产生多解/歧义: 例如 "banana banana", 两个 token embedding 非常接近, OT 会把大量 speech mass 分散到多个重复目标上, plan 变得不稳定. 用 unique embeddings 相当于把目标变成"词表集合", 让 speech 只需对齐到"出现过的语义原型", 更稳. 
+因为 transcript 中重复模式会导致 OT 产生多解/歧义: 例如 "banana banana", 两个 token embedding 非常接近, OT 会把大量 speech mass 分散到多个重复目标上, plan 变得不稳定. 用 unique embeddings 相当于把目标变成"词表集合", 让 speech 只需对齐到"出现过的语义原型", 更稳.
 
 ### OT不依赖temporal order, 会不会前半句对应到后半句
 
-在这篇论文里, OT 是在做: 
+在这篇论文里, OT 是在做:
 
 * source: speech embeddings(语音特征)
 * target: unique transcript embeddings(文本特征)
 
-OT 只根据 embedding 相似度 做匹配, 它不会看: 
+OT 只根据 embedding 相似度 做匹配, 它不会看:
 
 * 这是第几个 token
 * 是不是时间上相邻
 * 是否单调递增
 
-但是, 这篇论文的目标不是做严格 ASR alignment. 它的目标是: 减少 modality gap, 让 speech embedding 落在 transcript embedding 的语义空间里. 也就是说, 它不在乎: 这个语音帧是不是对应第 5 个 token, 或第 8 个 token. 它只在乎: 这个语音 embedding 看起来像不像某个正确的文本 token embedding. 
+但是, 这篇论文的目标不是做严格 ASR alignment. 它的目标是: 减少 modality gap, 让 speech embedding 落在 transcript embedding 的语义空间里. 也就是说, 它不在乎: 这个语音帧是不是对应第 5 个 token, 或第 8 个 token. 它只在乎: 这个语音 embedding 看起来像不像某个正确的文本 token embedding.
 
 ### unique阈值怎么选, 影响是什么?
 
-在做OT对齐的时候, target用的是unique transcript embeddings, 这个unique是通过consine similarity阈值来判断的. 如果阈值很高, 很少embedding会被合并, unique token数量多, OT target更细, transport更严格, 对齐更加精细, 但是可能有更多的噪声, 更加敏感. 阈值低的话, 很多embedding被认为是等价, unique token少, OT target更加粗, 对齐更加宽松, 更加鲁棒, 但是语义可能会被过度合并. 
+在做OT对齐的时候, target用的是unique transcript embeddings, 这个unique是通过consine similarity阈值来判断的. 如果阈值很高, 很少embedding会被合并, unique token数量多, OT target更细, transport更严格, 对齐更加精细, 但是可能有更多的噪声, 更加敏感. 阈值低的话, 很多embedding被认为是等价, unique token少, OT target更加粗, 对齐更加宽松, 更加鲁棒, 但是语义可能会被过度合并.
 
 ### $L_{\text{cost}}$和$L_{\text{spr}}$各自优化的是什么?
 
-* L_cost: 让 transport 发生在高相似度对上(speech embedding 靠近 transcript embedding 集合). 让模型产生的optimal transport plan更加好. 
-* L_spr: 让每个 speech embedding 的对齐分布更集中(趋向一对一), 减少"平均对齐/糊成一团". 
+* L_cost: 让 transport 发生在高相似度对上(speech embedding 靠近 transcript embedding 集合). 让模型产生的optimal transport plan更加好.
+* L_spr: 让每个 speech embedding 的对齐分布更集中(趋向一对一), 减少"平均对齐/糊成一团".
 
 ### 去掉sparsity会怎么样?
 
-transport plan 会更平滑(尤其在 entropy 正则下), 导致: 
+transport plan 会更平滑(尤其在 entropy 正则下), 导致:
 
-* speech embedding 被"同时拉向多个 token 原型", 产生语义模糊; 
-* alignment 变成"distribution matching"而不是"token-like anchoring", 对减少 modality gap 不如带 sparsity 明显. (如果alignment只是让speech embedding的**整体分布**接近transcript embedding的分布, 那本质上是一种global distribution-level alignment; token-like anchoring的意思是每个speech token都被锚定到某个具体的transcript embedding).  
+* speech embedding 被"同时拉向多个 token 原型", 产生语义模糊;
+* alignment 变成"distribution matching"而不是"token-like anchoring", 对减少 modality gap 不如带 sparsity 明显. (如果alignment只是让speech embedding的**整体分布**接近transcript embedding的分布, 那本质上是一种global distribution-level alignment; token-like anchoring的意思是每个speech token都被锚定到某个具体的transcript embedding).
 
 ### 这篇文章推理/训练的流程是啥?
 
 #### 训练阶段
 
-1. 仅使用CE的监督微调: 
+1. 仅使用CE的监督微调:
 
     1. 输入: \( \text{Template}(E_P, F_S) \)
     2. 使用 LLM 进行自回归预测
@@ -220,7 +220,7 @@ transport plan 会更平滑(尤其在 entropy 正则下), 导致:
 
 2. 引入OT Reg和Compression
 
-    在 Stage 1 基础上继续训练, 每次迭代包括: 
+    在 Stage 1 基础上继续训练, 每次迭代包括:
 
 
     1. 前向传播
@@ -235,7 +235,7 @@ transport plan 会更平滑(尤其在 entropy 正则下), 导致:
 
     3. 计算OT正则化损失: \( L_{OT} = L_{cost} + \lambda_{spr} L_{spr} \)
 
-        作用: 
+        作用:
 
         - 拉近 speech embedding 与 transcript embedding
         - 促进稀疏的一对一对齐
@@ -243,7 +243,7 @@ transport plan 会更平滑(尤其在 entropy 正则下), 导致:
 
     4. OT-based Compression: \( K_S = \text{OTCompression}(F_S) \)
 
-        包括: 
+        包括:
 
         - 合并相邻高相似 embedding
         - 删除与 pad embedding 相似的无信息帧
@@ -251,109 +251,109 @@ transport plan 会更平滑(尤其在 entropy 正则下), 导致:
         目的: 去除冗余, 使 speech 表示更接近 text-like 结构
 
     5. 计算CE损失: \( L_{CE} = \text{CE}(\hat{Y}, Y) \)
-    
+
     6. 总损失: \( L_{total} = L_{CE} + \lambda_{OT} L_{OT} \)
 
 #### 推理阶段
 
-推理阶段: 
+推理阶段:
 
 - 没有 transcript
 - 不计算 OT plan
 - 不计算 OT loss
 
-流程如下: 
+流程如下:
 
 1. Speech → Encoder → Adapter → \( F_S \)
 2. 应用 OT-based Compression → \( K_S \)
 3. 输入 \( \text{Template}(E_P, K_S) \) 到 LLM
 4. 自回归生成文本
 
-### OT-based compression 为什么可微? 梯度怎么走? 
+### OT-based compression 为什么可微? 梯度怎么走?
 
-因为使用的是熵正则OT++Sinkhorn算法, 这个算法的输出(transport plan)是输入(cost matrix)的连续可微函数. 所以梯度能从loss -> $\hat{\gamma}$ -> 相似度矩阵 $C$ -> speech embedding反传. compression的merge/drop实现为软门控/soft mask就同样可微. 
+因为使用的是熵正则OT++Sinkhorn算法, 这个算法的输出(transport plan)是输入(cost matrix)的连续可微函数. 所以梯度能从loss -> $\hat{\gamma}$ -> 相似度矩阵 $C$ -> speech embedding反传. compression的merge/drop实现为软门控/soft mask就同样可微.
 
 ### OT-based compression是如何实现的?
 
 1. Merge Step: 把序列$[f_0, f_1, ..., f_5, ...]$分为$(f_0, f_1), (f_2, f_3), (f_4, f_5), ...$, 然后计算相似度: $\cos(f_{2k}, f_{2k+1})$, 如果similarity > threshold, 那么认为, 这两个embedding的语义是一样的. 如何 merge? 最自然的可微实现方式是$f_{\text{merged}} = \frac{f_{2k} + f_{2k+1}}{2}$. 为什么只merge adjacent pairs? 为了防止过度压缩, 例如hheelllloo, 如果不是merge adjacent pairs, 可能会变为helo, 丢失了太多的重复信息.
-2. Drop Step: 因为在unique transcript embedding里面, 我们定义了一个pad token, 表示无信息, 我们可以drop掉那些与pad embedding相似度很高的speech embedding. 具体实现是: 计算$\cos(f_i, g_{\text{pad}})$, 如果 similarity > threshold, 那么这个frame就被认为是无信息的, 可以被drop. 但是, 为了保持可微, 我们不是真的把它丢掉, 而是给它一个soft mask.  
+2. Drop Step: 因为在unique transcript embedding里面, 我们定义了一个pad token, 表示无信息, 我们可以drop掉那些与pad embedding相似度很高的speech embedding. 具体实现是: 计算$\cos(f_i, g_{\text{pad}})$, 如果 similarity > threshold, 那么这个frame就被认为是无信息的, 可以被drop. 但是, 为了保持可微, 我们不是真的把它丢掉, 而是给它一个soft mask.
 
-### 用 pad embedding 判断 non-informative 合理吗? 
+### 用 pad embedding 判断 non-informative 合理吗?
 
-训练里把 pad 当成"blank/非信息"锚点(augmented transcript 也包含 pad), OTReg 会把 静音/停顿的 speech embedding 拉近 pad embedding, 所以推理时"像 pad 的就 drop"在机制上自洽 ✅. 风险是 pad 在某些 LLM 里可能带点偏置会误删, 但用阈值控制, 删多了 CE 会把它纠回来. 
+训练里把 pad 当成"blank/非信息"锚点(augmented transcript 也包含 pad), OTReg 会把 静音/停顿的 speech embedding 拉近 pad embedding, 所以推理时"像 pad 的就 drop"在机制上自洽 ✅. 风险是 pad 在某些 LLM 里可能带点偏置会误删, 但用阈值控制, 删多了 CE 会把它纠回来.
 
 ### 为什么OTReg不在stage1用?
 
-OTReg 依赖"cosine 相似度矩阵"来算 transport plan, 但 Stage 1 的 adapter 输出还没被训练到 LLM embedding 的同一语义空间, 所以此时算出来的 cosine 相似度基本是乱的 → Sinkhorn/OT 会得到噪声 transport plan → 反传的梯度也是错的, 训练容易不稳定/震荡 😵‍💫. 
+OTReg 依赖"cosine 相似度矩阵"来算 transport plan, 但 Stage 1 的 adapter 输出还没被训练到 LLM embedding 的同一语义空间, 所以此时算出来的 cosine 相似度基本是乱的 → Sinkhorn/OT 会得到噪声 transport plan → 反传的梯度也是错的, 训练容易不稳定/震荡 😵‍💫.
 
 ### CE和OT会conflict嘛?
 
-CE 和 OTReg 目标不完全一样, 局部可能"拉扯", 但整体是互补的. **CE(交叉熵)**管的是最终任务: 让模型输出的 token 序列/转写结果正确(直接决定 WER). OTReg更像是结构化对齐/表示约束: 让 speech 内部表示在分布上更接近对应文本表示(更"像文本那样组织"), 有助于减少 modality gap, 提升泛化. 当 OT 权重大, 可能损伤纯 WER; 当 OT 太小, generalization 改善有限. 你通过 λOT sweep 找到 sweet spot. 
+CE 和 OTReg 目标不完全一样, 局部可能"拉扯", 但整体是互补的. **CE(交叉熵)**管的是最终任务: 让模型输出的 token 序列/转写结果正确(直接决定 WER). OTReg更像是结构化对齐/表示约束: 让 speech 内部表示在分布上更接近对应文本表示(更"像文本那样组织"), 有助于减少 modality gap, 提升泛化. 当 OT 权重大, 可能损伤纯 WER; 当 OT 太小, generalization 改善有限. 你通过 λOT sweep 找到 sweet spot.
 
-在文章里面, $\lambda_{OT}$设置为$0.3$.  
+在文章里面, $\lambda_{OT}$设置为$0.3$.
 
-### 为什么 Base+CTC cross-domain 反而变差? 
+### 为什么 Base+CTC cross-domain 反而变差?
 
-CTC 的 classifier 参数大, 容易过拟合. 而且 CTC 对齐的是 label, 不保证 embedding-level 对齐到 LLM; 所以可能学到"CTC 好用的对齐捷径", 但对跨域的 speech variability 仍敏感, 导致泛化下降或收益不稳定. 
+CTC 的 classifier 参数大, 容易过拟合. 而且 CTC 对齐的是 label, 不保证 embedding-level 对齐到 LLM; 所以可能学到"CTC 好用的对齐捷径", 但对跨域的 speech variability 仍敏感, 导致泛化下降或收益不稳定.
 
-### Fig.4 距离下降说明什么? 会不会只是 norm 变小? 
+### Fig.4 距离下降说明什么? 会不会只是 norm 变小?
 
-你画的是 speech embeddings 与 transcript embeddings 的 pairwise distance/相似度结构, OTReg 后结构更清晰, 并且非信息段更集中对应到 pad. 同时你用 cosine cost, 本质上对 norm 不敏感, 所以很难用"norm 变小"解释整体结构改善. 
+你画的是 speech embeddings 与 transcript embeddings 的 pairwise distance/相似度结构, OTReg 后结构更清晰, 并且非信息段更集中对应到 pad. 同时你用 cosine cost, 本质上对 norm 不敏感, 所以很难用"norm 变小"解释整体结构改善.
 
-### 为什么 multilingual 下 OTReg 提升更明显? 
+### 为什么 multilingual 下 OTReg 提升更明显?
 
-跨语言/跨数据集时 speech variability 更大, domain shift 更明显. 
-OTReg 提供了"语言无关"的表示约束: 把 speech embedding 拉向 LLM 的 token 语义几何(而不是依赖某数据集的声学风格). 因此越是 shift 大的 setting, 收益越明显. 
+跨语言/跨数据集时 speech variability 更大, domain shift 更明显.
+OTReg 提供了"语言无关"的表示约束: 把 speech embedding 拉向 LLM 的 token 语义几何(而不是依赖某数据集的声学风格). 因此越是 shift 大的 setting, 收益越明显.
 
-### speech 长 >> transcript 长, 会不会违背 monotonic? 
+### speech 长 >> transcript 长, 会不会违背 monotonic?
 
-你没有显式追求 monotonic, 对齐目标是"语义集合对齐"而非"严格时间对齐". 
-speech 长带来的冗余通过:  
+你没有显式追求 monotonic, 对齐目标是"语义集合对齐"而非"严格时间对齐".
+speech 长带来的冗余通过:
 
-* OT sparsity 让每个 speech embedding 选一个语义原型; 
-* OT-based compression merge/drop 去冗余; 从而把多帧映射到更"token-like"的序列/集合. 
+* OT sparsity 让每个 speech embedding 选一个语义原型;
+* OT-based compression merge/drop 去冗余; 从而把多帧映射到更"token-like"的序列/集合.
 
-### OT 复杂度是多少? 长语音怎么办? 
+### OT 复杂度是多少? 长语音怎么办?
 
-na×ng 的 cost matrix 构建是 O(na·ng), Sinkhorn 是迭代缩放, 整体开销与迭代次数线性相关. 每次迭代都要对整个的矩阵$n_a\times n_g$做缩放/归一化(行列边缘约束), 所以总开销大致: $O(T\times n_a n_g)$. 
+na×ng 的 cost matrix 构建是 O(na·ng), Sinkhorn 是迭代缩放, 整体开销与迭代次数线性相关. 每次迭代都要对整个的矩阵$n_a\times n_g$做缩放/归一化(行列边缘约束), 所以总开销大致: $O(T\times n_a n_g)$.
 
 我们的目的是将$n_a$或者$n_g$的长度压下去:
 
 * 降低$n_a$: 比如你提到 adapter 里k=5(等价于把时间长度缩短约 5 倍)这会把 OT 的成本几乎按比例降下来
 * 降低$n_g$: 通过 unique transcript embedding, 把重复的 token 合并成一个原型, 从而降低目标长度.
 
-### OT 能看作 soft CTC 吗? 
+### OT 能看作 soft CTC 吗?
 
-可以作为一种直觉类比: 两者都在无显式对齐下建立"软对齐".  但差别关键在: 
+可以作为一种直觉类比: 两者都在无显式对齐下建立"软对齐".  但差别关键在:
 
-* CTC 在 label space 做路径求和; 
-* OT 在 embedding metric space 做全局运输; OTReg 的监督目标更接近"让 speech embeddings 贴近 LLM transcript embeddings", 而不是贴近离散 label classifier. 
+* CTC 在 label space 做路径求和;
+* OT 在 embedding metric space 做全局运输; OTReg 的监督目标更接近"让 speech embeddings 贴近 LLM transcript embeddings", 而不是贴近离散 label classifier.
 
-### 换成 Wasserstein-2 直接优化分布距离会怎样? 
+### 换成 Wasserstein-2 直接优化分布距离会怎样?
 
-W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语义相似. 此外你需要的是可微且稳定的 plan(用于构造正则项与压缩), entropy-regularized OT + Sinkhorn 是工程上更合适的选择. W2 也可行, 但可能需要重新设计 cost/正则与实现细节(以及处理高维 embedding 的数值稳定). 
+W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语义相似. 此外你需要的是可微且稳定的 plan(用于构造正则项与压缩), entropy-regularized OT + Sinkhorn 是工程上更合适的选择. W2 也可行, 但可能需要重新设计 cost/正则与实现细节(以及处理高维 embedding 的数值稳定).
 
-### 方法能否用于 speech-to-speech / speech-to-vision / grounding? 
+### 方法能否用于 speech-to-speech / speech-to-vision / grounding?
 
-可以迁移的部分是 "用 OT 在两模态 embedding 集合之间做软匹配, 并把 plan 变成训练正则". 
+可以迁移的部分是 "用 OT 在两模态 embedding 集合之间做软匹配, 并把 plan 变成训练正则".
 
-前提是: 目标模态要有稳定的 embedding 表示(如 text token embeddings, vision token embeddings). speech-to-speech 需要定义"目标语音嵌入的语义原型", 否则会对齐到声学风格而不是语义. 
+前提是: 目标模态要有稳定的 embedding 表示(如 text token embeddings, vision token embeddings). speech-to-speech 需要定义"目标语音嵌入的语义原型", 否则会对齐到声学风格而不是语义.
 
-### 能否做 token-level / multi-layer / hierarchical OT? 
+### 能否做 token-level / multi-layer / hierarchical OT?
 
-* token-level: 更细粒度, 但更噪; 
-* multi-layer: 对齐不同层的抽象语义(浅层更声学, 深层更语义); 
-* hierarchical: 先粗对齐(句级/词级), 再细对齐(token/帧). 
+* token-level: 更细粒度, 但更噪;
+* multi-layer: 对齐不同层的抽象语义(浅层更声学, 深层更语义);
+* hierarchical: 先粗对齐(句级/词级), 再细对齐(token/帧).
 
-这也是未来工作方向: 在不引入标注的前提下增强结构性. 
+这也是未来工作方向: 在不引入标注的前提下增强结构性.
 
-### transcript 有错误怎么办? OT 会被误导吗? 
+### transcript 有错误怎么办? OT 会被误导吗?
 
-会有风险, 因为 target 原型错了会把 speech embeddings 拉向错误 token manifold.  但你训练还有 CE loss(ASR 输出)作为主目标, OT 是正则项而不是唯一监督; 因此错误 transcript 的影响会被部分抵消. 
+会有风险, 因为 target 原型错了会把 speech embeddings 拉向错误 token manifold.  但你训练还有 CE loss(ASR 输出)作为主目标, OT 是正则项而不是唯一监督; 因此错误 transcript 的影响会被部分抵消.
 
 ## 情感对话的双信息语音语言模型面试
 
-我主导设计并实现了Equivalence Replacement Regularization (ERR)的训练机制, 并系统性的验证其在避免adapter退化为task-specific vector中的作用(消融实验技术验证).  
+我主导设计并实现了Equivalence Replacement Regularization (ERR)的训练机制, 并系统性的验证其在避免adapter退化为task-specific vector中的作用(消融实验技术验证).
 
 论文目标是把speech disentangle分成两部分, EC和EA, 分别是linguistic embedding, 一个是paralinguistic embedding. 然后分三类任务:
 
@@ -373,18 +373,18 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 
         👉 那"另一种信息"就是 paralinguistic embedding(EA)
 
-        所以 ERR 做的事情是: 
+        所以 ERR 做的事情是:
 
         ```
-        ASR 任务中: 
+        ASR 任务中:
         随机替换 EA 的来源
         ```
 
-        因为 transcript 不应该依赖情绪, 音调. 
+        因为 transcript 不应该依赖情绪, 音调.
 
-        如果 ASR 结果会因为 EA 来源不同而变化, 说明: 
+        如果 ASR 结果会因为 EA 来源不同而变化, 说明:
 
-        > 模型偷偷用了不该用的信息. 
+        > 模型偷偷用了不该用的信息.
 
     === "情况 2: 训练 emotion classification(paralinguistic task)"
 
@@ -394,14 +394,14 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 
         👉 那"另一种信息"就是 linguistic embedding(EC)
 
-        ERR 会: 
+        ERR 会:
 
         ```
-        emotion task 中: 
+        emotion task 中:
         随机替换 EC 的来源
         ```
 
-        因为情绪识别不应该依赖具体语义内容. 
+        因为情绪识别不应该依赖具体语义内容.
 
 ### ERR架构
 
@@ -410,7 +410,7 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 ![](https://img.ricolxwz.cn/c74cedfbe9523651177ae35d29001c33_inverted.webp#only-dark){ loading=lazy width='500' }
 </figure>
 
-例如, 在linguistic task中, $f(E_C, E_A^{\text{speech}}) \approx f(E_C, E_A^{\text{text}}) \approx f(E_C, \text{None})$. 
+例如, 在linguistic task中, $f(E_C, E_A^{\text{speech}}) \approx f(E_C, E_A^{\text{text}}) \approx f(E_C, \text{None})$.
 
 ### Speech Caption和Speech Transcript的区别
 
@@ -422,16 +422,24 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 
 ### 为什么要random sampling?
 
-防止模型记住固定组合模式, 迫使adapter encode真正的信息. 如果不随机, 模型会学shortcut. 
+防止模型记住固定组合模式, 迫使adapter encode真正的信息. 如果不随机, 模型会学shortcut.
 
 ### 为什么在训练EC的时候不能干脆不妨EA?
 
-在linguistic task中, 如果完全移除 EA, 模型不会学习在存在 EA 的情况下保持不依赖它, 这会在后续 joint 使用时产生分布偏移. ERR 的目的是在组合输入条件下显式约束模型对非主信息不敏感, 从而保证模块的可组合性. 
+在linguistic task中, 如果完全移除 EA, 模型不会学习在存在 EA 的情况下保持不依赖它, 这会在后续 joint 使用时产生分布偏移. ERR 的目的是在组合输入条件下显式约束模型对非主信息不敏感, 从而保证模块的可组合性.
 
 ### ERP是如何避免adapter的输出退化为task-specific vector的?
 
-在双 adapter 结构中, 若不加 ERP, 非主 adapter 很容易在单任务训练中退化为任务 ID. ERP 通过随机替换非主 embedding 来源, 使其在同一任务下分布不稳定, 从而无法编码任务 prior, 迫使两个 adapter 各自表示真实的输入信息. 
+在双 adapter 结构中, 若不加 ERP, 非主 adapter 很容易在单任务训练中退化为任务 ID. ERP 通过随机替换非主 embedding 来源, 使其在同一任务下分布不稳定, 从而无法编码任务 prior, 迫使两个 adapter 各自表示真实的输入信息.
 
 ### 为什么不直接加正交约束
 
-speech embedding的语义空间本来就是inherently entangled, 强行orthogonal肯能会损伤useful correlation, 我们选择behaviour-level constraint而不是representation-level constraint. 
+speech embedding的语义空间本来就是inherently entangled, 强行orthogonal肯能会损伤useful correlation, 我们选择behaviour-level constraint而不是representation-level constraint.
+
+### 为什么stage2不joint train两个adapter?
+
+因为我们需要freeze其中的一个adapter, 才能enforce single-source reliance. 否则, 两个adapter会互相泄露信息, 无法distangle.
+
+### 如果没有ERR会发生什么?
+
+我们观察到adapter生成高度相似embedding, 不随输入变化.
