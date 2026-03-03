@@ -410,6 +410,8 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 ![](https://img.ricolxwz.cn/c74cedfbe9523651177ae35d29001c33_inverted.webp#only-dark){ loading=lazy width='500' }
 </figure>
 
+例如, 在linguistic task中, $f(E_C, E_A^{\text{speech}}) \approx f(E_C, E_A^{\text{text}}) \approx f(E_C, \text{None})$. 
+
 ### Speech Caption和Speech Transcript的区别
 
 |                 | Speech Transcript       | Speech Caption                                                 |
@@ -417,3 +419,15 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 | 描述什么            | 说了什么                    | 怎么说的                                                           |
 | 信息类型            | Linguistic              | Paralinguistic                                                 |
 | **例子(对应同一段语音)** | `I can't believe this.` | `The speaker sounds angry and speaks quickly with high pitch.` |
+
+### 为什么要random sampling?
+
+防止模型记住固定组合模式, 迫使adapter encode真正的信息. 如果不随机, 模型会学shortcut. 
+
+### 为什么在训练EC的时候不能干脆不妨EA?
+
+在linguistic task中, 如果完全移除 EA, 模型不会学习在存在 EA 的情况下保持不依赖它, 这会在后续 joint 使用时产生分布偏移. ERR 的目的是在组合输入条件下显式约束模型对非主信息不敏感, 从而保证模块的可组合性. 
+
+### ERP是如何避免adapter的输出退化为task-specific vector的?
+
+在双 adapter 结构中, 若不加 ERP, 非主 adapter 很容易在单任务训练中退化为任务 ID. ERP 通过随机替换非主 embedding 来源, 使其在同一任务下分布不稳定, 从而无法编码任务 prior, 迫使两个 adapter 各自表示真实的输入信息. 
