@@ -537,11 +537,11 @@ nav = [
     { "面试" = [
         { "八股文" = [
             { "深度学习" = "int/bg-dl.md" },
-            { "Python" = "int/bg-py.md" }
         ]},
         { "代码" = "int/code.md" },
         { "简历" = "int/pro.md" },
         { "DeepSeed" = "int/deepspeed.md" },
+        { "Megatron" = "int/megatron.md" },
     ]},
 ]
 
