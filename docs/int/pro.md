@@ -431,3 +431,7 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 ### ERP是如何避免adapter的输出退化为task-specific vector的?
 
 在双 adapter 结构中, 若不加 ERP, 非主 adapter 很容易在单任务训练中退化为任务 ID. ERP 通过随机替换非主 embedding 来源, 使其在同一任务下分布不稳定, 从而无法编码任务 prior, 迫使两个 adapter 各自表示真实的输入信息. 
+
+### 为什么不直接加正交约束
+
+speech embedding的语义空间本来就是inherently entangled, 强行orthogonal肯能会损伤useful correlation, 我们选择behaviour-level constraint而不是representation-level constraint. 
