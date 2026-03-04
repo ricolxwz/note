@@ -7,7 +7,7 @@
 ```
 mkdir -p ./npm-cache
 npm pack @openai/codex
-npm i -g ./openai-codex-0.106.0.tgz --cache ./npm-cache --no-audit --no-fund
+npm i -g @openai/codex --cache ./npm-cache --no-audit --no-fund
 tar czf codex-offline-bundle.tgz openai-codex-0.106.0.tgz npm-cache 
 # npm i -g ./anthropic-ai-claude-code-2.1.63.tgz --cache ./npm-cache --no-audit --no-fund
 # tar czf offline-bundle.tgz anthropic-ai-claude-code-2.1.63.tgz npm-cache 
