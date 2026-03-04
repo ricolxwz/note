@@ -167,7 +167,18 @@ x → GPU0 → 中间结果 → GPU1 → 输出
     * QAT: 在模型训练或微调的过程中, 提前模拟量化带来的误差. 它在计算图中插入伪量化节点 (Fake Quantization), 让模型在训练时就意识到自己未来会被量化, 从而通过反向传播不断调整权重, 主动适应并抵消量化带来的误差. 精度高, 能够最大程度保留模型能力, 需要完整的训练流程, 消耗大量算力和时间, 且需要训练数据. 
 * 动态批处理: 这是一种推理阶段的加速技术, 其核心思想是在短时间内手机多个同时到达的请求, 将他们动态合并为一个batch在GPU上一次性计算, 从而提升硬件效率和系统吞吐量. 系统通常通过设置最大batch size和最大等待时间来控制何时进行批处理. 
 * Flash Attention: 标准self-attention计算: $S=QK^T$, 得到的矩阵大小是$N\times N$, 这个矩阵会被存入HBM, 再进行softmax, 再和$V$矩阵相乘. Flash Attention的核心思想是**不显式计算和存储整个$N\times N$的注意力矩阵**, 而是分块计算. SRAM中只需要容纳B*B的中间结果, 而不是N*N的矩阵, 通过选择合适的block size. 使得B*B能够放入SRAM.  
+
+    <figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.cn/c0bc68396c24247778795b5258797f83.webp#only-light){ loading=lazy width='800' }
+    ![](https://img.ricolxwz.cn/c0bc68396c24247778795b5258797f83_inverted.webp#only-dark){ loading=lazy width='800' }
+    </figure>
 * KV Cache: 在生成式模型的推理过程中, 每次生成一个新token, 都需要重新计算之前所有token的注意力分数. 这会导致计算量随着生成长度的增加而呈指数级增长. KV Cache的核心思想是**缓存之前计算过的键值对(KV)**, 在生成新token时, 只需要计算当前token与之前token的注意力分数, 而不需要重新计算之前token之间的注意力分数. 这样可以显著减少每一步的计算量, 提升推理效率.
+
+    <figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.cn/bb2bb2396d5506a985e46b6fdb6e571d.gif#only-light){ loading=lazy width='800' }
+    ![](https://img.ricolxwz.cn/bb2bb2396d5506a985e46b6fdb6e571d_inverted.gif#only-dark){ loading=lazy width='800' }
+    </figure>
+
 
 ## 分词
 
