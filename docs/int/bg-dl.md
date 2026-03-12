@@ -229,7 +229,8 @@ x → GPU0 → 中间结果 → GPU1 → 输出
 
 10. 什么是GPTQ/AWQ
 
-
+    * GPTQ: Generative Pretrained Transformer Quantization, 是一种PTQ方法, 不需要重新训练模型. 流程: 取一小部分calibration data, 对某一层进行量化, 计算量化产生的误差, 通过近似Hessian信息, 调整剩余权重补偿误差. 特点: layer-by-layer量化, 常见配置是W4A16
+    * AWQ: Activation-aware Weight Quantization, 是一种PTQ方法. 流程: 用calibration data跑模型, 收集activation, 找出对输出影响最大的权重通道, 对这些通道进行scale调整或保护, 再进行INT4量化
 
 #### 动态批处理
 
