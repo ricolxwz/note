@@ -77,12 +77,48 @@ class Solution:
     def isPalindrome(self, head: Optional[ListNode]) -> bool:
         mid = self.middleNode(head)
         head2 = self.reverseList(mid)
-        while head2:
+**        while head2:
             if head.val != head2.val:
                 return False
             head = head.next
             head2 = head2.next
         return True
+```
+
+### [141.环形链表](https://leetcode.cn/problems/linked-list-cycle/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题的思想和找中点有点类似, 定义一个快指针, 一下子移动两个单位; 定义一个慢指针, 一下子移动一个单位, 如果有环的话, 这两个指针会在环里面上演追逐大战, 最终一定会相遇; 如果没有环的话, 这两个指针不可能相遇. 
+
+```py
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        slow = fast = head
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+            if fast == slow:
+                return True
+        return False
+```
+
+### [142.环形链表 II](https://leetcode.cn/problems/linked-list-cycle-ii/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题建立在141的基础上, 我们首先要找到快慢指针相交的节点, 然后将慢指针设置为head, 快慢指针同时以步长为1出发, 他们相遇的时候就是入环的第一个节点. 
+
+```py
+class Solution:
+    def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        slow = fast = head
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+            if fast == slow:
+                slow = head
+                while slow != fast:
+                    fast = fast.next
+                    slow = slow.next
+                return slow
+        return None
 ```
 
 ## 回溯
