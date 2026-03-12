@@ -158,6 +158,37 @@ x → GPU0 → 中间结果 → GPU1 → 输出
 * Adapter: 在每层插入小型网络模块, 参数量比LoRA稍大, 适合多任务切换
 * P-Tuning/Prefix-tuning: 只训练prompt嵌入或者前缀, 参数量最少, 适合少样本
 
+---
+
+1. Full Fine-tuning和Parameter-efficient Fine-tuning(PEFT)的区别
+
+    * Full Fine-Tuning: 更新模型的所有参数, 训练成本高, 显存要求大, 效果通常最好
+    * PEFT: 只训练少量参数, 原模型权重冻结, 显存需求小, 更适合工业场景, 包括LoRA, Adapter, P-Funing, Prefix Tuning.
+
+2. 为什么现在工业界常用LoRA
+
+    因为它参数量小, 通常只占总参数量的1%-3%, 显存占用低, 只训练新增矩阵, 在大多数任务中性能接近FT, 不同任务的LoRA可以叠加加载并且可以高效的替换.
+
+3. LoRA的核心思想是啥
+
+    不直接修改原始模型的权重, 而是通过训练一个低秩矩阵的增量来近似权重更新. 在Transformer结构中, LoRA通常插入到注意力层的线性投影矩阵里面, 也就是Query Projection, Key Projection和Value projection, 对这些线性层增加一个低秩旁路.
+
+4. LoRA的Rank参数有什么用
+
+    rank参数用来控制低秩矩阵的大小, r越大, 表示表达能力越强, r越小, 参数更少.
+
+5. 什么是QLoRA?
+
+    QLoRA是Quantization+LoRA, 将模型权重量化为4bit, 冻结量化模型, 在其上训练LoRA.
+
+6. Adapter和LoRA的区别?
+
+    Adapter在每层插入小网络, 额外增加推理计算, 参数量比LoRA略多. LoRA直接修改权重矩阵, 不增加推理延迟因为可以合并, 参数更少. 因此LoRA更加流行.
+
+7. 微调的时候如何防止过拟合?
+
+    Dropout, 简化模型, Early stopping, Data augmentation...
+
 ## 推理
 
 ### 加速技术
