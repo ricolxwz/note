@@ -33,6 +33,22 @@ comments: false
 4. 层次摘要: 段落总结->全局总结
 5. 位置编码外推技术: 模型训练的时候会设定一个最大上下文长度, 如2048 tokens, 如果输入4096, 模型通常会出现注意力退化, 推理错误, 性能明显下降, 这是因为模型没有见过更大的位置编号. 经典的Transformer模型使用的绝对位置编码无法外推, 后来的很多模型(如LLaMA, Qwen)使用RoPE(Rotary Positinoal Embedding), 他可以外推扩展上下文.
 
+### LLM复读机问题
+
+复读机是模型重复输出相同短语/句子的现象, 常见的原因:
+
+* 温度太低, top-p过窄
+* repetition_penalty未设置
+* prompt指令不正确
+* 长上下文导致局部高概率循环
+
+常见解决方案:
+
+* 提高temperature, top-p
+* 设置repetition_penalty
+* 缩短上下文或者分段生成
+* 在提示词明确禁止重复
+
 ## 激活函数
 
 常见的激活函数有Sigmoid, Tanh, ReLU, Leaky ReLU.
