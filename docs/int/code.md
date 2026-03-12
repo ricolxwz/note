@@ -3,6 +3,88 @@ title: 代码
 comments: false
 ---
 
+## 链表
+
+### [160.相交链表](https://leetcode.cn/problems/intersection-of-two-linked-lists/?envType=study-plan-v2&envId=top-100-liked)
+
+定义两个指针, `pA`从`headA`出发, `pB`从`headB`出发, `pA`走到空, 就跳到`headB`, `pB`走到空, 就跳到`headA`, 然后继续走, 直到`pA=pB`. 这是因为如果两个链表相交, 那么到他们相交的时候所经过的步数是相等的. 
+
+```py
+class Solution:
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+        pA = headA 
+        pB = headB
+        while pA != pB:
+            pA = headB if pA is None else pA.next
+            pB = headA if pB is None else pB.next
+        return pA
+```
+
+### [206.反转链表](https://leetcode.cn/problems/reverse-linked-list/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题用三个指针来维护链表的反转过程. 
+
+```py
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        pre = None
+        cur = head
+        while cur:
+            nxt = cur.next
+            cur.next = pre
+            pre = cur
+            cur = nxt
+        return pre
+```
+
+### [876.链表的中间结点](https://leetcode.cn/problems/middle-of-the-linked-list/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题的解法是快慢指针. 定义两个指针, `slow`和`fast`, `slow`每次走一步, `fast`每次走两步, 当`fast`走到链表末尾的时候, `slow`正好走到链表的中间. (对于偶数的话, 是走到后面的那个节点).
+
+```py
+class Solution:
+    def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        slow = fast = head
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+        return slow
+```
+
+### [234.回文链表](https://leetcode.cn/problems/palindrome-linked-list/?envType=study-plan-v2&envId=top-100-liked)
+
+这道题的暴力解法是直接深拷贝一份原始链表, 然后反转, 判断反转后的链表是否和原始链表相等, 但是这样空间复杂度为$O(n)$. 
+
+另外一种空间复杂度为$O(1)$的解法是结合876.链表的中间结点和206.反转链表两道题的解法, 首先找到链表的中间结点, 然后反转后半部分链表, 最后比较前半部分和反转后的后半部分是否相等.
+
+```py
+class Solution:
+    def middleNode(self, head):
+        slow = fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        return slow
+    def reverseList(self, head):
+        pre = None
+        cur = head
+        while cur:
+            nxt = cur.next
+            cur.next = pre
+            pre = cur
+            cur = nxt
+        return pre
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        mid = self.middleNode(head)
+        head2 = self.reverseList(mid)
+        while head2:
+            if head.val != head2.val:
+                return False
+            head = head.next
+            head2 = head2.next
+        return True
+```
+
 ## 回溯
 
 ### 子集型回溯
