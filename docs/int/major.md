@@ -7,6 +7,10 @@ comments: false
 
 ### 傅里叶
 
+<div style="position: relative; padding: 30% 45%;">
+<iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.youtube.com/embed/nwMKuChwpMo?si=sO9jbkL-39M3PGtS" frameborder="yes" scrolling="no" allowfullscreen="true"></iframe>
+</div>
+
 #### 傅里叶级数
 
 傅里叶级数告诉我们, 任何一个周期函数都可以表示为一系列正余弦函数的叠加. 如果函数的周期是$T$, 那么傅里叶级数的基函数是$\sin(\frac{2\pi n}{T} x)$和$\cos(\frac{2\pi n}{T} x)$, 其中$n$是整数. 为啥能够这么表示, 因为这些正余弦函数之间互相正交, 他们两两之间的内积是0(可以想象一下坐标系, 我们用两个单位向量来表示任意一个向量, 我们要求这个单位向量必须是正交的, 这里也是类似的道理). 什么是正余弦的内积? 就是把两个函数在一个周期内的乘积积分. 
