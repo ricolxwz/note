@@ -80,7 +80,26 @@ Now, 因为这个时候我们只有$N$个数据, 若我们尝试用很多频率�
 4. 共振峰: 是声道共振产生的频率峰值, 是包络网格中的峰值, 声源经过声道滤波之后, 不同频率被不同程度增强, 增强最明显的位置就是共振峰.
 5. LPC(线性预测技术): 当前语音可以用过去几个采样点线性预测. 他主要是估计声道的滤波器参数.
 6. 倒谱: 是对语音频谱做进一步变换后的表示, 常用于将声源信息和声道信息分离开. 计算步骤如下, 对语音做傅里叶变换得到频谱, 取幅度谱, 取对数, 再做逆傅里叶变换. 为什么能够分离呢, 这是因为在语音模型里面, 声音=激励源*滤波器(卷积), 取对数之后, 乘积能够变成加和, 所以声源和声道更容易分开.
-7. MFCC: 是基于Mel频率尺度和倒谱分析提取出来的一些特征. 其过程包括预加重, 分帧, 加窗, FFT, Mel滤波器组, 取对数, DCT.
+7. MFCC: 是基于Mel频率尺度和倒谱分析提取出来的一些特征. 其过程包括预加重, 分帧, 加窗, FFT, Mel滤波器组, 取对数, DCT. MFCC的本质是用少量的数字来表示语音频谱的整体形状, 它先把声音转换为类似人耳听到的频率结构, 再从这个结构里面提取语音特征.
+
+### 分析方法
+
+#### 短时傅里叶变换
+
+短时傅里叶变换, STFT,  = 滑动窗口 + 每帧做DFT. 来看一张STFT的效果图.
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/eff03129717601644cc28b8f09a1a862.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/eff03129717601644cc28b8f09a1a862_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+下面一张图中, 颜色表示的是magnitude, 变为了一张2D图像:
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/59759360792a27fe913696b5c2c8bec3.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/59759360792a27fe913696b5c2c8bec3_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
 
 
 ## 3A算法
