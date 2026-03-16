@@ -382,7 +382,7 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 
 ## 情感对话的双信息语音语言模型面试
 
-Dual Information Speech Language Models for Emotional Conversations
+Dual Information Speech Language Models for Emotional Conversations. 把语音里的"内容"和"情绪/语气"分开表示, 再一起交给 LLM 做情感对话理解与生成.
 
 我主导设计并实现了Equivalence Replacement Regularization (ERR)的训练机制, 并系统性的验证其在避免adapter退化为task-specific vector中的作用(消融实验技术验证).
 
