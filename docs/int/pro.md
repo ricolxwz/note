@@ -64,6 +64,35 @@ uvicorn app:app --host 0.0.0.0 --port 8000
 
 ## 语音文本对齐的最优传输正则化面试
 
+Optimal Transport Regularization for Speech Text Alignment in Spoken Language Models.
+
+### 介绍
+
+这个项目是一个用于 Spoken Language Model 的训练增强方法, 叫 OTReg. 它不改主干模型, 而是在 speech encoder, adapter, LLM 这套标准框架上, 引入 optimal transport regularization, 去显式建模 speech embeddings 和 transcript embeddings 之间的对齐关系. 它的目标是缩小语音和文本的 modality gap, 避免模型过度依赖语速, 停顿这些非语义信息, 从而提升跨数据集泛化. 方法上它比较轻量, 不需要额外标注和新增参数, 并且通过两阶段训练把 alignment loss 稳定地接入现有 SLM 训练流程.
+
+### 动机
+
+现在一种实用的Spoken Language Model(SLM)构建方式, 是把预训练的speech encoder, adapter和LLM接起来. 这条路线已经在ASR和speech-to-text translation上取得了不错的效果. 但是, 为什么这些模型在训练域内表现不错, 但是一换数据集就开始明显掉性能?
+
+这是一个泛化问题, 模型可能没有真正按照像文本那样的方式理解语音, 而是部分依赖了数据集里面的某些偶然的语音特征, 比如说话速度, 停顿模式, 录音条件之类的变化; 换句话说, 模型可能利用了speech embdding中的额外自由度, 学到了和linguistic content的关的东西, 从而产生了过拟合.
+
+这是因为speech和text之间存在modality gap. speech embedding往往比transcript embedding要长很多, 因为语音具有高频率. 同时, 文本嵌入主要承载语言内容, 而语音嵌入除了语言内容, 还会带上停顿, 语速变化等副语言信息. 这意味着speech比text更加动态, 更加复杂, 也更容易让模型抓到"无关但是好用"的模式, 而不是只聚焦应该对齐的语义内容. 这就是unintended variation.
+
+这种动机具体有两个挑战. 第一, 虽然拿到一段语音和他的transcript很容易, 但是要在两串异构embedding之间定义出有意义的点对点对应关系不容易; 第二, 即使动态地找到了这些对应关系, 还需要一个可微, 稳定, 鲁棒的损失函数, 才能反过来训练模型, 让speech embedding更加贴近transcript embedding; 但动态建立出来的对应关系通常会很噪, 而且在训练过程中不断变化.
+
+CTC是常见的点对点对齐方案, 但是它依赖的是textual
+label作为目标, 而我们真正想要优化的是speech embedding在表示空间里面更加贴近transcript embedding这件事, 所以CTC和我们的目标并非完全一致. 另一方面, 已有OT方法虽然更加接近直接对齐embedding, 但是很多工作又额外施加了单调性, 局部性, 位置约束. 这在很多语音场景下未必合理, 因为真实的语音中有语速, 停顿, 静音等因素, 强行要求monotonic alignment反而限制了表达.
+
+!!! warning "为啥monotonic alignment会限制表达"
+
+    因为单调性, 局部性, 位置约束默认语音-文本对齐在时间轴上是规则的, 但是真实语音的时长伸缩, 停顿, 静音会让规则变得脆弱, 一旦约束没错, 就会把无关的时间结构硬注入对齐过程, 反而影响模型学习真正需要的语音对应.
+
+### 遇到的难点
+
+怎么处理transcript里面的重复token: 如果transcript里面有重复的模式, 例如banana和banan, 那么transcript embedding里面会出现语义非常接近, 甚至基于一样的目标点. 这样一来, 做optimal transportation的时候, 很多speech embedding很可能同样合理地分配到多个重复文本位置上, transport plan就会产生歧义和噪音, 导致对齐不稳定, 学到了一个模糊, 分散的对齐.
+
+我们的解决方案是, 没有直接拿全部transcript embeddings做target, 而是先构造unique transript embeddings, 把语义上等价或者高度相似的重复embedding去掉, 再把这些去重后的目标拿来做OT对齐, 这样target集合更加干净, transport ambiguity更加小, 对齐更加稳定.
+
 ### 多模态融合方法
 
 先记主线: **早-中-高-对-接-图**
@@ -353,6 +382,8 @@ W2 强调几何结构与平方距离, 但你这里 cost 用 cosine 更贴近语�
 
 ## 情感对话的双信息语音语言模型面试
 
+Dual Information Speech Language Models for Emotional Conversations. 把语音里的"内容"和"情绪/语气"分开表示, 再一起交给 LLM 做情感对话理解与生成.
+
 我主导设计并实现了Equivalence Replacement Regularization (ERR)的训练机制, 并系统性的验证其在避免adapter退化为task-specific vector中的作用(消融实验技术验证).
 
 论文目标是把speech disentangle分成两部分, EC和EA, 分别是linguistic embedding, 一个是paralinguistic embedding. 然后分三类任务:
@@ -456,31 +487,35 @@ dropout是噪声正则, ERR是条件不变性约束.
 
 $E_A^{\text{test}}$表示从文本caption构造出来的paralinguistic embedding, $E_A^{\text{speech}}$表示从真实语音encoder得到的paralinguistic embedding, 如果这两者的分布不匹配, 那么模型很容易会学习到一个捷径. 先判断embedding来源是speech还是text, 然后直接对某个来源忽略或者特殊处理, 结果就是, 训练的时候看起来loss能降低, 但是模型没有真正学习到情绪等paralinguistic信息, 而是学习到了source classifier.
 
+### 为啥在训练para linguistic adapter的时候, ERR里面不含有caption, 而是含有transcript?
+
+训练 paralinguistic adapter 时, 需要一个语言内容辅助通道; 作者希望语言内容作为外部补充存在, 从而减少 para adapter 自己编码 linguistic content 的动机. 这个角色由 transcript-derived linguistic embedding 承担, 而不是由 caption 承担
+
 ### 如果sampling不均匀会怎样?
 
-模型会学习到偏置, 某种embedding source会成为shortcut, invariance被破坏. 
+模型会学习到偏置, 某种embedding source会成为shortcut, invariance被破坏.
 
 ## 专利面试准备
 
 ### 整体pipeline是啥?
 
-我们的方法核心是将说话人视频从像素空间解耦为结构化的动作空间, 提取眼睛动作, 头部姿态和表情变化等连续细粒度特征, 实现多粒度可控建模; 随后在连续特征空间中通过可逆层进行无损维度对齐, 使动作特征映射到语言模型的隐空间维度, 在此对齐空间上分别使用 VQ-VAE 进行离散化编码, 得到各动作的离散行为 token; 接着将动作 token 的 embedding, 语音 token 以及提示词共同输入多模态 LLM, 建模说话人与聆听人之间的条件反应分布, 生成聆听人的动作 token 序列; 最后通过新增的 video head 将 LLM 输出映射回视频特征空间, 经逆 VQ 与逆可逆变换恢复为连续的眼睛, 头部和表情特征, 并通过 PD-FGC 解码器进行身份融合与渲染, 重建为最终的数字人聆听视频. 
+我们的方法核心是将说话人视频从像素空间解耦为结构化的动作空间, 提取眼睛动作, 头部姿态和表情变化等连续细粒度特征, 实现多粒度可控建模; 随后在连续特征空间中通过可逆层进行无损维度对齐, 使动作特征映射到语言模型的隐空间维度, 在此对齐空间上分别使用 VQ-VAE 进行离散化编码, 得到各动作的离散行为 token; 接着将动作 token 的 embedding, 语音 token 以及提示词共同输入多模态 LLM, 建模说话人与聆听人之间的条件反应分布, 生成聆听人的动作 token 序列; 最后通过新增的 video head 将 LLM 输出映射回视频特征空间, 经逆 VQ 与逆可逆变换恢复为连续的眼睛, 头部和表情特征, 并通过 PD-FGC 解码器进行身份融合与渲染, 重建为最终的数字人聆听视频.
 
 ### 为什么整体视频离散化不够好?
 
-原因有: 
+原因有:
 
-聆听行为是多因素叠加的, 眼睛, 头部姿态, 表情, 语音, 如果统一VQ, codebook必须同时编码所有因素, 不同因素之间产生统计耦合, 很容易学到场景特定pattern. 整体token无法单独控制: 只动眼神, 只改head nod, 只改微笑幅度, 模型只能整体替换. 但是聆听是subtle的, 局部的. 
+聆听行为是多因素叠加的, 眼睛, 头部姿态, 表情, 语音, 如果统一VQ, codebook必须同时编码所有因素, 不同因素之间产生统计耦合, 很容易学到场景特定pattern. 整体token无法单独控制: 只动眼神, 只改head nod, 只改微笑幅度, 模型只能整体替换. 但是聆听是subtle的, 局部的.
 
-我们可以通过unified vs disentangled的abaltion study来验证FID是否降低, diversity是否提升, controllability是否增强, token mutual information是否降低. 
+我们可以通过unified vs disentangled的abaltion study来验证FID是否降低, diversity是否提升, controllability是否增强, token mutual information是否降低.
 
 ### 为什么不能直接使用continuous embedding?
 
-因为continuous embedding分布漂移严重, LLM不擅长连续空间, 对长序列非常不稳定, 无法做自回归生成. 对于LLM, 离散token可以统一建模凡式(像text token), 可以做AR建模, 可以用cross-attention, 可以做token-level alignment. 
+因为continuous embedding分布漂移严重, LLM不擅长连续空间, 对长序列非常不稳定, 无法做自回归生成. 对于LLM, 离散token可以统一建模凡式(像text token), 可以做AR建模, 可以用cross-attention, 可以做token-level alignment.
 
 ### 为什么要用可逆层, 直接用线性投影不行吗?
 
-因为我们不仅要编码进LLM, 还要再解码回原动作空间. 如果是普通线性投影, 映射不可逆, 可逆层保证维度对齐的同时可精确回溯. 
+因为我们不仅要编码进LLM, 还要再解码回原动作空间. 如果是普通线性投影, 映射不可逆, 可逆层保证维度对齐的同时可精确回溯.
 
 ### LLM是如何融合三种模态的? 是拼接还是cross-attention?
 
@@ -488,4 +523,4 @@ $E_A^{\text{test}}$表示从文本caption构造出来的paralinguistic embedding
 
 ### 为什么新增video head? 而不是微调整个LLM?
 
-保持LLM结构冻结, 可以复用预训练能力. video head专门负责从隐空间映射回动作空间. 这样实现模块化解耦, 提升泛化能力. 
+保持LLM结构冻结, 可以复用预训练能力. video head专门负责从隐空间映射回动作空间. 这样实现模块化解耦, 提升泛化能力.
