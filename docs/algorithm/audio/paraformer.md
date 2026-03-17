@@ -64,3 +64,67 @@ Predictor 先给每一帧打"贡献分" $\alpha_t$, 这些分数加起来决定�
 ![](https://img.ricolxwz.cn/2eb3f1bdf548a85571a18d451e152129_inverted.webp#only-dark){ loading=lazy width='800' }
 <figcaption>阈值$\beta$被设置为$1$</figcaption>
 </figure>
+
+更具体一点看, CIF做的是一种单调的软对齐. 假设Encoder输出为$\mathbf{h}_1, \mathbf{h}_2, ..., \mathbf{h}_T$, Predictor会先预测每一帧对应的权重$\alpha_t$. 这些权重不断累加, 一旦累计值达到阈值$1$, 就认为已经积累够了一个输出token所需的信息, 然后把这段时间范围内的Encoder表示按权重做加权求和, 得到一个token级别的声学embedding.
+
+因此Predictor同时承担了两个任务:
+
+* 预测输出长度: $\sum_t \alpha_t$近似表示这段语音应当生成多少个token
+* 生成token级表示: 用CIF把帧级特征压缩成和输出token一一对应的声学表示
+
+在训练时, 如果已知真实标签长度, 通常会对$\alpha$做尺度调整, 让其总和更接近真实token数, 这样有助于稳定训练并提升对齐质量. 这也是Paraformer相比直接使用CTC长度预测的一个关键改进: 它不仅估计长度, 还直接产生了给Decoder使用的token级隐变量.
+
+### Sampler模块
+
+单轮非自回归解码的一个核心问题是条件独立假设太强. 如果每个位置都只根据声学信息独立预测, 那么模型容易在近音字, 同音词或者语义相关位置上犯替换错误. Paraformer为了解决这个问题, 在训练阶段加入了一个GLM sampler.
+
+它的基本思想可以理解为"偷看一部分正确答案". 训练时, 模型会先得到一次粗预测, 然后根据预测与真实标签之间的差异, 从真实标签中采样一部分token, 将这些位置的语义信息注入Decoder输入. 这样Decoder就不只是看到声学embedding, 还能够在部分位置获得可靠的上下文提示, 从而学到token之间的依赖关系.
+
+需要注意的是, Sampler本身不是一个复杂的可学习网络, 更像是一个训练阶段使用的数据构造模块. 它的作用不是直接输出最终结果, 而是帮助双向Decoder在训练时学到更强的上下文建模能力.
+
+### Decoder模块
+
+Paraformer的Decoder与传统自回归Decoder最大的不同在于: 它不是从左到右逐个生成token, 而是并行地预测整句输出. 由于训练时已经通过Predictor得到了和token对齐的声学embedding, 又通过Sampler补充了一部分语义信息, Decoder就可以在一个双向上下文环境下同时预测所有位置的token.
+
+这样做带来的直接收益是推理速度显著提升. 自回归模型每生成一个token都要跑一次Decoder, 而Paraformer只需要一次并行前向传播即可得到整句结果, 因而在长句和大规模工业场景下优势明显.
+
+从信息流角度看, Decoder主要依赖两部分输入:
+
+* Encoder输出的高层语音表示
+* Predictor生成的token级声学embedding, 以及训练时由Sampler补充的部分语义信息
+
+### Loss函数
+
+Paraformer的训练目标不是单一的交叉熵, 而是多种目标共同作用.
+
+首先是最基本的交叉熵损失, 用来监督Decoder输出正确的token序列. 其次是针对Predictor的长度约束损失, 通常使用MAE来约束预测出来的token个数与真实长度接近, 使CIF对齐更加稳定.
+
+除此之外, Paraformer还引入了MWER(minimum word error rate)训练目标. 这个目标不是只看某个位置的分类是否正确, 而是更直接地从最终识别结果出发, 优化整体的词错率或字错率. 直观理解就是: 交叉熵更关注"每一步预测像不像对", MWER更关注"整句识别结果到底好不好".
+
+论文中还专门设计了负样本生成策略, 用来配合MWER训练. 这样模型在训练时不仅看到正确答案, 也会显式比较一些错误候选, 从而进一步提升最终识别质量.
+
+### 推理流程
+
+Paraformer在推理阶段比训练阶段更简单.
+
+1. 先由Encoder对输入语音编码
+2. Predictor通过CIF预测输出长度并生成token级声学embedding
+3. Decoder直接并行输出所有token
+
+在这个过程中, Sampler并不参与推理. 也就是说, Paraformer在训练时借助Sampler学习上下文建模能力, 但在真正部署时仍然保持单次并行解码, 这也是它能够同时兼顾速度和精度的重要原因.
+
+## 优势与局限
+
+Paraformer最突出的优势是推理快. 由于不再依赖逐token自回归解码, 它相比传统Transformer ASR通常能带来显著的速度提升, 特别适合工业实时识别和低延迟场景.
+
+另一方面, 它通过Predictor+CIF缓解了非自回归模型最关键的长度预测问题, 又通过GLM sampler缓解了上下文依赖不足的问题, 因此能够在保持高速度的同时, 把识别效果做到接近强自回归基线.
+
+不过它也不是完全没有代价. Paraformer的性能较大程度上依赖Predictor的对齐质量, 如果长度预测和token级声学embedding提取得不够准, 后续并行解码的效果也会受到影响. 此外, 它虽然通过Sampler缓解了条件独立问题, 但在极其复杂的长距离语言依赖场景下, 自回归模型依然可能更稳.
+
+## 总结
+
+Paraformer可以看成是对端到端语音识别里"速度"和"精度"矛盾的一次工程化折中. 它不再逐字生成, 而是先用Predictor和CIF确定输出token数并构造token级声学表示, 再通过GLM sampler增强上下文建模, 最后用双向Decoder一次性并行输出整句结果.
+
+一句话理解Paraformer:
+
+> 先估计有多少个字, 再抽出每个字对应的声学表示, 最后并行把整句一次性解出来.
