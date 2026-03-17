@@ -238,36 +238,4 @@ AGC 是自动增益控制,目标是让输出语音电平稳定在合适范围.�
     * RTF: Real-Time Factor, 实时率, 即"处理耗时/音频时长", RTF<1通常表示比实时更快, 能满足实时或者近实时推理需求.
     * 延迟: 如果是流式ASR, 还会特别关注延迟, 常会区分首字延迟, 端到端延迟, 稳定输出延迟等.
 
-## ASR主流方法
-
-### Transducer
-
-CTC模型有一个限制, 它在每个时间步只能依赖当前的声学特征, 不利用已输出的标签信息. 而Transducer模型通过引入预测网络, 是的每个时间步的输出不仅依赖于当前的声学特征, 还依赖于之前的标签. 这类似于语言模型的作用. 并且, CTC中, 输出序列的长度必须小于等于输入的帧数. 如果语速很快或者语音帧数过少, CTC会有你为格子不够放导致Loss无穷大或者无法对齐. 与此相比, RNN-T允许在同一个时间步上连续循环运行预测网络, 发射多个标签, 知道模型输出空白符才进入下一帧.
-
-RNN-Transducer通过预测网络引入输出历史依赖, 解决了这一局限:
-
-\[ P(\mathbf{y}|\mathbf{x}) = \sum_{\hat{\mathbf{y}} \in \mathcal{A}_{\text{RNNT}}(\mathbf{x}, \mathbf{y})} \prod_{i=1}^{T+U} P(\hat{y}_i | x_1, \cdots, x_{t_i}, y_0, \ldots, y_{u_{i-1}}) \]
-
-关键差异在于RNN-T的条件项包含了标签历史 \(y_0, \ldots, y_{u_{i-1}}\), 使当前输出能依赖之前的标签序列. 这里的对齐序列$\mathbf{\hat{y}}=(\hat{y}_1, ..., \hat{y}_{T+U})$包含$T$个空白和$U$个标签, 移除空白之后得到$\mathbf{y}$. 用图片表示:
-
-<figure markdown='1' id='fig'>
-![](https://img.ricolxwz.cn/8c6465b0c3dcdecfe8a0774d494210ea.webp#only-light){ loading=lazy width='400' }
-![](https://img.ricolxwz.cn/8c6465b0c3dcdecfe8a0774d494210ea_inverted.webp#only-dark){ loading=lazy width='400' }
-</figure>
-
-可以看到, 编码器负责处理声学特征, 预测网络仅依赖标签历史, 类似语言模型, 联合网络输出经过softmax生成包含空白的概率分布.
-
-??? tip "RNN-T和CTC在路径的长度定义的本质区别"
-
-    RNN-Transducer通过预测网络引入输出历史依赖, 解决了这一局限:
-
-    \[ P(\mathbf{y}|\mathbf{x}) = \sum_{\hat{\mathbf{y}} \in \mathcal{A}_{\text{RNNT}}(\mathbf{x}, \mathbf{y})} \prod_{i=1}^{T+U} P(\hat{y}_i | x_1, \cdots, x_{t_i}, y_0, \ldots, y_{u_{i-1}}) \]
-
-    关键差异在于RNN-T的条件项包含了标签历史 \(y_0, \ldots, y_{u_{i-1}}\), 使当前输出能依赖之前的标签序列. 这里的对齐序列$\mathbf{\hat{y}}=(\hat{y}_1, ..., \hat{y}_{T+U})$包含$T$个空白和$U$个标签, 移除空白之后得到$\mathbf{y}$. 用图片表示:
-
-    <figure markdown='1' id='fig'>
-    ![](https://img.ricolxwz.cn/8c6465b0c3dcdecfe8a0774d494210ea.webp#only-light){ loading=lazy width='400' }
-    ![](https://img.ricolxwz.cn/8c6465b0c3dcdecfe8a0774d494210ea_inverted.webp#only-dark){ loading=lazy width='400' }
-    </figure>
-
-    可以看到, 编码器负责处理声学特征, 预测网络仅依赖标签历史, 类似语言模型, 联合网络输出经过softmax生成包含空白的概率分布.
+## 语音多模态的技术
