@@ -18,3 +18,49 @@ Paraformer是2022年由达摩院提出的一种端到端, 非自回归的语言�
 再往后是Decoder. Paraformer的Decoder和很多传统自回归Decoder不一样, 它是双向的. 而且在推理的时候做的是并行输出, 而不是按照顺序一个字一个字. 论文还特别说明: 训练的时候Sampler会参与, 两次前向帮助模型学习上下文. 但是推理的时候sampler不工作, 模型直接用acoustic embedding和encoder hidden states一次性输出最终结果.
 
 训练目标上, Paraformer不只是普通的交叉熵. 论文提到它同时使用了MAE去约束Predictor学准输出长度, 还使用了MWER, 也就是minimum word error rate训练, 让模型更直接朝"降低词错率/字错率"的目标优化.
+
+## 动机
+
+近年来, 随着端到端语音识别的流行, 基于 Transformer 结构的语音识别系统逐渐成为了主流. 然而, 由于 Transformer 是一种自回归模型, 需要逐个生成目标文字, 计算复杂度随着目标文字数量而呈线性增加, 限制了其在工业生产中的应用.
+
+针对 Transoformer 模型自回归生成文字的低计算效率的缺陷, 学术界提出了非自回归模型来并行地输出目标文字. 根据生成目标文字时的迭代轮数, 非自回归模型分为: 多轮迭代式与单轮非自回归模型.
+
+迭代式非自回归模型, 主要为 Mask-Predict 模式, 训练时, 将输入文字随机掩码, 通过周边信息预测当前文字. 解码时, 采用多轮迭代的方式逐步生成目标文字; 计算复杂度与迭代轮数有关(通常小于目标文字个数), 相比于自回归模型, 计算复杂度有所下降, 但是解码需要多轮迭代的特性, 限制了其在工业生产中的应用. 相比于多轮迭代模型, 单轮非自回归模型有着更加广阔的应用前景, 可以通过单次解码获取全部目标文字, 计算复杂度与目标文字个数无关, 进而极大的提高了解码效率. 然而, 由于条件独立假设, 单轮非自回归模型识别效果与自回归模型有着巨大的差距, 特别是在工业大数据上.
+
+对于单轮非自回归模型, 现有工作往往聚焦于如何更加准确的预测目标文字个数, 如较为典型的 Mask CTC, 采用 CTC 预测输出文字个数, 尽管如此, 考虑到现实应用中, 语速, 口音, 静音以及噪声等因素的影响, 如何准确的预测目标文字个数以及抽取目标文字对应的声学隐变量仍然是一个比较大的挑战.
+
+另外一方面, 我们通过对比自回归模型与单轮非自回归模型在工业大数据上的错误类型, 发现相比于自回归模型, 非自回归模型在预测目标文字个数(插入错误+删除错误)方面差距较小, 但是替换错误显著的增加, 我们认为这是由于单轮非自回归模型中条件独立假设导致的语义信息丢失. 与此同时, 目前非自回归模型主要停留在学术验证阶段, 还没有工业大数据上的相关实验与结论.
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/ebfc82a5079c5a314888de1d439e8a7a.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/ebfc82a5079c5a314888de1d439e8a7a_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+## 设计
+
+为了解决上述问题, 我们设计了一种具有高识别率与计算效率的单轮非自回归模型Paraformer.
+
+针对第一个问题, 我们采用一个预测器(Predictor)来预测文字个数并通过 Continuous integrate-and-fire (CIF) 机制来抽取文字对应的声学隐变量. 针对第二个问题, 受启发于机器翻译领域中的 Glancing language model(GLM), 我们设计了一个基于 GLM 的 Sampler 模块来增强模型对上下文语义的建模. 除此之外, 我们还设计了一种生成负样本策略来引入 MWER区分性训练.
+
+具体模型结构如下图所示, 由 Encoder, Predictor, Sampler, Decoder 与 Loss function 几部分组成. Encoder 与自回归模型保持一致, 可以为 Self-attention, SAN-M 或者 Conformer 结构. Predictor 为2层 DNN 模型, 预测目标文字个数以及抽取目标文字对应的声学向量. Sampler 为无可学习参数模块, 依据输入的声学向量和目标向量, 生产含有语义的特征向量. Decoder 结构与自回归模型类似, 为双向建模(自回归为单向建模). Loss function 部分, 除了交叉熵(CE)与 MWER 区分性优化目标, 还包括了 Predictor 优化目标 MAE.
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/8faed8c82860fa20e64c962ec7e2a0b9.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/8faed8c82860fa20e64c962ec7e2a0b9_inverted.webp#only-dark){ loading=lazy width='800' }
+</figure>
+
+其核心点主要有:
+
+* Predictor 模块: 基于 CIF 的 Predictor 来预测语音中目标文字个数以及抽取目标文字对应的声学特征向量
+* Sampler: 通过采样, 将声学特征向量与目标文字向量变换成含有语义信息的特征向量, 配合双向的 Decoder 来增强模型对于上下文的建模能力
+* 基于负样本采样的 MWER 训练准则
+
+### Predictor模块
+
+Predictor 先给每一帧打"贡献分" $\alpha_t$, 这些分数加起来决定有多少个 token; 再用 CIF 把这些分数沿时间累积, 攒够一个阈值就吐出一个 token 的声学表示.
+
+<figure markdown='1' id='fig'>
+![](https://img.ricolxwz.cn/2eb3f1bdf548a85571a18d451e152129.webp#only-light){ loading=lazy width='800' }
+![](https://img.ricolxwz.cn/2eb3f1bdf548a85571a18d451e152129_inverted.webp#only-dark){ loading=lazy width='800' }
+<figcaption>阈值$\beta$被设置为$1$</figcaption>
+</figure>
