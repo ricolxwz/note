@@ -112,6 +112,10 @@ label作为目标, 而我们真正想要优化的是speech embedding在表示空
 | 接口式融合 | 强编码器 + 轻桥接 + 语言生成 | Q-Former / Adapter / LLM | 成本低, 产品化强 | 幻觉与一致性风险 |
 | 图结构融合 | 用图建模对象与关系 | GNN / Scene Graph | 关系推理强 | 构图成本高, 流程复杂 |
 
+### SLM架构路线
+
+
+
 ### 什么是Optimal Transportation
 
 OT是一种在两个分布之间寻找最小搬运成本匹配方式的方法. 他解决的问题是: 如何把质量从A分布搬到B分布, 使得总成本最小. 给定两个分布: $a=(a_1, ..., a_T)$, $b=(b_1, ..., b_N)$, 给定cost矩阵: $C_{ij}=distance(x_i, y_j)$, OT求: $\min_{\pi}\sum_{i, j}\pi_{ij}C_{ij}$, 其中, $\pi_{ij}$是transport plan. 在speech-text场景里面, 每个frame有质量, 每个token有质量, cost是embedding距离, OT会算出$\pi_{ij}$表示第$i$个frame有多少概率质量对齐到第$j$个token.

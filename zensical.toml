@@ -345,6 +345,7 @@ nav = [
     { "综述" = [
         { "多模态大模型" = "survey/mllm.md" },
         { "思维链" = "survey/cot.md" },
+        { "语音识别" = "survey/asr.md" },
     ]},
     { "系统" = [
         { "Linux" = [
