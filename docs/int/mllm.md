@@ -108,3 +108,39 @@ BLIP, Boostrapping Language-Image Pre-training, 它的定义是一个统一的�
 10. BLIP的局限是啥?
 
     论文主打统一和数据清洗, 但是它仍然属于较早期的vision-language pretraing路线, 和后来的大模型相比, 在复杂多轮对话, 开放式推理, 指令跟随方面能力有限; 虽然它缓解了网页数据噪声, 但是不能彻底解决数据偏差和错配的问题.
+
+## BLIP2
+
+BLIP-2的核心思想是冻结图像编码器, 冻结大预言模型, 只训练一个轻量的桥接模块Q-former, 用两阶段的预训练把视觉信息对齐到语言模型. 论文里强调, 这样可以显著减低训练成本, 同时在多种视觉语言任务上保持很强的效果; 例如论文摘要中给出的例子, BLIP-2在zero-shot VQAv2上超过Flamingo80B 8.7%, 而可训练参数少54倍. 
+
+1. 什么是BLIP-2, 他想解决什么问题?
+
+    BLIP-2是一种视觉语言预训练方法, 目标是更低成本地把现成的强视觉模型和强语言模型组合为多模态模型. 他要解决的问题是: 端到端训练大型视觉语言模型太贵, 而冻结LLM后又很难完成视觉-语言对齐, 所以他引入了Q-former来桥接两种模态. 
+
+2. BLIP-2的整体架构是什么?
+
+    他由三部分组成: 一个冻结的图像编码器, 一个可训练的Q-former, 一个冻结的大预言模型. Q-former负责从视觉编码器输出里提取对预言最有用的视觉信息, 再把这些信息发给LLM. Hugging Face文档把BLIP-2明确描述为vision encoder + Q-former + language model. 
+
+3. 什么是Q-former, 为什么他是核心?
+
+    Q-former是Querying Transformer. 他通过一组可学习的query embeddings, 从冻结图像编码器的特征里面"查询"出固定数量的视觉表示. 论文把它定义为连接frozen image encoder和frozen LLM的可训练模块, 也强调它是一个information bottleneck, 只把最有用的视觉信息传给预言模型. 
+
+4. Q-former的内部结构是啥?
+
+    Q-former由两个共享self-attention的transformer子模块构成, 一个是image transformer, 负责和冻结的视觉特征交互; 另一个是text transformer, 既可以当text encoder, 也可以当text decoder. 这里最容易误解的点是"两个子模块"并不表示两套完全独立参数, 而是他们共同采用了self-attention的主干, 只是在是否接入图像cross-attention, 以及attention-mask怎么设定上不同. 论文还说明, query之间通过self-attention彼此交互, 同时通过cross-attention去读取冻结图像编码器的输出; 这些cross-attention层是每隔一个attention block插入一次的. 
+     
+    更具体地说, 先把图像送入冻结的 ViT/CLIP 类图像编码器, 得到一串视觉 token; 然后 32 个 query token 进入 Q-Former, 在自注意力里彼此通信, 并通过交叉注意力去"查询"这串视觉 token; 经过多层后, 输出 32 个更紧凑的 query 表征. 若当前任务需要结合文本, 这些 query 还会和文本 token 通过同一套 self-attention 层发生交互; 若进入第二阶段接 LLM, 则这些 query 输出会先经过一个线性层投影到 LLM 的词向量维度, 再作为 soft visual prompts 拼接到 LLM 输入前面. 
+
+5. Q-former的训练是咋样子的
+
+    <figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.cn/a91d65c6298588ae016f475965f8eca4.webp#only-light){ loading=lazy width='800' }
+    ![](https://img.ricolxwz.cn/a91d65c6298588ae016f475965f8eca4_inverted.webp#only-dark){ loading=lazy width='800' }
+    <figcaption>图: 第一阶段训练. 通过mask控制MED.</figcaption>
+    </figure>
+
+    <figure markdown='1' id='fig'>
+    ![](https://img.ricolxwz.cn/f7b076d1f587fb270a5da4ff2da305f0.webp#only-light){ loading=lazy width='800' }
+    ![](https://img.ricolxwz.cn/f7b076d1f587fb270a5da4ff2da305f0_inverted.webp#only-dark){ loading=lazy width='800' }
+    <figcaption>图: 第二阶段训练. </figcaption>
+    </figure>
