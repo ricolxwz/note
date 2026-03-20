@@ -100,3 +100,11 @@ BLIP, Boostrapping Language-Image Pre-training, 它的定义是一个统一的�
 8. BLIP和CLIP的区别是啥?
 
     CLIP更加偏向图文对齐和表示学习, 核心是对比学习, 擅长zero-shot分类和检索; BLIP则进一步追求理解+生成统一, 除了匹配能力, 还显式支持caption生成, VQA等任务.
+
+9. BLIP的优势是啥?
+
+    第一, 它统一了理解和生成, 不像一些旧方法比较偏科; 第二, 它显式处理noisy web data, 而不是被动接受噪声数据; 第三, 论文报告它在retrieval, captioning, VQA上都达到了当时的SOTA, 说明这种统一框架是有效的.
+
+10. BLIP的局限是啥?
+
+    论文主打统一和数据清洗, 但是它仍然属于较早期的vision-language pretraing路线, 和后来的大模型相比, 在复杂多轮对话, 开放式推理, 指令跟随方面能力有限; 虽然它缓解了网页数据噪声, 但是不能彻底解决数据偏差和错配的问题.
