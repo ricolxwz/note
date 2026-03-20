@@ -305,3 +305,6 @@ AGC 是自动增益控制,目标是让输出语音电平稳定在合适范围.�
     * 更加细粒度的路由和个性化应答
     * 通过日志回流做数据闭环, 持续优化prompt, 语料和模型效果
 
+## 近些年ASR的趋势
+
+领域正在从以转写为中心的ASR往更加广义的spoken language understanding/Speech LLM迁移, 就是说不止关心说了什么, 还关心怎么说, 说话人, 情绪, 环境声等等.  现在大致有三条并行主线. 第一条是ASR/cascaded pipeline, 先转写, 再交给LLM, 再接TTS, 这条线没有小时, 反而因为可控, 好调试, 容易接工具和业务系统, 工程里仍然很常见.; 第二条是现在最热的, end-to-end speech-to-speech/realtime voice agent, 这条路线的目标不是先把语音完整转为文字再思考, 而是直接处理连续语音输入, 并尽量低延迟地输出语音, 追求更加自然地打断, 接话和表达. OpenAI的Realtime API明确就是给低延迟双向音频设计交互设计的. Qwen2.5-Omni和LLaVA-Omni这类论文也都把streaming, 低时延, 自然语音交互放在核心位置; 第三条是从transcript-only走向richer speech understanding. 也就是说, 大家越来越不满足于"先转成文字再理解", 因为这会丢掉说话风格, 韵律, 情绪和其他副语言信息. 近些年的论文和综述都在强调, 端到端LLM的价值之一, 就是能保留这些ASR文本化之后会损失的信息.  

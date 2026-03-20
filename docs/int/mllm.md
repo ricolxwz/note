@@ -176,3 +176,9 @@ BLIP-2的核心思想是冻结图像编码器, 冻结大预言模型, 只训练�
 13. BLIP 和 BLIP-2 的核心区别是什么? 
 
     BLIP 更强调统一的视觉语言理解与生成框架, 以及 noisy web caption 的 bootstrapping; BLIP-2 更强调模块化桥接, 也就是如何高效地连接冻结视觉编码器和冻结 LLM. 简单说, BLIP 偏"统一多任务预训练", BLIP-2 偏"高效利用现成大模型". 
+
+## 图像->语音
+
+* BLIP-2: 类似于SALMONN/SpeechVerse, SALMONN使用的是window-level Q-former作为连接模块, 把冻结的Whisper语音编码器和冻结的BEATs音频编码器接到冻结的Vicuna/LLM上面. 训练的时候主要更新Q-former和LoRA. 
+* Flamingo: 类似于Audio Flamingo, 用cross-attention把音频信息融合入语言模型. 
+* LLaVA: 最像的是Qwen2-Audio, 更早期的是SpeechGPT/AudioChatLlama. 
