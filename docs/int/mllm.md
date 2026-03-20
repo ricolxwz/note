@@ -1,5 +1,5 @@
 ---
-title: MLLM
+titl: MLLM
 comments: false
 ---
 
@@ -144,3 +144,35 @@ BLIP-2的核心思想是冻结图像编码器, 冻结大预言模型, 只训练�
     ![](https://img.ricolxwz.cn/f7b076d1f587fb270a5da4ff2da305f0_inverted.webp#only-dark){ loading=lazy width='800' }
     <figcaption>图: 第二阶段训练. </figcaption>
     </figure>
+
+6. BLIP2为啥分为两阶段训练
+
+    因为它先要解决看懂图的问题, 再解决把图说出来的问题. 第一阶段是vision-language pretraining, 让Q-former从冻结的图像编码器中学到和文本最相关的视觉表示; 第二阶段是vision-to-language generative learning, 把Q-former的输出接到冻结的LLM上面, 让语言模型能利用这些视觉表示生成文本. 
+
+7. 第一阶段具体训练什么目标?
+
+    和BLIP类似, 三个目标, ITC, ITG, ITM. 这三个目标共享输入格式和模型参数, 只是通过不同的attention mask控制query和text的交互方式. 
+
+8. 第一阶段里, ITC, ITM, ITG 各自起什么作用? 
+
+    ITC 负责学图文的全局对齐, 用对比学习把正样本拉近, 负样本拉远; ITM 负责学更细粒度的图文匹配, 本质是 matched / unmatched 的二分类; ITG 则逼 Q-Former 提取足够支持文本生成的视觉信息, 因为文本生成时所需信息必须先经由 queries 从图像里抽出来. 
+
+9. 二阶段是怎么把视觉信息接给 LLM 的? 
+
+    先用一个全连接层把 Q-Former 的输出投影到 LLM 的词向量维度, 然后把这些投影后的 query embeddings 拼到文本输入前面, 当作 soft visual prompts. 这样冻结的 LLM 就能在不改主干参数的情况下利用视觉信息生成文本. 
+
+10. 为什么 BLIP-2 要冻结图像编码器和 LLM, 不直接端到端训练? 
+
+    论文给的理由有两个: 一是训练成本太高, 二是会有 catastrophic forgetting 风险. 冻结现成的高质量单模态模型, 可以直接继承它们已有的视觉表示和语言能力, 再用轻量 Q-Former 做桥接, 因此更高效, 也更灵活. 
+
+11. 为什么不能只靠 image-to-text generation loss? 为什么还要第一阶段的表征学习? 
+
+    论文在引言里明确说, 单靠生成损失不足以桥接视觉和语言的模态鸿沟, 尤其是在 LLM 冻结时更难. BLIP-2 先做表征学习, 让 Q-Former 学会提取"和文本最相关"的视觉特征, 再进入生成阶段, 这样第二阶段的 LLM 负担更小. 
+
+12. Q-Former 为什么说是 information bottleneck? 
+
+    因为它不会把整张图的所有特征一股脑丢给 LLM, 而是用固定数量的 query 输出压缩视觉信息. 论文指出, 这种瓶颈结构会逼 queries 只提取和文本最相关的内容, 也有助于减轻 LLM 学习跨模态对齐的负担. 
+
+13. BLIP 和 BLIP-2 的核心区别是什么? 
+
+    BLIP 更强调统一的视觉语言理解与生成框架, 以及 noisy web caption 的 bootstrapping; BLIP-2 更强调模块化桥接, 也就是如何高效地连接冻结视觉编码器和冻结 LLM. 简单说, BLIP 偏"统一多任务预训练", BLIP-2 偏"高效利用现成大模型". 
