@@ -78,3 +78,25 @@ BLIP, Boostrapping Language-Image Pre-training, 它的定义是一个统一的�
     1. 计算方式不太一样. ITC是双塔思路, 图像单独编码一次, 文本单独编码一次, 然后计算相似度就行, 这非常适合大规模的检索, 比如100万张图匹配1条文本查询. 但是ITM不是, ITM依赖cross-attention, 是单塔模型, 也就是"这张图和这句话要放在一起交互之后, 模型才能判断配不配". 这意味着每一个图文候选对就要跑一遍融合模型, 如果是1条文本对和100万张图, ITM没法直接这么干, 成本太高.  所以ITC适合召回, ITM适合重排.
     2. 学习粒度不一样: ITC学习的是全局语义空间. 让"猫的图"靠近"cat"的文本, 这一步让模型建立一个整体的跨模态集合结构. 如果一开始用的是ITM, 它的损失是二分类交叉熵损失, 模型看到的只是"这是正样本/这是负样本"的二分类信号, 它当然也能学习到一些匹配关系, 但是未必学出一个好用, 规整, 可检索的embedding space. 所以ITC在塑造表示空间, ITM在做判别边界.
     3. 训练难度和泛化目标不同: ITC会在一个batch里面天然构造很多负样本, 训练信号密, 覆盖广, 能够快速学到粗粒度对齐. ITM更像"最后一公里"的细判别, 擅长学属性, 关系, 局部细节, 但是如果没有前面的粗对齐, ITM一上来就要处理复杂融合, 训练不一定稳, 也不一定高效.
+
+5. 术语
+
+    * ITC: Image-Text Contrasive
+    * ITM: Image-Text Matching
+    * LM: Language Modeling
+    * Image-Grounded Text Encoder
+    * Image-Grounded Text Decoder
+    * Image Encoder
+    * Text Encoder
+
+6. BLIP为什么既能做理解任务又能做生成任务?
+
+    因为它不是只训练一个对比目标, 也不是只训练一个语言生成目标. BLIP在预训练里面联合考虑了图文对齐, 图文匹配和语言生成等目标, 再配合MED的不同工作模式, 所以它既能用于image-text retrieval, VQA这类理解任务, 也能用于image captioning这类生成任务.
+
+7. BLIP里面caption bootstraping是啥? 为什么有功效?
+
+    网页上原始的alt-text常常噪声很大, 和图像并不是严格对应的. BLIP的做法是先训练一个captioner为图片生成更加干净的文本, 再训练一个filter去筛选到不可靠的配对. 这样做的本质是用模型反过来训练清洗数据, 提升监督信号质量, 所以在多个任务上都有收益.
+
+8. BLIP和CLIP的区别是啥?
+
+    CLIP更加偏向图文对齐和表示学习, 核心是对比学习, 擅长zero-shot分类和检索; BLIP则进一步追求理解+生成统一, 除了匹配能力, 还显式支持caption生成, VQA等任务.
