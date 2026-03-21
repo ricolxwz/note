@@ -543,6 +543,7 @@ nav = [
         { "代码" = "int/code.md" },
         { "简历" = "int/pro.md" },
         { "专业" = "int/major.md" },
+        { "HR" = "int/hr.md" },
     ]},
 ]
 
