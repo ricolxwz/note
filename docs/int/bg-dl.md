@@ -275,6 +275,10 @@ x → GPU0 → 中间结果 → GPU1 → 输出
 
     Dropout, 简化模型, Early stopping, Data augmentation...
 
+8. LoRA矩阵是否可以初始化为 0?
+
+    不可以的, 因为$A=B=0$, $\Delta W=BA=0$, 梯度$\frac{\partial \Delta W}{\partial A}=B, \frac{\partial \Delta W}{\partial B} = A$, 可以看到梯度全是0, 那么学不动了. 常用的方式是一个随机, 一个置零.
+
 ## 推理
 
 ### 加速技术
