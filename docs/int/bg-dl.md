@@ -15,8 +15,8 @@ comments: false
 
 ### Prefix LM和Causal LM的区别是啥?
 
-    * Casual LM: 严格的自回归, token只能看左侧的历史
-    * Prefix LM: 将输入分为前缀区和生成区, 前缀区是双向可见, 生成区按照自回归方式生成. Prefix LM的目的是让那些decoder only的模型能更好的处理条件生成(其实有一点encoder-decoder的那个味)
+* Casual LM: 严格的自回归, token只能看左侧的历史
+* Prefix LM: 将输入分为前缀区和生成区, 前缀区是双向可见, 生成区按照自回归方式生成. Prefix LM的目的是让那些decoder only的模型能更好的处理条件生成(其实有一点encoder-decoder的那个味)
 
 ### 为何现在的模型大部分都是decoder-only架构?
 
