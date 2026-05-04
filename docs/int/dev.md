@@ -3,331 +3,68 @@ title: 软件工程
 comments: false
 ---
 
-```
-todolist:
- 1. Java 基础
-     重点补: 
-     面向对象, 集合, 异常, String, 泛型, 反射基础, IO, 线程基础
-     高频题: 
-     ArrayList 和 LinkedList
-     HashMap 原理
-     == 和 equals
-     重载和重写
-     final / finally / finalize
-     接口和抽象类
-     异常分类
-     线程和进程
-     synchronized 和 Lock
-  2. Spring / Spring Boot
-     不用啃源码, 先补"面试能说"的层面: 
-     IOC 是什么
-     AOP 是什么
-     Bean 生命周期
-     Spring Boot 自动配置大概是什么
-     @Autowired / @Resource 区别
-     事务传播机制
-     Spring MVC 请求流程
-     你只要能把这些讲到 60 分, 就够比很多临时抱佛脚的人强了. 
-  3. MySQL
-     银行开发很容易问数据库. 
-     必须会: 
-     索引
-     B+ 树
-     事务 ACID
-     隔离级别
-     脏读/不可重复读/幻读
-     MVCC
-     left join
-     如何优化慢 SQL
-     varchar 和 char
-     索引失效场景
-  4. 计算机基础
-     重点是: 
-     TCP 三次握手
-     HTTP/HTTPS
-     Cookie/Session/Token
-     进程线程
-     死锁
-     内存和垃圾回收基础
-     不用太深, 但要能答
-```
-
 ## Java
 
-### ArrayList和LinkedList的区别 
+### 自动拆箱/装箱
 
-**1. 底层结构 🧱**
-
-* ArrayList: 基于**动态数组**(连续内存)
-* LinkedList: 基于**双向链表**(节点+指针)
-
-**2. 访问性能 ⚡**
-
-* ArrayList: 支持**随机访问(O(1))**, 通过下标直接取值
-* LinkedList: 访问需要遍历, **O(n)**
-
-**3. 插入/删除性能 🔄**
-
-* ArrayList: 
-
-    * 尾部插入快(均摊 O(1))
-    * 中间插入/删除慢(需要移动元素, O(n))
-
-* LinkedList: 
-
-    * 插入/删除节点快(O(1)), 但**前提是已找到位置**
-    * 查找位置仍是 O(n)
-
-**4. 内存占用 💾**
-
-* ArrayList: 空间利用率高(只存数据)
-* LinkedList: 每个节点额外存前后指针, **更耗内存**
-
-**5. 扩容机制 📈**
-
-* ArrayList: 容量不够时会**扩容(一般1.5倍)并复制数组**
-* LinkedList: 无需扩容, 按需创建节点
-
-**6. 使用场景 🎯**
-
-* ArrayList: 
-👉 读多写少, 频繁随机访问(最常用)
-* LinkedList: 
-👉 插入删除频繁, 对随机访问要求低(实际开发较少用)
-
-**一句话总结 🧠**
-
-* ArrayList: **查得快, 改得慢**
-* LinkedList: **改得快(理论), 查得慢**
-
-### HashMap原理
-
-**HashMap 的核心原理可以概括为: 数组 + 哈希函数 + 冲突处理(链表/红黑树)** 🧠
-
-**1. 基本结构 🧱**
-
-HashMap 底层是一个**数组(table)**, 每个位置叫"桶(bucket)". 
-每个桶里存的是: 
-
-* 单个元素, 或
-* 一个**链表**, 或
-* 一棵**红黑树**(JDK 8 之后)
-
-**2. 存储过程(put)📥**
-
-插入一个 key-value 时会经历: 
-
-1. 计算 hash 值
-
-    * 通过 key 的 `hashCode()` 再做扰动运算
-
-2. 定位数组下标
-
-    * `index = hash & (n - 1)`(n 是数组长度)
-
-3. 放入桶中
-
-    * 该位置为空 → 直接放
-    * 有元素 → 发生**哈希冲突**, 进入链表或树结构
-
-4. 冲突处理
-
-    * JDK 7: 链表
-    * JDK 8: 
-
-        * 链表长度 ≥ 8 且数组容量 ≥ 64 → 转为**红黑树** 🌳
-        * 否则继续链表
-
-**3. 查询过程(get)🔍**
-
-1. 根据 key 算 hash
-2. 定位桶位置
-3. 在桶中查找: 
-    * 单节点 → 直接返回
-    * 链表 → 遍历
-    * 红黑树 → 二叉搜索(更快)
-
-**4. 扩容机制(resize)📈**
-
-当元素数量超过阈值时触发扩容: 
-
-* 阈值 = 容量 × 负载因子(默认 0.75)
-* 扩容时: 
-
-    * 数组长度变为**2倍**
-    * 所有元素重新计算位置(rehash)
-
-**5. 关键特性 ⚡**
-
-* 查询/插入平均复杂度: **O(1)**
-* 冲突严重时: 
-
-    * 链表 → O(n)
-    * 红黑树 → O(log n)
-    * 线程不安全(多线程需用 ConcurrentHashMap)
-
-**6. 面试高频点 🎯**
-
-* 为什么容量是 2 的幂? 👉 为了用位运算快速定位
-* 为什么要树化? 👉 避免链表过长导致性能退化
-* 扩容为什么慢? 👉 需要**数据迁移 + 重新计算位置**
-
-### == 和 equals
-
-在 Java 中, `==` 和 `equals()` 的区别是面试高频基础题, 核心在于: **比较"地址"还是"内容"**. 🧠
-
-**1. `==` 是什么 ⚖️**
-
-* 基本类型: 比较**值是否相等**
-* 引用类型: 比较**内存地址是否相同(是否指向同一个对象)**
-
-示例: 
+* 装箱: 将基本数据类型转换为包装类型, 例如`int`转换为`Integer`
+* 拆箱: 将包装类型转换为基本数据类型
 
 ```java
-int a = 10, b = 10;
-System.out.println(a == b); // true
-
-String s1 = new String("abc");
-String s2 = new String("abc");
-System.out.println(s1 == s2); // false(不同对象)
+Integer i = 10;  //装箱
+int n = i;   //拆箱
 ```
 
-**2. `equals()` 是什么 🔍**
+### `&`和`&&`的区别
 
-* 是 `Object` 类的方法(所有类都有)
-* 默认实现: 其实也是比较地址(和 `==` 一样)
-* 很多类(如 String)**重写了 equals()**, 变为比较"内容"
+`&`是逻辑与, `&&`是短路与, 这两个差别很大, `&&`之所以叫做短路与是因为, 如果左边的表达式值是`false`, 右边的表达式会直接短路掉, 不会进行运算.
 
-示例: 
+逻辑或`|`和短路或`||`也是一样的道理.
+
+### 自动类型转换, 强制类型转换
+
+当把一个范围较小的数值或者变量赋值给另一个范围较大的变量的时候, 会进行自动类型转换, 反之, 需要强制类型转换.
+
+1. `float f = 3.4`对吗? 不正确, 因为`3.4`默认是双精度, 将双精度复制给浮点型属于down casting, 会造成精度丢失, 所以需要强制类型转换.
+2. `short s1 = 1; s1 = s1 + 1`对吗, `short s1 = 1; s1 += 1`对吗? 前者会编译出错, 因为`1`是int类型, 因此计算结果也是int型, 需要强制类型转换才能赋值给short型; 后者因为`s1 += 1`相当于`s1 = (short(s1 + 1))`, 有隐含的强制类型转换.
+
+### Boolean类型实际占用几个字节
+
+Java虚拟机规范中, 没有明确规定boolean类型的大小, 实测是1个字节.
+
+### `switch`是否可以用在byte/long/String上
+
+Java 5 以前 switch(expr) 中, expr 只能是 byte, short, char, int. 从 Java 5 开始, Java 中引入了枚举类型,  expr 也可以是 enum 类型. 从 Java 7 开始, expr 还可以是字符串. 从 Java 21 开始, switch 语句迎来了根本性的变革, 不仅可以处理 long 类型, 也能处理包括 null 在内的任意对象类型, 并可通过 when 子句添加复杂的判断条件.
+
+### `break`, `continue`, `return`的区别和作用
+
+`break`跳出整个循环, 不再执行循环(结束当前的循环体). `continue`跳出本次循环, 继续执行下次循环(结束正在执行的循环, 进入下一个循环条件). `return`程序返回, 不再执行下面的代码(结束当前的方法 直接返回)
+
+### 用效率最高的方法计算2*8
+
+`2 << 3`.
+
+### 说说自增/自减运算
+
+用一句口诀就是: "符号在前就先加/减, 符号在后就后加/减".
 
 ```java
-String s1 = new String("abc");
-String s2 = new String("abc");
-System.out.println(s1.equals(s2)); // true(比较内容)
+int i  = 1;
+i = i++;
+System.out.println(i);
 ```
 
-**3. 关键区别总结 📌**
-
-* `==`: 
-👉 判断是不是"同一个对象"
-* `equals()`: 
-👉 判断"内容是否相等"(前提是类重写了)
-
-**4. 面试常考补充 ⚠️**
-
-* 自定义类如果不重写 equals(): 
-👉 equals 仍然是比较地址
-
-* 一般规则: 
-👉 重写 equals() 必须同时重写 `hashCode()`(否则在 HashMap 等集合中会出问题)
-
-### 重载和重写
-
-Java 里的"重载"和"重写"区别: 
-
-**重载 Overload**: 同一个类中, 方法名相同, 但参数列表不同. 
-
 ```java
-class Calculator {
-    int add(int a, int b) {
-        return a + b;
-    }
-
-    double add(double a, double b) {
-        return a + b;
-    }
-
-    int add(int a, int b, int c) {
-        return a + b + c;
-    }
+int count = 0;
+for(int i = 0;i < 100;i++)
+{
+    count = count++;
 }
+System.out.println("count = "+count);
 ```
 
-特点: 发生在同一个类中; 方法名相同; 参数个数, 类型或顺序不同; 返回值不同不能单独构成重载. 
+答案都是`0`.
 
-**重写 Override**: 子类重新实现父类已有的方法. 
+### `flaot`是如何表示小数的
 
-```java
-class Animal {
-    void speak() {
-        System.out.println("Animal speaks");
-    }
-}
-
-class Dog extends Animal {
-    @Override
-    void speak() {
-        System.out.println("Dog barks");
-    }
-}
-```
-
-特点: 发生在父子类之间; 方法名, 参数列表必须相同; 返回值类型通常相同, 或是父类返回类型的子类; 访问权限不能更严格; 常用 `@Override` 标注. 
-
-一句话记忆: 
-**重载是"同名不同参", 重写是"子类改父类方法".**
-
-### final / finally / finalize
-
-这三个名字很像, 但用途完全不同: 
-
-**1️⃣ `final`(关键字)**
-用于"不可改变"的限制. 
-
-* 修饰变量: 值不能再改
-
-```java
-final int x = 10;
-// x = 20; ❌ 报错
-```
-
-* 修饰方法: 不能被子类重写
-
-```java
-class A {
-    final void show() {}
-}
-```
-
-* 修饰类: 不能被继承
-
-```java
-final class A {}
-// class B extends A {} ❌
-```
-
-👉 核心: **锁死(不能改 / 不能继承 / 不能重写)**
-
-**2️⃣ `finally`(代码块)**
-用于异常处理中, 表示"无论如何都会执行". 
-
-```java
-try {
-    int a = 1 / 0;
-} catch (Exception e) {
-    System.out.println("出错了");
-} finally {
-    System.out.println("一定会执行");
-}
-```
-
-👉 常见用途: 关闭资源(文件, 数据库连接等)
-
-**3️⃣ `finalize()`(方法)**
-是 `Object` 类里的方法, 在对象被垃圾回收前调用. 
-
-```java
-@Override
-protected void finalize() throws Throwable {
-    System.out.println("对象被回收前调用");
-}
-```
-
-**总结一句话 📌**
-
-* `final`: 限制(不能改)
-* `finally`: 一定执行
-* `finalize()`: 对象回收前调用(基本不用了)
-
-### 接口和抽象类
-
+使用的是IEEE 754标准.
