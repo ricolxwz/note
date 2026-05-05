@@ -131,36 +131,57 @@ Java支持4种不同的访问权限.
 
 ### 抽象类和接口的区别
 
-一个类只能继承一个抽象类, 但是一个类可以实现多个接口. 所以我们在新建线程类的时候一般推荐使用实现Runnable接口的方式. 这样线程类还可以继承其他类, 而不单单是Thread类.
+| 对比维度    | 抽象类(Abstract Class)           | 接口(Interface)                   |
+| ------- | ----------------------------- | ------------------------------- |
+| 定义      | 描述一类事物的共性                     | 定义行为规范/能力                       |
+| 关键字     | `abstract class`              | `interface`                     |
+| 实例化     | ❌ 不能实例化                       | ❌ 不能实例化                         |
+| 方法类型    | 抽象方法 + 具体方法                   | 抽象方法(Java8+支持 default / static) |
+| 方法访问权限  | 任意(public/protected/private等) | 默认 public(Java9+支持 private)     |
+| 成员变量    | 普通变量                          | 常量(public static final)📌       |
+| 构造方法    | ✔ 有(供子类调用)                    | ❌ 没有                            |
+| 继承方式    | 单继承(extends)                  | 多实现(implements)⚠️               |
+| 是否支持多继承 | ❌ 不支持                         | ✔ 支持(可实现多个接口)                   |
+| 代码复用    | ✔ 强(可写具体实现)                   | ❌ 弱(主要定义规范)                     |
+| 设计目的    | 抽象共性 + 代码复用                   | 解耦系统 + 定义能力                     |
+| 关系本质    | is-a(是什么)                     | can-do(能做什么)⚙️                  |
+| 使用场景    | 有明确继承关系的类层次                   | 不同类实现相同能力                       |
+| 示例      | Animal, Vehicle                | Flyable, Runnable                |
 
-抽象类符合is-a的关系, 而接口更像是has-a的关系, 比如一个类可以序列化的时候, 它只需要实现Serializable接口就可以了, 不需要去继承一个序列化类.
+### 成员变量和局部变量的区别
 
-抽象类更多地是用来为多个相关的类提供一个共同的基础框架, 包括状态的初始化, 而接口则是定义一套行为标准, 让不同的类可以实现同一接口, 提供行为的多样化实现.
+1. 位置不同: 成员变量在类里面, 方法外; 局部变量在方法里面或者方法参数里
+2. 修饰符不同: 成员变量可以加`public/private/static/final`等等; 局部变量不能加`public/private/static`, 但是可以加`final`
+3. 生命周期不同: 成员变量跟着对象活着, 对象还在它就在, 局部变量方法一结束就没了
+4. 默认值不同: 成员变量如果没赋值, Java会给默认值, 局部变量必须自己赋值后才能用, 不然编译会报错.
 
-抽象类可以有构造方法.
+### `static`关键字
 
-```java
-abstract class Animal {
-    protected String name;
+1. 修饰变量: `static`修饰变量后, 这个变量叫做静态变量/类变量
+2. 修饰方法: `static`修饰方法后, 这个方法叫做静态方法/类方法
+3. 修饰代码块: `static`修饰代码块, 叫做静态代码块, 类加载的时候执行一次
 
-    public Animal(String name) {
-        this.name = name;
+    ```java
+    class Demo {
+        static {
+            System.out.println("类加载了");
+        }
     }
+    ```
 
-    public abstract void makeSound();
-}
+    它常用来初始化一些只需要准备一次的数据.
 
-public class Dog extends Animal {
-    private int age;
+4. 修饰内部类: 内部类如果加`static`, 叫做静态内部类
 
-    public Dog(String name, int age) {
-        super(name);  // 调用抽象类的构造函数
-        this.age = age;
+    ```java
+    class Outer {
+        static class Inner {
+        }
     }
+    ```
 
-    @Override
-    public void makeSound() {
-        System.out.println(name + " says: Bark");
-    }
-}
-```
+    它虽然写在外部类里面, 但是不依赖外部类对象.
+
+    ```java
+    Outer.Inner obj = new Outer.Inner();
+    ```
