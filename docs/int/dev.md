@@ -270,3 +270,21 @@ new子类的时候, 包括以下的步骤:
 2. 接着执行子类的静态代码块(仅在类第一次加载的时候执行)
 3. 再执行父类的构造方法
 4. 最后执行子类的构造方法
+
+### `String`和`StringBuilder`, `StringBuffer`的区别
+
+`String`, `StringBuffer`, `StringBuilder`都是处理字符串的, 他们之间的区别是, `String`是不可变的, 平常开发用的最多, 当遇到大量字符串连接的时候, 就用`StringBuilder`, 它不会生成很多新的对象, `StringBuffer`和`StingBuilder`类似, 但是每个方法都加了`synchronized`关键字, 所以是线程安全的. 
+
+`String`的特点:
+
+`String`类对象是不可变的, 就是说, 一单一个`String`对象被创建,它t所包含的字符串内容是不可变的, 每次对`String`对象进行修改操作, 如拼接, 替换等, 实际上都会生成一个新的`String`对象, 而不是修改原有对象, 这可能会导致内存和性能开销, 尤其是在大量字符串操作的情况下. 
+
+`StringBuilder`的特点:
+
+* `StringBuilder`提供了一系列的方法进行的符串的增删改查操作, 这些操作都是直接在原有字符串对象的底层数组上进行的, 而不是生成新的`String`对象
+* `StringBuilder`不是线程安全的, 这意味着在没有外部同步的情况下, 它不适用于多线程环境
+* 相比于`String`, 在进行频繁的字符串修改操作的时候, 能提供更好的性能.
+
+`StringBuffer`的特点:
+
+`StringBuffer`和`StringBuilder`类似, 但是`StringBuffer`是线程安全的, 方法前面都加了`synchronized`关键字. 
