@@ -185,3 +185,40 @@ Java支持4种不同的访问权限.
     ```java
     Outer.Inner obj = new Outer.Inner();
     ```
+
+### `final`, `finally`, `finalize`的区别
+
+* `final`是一个修饰符, 可以修饰类, 方法和变量. 当`final`修饰一个类的时候, 表明这个类不能被继承; 当`final`修饰一个方法的时候, 表明这个方法不能被重写; 当`final`修饰一个变量的时候, 表明这个变量是个常量, 一旦赋值之后, 就不能再被修改了. 
+* `finally`是Java中异常处理的一部分, 用来创建`try`块后面的`finnally`块. 无论`try`块中的代码是否抛出异常, `finally`块中的代码总是会被执行. 通常, `finally`块被用来释放资源, 如关闭文件, 数据库连接等. 
+* `finalize`是Object类的一个方法, 用来在垃圾回收器将对象从内存中清除出去之前做一些必要的清理工作. 这个方法在垃圾回收器准备释放对象占用的内存之前被自动调用. 我们不能显式地调用`finalize`方法, 因为它总是由垃圾回收器在适当的时间自动调用. 
+
+### `==`和`equals`的区别
+
+在Java中, `==`和`equals()`方法用于比较两个对象. 
+
+* `==`用来比较两个对象的引用, 即他们是否指向同一个对象实例. 如果两个变量引用同一个对象实例, `==`返回`true`, 否则返回`false`. 对于基本数据类型, `==`比较值是否相等
+* `equals()`用来比较两个对象的内容是否相等. 默认情况下, `equals()`方法的行为和`==`相同, 即比较对象引用. 然而, `equals()`是可以被各种类重写的. 例如, `String`类重写了`equals()`方法, 以便它可以比较两个字符串的字符内容是否完全一样. 
+
+### 为什么重写`equals()`的时候必须重写`hashCode()`方法
+
+因为基于哈希的集合类, 如HashMap需要基于这一点来正确存储和查找对象. 很多集合以来`hashCode()`先分组, 然后再用`equals()`判断是否真相等, 比如`HashMap`, `HashSet`, `Hashtable`. 
+
+```java
+class User {
+    String name;
+    User(String name) {
+        this.name = name;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof User)) return false;
+        User other = (User) obj;
+        return Objects.equals(name, other.name);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+}
+```
