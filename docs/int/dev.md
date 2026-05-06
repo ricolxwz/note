@@ -222,3 +222,51 @@ class User {
     }
 }
 ```
+
+要注意的是, 如果两个对象通过equals相等, 那么他们的`hashCode`必须相等. 否则会导致哈希表类数据结构(如HashMap, HashSet)的行为异常. 
+
+### Java是值传递还是引用传递
+
+Java是值传递, 不是引用传递. 当一个对象作为参数传递到方法中的时候, 参数的值就是该对象的引用. 引用的值就是对象在堆中的地址. 对象是存储在堆中的, 所以传递对象的时候, 可以理解为把变量存储的对象地址给传递过去. 
+
+### 说说深拷贝和浅拷贝的区别
+
+在Java中, 深拷贝和浅拷贝是两种拷贝对象的方式. 浅拷贝会创建一个新的对象, 但是这个新对象的属性和原对象的属性完全相同. 如果属性是基本数据类型, 拷贝的是基本数据类型的值; 如果属性是引用类型, 拷贝的是引用地址, 因此新旧对象共享同一个引用对象. 
+
+浅拷贝的实现方式为, 实现`Cloneable`接口并重写`clone()`方法, 深拷贝也会创建一个新对象, 但是会递归地赋值所有的引用对象, 确保新对象和原对象完全独立, 深拷贝的实现方式有, 手动赋值所有的引用对象, 或者使用序列化和反序列化. 
+
+### Java创建对象有哪几种方式
+
+Java创建对象有四种方式:
+
+1. `new`关键字创建, 这是最常见和直接的方式, 通过调用类的构造方法来创建对象: `Person person = new Person();`. 
+2. 反射机制创建: 反射机制允许在运行的时候创建对象, 并且可以访问类的私有成员, 在框架和工具类中比较常见. 
+
+    ```java
+    Class clazz = Class.forName("Person");
+    Person person = (Person) clazz.newInstance();
+    ```
+
+3. `clone`拷贝创建, 通过`clone`方法创建对象, 需要实现`Cloneable`接口并重写`clone`方法
+
+    ```java
+    Person person = new Person();
+    Person person2 = (Person) person.clone();
+    ```
+
+4. 序列化机制创建, 通过序列化将对象转换为字节流, 再通过反序列化从字节流中恢复对象, 需要实现Serializable接口.
+
+    ```java
+    Person person = new Person();
+    ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("person.txt"));
+    oos.writeObject(person);
+    ObjectInputStream ois = new ObjectInputStream(new FileInputStream("person.txt"));
+    Person person2 = (Person) ois.readObject();
+    ```
+
+new子类的时候, 包括以下的步骤:
+
+1. 首先执行父类的静态代码块(仅在类第一次加载的时候执行)
+2. 接着执行子类的静态代码块(仅在类第一次加载的时候执行)
+3. 再执行父类的构造方法
+4. 最后执行子类的构造方法
