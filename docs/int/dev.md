@@ -327,3 +327,37 @@ String ab = sb.toString();
 1. `String`类内部使用一个私有的字符数组来存储字符串数据. 这个字符数组在创建字符串的时候被初始化, 之后不允许被改变. 
 2. `String`类没有提供任何可以修改其内容的公共方法, 像`concat`这些看似能够修改字符串的操作, 实际上都是返回一个新创建的字符串对象, 而原始字符串对象保持不变. 
 3. `String`类本身被申明为`final`, 这意味着它不能被继承, 防止了子类可能通过添加修改方法来改变字符串内容的可能性. 
+
+### `Integer a = 127`, `Integer b = 127`, `Integer c = 128`, `Integer d = 128`相等吗
+
+`a`和`b`相等, `c`和`d`不相等. 
+
+对于第一对, 这是因为Java在自动装箱的过过程中, `Integer.valueOf()`方法会针对数值在`-128`到`127`之间的`Integer`对象使用缓存. 因此, `a`和`b`实际上引用了常量池中相同的`Integer`对象. 
+
+对于第二对, 这是因为128超出了`Integer`缓存的范围. 因此, 自动装箱过程会为`c`和`d`创建两个不同的`Integer`对象, 他们有不同的引用地址. 
+
+可以通过`==`来检查是否相等:
+
+```java
+System.out.println(a == b); // 输出true
+System.out.println(c == d); // 输出false
+```
+
+要比较数值是否相等, 应该使用`equals()`方法:
+
+```java
+System.out.println(a.equals(b)); // 输出true
+System.out.println(c.equals(d)); // 输出true
+```
+
+### 什么是`Integer`缓存
+
+根据实践发现, 大部分的数值操作都集中在值比较小的范围, 因此`Integer`搞了一个缓存池, 默认范围是`-128`到`127`. 
+
+当我们使用自动装箱来创建这个范围内的`Integer`对象的时候, Java会直接从缓存中返回一个已经存在的对象, 而不是每次都创建一个新的对象. 这意味着, 对于这个值范围内的所有Integer对象, 他们实际上都是引用相同的对象实例. 
+
+Integer缓存的主要目的是优化性能和内存使用. 对于小整数的频繁操作, 使用缓存可以显著减少对象创建的数量. 
+
+可以在运行的时候添加`-Djava.lang.Integer.IntegerCache.high=1000`来调整缓存池的最大值. 
+
+### `new Integer(10) == new Integer(10)`返回的是`true`吗
