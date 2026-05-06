@@ -288,3 +288,42 @@ new子类的时候, 包括以下的步骤:
 `StringBuffer`的特点:
 
 `StringBuffer`和`StringBuilder`类似, 但是`StringBuffer`是线程安全的, 方法前面都加了`synchronized`关键字. 
+
+### `String str1 = new String("abc")`和`String str2 = "abc"`的区别
+
+`String str1 = new String("abc")` 会先确保字符串常量池中有 `"abc"` 这个对象, 然后再在堆内存中创建一个新的 `String` 对象, 最后让 `str1` 指向堆中的新对象; 而 `String str2 = "abc"` 是直接使用字符串常量池中的 `"abc"` 对象, 让 `str2` 指向它. 所以两者内容相同, `str1.equals(str2)` 为 `true`, 但它们不是同一个对象, `str1 == str2` 通常为 `false`. 
+
+### `String`是不可变类吗? 字符串拼接是如何实现的?
+
+`String`是不可变的, 这意味着一旦一个`String`对象被创建, 其存储的文本内容就不能被改变. 
+
+1. 不可变性使得`String`对象在使用中更加安全. 因为字符串经常用作参数传递给其他Java方法, 例如网络连接, 打开文件等. 如果`String`是可变的, 这些方法调用的参数值就可能在不知不觉中被改变, 从而导致网络连接被篡改, 文件被莫名其妙地修改等问题
+2. 不可变地对象因为状态不会改变, 所以更加容易进行缓存和重用, 字符串常量池地出现基于这个原因. 当代码中出现相同的字符串字面量的时候, JVM会确保所有的引用都指向常量池中的同一个对象, 从而节约内存. 
+3. 因为`String`的内容不会改变, 所以它的哈希值也就固定不变. 这使得`String`对象特别适合作为HashMap或者是HashSet等集合的键, 因为计算哈希值只需要进行一次, 提高了哈希表操作的效率. 
+
+### 字符串拼接是如何实现的
+
+因为`String`是不可变的. 因此通过`+`操作符进行的字符串拼接, 会生成新的字符串对象. 例如:
+
+```java
+String a = "hello ";
+String b = "world!";
+String ab = a + b;
+```
+
+Java8对`+`的字符串拼接进行了优化, 在编译期间基于`StringBuilder`的`append`方法进行拼接. 上述代码相当于:
+
+```java
+String a = "hello ";
+String b = "world!";
+StringBuilder sb = new StringBuilder();
+sb.append(a);
+sb.append(b);
+String ab = sb.toString();
+```
+
+### 如何保证`String`不可变?
+
+1. `String`类内部使用一个私有的字符数组来存储字符串数据. 这个字符数组在创建字符串的时候被初始化, 之后不允许被改变. 
+2. `String`类没有提供任何可以修改其内容的公共方法, 像`concat`这些看似能够修改字符串的操作, 实际上都是返回一个新创建的字符串对象, 而原始字符串对象保持不变. 
+3. `String`类本身被申明为`final`, 这意味着它不能被继承, 防止了子类可能通过添加修改方法来改变字符串内容的可能性. 
