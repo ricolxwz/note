@@ -363,3 +363,12 @@ Integer缓存的主要目的是优化性能和内存使用. 对于小整数的�
 ### `new Integer(10) == new Integer(10)`返回的是`true`吗
 
 答案是`false`. 这是因为和`String`诶是, `new`在堆上为每个`Integer`对象分配新的内存空间, 所以这里创建了两个不同的`Integer`对象, 他们有不同的内存地址. 当使用`==`运算符比较这两个对象的时候, 实际上比较的是他们的内存地址, 而不是他们的值, 因此即使两个对象代表相同的数值, 结果也是`false`.
+
+### `String`是如何转为`Integer`的
+
+`String`转为`Integer`, 主要有两个方法:
+
+* `Integer.parseInt(String s)`
+* `Integer.valueOf(String s)`
+
+`String` 转为 `Integer` 主要有两种方式: `Integer.parseInt(String s)` 和 `Integer.valueOf(String s)`. 前者会将字符串解析成基本类型 `int`, 后者会返回包装类型 `Integer`. 实际上, `Integer.valueOf(String s)` 内部通常也是先调用 `parseInt` 把字符串转成 `int`, 再通过 `Integer.valueOf(int)` 包装成 `Integer` 对象; 并且对于 `-128` 到 `127` 范围内的整数, `Integer.valueOf` 会使用缓存对象. 因此, 需要基本类型时用 `parseInt`, 需要包装类型时用 `valueOf`. 
