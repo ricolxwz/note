@@ -425,3 +425,24 @@ Object类提供了11个方法, 大致可以分为六类:
 
 * 对象比较
     * `public native int hashCode()`: 用于返回对象的哈希码. 按照约定, 相等的对象必须拥有相等的哈希码. 如果重写了`equals()`方法, 就应该重写`hashCode`方法, 可以使用`Object.hash()`方法来生成哈希码. 
+    * `public boolean equals(Object obj)`: 用于比较2个对象的内存地址是否相等. 如果比较的是两个对象的值是否相等, 就要重写该方法, 比如`String`类, `Integer`类等都重写了该方法. 
+* 对象拷贝
+    * `protected native Object clone() throws CloneNotSupportedException`: `native`方法, 返回此对象的一个副本. 在子类对象`super.clone()`调用的时候, 会检查该对象所对应的类是否实现了`Cloneable`接口. 
+* 对象转字符串
+    * `public String toString()`: 返回对象的字符串表示. 默认实现返回类名@哈希码的十六进制表示. 这个工作可以直接交给Idea, 右键选择Generate, 然后选择`toString()`方法, 就会自动生成一个方法. 
+* 反射
+    * `public final native Class<?> getClass()`: 用于获取对象的类信息, 如类名. 比如说:
+
+        ```java
+        public class GetClassDemo {
+            public static void main(String[] args) {
+                Person p = new Student();
+                Class<? extends Person> aClass = p.getClass();
+                System.out.println(aClass.getName());
+            }
+        }
+        ```
+
+        `<? extends Person>`表示某个未知类型, 但是这个类型一定是`Person`或者`Person`的子类. 
+* 垃圾回收
+    * `protected void finalize() throws Throwable`: 当垃圾回收器决定回收对象占用的内存时调用此方法. 用于清理资源, 但是Java不推荐使用, Java9开始被弃用. 
