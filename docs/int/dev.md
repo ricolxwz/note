@@ -225,6 +225,52 @@ class User {
 
 要注意的是, 如果两个对象通过equals相等, 那么他们的`hashCode`必须相等. 否则会导致哈希表类数据结构(如HashMap, HashSet)的行为异常. 
 
+!!! example "例子"
+
+    ```java
+    class User {
+        String name;
+
+        User(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof User)) return false;
+            User other = (User) obj;
+            return name.equals(other.name);
+        }
+    }
+    ```
+
+    现在:
+
+    ```java
+    User u1 = new User("Tom");
+    User u2 = new User("Tom");
+
+    System.out.println(u1.equals(u2)); // true
+    ```
+
+    如果没有重写`hashCode()`, 他们会继承`Object.hashCode()`, 通常基于对象地址, 所以:
+
+    ```java
+    System.out.println(u1.hashCode());
+    System.out.println(u2.hashCode());
+    ```
+
+    很可能会不同, 这会导致:
+
+    ```java
+    Set<User> set = new HashSet<>();
+    set.add(u1);
+
+    System.out.println(set.contains(u2)); // 可能是 false
+    ```
+
+    明明`u1.equals(u2)`是`true`, 但是`HashSet`先根据`hashCode()`找桶. 两个对象哈希值不同, 就可能被分到不同的桶里面, 根本不会再调用`equals()`比较. 
+
 ### Java是值传递还是引用传递
 
 Java是值传递, 不是引用传递. 当一个对象作为参数传递到方法中的时候, 参数的值就是该对象的引用. 引用的值就是对象在堆中的地址. 对象是存储在堆中的, 所以传递对象的时候, 可以理解为把变量存储的对象地址给传递过去. 
@@ -372,3 +418,10 @@ Integer缓存的主要目的是优化性能和内存使用. 对于小整数的�
 * `Integer.valueOf(String s)`
 
 `String` 转为 `Integer` 主要有两种方式: `Integer.parseInt(String s)` 和 `Integer.valueOf(String s)`. 前者会将字符串解析成基本类型 `int`, 后者会返回包装类型 `Integer`. 实际上, `Integer.valueOf(String s)` 内部通常也是先调用 `parseInt` 把字符串转成 `int`, 再通过 `Integer.valueOf(int)` 包装成 `Integer` 对象; 并且对于 `-128` 到 `127` 范围内的整数, `Integer.valueOf` 会使用缓存对象. 因此, 需要基本类型时用 `parseInt`, 需要包装类型时用 `valueOf`. 
+
+### Object类的常见方法
+
+Object类提供了11个方法, 大致可以分为六类:
+
+* 对象比较
+    * `public native int hashCode()`: 用于返回对象的哈希码. 按照约定, 相等的对象必须拥有相等的哈希码. 如果重写了`equals()`方法, 就应该重写`hashCode`方法, 可以使用`Object.hash()`方法来生成哈希码. 
