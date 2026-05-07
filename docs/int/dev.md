@@ -446,3 +446,52 @@ Object类提供了11个方法, 大致可以分为六类:
         `<? extends Person>`表示某个未知类型, 但是这个类型一定是`Person`或者`Person`的子类. 
 * 垃圾回收
     * `protected void finalize() throws Throwable`: 当垃圾回收器决定回收对象占用的内存时调用此方法. 用于清理资源, 但是Java不推荐使用, Java9开始被弃用. 
+
+### Java中的异常处理体系
+
+`Throwable`是所有错误和异常的基类, 它主要有两个子类, `Error`和`Exception`, 这两个类分别代表了Java异常处理体系中的两个分支. `Error`类代表那些严重的错误, 这类错误是程序无法处理的. 比如`OutOfMemoryError`表示内存不足, `StackOverflowError`表示栈溢出, 这些错误通常和JVM的运行状态有关, 一旦发生, 应用程序通常无法恢复. `Exception`代表程序可以处理的异常. 它分为两大类, 编译时异常和运行时异常. 
+
+* Checked Exception: 这类异常必须要被显式处理, 如果方法可能抛出某种编译时异常, 但是没有捕获它或者没有在`throws`中声明它, 编译不会通过
+* Runtime Exception, 这类异常在运行的时候抛出, 对于运行时异常, Java编译器不要求必须处理他们, 即不需要捕获也不需要声明抛出. 
+
+Java 里 `throw` 是真正抛出一个异常对象, `throws` 是写在方法声明上, 表示这个方法可能把异常交给上层处理; 如果抛的是 checked exception, 也就是继承 `Exception` 但不是 `RuntimeException` 的异常, 那么当前方法要么 `try-catch` 处理, 要么在方法上写 `throws` 继续往上抛, 调用方也同样必须 catch 或继续 throws; 如果抛的是 runtime exception, 也就是继承 `RuntimeException` 的异常, 则不强制处理, 也不强制声明; 自定义 checked exception 继承 `Exception`, 自定义 runtime exception 继承 `RuntimeException`. 
+
+!!! tip "注意"
+
+    `Exception`本身是Checked Exception, 所以强制要求捕获或者`throws`在上层捕获. 必须二选一:
+
+    ```java
+    void test() {
+        try {
+            throw new Exception("抛出异常");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    ```
+
+    ```java
+    void test() throws Exception {
+        throw new Exception("抛出异常");
+    }
+    ```
+
+### `catch`和`finally`中的异常可以同时抛出吗
+
+如果 catch 块抛出一个异常, 而 finally 块中也抛出异常, 那么最终抛出的将是 finally 块中的异常. catch 块中的异常会被丢弃, 而 finally 块中的异常会覆盖并向上传递. 
+
+```java
+public class Example {
+    public static void main(String[] args) {
+        try {
+            throw new Exception("Exception in try");
+        } catch (Exception e) {
+            throw new RuntimeException("Exception in catch");
+        } finally {
+            throw new IllegalArgumentException("Exception in finally");
+        }
+    }
+}
+```
+
+`finnaly`里面的异常会覆盖掉`catch`中的异常. 
