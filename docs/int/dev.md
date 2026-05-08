@@ -591,7 +591,7 @@ list.add(new Dog());  // 完全没有问题
 上述的代码和下面的代码其实在JVM中没有区别:  
 
 ```java
-LinkedList cats = new LinkedList();  // 注意：没有范型！
+LinkedList cats = new LinkedList();  // 注意: 没有范型! 
 LinkedList list = cats;
 list.add(new Dog());
 ```
@@ -609,3 +609,77 @@ Cat cat = (Cat) cats.get(0);
 ```
 
 也就是说, 如果这个对象实际是`Dog`, 那么最后会报`ClassCastException`错误. 
+
+### 什么是注解
+
+注解本质上是一个标记, 可以在类上面, 方法上, 属性上, 标记自身可以设置一些值, 比如说, 帽子的颜色是绿色. **有了标记之后, 我们就可以在编译或者运行阶段去识别这些标记, 然后搞一些事情. 真正让注解产生作用的, 是后续有人去读取这个标签, 并根据标签做事情.** 
+
+### 什么是反射, 应用, 原理是啥
+
+反射允许Java在运行的时候检查和操作类的方法和字段. 通过反射, 可以动态地获取类的字段, 方法, 构造方法等信息, 并在运行的时候调用方法或者访问字段. 
+
+比如说, 我们可以动态加载类并创建对象:
+
+```java
+String className = "java.util.Date";
+Class<?> cls = Class.forName(className);
+Object obj = cls.newInstance();
+System.out.println(obj.getClass().getName());
+```
+
+比如说, 我们可以这样来访问字段和方法:
+
+```java
+// 加载并实例化类
+Class<?> cls = Class.forName("java.util.Date");
+Object obj = cls.newInstance();
+
+// 获取并调用方法
+Method method = cls.getMethod("getTime");
+Object result = method.invoke(obj);
+System.out.println("Time: " + result);
+
+// 访问字段
+Field field = cls.getDeclaredField("fastTime");
+field.setAccessible(true); // 对于私有字段需要这样做
+System.out.println("fastTime: " + field.getLong(obj));
+```
+
+反射有以下应用场景:
+
+1. Spring框架大量使用了反射来动态加载和管理Bean. 
+
+    ```java
+    Class<?> clazz = Class.forName("com.example.MyClass");
+    Object instance = clazz.newInstance();
+    ```
+
+2. Java的动态加载机制就用了反射来创建代理类. 
+
+    ```java
+    InvocationHandler handler = new MyInvocationHandler();
+    MyInterface proxyInstance = (MyInterface) Proxy.newProxyInstance(
+        MyInterface.class.getClassLoader(),
+        new Class<?>[] { MyInterface.class },
+        handler
+    );
+    ```
+
+3. JUnit和TestNG等测试框架使用反射机制来发现和执行测试方法. 反射允许框架扫描类, 查找带有特定注解(如`@Test`)的方法, 并在运行的时候调用他们. 
+
+    ```java
+    Method testMethod = testClass.getMethod("testSomething");
+    testMethod.invoke(testInstance);
+    ```
+
+4. 最常见的是写通用的工具类, 比如对象拷贝工具. 比如说`BeanUtils`, `MapStruct`等等, 能够自动拷贝两个对象之间的同名属性. 
+
+反射的原理是啥?
+
+每个类在加载到JVM后, 都会在方法区生成一个对应的Class对象, 这个对象包含了类的所有元信息, 比如字段, 方法, 构造器, 注解等. 通过这个对象, 我们就能在运行的时候动态地创建对象, 调用方法, 访问字段. 
+
+### 反射的有缺点是啥?
+
+反射的有点是很明显的. 她能够在运行的时候动态地操作类和对象. 其次是能够编写通用的代码, 一套代码可以处理不同类型的对象. 还有就是能够突破访问限制, 访问`private`字段和方法. 
+
+但是反射的缺点也不少, 最明显的是性能问题, 反射操作比直接调用慢很多, 因为需要在运行的时候解析类信息, 进行类型检查, 权限验证等. 其次是反射能够绕过访问控制, 访问和修改`private`成员, 会破坏类的封装. 
