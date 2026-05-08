@@ -506,3 +506,106 @@ Java IO流的划分可以根据多个维度进行, 包括数据流的方向(输�
 * 按照处理数据单位划分
     * 字节流: 以字节为单位读写数据, 主要用于处理二进制数据, 如音频, 图像文件等
     * 字符流: 以字符为单位读写数据, 主要用于处理文本数据
+
+### 了解过Socket网络套接字吗?
+
+Socket是网络通信的基础, 表示两台设备之间通信的一个端点. Socket通常用于建立TCP或者UDP连接, 实现进程间的网络通信. 
+
+### 了解RPC框架吗
+
+RPC框架支持高效的序列化和通信协议, 屏蔽了底层网络通信的细节, 开发者只需要关注业务逻辑就可以了. 常见的RPC框架包括: gRPC, Dubbo, Spring Cloud OpenFeign, Thrift. 
+
+### Java的泛型了解吗
+
+泛型主要用于提高代码的类型安全, 它允许在定义类, 接口和方法的时候使用类型参数, 这样可以在编译的时候检查类型一致性, 避免不必要的类型转换和类型错误. 没有泛型的时候, 像`List`这样的集合类存储的是`Object`类型, 导致从集合中读取数据的时候, 必须进行强制性的类型转换, 否则会引发`ClassCastException`. 
+
+```java
+List list = new ArrayList();
+list.add("hello");
+String str = (String) list.get(0);  // 必须强制类型转换
+```
+
+1. 泛型类
+
+    ```java
+    public class Generic<T> {
+        private T key;
+        public Generic(T key) {
+            this.key = key;
+        }
+        public T getKey() {
+            return key;
+        }
+    }
+    ```
+
+    ```java
+    Generic<Integer> genericInteger = new Generic<Integer>(123456);
+    ```
+
+2. 泛型接口
+
+    ```java
+    public interface Generator<T> {
+        public T method();
+    }
+    ```
+
+    ```java
+    class GeneratorImpl implements Generator<String> {
+        @Override
+        public String method() {
+            return "hello";
+        }
+    }
+    ```
+
+3. 泛型方法
+
+    ```java
+    public static <E> void printArray(E[] inputArray) {
+        for (E element : inputArray) {
+            System.out.printf("%s", element);
+        }
+        System.out.println();
+    }
+    ```
+
+    ```java
+    Integer[] intArray = {1, 2, 3};
+    String[] stringArray = {"Hello", "World!"};
+    printArray(intArray);
+    printArray(stringArray);
+    ```
+
+### 什么是泛型擦除
+
+所谓的泛型擦除, 官方名叫做类型擦除. Java的泛型是伪泛型, 这是因为Java在编译期间, 所有类型信息都会被擦掉. 也就是说, 在运行的时候是没有泛型的. 例如这段代码, 在一群猫里面放条狗:
+
+```java
+LinkedList<Cat> cats = new LinkedList<Cat>();
+LinkedList list = cats;
+list.add(new Dog());  // 完全没有问题
+```
+
+上述的代码和下面的代码其实在JVM中没有区别:  
+
+```java
+LinkedList cats = new LinkedList();  // 注意：没有范型！
+LinkedList list = cats;
+list.add(new Dog());
+```
+
+真正的问题在这里,: 
+
+```java
+Cat cat = cats.get(0);
+```
+
+编译器认为`get(0)`返回的应该是`Cat`, 但是类型擦除后, `LinkedList`的`get`实际返回的是`Object`. 所以编译器会在执行前把代码变成: 
+
+```java
+Cat cat = (Cat) cats.get(0);
+```
+
+也就是说, 如果这个对象实际是`Dog`, 那么最后会报`ClassCastException`错误. 
