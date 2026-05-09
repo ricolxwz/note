@@ -683,3 +683,33 @@ System.out.println("fastTime: " + field.getLong(obj));
 反射的有点是很明显的. 她能够在运行的时候动态地操作类和对象. 其次是能够编写通用的代码, 一套代码可以处理不同类型的对象. 还有就是能够突破访问限制, 访问`private`字段和方法. 
 
 但是反射的缺点也不少, 最明显的是性能问题, 反射操作比直接调用慢很多, 因为需要在运行的时候解析类信息, 进行类型检查, 权限验证等. 其次是反射能够绕过访问控制, 访问和修改`private`成员, 会破坏类的封装. 
+
+### 什么是序列化, 什么是反序列化
+
+序列化是指将对象转换为字节流的过程, 以便能够将该对象保存到文件, 数据库, 或者进行网络传输. 反序列化就是将字节流转换回对象的过程, 以便构建原始对象. 
+
+`Serializable`接口用于标记一个类可以被序列化. 
+
+```java
+public class Person implements Serializable {
+    private String name;
+    private int age;
+    // 省略 getter 和 setter 方法
+}
+```
+
+`seqialVersionUID`是Java序列化机制中用于标识类版本的唯一标识符. 她的作用是确保在序列化和反序列化的过程中, 类的版本是兼容的. 
+
+```java
+import java.io.Serializable;
+
+public class MyClass implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private String name;
+    private int age;
+
+    // getters and setters
+}
+```
+
+只要`serialVersionUID`相同, 就算类的结构发生了改变, 只要不涉及到字段的删除或者类型的改变, 反序列化通常也是可以成功的. 但是如果`serialVersionUID`不同, 那么在反序列化的时候就会抛出`InvalidClassException`, 因为JVM认为这是两个不同版本的类, 无法兼容.
