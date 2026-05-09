@@ -713,3 +713,25 @@ public class MyClass implements Serializable {
 ```
 
 只要`serialVersionUID`相同, 就算类的结构发生了改变, 只要不涉及到字段的删除或者类型的改变, 反序列化通常也是可以成功的. 但是如果`serialVersionUID`不同, 那么在反序列化的时候就会抛出`InvalidClassException`, 因为JVM认为这是两个不同版本的类, 无法兼容.
+
+### 序列化是否包含静态变量
+
+序列化不包含静态变量. 因为静态变量是属于类的, 而不是属于对象的. 当一个对象被序列化的时候, 只有对象的实例变量会被序列化, 静态变量不会被序列化.
+
+### 如果有些变量不想被序列化, 怎么办?
+
+可以使用`transient`关键字来修饰这个变量, 这样这个变量在序列化的时候就会被忽略掉. 
+
+```java
+public class User implements Serializable {
+    private String username;
+    private transient String password; // 这个字段不会被序列化
+    // getters and setters
+}
+```
+
+### 序列化的几种方式
+
+* Java对象序列化: Java原生序列化方法通过Java原生流的方式进行转化, 一般是对象输出流`ObjectOutputStream`和对象输入流`ObjectInputStream`. 
+* Json序列化: 这个可能是我们常用的序列化方式, Json序列化的选择很多, 一般会使用Jackson包, 通过`ObjectMapper`类来进行序列化和反序列化.
+* ProtoBuff序列化: 这是Google开源的一个高性能序列化框架, 需要定义.proto文件来描述数据结构, 然后通过编译器生成对应的Java类. ProtoBuff序列化效率很高, 适合在性能要求较高的场景使用.
