@@ -5,6 +5,7 @@ site_dir = "public"
 site_url = "https://n.ricolxwz.cn"
 edit_uri = "https://git.ricolxwz.download/root/note-zen/-/edit/master/docs/"
 copyright = """<p xmlns:cc="https://creativecommons.org/ns#" >版权所有 &copy 由 <span property="cc:attributionName">麦旋风超好吃</span> 采用 <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0&nbsp</a>许可证发布 | 浙ICP备2025190393号-2</p>"""
+validation = false
 
 extra_css = [
   "stylesheets/extra.css",
