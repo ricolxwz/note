@@ -281,7 +281,7 @@ MCU是Microcontroller Unit的缩写, 中文叫微控制器. 它是一个集成�
 
 ### UART
 
-UART是最常见, 最简单的串行通信接口之一. 全名为Universal Asynchronous Receiver/Transmitter. 中文名叫通用异步收发器. 通过TX, RX, GND三根线, 让两个设备按照约定好的速度一位一位的传输数据. 
+UART是最常见, 最简单的串行通信接口之一. 全名为Universal Asynchronous Receiver/Transmitter. 中文名叫通用异步收发器. 通过TX, RX, GND三根线, 让两个设备按照约定好的速度一位一位的传输数据. 全双工. 
 
 连接的时候, 要交叉链接: 
 
@@ -304,7 +304,7 @@ UART发送数据的时候不是直接丢8个bit, 而是会加一些辅助位, �
 
 ### IIC
 
-IIC是一种两线制同步串行总线. 中文名称为集成电路总线. IIC只需要两根信号线: 
+IIC是一种两线制同步串行总线. 半双工. 中文名称为集成电路总线. IIC只需要两根信号线: 
 
 - SCL: Serial Clock, 串行时钟线
 - SDA: Serial Data, 串行数据线
@@ -360,3 +360,53 @@ SDA -------+---- 温湿度传感器
 读写是通过一开始发送的读写位来区分的, 读写位在发送从机地址的时候就已经确定了.
 
 ### SPI
+
+SPI, Serial Peripheral Interface, 串行外设接口. SPI是一种全双工的同步串行通信协议. SPI通常需要4根线:
+
+- SCLK: Serial Clock, 串行时钟线
+- MOSI: Master Out Slave In, 主输出从输入线
+- MISO: Master In Slave Out, 主输入从输出线
+- CS/SS/NSS: Chip Select / Slave Select, 片选线
+
+拓扑图如:
+
+```
+          +---- Flash
+SCK  -----+---- OLED
+MOSI -----+---- 传感器
+MISO -----+---- 传感器/Flash 等
+
+CS1  ---------- Flash
+CS2  ---------- OLED
+CS3  ---------- 传感器
+```
+
+假设单片机要和一个Flash芯片通信:  
+
+- 单片机 = master
+- Flash芯片 = slave
+
+通信流程大概是:
+
+```
+1. 主机把 CS 拉低, 选中 Flash
+2. 主机通过 SCK 产生时钟
+3. 主机通过 MOSI 发送数据
+4. 从机通过 MISO 返回数据
+5. 通信结束后, 主机把 CS 拉高
+```
+
+SPI比IIC通常更快, 因为它有独立的数据发送和接收线, 所以SPI可以一边发, 一边收, 这叫做全双工通信. 和IIC的区别:
+
+| 对比    | SPI       | IIC  |
+| ----- | --------- | ---- |
+| 线数量   | 较多        | 较少   |
+| 数据线   | MOSI, MISO | SDA  |
+| 时钟线   | SCK       | SCL  |
+| 选设备方式 | CS 片选     | 地址   |
+| 速度    | 通常更快      | 通常较慢 |
+| 通信方式  | 全双工       | 半双工  |
+
+### CAN
+
+CAN, Controller Area Network, 控制器局域网. 
