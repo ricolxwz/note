@@ -493,7 +493,7 @@ CAN主要有四类帧:
 
 #### 数据帧格式
 
-标准数据帧共11位. 
+标准数据帧共11位ID. 
 
 - SOF: Start of Frame
 - Identifier: 报文ID, 决定优先级
@@ -504,6 +504,8 @@ CAN主要有四类帧:
 - CRC: 循环冗余校验
 - ACK: 接收节点确认位
 - EOF: End of Frame
+
+扩展数据帧共29位ID. 额外的18位ID. 
 
 ## 操作系统
 
