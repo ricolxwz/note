@@ -558,6 +558,126 @@ MCU HAL/寄存器层
 
 不同`I2C_Read()`有不同的HAL实现, 对于不同的MCU只需要更换HAL层就可以了.
 
+### 传感器驱动设计思路
+
+以SHT30温湿度传感器为例, 它是一个常见的I2C传感器, 目标是MCU读取温度和湿度. 
+
+1. 硬件链接
+
+    ```
+    SHT30        MCU
+    VCC   --->   3.3V
+    GND   --->   GND
+    SCL   --->   I2C_SCL
+    SDA   --->   I2C_SDA
+    ```
+
+    SHT30通过I2C和MCU通信. 
+
+2. 驱动设计思路
+
+    SHT30的驱动大概分为3个函数: 
+
+    ```
+    SHT30_Init();          // 初始化
+    SHT30_ReadData();      // 读取原始数据
+    SHT30_GetTempHumi();   // 换算成温湿度
+    ```
+
+    整体流程:
+
+    ```
+    MCU 初始化 I2C
+        ↓
+    发送测量命令给 SHT30
+        ↓
+    等待测量完成
+        ↓
+    读取 6 个字节数据
+        ↓
+    把原始数据换算成温度和湿度
+    ```
+
+3. 驱动代码示例
+
+```
+#include "sht30.h"
+
+#define SHT30_ADDR  (0x44 << 1)
+
+extern I2C_HandleTypeDef hi2c1;
+
+uint8_t SHT30_ReadData(float *temperature, float *humidity)
+{
+    uint8_t cmd[2] = {0x2C, 0x06};
+    uint8_t data[6];
+
+    uint16_t raw_temp;
+    uint16_t raw_humi;
+
+    // 1. 发送测量命令
+    if (HAL_I2C_Master_Transmit(&hi2c1, SHT30_ADDR, cmd, 2, 100) != HAL_OK)
+    {
+        return 1;
+    }
+
+    // 2. 等待测量完成
+    HAL_Delay(20);
+
+    // 3. 读取 6 字节数据
+    if (HAL_I2C_Master_Receive(&hi2c1, SHT30_ADDR, data, 6, 100) != HAL_OK)
+    {
+        return 2;
+    }
+
+    // 4. 合成原始温度数据
+    raw_temp = (data[0] << 8) | data[1];
+
+    // 5. 合成原始湿度数据
+    raw_humi = (data[3] << 8) | data[4];
+
+    // 6. 换算成真实温度和湿度
+    *temperature = -45.0f + 175.0f * raw_temp / 65535.0f;
+    *humidity = 100.0f * raw_humi / 65535.0f;
+
+    return 0;
+}
+```
+
+头文件`sht30.h`:
+
+```
+#ifndef __SHT30_H
+#define __SHT30_H
+
+#include "main.h"
+
+uint8_t SHT30_ReadData(float *temperature, float *humidity);
+
+#endif
+```
+
+`main.c`里面这样用:
+
+```
+float temp;
+float humi;
+
+while (1)
+{
+    if (SHT30_ReadData(&temp, &humi) == 0)
+    {
+        printf("Temp: %.2f C, Humi: %.2f %%\r\n", temp, humi);
+    }
+    else
+    {
+        printf("SHT30 read error\r\n");
+    }
+
+    HAL_Delay(1000);
+}
+```
+
 ## RTOS
 
 RTOS是Real-Time Operating System, 中文叫做实时操作系统. 它是一种专门为了及时响应任务设计的操作系统, 重点不是跑得快, 而是在规定时间内一定完成. 普通操作系统(例如Windows, macOS)更加关注多任务体验, UI, 吞吐量, 用户交互; RTOS更加关注响应时间, 任务调度精准, 稳定性, 低延迟.
