@@ -678,6 +678,30 @@ while (1)
 }
 ```
 
+## Linux
+
+### 字符设备
+
+Linux中很多硬件设备都会被抽象为一个文件, 例如: 
+
+```
+/dev/led
+/dev/key
+/dev/ttyS0
+```
+
+用户程序可以像操作普通文件一样操作设备:
+
+```
+open("/dev/led", O_RDWR);
+write(fd, ...);
+read(fd, ...);
+ioctl(fd, ...);
+close(fd);
+```
+
+这类设备就叫做字符设备.
+
 ## RTOS
 
 RTOS是Real-Time Operating System, 中文叫做实时操作系统. 它是一种专门为了及时响应任务设计的操作系统, 重点不是跑得快, 而是在规定时间内一定完成. 普通操作系统(例如Windows, macOS)更加关注多任务体验, UI, 吞吐量, 用户交互; RTOS更加关注响应时间, 任务调度精准, 稳定性, 低延迟.
