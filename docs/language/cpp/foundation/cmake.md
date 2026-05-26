@@ -18,4 +18,6 @@ comments: false
     * `toolset`: 告诉生成器使用哪个工具集或工具集选项, 典型用于 Visual Studio. 它和 `toolchainFile` 不是同一个层级: `toolchainFile` 更像是定义一整套构建环境, `toolset` 更像是在生成器支持的范围内选择或微调工具集. `host=x64` 表示运行编译器, 链接器这些构建工具本身的宿主架构是 x64, 不等于产物目标架构是 x64. 当前项目里使用了 `strategy: "external"`, 所以它更偏向给外部工具或 IDE 的提示. 
     * `condition`: 用于按照环境过滤 preset. 当条件为 `false` 时, 该 preset 会被视为不可用, `cmake --list-presets` 通常不会显示它. 例如 `${hostSystemName}` 表示运行 CMake 的机器系统, 如果当前机器不是 Windows, 那么带有 Windows 条件的 preset 就不会作为可用项出现. 
 * `buildPresets`: 对应的是build阶段, 也就是configure之后真正执行编译的那一步. 
-* `testPresets`: 
+* `testPresets`: 对应的是test阶段. 
+    * `output`: `shortProgress`表示测试运行的时候显示简短进度; `verbosity`表示使用默认详细程度输出. `outputOnFailure`表示只有测试失败的时候才打印该测试的输出, 很常用, 避免成功测试刷屏. 
+    * `execution`: `jobs`表示并行跑多少个测试. `stopOnFailure`表示遇到第一个失败测试就停止. 
