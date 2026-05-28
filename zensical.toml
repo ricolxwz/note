@@ -100,6 +100,7 @@ nav = [
                 { "文件" = "language/cpp/foundation/io.md" },
                 { "异步" = "language/cpp/foundation/sync.md" },
                 { "其他" = "language/cpp/foundation/others.md" },
+                { "CMake" = "language/cpp/foundation/cmake.md" },
             ]},
         ]},
         { "Go" = [
