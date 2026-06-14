@@ -99,6 +99,19 @@ asar pack app app.asar
 
 
 1. WePE下直接把制作好的字体拖过去
-2. 安全模式下使用`xcopy`命令: 进入安全模式方法, 1)按住shift重启; 2)设置, 系统, 恢复, 高级启动重新启动; 3)系统配置, 引导, 安全引导, 选择最小, 应用, 完成操作后, 需要取消勾选安全引导改回来; 4)连续强制关机3次
+2. 安全模式下使用`xcopy`命令: 进入安全模式方法, 1)按住shift重启; 2)设置, 系统, 恢复, 高级启动重新启动; 3)系统配置, 引导, 安全引导, 选择最小, 应用, 完成操作后, 需要取消勾选安全引导改回来; 4)连续强制关机3次. 进入安全模式后, win+R输, cmd, 然后Ctrl+Shift+Enter, 以管理员身份打开, 执行命令:
+
+    ```bat
+    set "SRC=%USERPROFILE%\Downloads\font_replace"
+
+    dir "%SRC%"
+
+    for %F in ("%SRC%\*.*") do if exist "C:\Windows\Fonts\%~nxF" takeown /F "C:\Windows\Fonts\%~nxF" /A
+    for %F in ("%SRC%\*.*") do if exist "C:\Windows\Fonts\%~nxF" icacls "C:\Windows\Fonts\%~nxF" /grant *S-1-5-32-544:F
+    xcopy "%SRC%\*.*" "C:\Windows\Fonts\" /Y /H /R
+    ```
+
+    注意将`font_replace`替换为字体文件夹的名字. 
+
 3. 使用"字体替换工具 by 随风飘扬"替换: https://www.fishlee.net/soft/SysFontReplacer/
 4. 使用noMeiryoUI替换: https://github.com/Tatsu-syo/noMeiryoUI
