@@ -97,7 +97,8 @@ asar pack app app.asar
 
 ## 其他方法
 
-1. 使用"字体替换工具 by 随风飘扬"替换: https://www.fishlee.net/soft/SysFontReplacer/
-2. 使用noMeiryoUI替换: https://github.com/Tatsu-syo/noMeiryoUI
 
-上述三板斧下来之后, 任何情况下, 应该都能被替换了. 
+1. WePE下直接把制作好的字体拖过去
+2. 安全模式下使用`xcopy`命令: 进入安全模式方法, 1)按住shift重启; 2)设置, 系统, 恢复, 高级启动重新启动; 3)系统配置, 引导, 安全引导, 选择最小, 应用, 完成操作后, 需要取消勾选安全引导改回来; 4)连续强制关机3次
+3. 使用"字体替换工具 by 随风飘扬"替换: https://www.fishlee.net/soft/SysFontReplacer/
+4. 使用noMeiryoUI替换: https://github.com/Tatsu-syo/noMeiryoUI
