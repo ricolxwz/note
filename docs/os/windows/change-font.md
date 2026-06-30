@@ -115,3 +115,131 @@ asar pack app app.asar
 
 3. 使用"字体替换工具 by 随风飘扬"替换: https://www.fishlee.net/soft/SysFontReplacer/
 4. 使用noMeiryoUI替换: https://github.com/Tatsu-syo/noMeiryoUI
+5. 使用pendandmoves替换: 使用的script:
+
+    ```powsershell
+    #Requires -RunAsAdministrator
+
+    $BaseDir = "C:\Users\610184\Downloads\pendmoves"
+    $ReplaceDir = "$BaseDir\replace"
+    $SystemFontDir = "C:\Windows\Fonts"
+
+    $TimeStamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
+    $WorkDir = "C:\FontSwap\$TimeStamp"
+    $BackupDir = "$WorkDir\backup"
+    $StagingDir = "$WorkDir\staging"
+
+    $MoveFile = "$BaseDir\movefile64.exe"
+    $PendMoves = "$BaseDir\pendmoves64.exe"
+
+    if (!(Test-Path $MoveFile)) {
+        $MoveFile = "$BaseDir\movefile.exe"
+    }
+
+    if (!(Test-Path $PendMoves)) {
+        $PendMoves = "$BaseDir\pendmoves.exe"
+    }
+
+    if (!(Test-Path $MoveFile)) {
+        Write-Error "movefile64.exe/movefile.exe not found."
+        exit 1
+    }
+
+    New-Item -ItemType Directory -Force $BackupDir | Out-Null
+    New-Item -ItemType Directory -Force $StagingDir | Out-Null
+
+    function Add-FontReplaceTask {
+        param(
+            [string]$FontName
+        )
+
+        $ReplaceFont = Join-Path $ReplaceDir $FontName
+        $SystemFont = Join-Path $SystemFontDir $FontName
+        $BackupFont = Join-Path $BackupDir $FontName
+        $StagingFont = Join-Path $StagingDir $FontName
+
+        Write-Host ""
+        Write-Host "===== $FontName ====="
+
+        if (!(Test-Path $ReplaceFont)) {
+            Write-Host "SKIP: replace font not found: $ReplaceFont"
+            return
+        }
+
+        if (!(Test-Path $SystemFont)) {
+            Write-Host "SKIP: system font not found: $SystemFont"
+            return
+        }
+
+        Copy-Item -Force $ReplaceFont $StagingFont
+
+        Write-Host "Add backup task:"
+        Write-Host "$SystemFont -> $BackupFont"
+        & $MoveFile -accepteula $SystemFont $BackupFont
+
+        Write-Host "Add replace task:"
+        Write-Host "$StagingFont -> $SystemFont"
+        & $MoveFile -accepteula $StagingFont $SystemFont
+    }
+
+    Add-FontReplaceTask "consola.ttf"
+    Add-FontReplaceTask "consolab.ttf"
+    Add-FontReplaceTask "consolai.ttf"
+    Add-FontReplaceTask "consolaz.ttf"
+
+    Add-FontReplaceTask "msyh.ttc"
+    Add-FontReplaceTask "msyhbd.ttc"
+    Add-FontReplaceTask "msyhbdIt.ttc"
+    Add-FontReplaceTask "msyhIt.ttc"
+    Add-FontReplaceTask "msyhl.ttc"
+    Add-FontReplaceTask "msyhlIt.ttc"
+    Add-FontReplaceTask "msyhmd.ttc"
+    Add-FontReplaceTask "msyhmdit.ttc"
+    Add-FontReplaceTask "msyhsb.ttc"
+    Add-FontReplaceTask "msyhsbit.ttc"
+    Add-FontReplaceTask "msyhxb.ttc"
+    Add-FontReplaceTask "msyhxbit.ttc"
+    Add-FontReplaceTask "msyhxl.ttc"
+    Add-FontReplaceTask "msyhxlit.ttc"
+
+    Add-FontReplaceTask "segoepr.ttf"
+    Add-FontReplaceTask "segoeprb.ttf"
+    Add-FontReplaceTask "segoesc.ttf"
+    Add-FontReplaceTask "segoescb.ttf"
+    Add-FontReplaceTask "segoeui.ttf"
+    Add-FontReplaceTask "segoeuib.ttf"
+    Add-FontReplaceTask "segoeuii.ttf"
+    Add-FontReplaceTask "segoeuil.ttf"
+    Add-FontReplaceTask "segoeuisl.ttf"
+    Add-FontReplaceTask "segoeuiz.ttf"
+
+    Add-FontReplaceTask "seguibl.ttf"
+    Add-FontReplaceTask "seguibli.ttf"
+    Add-FontReplaceTask "seguihis.ttf"
+    Add-FontReplaceTask "seguili.ttf"
+    Add-FontReplaceTask "seguisb.ttf"
+    Add-FontReplaceTask "seguisbi.ttf"
+    Add-FontReplaceTask "seguisli.ttf"
+    Add-FontReplaceTask "SegUIVar.ttf"
+
+    Write-Host ""
+    Write-Host "========================================"
+    Write-Host "All pending font replace tasks submitted."
+    Write-Host "Backup dir:"
+    Write-Host $BackupDir
+    Write-Host "Staging dir:"
+    Write-Host $StagingDir
+    Write-Host "========================================"
+
+    if (Test-Path $PendMoves) {
+        Write-Host ""
+        Write-Host "Current pending move tasks:"
+        & $PendMoves
+    } else {
+        Write-Host "pendmoves not found, skip checking pending tasks."
+    }
+
+    Write-Host ""
+    Write-Host "After confirming pending tasks, reboot with:"
+    Write-Host "shutdown /r /t 0"
+    ```
