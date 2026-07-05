@@ -546,6 +546,7 @@ nav = [
         { "简历" = "int/pro.md" },
         { "专业" = "int/major.md" },
         { "HR" = "int/hr.md" },
+        { "HR嵌入式" = "int/hr_embedded.md" },
         { "软开" = "int/dev.md" },
         { "嵌入式" = "int/embedded.md" },
     ]},
