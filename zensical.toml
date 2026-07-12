@@ -524,6 +524,7 @@ nav = [
         { "Zotero配置" = "others/zotero.md" },
         { "颜色标注推荐" = "others/annotation-color.md" },
         { "IT创新" = "others/it-innovation.md" },
+        { "Codex安装" = "others/codex-install.md" },
     ]},
     { "金融" = [
         { "交易策略" = "finance/proxy.md" },
