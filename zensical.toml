@@ -1,6 +1,7 @@
 [project]
 site_name = "机器蝉"
 site_author = "ricolxwz"
+site_description = "麦旋风巨好吃(ricolxwz)的个人知识笔记: 数学、算法、语言、词典、软件与系统配置的深度记录"
 site_dir = "public"
 site_url = "https://n.ricolxwz.cn"
 edit_uri = "https://git.ricolxwz.download/root/note-zen/-/edit/master/docs/"
@@ -568,15 +569,19 @@ features = [
     "content.tooltips",
     "content.action.edit",
     "content.action.view",
+    "navigation.instant",
+    "navigation.instant.prefetch",
+    "navigation.instant.progress",
     "navigation.tabs",
+    "navigation.tabs.sticky",
     "navigation.sections",
     "navigation.expand",
     "navigation.indexes",
+    "navigation.path",
     "navigation.top",
     "navigation.tracking",
-    "search.suggest",
+    "toc.follow",
     "search.highlight",
-    "search.share",
     "announce.dismiss",
 ]
 

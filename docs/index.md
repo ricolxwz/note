@@ -49,3 +49,35 @@ comments: true
 ⠀⠀⠳⣀⠀⠀⠀⠀⠀⠀⣠⣦⡀⢠⣄⣠⠤⠷⣀⡠⠶⢄⣀⣼⣀⠀⠀⣀⣀⠜
 ⠀⠀⠀⠈⠉⠒⠤⠄⣀⣰⣿⣿⣷⣿⡟⠁⠀⠀⠈⠱⡄⠀⠀⠀⠉⠉⠉⠁⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠙⠛⠿⠤⢀⣀⣀⣀⡴⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀
+
+---
+
+## 快捷入口
+
+<div class="grid cards" markdown>
+
+-   :fontawesome-solid-calculator: **数学** — 概率论与数理统计笔记
+    [:octicons-arrow-right-24: 随机事件和概率](math/random-event-and-probability.md)
+
+-   :fontawesome-brands-python: **语言** — Python / C++ / Go 学习笔记
+    [:octicons-arrow-right-24: Python 基础](language/python/foundation/container.md)
+
+-   :material-brain: **算法** — 机器学习与深度学习笔记
+    [:octicons-arrow-right-24: 算法概览](algorithm/index.md)
+
+-   :material-book-search: **词典** — 概念速查
+    [:octicons-arrow-right-24: 反向传播](dicts/backpropagation.md)
+
+-   :material-file-document-multiple-outline: **综述** — 论文精读
+    [:octicons-arrow-right-24: 多模态大模型](survey/mllm.md)
+
+-   :material-desktop-classic: **软件** — 配置与踩坑记录
+    [:octicons-arrow-right-24: 软件目录](software/nezha/install.md)
+
+-   :material-currency-cny: **金融** — 交易策略与基本面分析
+    [:octicons-arrow-right-24: 现货交易](finance/spot.md)
+
+-   :material-account-group: **面试** — 八股文与简历
+    [:octicons-arrow-right-24: 深度学习八股](int/bg-dl.md)
+
+</div>

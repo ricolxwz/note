@@ -1,5 +1,4 @@
-@import url("https://fontsapi.zeoseven.com/442/main/result.css");
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+/* 字体已通过 main.html 中的 <link> 引入, 不再使用 @import */
 
 #logo_light_mode,
 #logo_dark_mode {
