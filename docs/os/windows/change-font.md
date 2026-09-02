@@ -246,9 +246,15 @@ asar pack app app.asar
 
     ```powershell
     #Requires -RunAsAdministrator
-
-    $BaseDir       = "C:\Users\610184\Downloads\pendmoves"
-    $ReplaceDir    = "$BaseDir\replace"
+    
+    # 自动获取当前文件夹(脚本所在目录);若直接粘贴到控制台执行则回退到当前工作目录
+    if ($PSScriptRoot) {
+        $BaseDir = $PSScriptRoot
+    } else {
+        $BaseDir = (Get-Location).Path
+    }
+    
+    $ReplaceDir    = Join-Path $BaseDir "replace"
     $SystemFontDir = "C:\Windows\Fonts"
     
     $TimeStamp  = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
@@ -259,14 +265,14 @@ asar pack app app.asar
     # 支持的字体扩展名
     $FontExtensions = @(".ttf", ".ttc", ".otf", ".fon")
     
-    $MoveFile  = "$BaseDir\movefile64.exe"
-    $PendMoves = "$BaseDir\pendmoves64.exe"
+    $MoveFile  = Join-Path $BaseDir "movefile64.exe"
+    $PendMoves = Join-Path $BaseDir "pendmoves64.exe"
     
-    if (!(Test-Path $MoveFile))  { $MoveFile  = "$BaseDir\movefile.exe" }
-    if (!(Test-Path $PendMoves)) { $PendMoves = "$BaseDir\pendmoves.exe" }
+    if (!(Test-Path $MoveFile))  { $MoveFile  = Join-Path $BaseDir "movefile.exe" }
+    if (!(Test-Path $PendMoves)) { $PendMoves = Join-Path $BaseDir "pendmoves.exe" }
     
     if (!(Test-Path $MoveFile)) {
-        Write-Error "movefile64.exe/movefile.exe not found."
+        Write-Error "movefile64.exe/movefile.exe not found in $BaseDir"
         exit 1
     }
     
@@ -352,6 +358,8 @@ asar pack app app.asar
     Write-Host ""
     Write-Host "========================================"
     Write-Host "Done. Scheduled: $script:ReplacedCount | Skipped: $script:SkippedCount | Failed: $script:FailedCount"
+    Write-Host "Base dir:"
+    Write-Host "  $BaseDir"
     Write-Host "Backup dir:"
     Write-Host "  $BackupDir"
     Write-Host "Staging dir:"
