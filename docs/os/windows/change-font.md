@@ -243,3 +243,130 @@ asar pack app app.asar
     Write-Host "After confirming pending tasks, reboot with:"
     Write-Host "shutdown /r /t 0"
     ```
+
+    ```powershell
+    #Requires -RunAsAdministrator
+
+    $BaseDir       = "C:\Users\610184\Downloads\pendmoves"
+    $ReplaceDir    = "$BaseDir\replace"
+    $SystemFontDir = "C:\Windows\Fonts"
+    
+    $TimeStamp  = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
+    $WorkDir    = "C:\FontSwap\$TimeStamp"
+    $BackupDir  = "$WorkDir\backup"
+    $StagingDir = "$WorkDir\staging"
+    
+    # 支持的字体扩展名
+    $FontExtensions = @(".ttf", ".ttc", ".otf", ".fon")
+    
+    $MoveFile  = "$BaseDir\movefile64.exe"
+    $PendMoves = "$BaseDir\pendmoves64.exe"
+    
+    if (!(Test-Path $MoveFile))  { $MoveFile  = "$BaseDir\movefile.exe" }
+    if (!(Test-Path $PendMoves)) { $PendMoves = "$BaseDir\pendmoves.exe" }
+    
+    if (!(Test-Path $MoveFile)) {
+        Write-Error "movefile64.exe/movefile.exe not found."
+        exit 1
+    }
+    
+    if (!(Test-Path $ReplaceDir)) {
+        Write-Error "Replace folder not found: $ReplaceDir"
+        exit 1
+    }
+    
+    New-Item -ItemType Directory -Force $BackupDir  | Out-Null
+    New-Item -ItemType Directory -Force $StagingDir | Out-Null
+    
+    # 统计计数
+    $script:ReplacedCount = 0
+    $script:SkippedCount  = 0
+    $script:FailedCount   = 0
+    
+    function Add-FontReplaceTask {
+        param(
+            [System.IO.FileInfo]$FontFile
+        )
+    
+        $FontName    = $FontFile.Name
+        $ReplaceFont = $FontFile.FullName
+        $SystemFont  = Join-Path $SystemFontDir $FontName
+        $BackupFont  = Join-Path $BackupDir  $FontName
+        $StagingFont = Join-Path $StagingDir $FontName
+    
+        Write-Host ""
+        Write-Host "===== $FontName ====="
+    
+        if (!(Test-Path $SystemFont)) {
+            Write-Host "SKIP: system font not found: $SystemFont"
+            $script:SkippedCount++
+            return
+        }
+    
+        try {
+            Copy-Item -Force $ReplaceFont $StagingFont -ErrorAction Stop
+        }
+        catch {
+            Write-Host "FAIL: cannot copy to staging: $($_.Exception.Message)"
+            $script:FailedCount++
+            return
+        }
+    
+        Write-Host "Add backup task:"
+        Write-Host "  $SystemFont -> $BackupFont"
+        & $MoveFile -accepteula $SystemFont $BackupFont | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "FAIL: movefile (backup) exited with code $LASTEXITCODE"
+            $script:FailedCount++
+            return
+        }
+    
+        Write-Host "Add replace task:"
+        Write-Host "  $StagingFont -> $SystemFont"
+        & $MoveFile -accepteula $StagingFont $SystemFont | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "FAIL: movefile (replace) exited with code $LASTEXITCODE"
+            $script:FailedCount++
+            return
+        }
+    
+        $script:ReplacedCount++
+    }
+    
+    # 扫描 replace 文件夹下所有字体文件并安排替换
+    $FontFiles = Get-ChildItem -Path $ReplaceDir -File |
+        Where-Object { $FontExtensions -contains $_.Extension.ToLower() } |
+        Sort-Object Name
+    
+    if ($FontFiles.Count -eq 0) {
+        Write-Host "No font files found in $ReplaceDir"
+        exit 0
+    }
+    
+    Write-Host "Found $($FontFiles.Count) font file(s) in replace folder."
+    
+    foreach ($FontFile in $FontFiles) {
+        Add-FontReplaceTask $FontFile
+    }
+    
+    Write-Host ""
+    Write-Host "========================================"
+    Write-Host "Done. Scheduled: $script:ReplacedCount | Skipped: $script:SkippedCount | Failed: $script:FailedCount"
+    Write-Host "Backup dir:"
+    Write-Host "  $BackupDir"
+    Write-Host "Staging dir:"
+    Write-Host "  $StagingDir"
+    Write-Host "========================================"
+    
+    if (Test-Path $PendMoves) {
+        Write-Host ""
+        Write-Host "Current pending move tasks:"
+        & $PendMoves
+    } else {
+        Write-Host "pendmoves not found, skip checking pending tasks."
+    }
+    
+    Write-Host ""
+    Write-Host "After confirming pending tasks, reboot with:"
+    Write-Host "shutdown /r /t 0"
+    ```
