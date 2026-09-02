@@ -1,6 +1,7 @@
 [project]
 site_name = "机器蝉"
 site_author = "ricolxwz"
+repo_url = "https://github.com/ricolxwz/note"
 site_description = "麦旋风巨好吃(ricolxwz)的个人知识笔记: 数学、算法、语言、词典、软件与系统配置的深度记录"
 site_dir = "public"
 site_url = "https://n.ricolxwz.cn"
