@@ -534,25 +534,26 @@ nav = [
         { "合约交易" = "finance/future.md" },
         { "基本面分析" = "finance/fundamental-analysis.md" }
     ]},
-    { "推荐" = [
-        { "长桥" = "aff/longbridge.md" },
-        { "币安" = "aff/binance.md" },
-        { "Wise" = "aff/wise.md" },
-        { "moomoo" = "aff/moomoo.md" }
-    ]},
-    { "面试" = [
-        { "八股文" = [
-            { "深度学习" = "int/bg-dl.md" },
-            { "多模态大模型" = "int/mllm.md" },
-        ]},
-        { "代码" = "int/code.md" },
-        { "简历" = "int/pro.md" },
-        { "专业" = "int/major.md" },
-        { "HR" = "int/hr.md" },
-        { "HR嵌入式" = "int/hr_embedded.md" },
-        { "软开" = "int/dev.md" },
-        { "嵌入式" = "int/embedded.md" },
-    ]},
+# 暂时隐藏推荐和面试栏目，取消下方注释即可恢复。
+#     { "推荐" = [
+#         { "长桥" = "aff/longbridge.md" },
+#         { "币安" = "aff/binance.md" },
+#         { "Wise" = "aff/wise.md" },
+#         { "moomoo" = "aff/moomoo.md" }
+#     ]},
+#     { "面试" = [
+#         { "八股文" = [
+#             { "深度学习" = "int/bg-dl.md" },
+#             { "多模态大模型" = "int/mllm.md" },
+#         ]},
+#         { "代码" = "int/code.md" },
+#         { "简历" = "int/pro.md" },
+#         { "专业" = "int/major.md" },
+#         { "HR" = "int/hr.md" },
+#         { "HR嵌入式" = "int/hr_embedded.md" },
+#         { "软开" = "int/dev.md" },
+#         { "嵌入式" = "int/embedded.md" },
+#     ]},
     { "端侧" = [
         { "学习路线" = "eai/index.md" },
     ]},
