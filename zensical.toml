@@ -553,6 +553,9 @@ nav = [
         { "软开" = "int/dev.md" },
         { "嵌入式" = "int/embedded.md" },
     ]},
+    { "端侧" = [
+        { "学习路线" = "eai/index.md" },
+    ]},
 ]
 
 [project.theme]
