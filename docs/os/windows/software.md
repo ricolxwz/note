@@ -60,3 +60,7 @@ comments: true
 * XnView: 看图软件
 * Driver Booster 12 pro: 驱动更新, 硬件信息查看, 🌟
 * IObit Installer: 卸载软件, ⭐
+* Process Lasso: CPU/GPU/内存/IO优先级管理软件, 🌟
+* Park Control: CPU停放管理, 电源策略管理, 🌟
+* StartAllBack: Win任务栏图标多开, 🌟
+* Windows Terminal: 好用的🀄️端, 🌟
