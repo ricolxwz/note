@@ -17,6 +17,7 @@ extra_css = [
 
 extra_javascript = [
   "javascripts/favicon.js",
+  "javascripts/web-editor.js",
   "javascripts/katex.js",
   "https://unpkg.com/katex@0/dist/katex.min.js",
   "https://unpkg.com/katex@0/dist/contrib/auto-render.min.js",
@@ -556,7 +557,7 @@ nav = [
 #         { "嵌入式" = "int/embedded.md" },
 #     ]},
     { "端侧" = [
-        { "学习路线" = "eai/index.md" },
+        { "TorchChat" = "eai/torchchat.md" },
     ]},
 ]
 
