@@ -3,6 +3,9 @@ title: 配置
 comments: true
 ---
 
+
+## 主配置
+
 ```json
 {
   "minimum_split_diff_width": 0.0,
@@ -202,4 +205,39 @@ comments: true
     }
   }
 }
+```
+
+## 键盘配置
+
+```json
+[
+  {
+    "context": "Workspace || Editor && !menu",
+    "bindings": {
+      "ctrl-a": "editor::SelectAll",
+      "ctrl-c": "editor::Copy",
+      "ctrl-v": "editor::Paste",
+      "ctrl-x": "editor::Cut",
+      "ctrl-z": "editor::Undo",
+      "ctrl-shift-z": "editor::Redo",
+      "ctrl-y": "editor::Redo",
+      "ctrl-s": "workspace::Save",
+      "ctrl-shift-s": "workspace::SaveAs",
+      "ctrl-f": "buffer_search::Deploy",
+      "ctrl-h": "buffer_search::DeployReplace",
+      "ctrl-n": "workspace::NewFile",
+      "ctrl-o": "workspace::Open",
+      "ctrl-w": "pane::CloseActiveItem",
+      "ctrl-p": "file_finder::Toggle",
+      "ctrl-shift-p": "command_palette::Toggle",
+      "ctrl-tab": "pane::ActivateNextItem",
+      "ctrl-shift-tab": "pane::ActivatePreviousItem",
+      "ctrl-]": "editor::GoToDefinition",
+      "ctrl-shift-]": "editor::GoToDeclaration",
+      "ctrl-\\": "workspace::ToggleRightDock",
+      "alt-\\": "workspace::ToggleLeftDock",
+      "win-\\": "workspace::ToggleBottomDock"
+    },
+  },
+]
 ```
