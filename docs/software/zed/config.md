@@ -296,6 +296,15 @@ comments: true
   "tab_bar": {
     "show": true
   },
+
+  "title_bar": {
+    "show_branch_name": true,
+    "show_worktree_name": true,
+    "show_project_items": true,
+    "show_onboarding_banner": false,
+    "show_sign_in": false,
+    "show_user_picture": false
+  },
 }
 ```
 
