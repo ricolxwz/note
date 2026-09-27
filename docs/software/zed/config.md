@@ -278,7 +278,7 @@ comments: true
     "coloring": "indent_aware",
     "active_line_width": 2,
     "line_width": 1,
-    "enabled": true
+    "enabled": false
   },
 
   "use_smartcase_search": true,
