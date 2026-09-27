@@ -36,7 +36,8 @@ comments: true
   "search": {
     "search_on_type": false,
     "include_ignored": false,
-    "regex": false
+    "regex": false,
+    "button": false
   },
 
   "file_scan_exclusions": [
@@ -73,6 +74,7 @@ comments: true
   "diagnostics_max_severity": "off",
 
   "diagnostics": {
+    "button": false,
     "inline": { "enabled": false }
   },
 
@@ -230,6 +232,7 @@ comments: true
     "font_size": 13,
     "font_weight": 500.0,
     "copy_on_select": true,
+    "button": false
   },
 
   "enable_language_server": true,
