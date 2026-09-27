@@ -81,7 +81,9 @@ comments: true
   },
 
   "tabs": {
-    "show_diagnostics": "off"
+    "git_status": true,
+    "show_diagnostics": "off",
+    "file_icons": true,
   },
 
   "lsp": {
@@ -93,10 +95,15 @@ comments: true
   },
 
   "project_panel": {
+    "git_status_indicator": true,
+    "indent_guides": {
+      "show": "never"
+    },
     "dock": "left",
     "git_status": true,
     "button": true,
-    "show_diagnostics": "off"
+    "show_diagnostics": "off",
+    "hide_root": true,
   },
 
   "outline_panel": { "dock": "left" },
@@ -106,8 +113,10 @@ comments: true
   },
 
   "git_panel": {
-    "starts_open": true,
-    "dock": "left"
+    "starts_open": false,
+    "dock": "left",
+    "entry_primary_click_action": "file_diff",
+    "file_icons": true,
   },
 
   "debugger": { "button": false },
@@ -219,7 +228,9 @@ comments: true
   "base_keymap": "VSCode",
 
   "terminal": {
-    "font_size": 13
+    "font_size": 13,
+    "font_weight": 500.0,
+    "copy_on_select": true,
   },
 
   "enable_language_server": true,
@@ -270,15 +281,28 @@ comments: true
     "enabled": true
   },
 
-"use_smartcase_search": true,
+  "use_smartcase_search": true,
 
-"status_bar": {
+  "status_bar": {
+      "show_active_file": false,
+      "pending_keystrokes_indicator": true,
+      "cursor_position_button": false,
+      "line_endings_button": true,
+      "active_encoding_button": "enabled",
+      "active_language_button": false
+  },
+
+  "status_bar": {
     "show_active_file": false,
     "pending_keystrokes_indicator": true,
     "cursor_position_button": false,
     "line_endings_button": true,
     "active_encoding_button": "enabled",
     "active_language_button": false
+  },
+
+  "tab_bar": {
+    "show": true
   },
 }
 ```
