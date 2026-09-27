@@ -64,6 +64,8 @@ comments: true
     "**/NTUSER.DAT*"
   ],
 
+  "auto_update": false,
+
   "file_scan_depth": 2,
   "scan_symlinks": "expanded",
   "document_symbols": "off",
