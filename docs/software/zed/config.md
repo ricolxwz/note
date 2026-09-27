@@ -218,7 +218,6 @@ comments: true
   "show_edit_predictions": false,
   "expand_excerpt_lines": 10,
 
-  "cli_default_open_behavior": "existing_window",
   "diff_view_style": "split",
   "disable_ai": false,
 
@@ -259,7 +258,6 @@ comments: true
   "cursor_blink": false,
 
   "hover_popover_enabled": false,
-  "hover_popover_enabled": false,
 
   "gutter": {
     "breakpoints": true,
@@ -282,15 +280,6 @@ comments: true
   },
 
   "use_smartcase_search": true,
-
-  "status_bar": {
-      "show_active_file": false,
-      "pending_keystrokes_indicator": true,
-      "cursor_position_button": false,
-      "line_endings_button": true,
-      "active_encoding_button": "enabled",
-      "active_language_button": false
-  },
 
   "status_bar": {
     "show_active_file": false,
