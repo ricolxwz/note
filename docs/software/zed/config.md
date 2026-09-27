@@ -121,6 +121,41 @@ comments: true
   },
 
   "agent": {
+    "profiles": {
+      "full": {
+        "default_model": {
+          "provider": "openrouter",
+          "model": "stealth/space-bunny-alpha",
+          "enable_thinking": true,
+          "effort": "max"
+        },
+        "name": "Full",
+        "tools": {
+          "write_file": true,
+          "terminal": true,
+          "spawn_agent": true,
+          "skill": true,
+          "read_file": true,
+          "move_path": true,
+          "list_directory": true,
+          "grep": true,
+          "find_path": true,
+          "fetch": true,
+          "edit_file": true,
+          "diagnostics": true,
+          "delete_path": true,
+          "create_directory": true,
+          "copy_path": true,
+          "ask_user": true
+        },
+        "enable_all_context_servers": false,
+        "context_servers": {}
+      }
+    },
+    "default_profile": "full",
+    "tool_permissions": {
+      "default": "allow"
+    },
     "show_turn_stats": true,
     "dock": "right",
     "expand_terminal_card": false,
