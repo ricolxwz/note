@@ -227,10 +227,6 @@ comments: true
 
   "vim_mode": true,
 
-  "vim": {
-    "use_system_clipboard": "never"
-  },
-
   "ui_font_size": 14.0,
   "ui_font_family": "Maple Mono Normal NL NF CN",
   "buffer_font_size": 13,
@@ -240,7 +236,50 @@ comments: true
     "Markdown": {
       "soft_wrap": "editor_width"
     }
-  }
+  },
+
+  "cli_default_open_behavior": "new_window",
+  "default_open_behavior": "new_window",
+
+  "session": {
+    "trust_all_worktrees": true
+  },
+
+  "cursor_blink": false,
+
+  "hover_popover_enabled": false,
+  "hover_popover_enabled": false,
+
+  "gutter": {
+    "breakpoints": true,
+    "bookmarks": true,
+    "folds": false
+  },
+
+  "vim": {
+    "toggle_relative_line_numbers": false,
+    "use_system_clipboard": "always",
+    "use_smartcase_find": true,
+  },
+
+  "indent_guides": {
+    "background_coloring": "disabled",
+    "coloring": "indent_aware",
+    "active_line_width": 2,
+    "line_width": 1,
+    "enabled": true
+  },
+
+"use_smartcase_search": true,
+
+"status_bar": {
+    "show_active_file": false,
+    "pending_keystrokes_indicator": true,
+    "cursor_position_button": false,
+    "line_endings_button": true,
+    "active_encoding_button": "enabled",
+    "active_language_button": false
+  },
 }
 ```
 
