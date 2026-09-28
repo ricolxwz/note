@@ -174,7 +174,7 @@ comments: true
     "expand_terminal_card": false,
     "enable_feedback": false,
     "auto_compact": { "threshold": "90%" },
-    "thinking_display": "preview",
+    "thinking_display": "always_collapsed",
     "play_sound_when_agent_done": "always",
     "commit_message_instructions": "Use Conventional Commits format: <type>(<scope>): <description>. Keep the subject concise & use simplified chinese.",
     "commit_message_include_project_rules": true,
