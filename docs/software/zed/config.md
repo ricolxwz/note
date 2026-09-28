@@ -305,6 +305,16 @@ comments: true
     "show_sign_in": false,
     "show_user_picture": false
   },
+
+  "experimental.theme_overrides": {
+    "players": [
+      {
+        "cursor": "#39FF14",
+        "selection": "#39FF1440",
+        "background": "#39FF1420"
+      }
+    ]
+  },
 }
 ```
 
