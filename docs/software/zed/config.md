@@ -16,7 +16,7 @@ comments: true
   "current_line_highlight": "all",
   "show_wrap_guides": false,
   "cursor_animation": {
-    "enabled": true
+    "enabled": false
   },
   "ui_font_weight": 500.0,
   "buffer_font_weight": 500.0,
@@ -111,7 +111,7 @@ comments: true
   "outline_panel": { "dock": "left" },
   
   "minimap": {
-    "show": "always"
+    "show": "never"
   },
 
   "git_panel": {
