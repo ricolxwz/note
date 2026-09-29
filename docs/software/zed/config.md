@@ -6,32 +6,149 @@ comments: true
 
 ## 主配置
 
-```json
+```jsonc
 {
+  // ============================================================
+  // General
+  // ============================================================
+
+  "base_keymap": "VSCode",
+  "vim_mode": true,
+  "accessible_mode": false,
+
+  "auto_update": false,
+  "autosave": "on_focus_change",
+
+  "cli_default_open_behavior": "new_window",
+  "default_open_behavior": "new_window",
+
+  "remove_trailing_whitespace_on_save": false,
+  "ensure_final_newline_on_save": false,
+
+  "use_system_path_prompts": true,
+  "use_smartcase_search": true,
+
+  "expand_excerpt_lines": 10,
   "minimum_split_diff_width": 0.0,
-  "buffer_line_height": "comfortable",
-  "agent_ui_font_size": 13.0,
-  "cursor_shape": "bar",
+
+
+  // ============================================================
+  // UI
+  // ============================================================
+
+  "ui_font_size": 14.0,
+  "ui_font_family": "Maple Mono Normal NF CN",
+  "ui_font_weight": 500.0,
+
   "reduce_motion": "off",
+
+  "tab_bar": {
+    "show": true
+  },
+
+  "title_bar": {
+    "show_branch_name": true,
+    "show_worktree_name": true,
+    "show_project_items": true,
+    "show_onboarding_banner": false,
+    "show_sign_in": false,
+    "show_user_picture": false
+  },
+
+  "status_bar": {
+    "show_active_file": false,
+    "pending_keystrokes_indicator": true,
+    "cursor_position_button": false,
+    "line_endings_button": true,
+    "active_encoding_button": "enabled",
+    "active_language_button": false
+  },
+
+
+  // ============================================================
+  // Editor
+  // ============================================================
+
+  "buffer_font_size": 13,
+  "buffer_font_family": "Maple Mono Normal NF CN",
+  "buffer_font_weight": 500.0,
+  "buffer_line_height": "comfortable",
+
   "current_line_highlight": "all",
   "show_wrap_guides": false,
+
+  "cursor_shape": "bar",
+  "cursor_blink": false,
+
   "cursor_animation": {
     "enabled": false
   },
-  "ui_font_weight": 500.0,
-  "buffer_font_weight": 500.0,
-  "use_system_path_prompts": true,
-  "language_models": {
-    "opencode": {
-      "show_go_models": false,
-      "show_zen_models": false
-    }
+
+  "hover_popover_enabled": false,
+
+  "show_edit_predictions": false,
+
+  "gutter": {
+    "breakpoints": true,
+    "bookmarks": true,
+    "folds": false
   },
-  "git": { "inline_blame": {
-                "show_commit_summary": true,
-                "location": "inline"
-           },
-           "diff_base": "head" },
+
+  "indent_guides": {
+    "background_coloring": "disabled",
+    "coloring": "indent_aware",
+    "active_line_width": 2,
+    "line_width": 1,
+    "enabled": false
+  },
+
+  "minimap": {
+    "show": "never"
+  },
+
+
+  // ============================================================
+  // Files / Project Scanning
+  // ============================================================
+
+  "file_scan_depth": 2,
+  "scan_symlinks": "expanded",
+  "document_symbols": "off",
+
+  "file_scan_exclusions": [
+    "**/AppData/**",
+    "**/Local Settings/**",
+    "**/Temp/**",
+    "**/.codex/tmp/**",
+    "**/.local/share/wezterm/**",
+
+    "**/build/**",
+    "**/cmake-build-*/**",
+    "**/out/**",
+    "**/output/**",
+    "**/dist/**",
+
+    "**/.cache/**",
+    "**/node_modules/**",
+    "**/target/**",
+
+    "**/__pycache__/**",
+    "**/.pytest_cache/**",
+    "**/.mypy_cache/**",
+    "**/.ruff_cache/**",
+
+    "**/.venv/**",
+    "**/venv/**",
+
+    "**/*.log",
+    "**/*.sock",
+    "**/NTUSER.DAT*"
+  ],
+
+
+  // ============================================================
+  // Search
+  // ============================================================
 
   "search": {
     "search_on_type": false,
@@ -40,109 +157,126 @@ comments: true
     "button": false
   },
 
-  "file_scan_exclusions": [
-    "**/AppData/**",
-    "**/Local Settings/**",
-    "**/Temp/**",
-    "**/.codex/tmp/**",
-    "**/.local/share/wezterm/**",
-    "**/build/**",
-    "**/cmake-build-*/**",
-    "**/out/**",
-    "**/output/**",
-    "**/dist/**",
-    "**/.cache/**",
-    "**/node_modules/**",
-    "**/target/**",
-    "**/__pycache__/**",
-    "**/.pytest_cache/**",
-    "**/.mypy_cache/**",
-    "**/.ruff_cache/**",
-    "**/.venv/**",
-    "**/venv/**",
-    "**/*.log",
-    "**/*.sock",
-    "**/NTUSER.DAT*"
-  ],
 
-  "auto_update": false,
+  // ============================================================
+  // Diagnostics / Language Server
+  // ============================================================
 
-  "file_scan_depth": 2,
-  "scan_symlinks": "expanded",
-  "document_symbols": "off",
-
+  "enable_language_server": true,
   "diagnostics_max_severity": "off",
 
   "diagnostics": {
     "button": false,
-    "inline": { "enabled": false }
-  },
-
-  "scrollbar": {
-    "diagnostics": "none"
-  },
-
-  "tabs": {
-    "git_status": true,
-    "show_diagnostics": "off",
-    "file_icons": true,
+    "inline": {
+      "enabled": false
+    }
   },
 
   "lsp": {
     "clangd": {
       "binary": {
-        "arguments": ["--background-index"]
+        "arguments": [
+          "--background-index"
+        ]
       }
     }
   },
 
-  "project_panel": {
-    "git_status_indicator": true,
-    "indent_guides": {
-      "show": "never"
-    },
-    "dock": "left",
-    "git_status": true,
-    "button": true,
-    "show_diagnostics": "off",
-    "hide_root": true,
+
+  // ============================================================
+  // Git / Diff
+  // ============================================================
+
+  "git": {
+    "diff_base": "head",
+
+    "inline_blame": {
+      "show_commit_summary": true,
+      "location": "inline"
+    }
   },
 
-  "outline_panel": { "dock": "left" },
-  
-  "minimap": {
-    "show": "never"
+  "diff_view_style": "split",
+
+  "tabs": {
+    "git_status": true,
+    "show_diagnostics": "off",
+    "file_icons": true
+  },
+
+
+  // ============================================================
+  // Panels
+  // ============================================================
+
+  "project_panel": {
+    "dock": "left",
+    "button": true,
+    "hide_root": true,
+
+    "git_status": true,
+    "git_status_indicator": true,
+    "show_diagnostics": "off",
+
+    "indent_guides": {
+      "show": "never"
+    }
+  },
+
+  "outline_panel": {
+    "dock": "left"
   },
 
   "git_panel": {
     "starts_open": false,
     "dock": "left",
     "entry_primary_click_action": "file_diff",
-    "file_icons": true,
+    "file_icons": true
   },
-
-  "debugger": { "button": false },
 
   "collaboration_panel": {
     "dock": "left",
     "button": false
   },
 
-  "markdown_preview": {
-    "code_font_family": "Maple Mono Normal NL NF CN",
-    "font_family": "Maple Mono Normal NL NF CN"
+  "debugger": {
+    "button": false
+  },
+
+  "scrollbar": {
+    "diagnostics": "none"
+  },
+
+
+  // ============================================================
+  // Agent / AI
+  // ============================================================
+
+  "disable_ai": false,
+
+  "agent_ui_font_size": 13.0,
+
+  "language_models": {
+    "opencode": {
+      "show_go_models": false,
+      "show_zen_models": false
+    }
   },
 
   "agent": {
+    "default_profile": "full",
+
     "profiles": {
       "full": {
+        "name": "Full",
+
         "default_model": {
           "provider": "openrouter",
           "model": "stealth/space-bunny-alpha",
           "enable_thinking": true,
           "effort": "max"
         },
-        "name": "Full",
+
         "tools": {
           "write_file": true,
           "terminal": true,
@@ -161,89 +295,95 @@ comments: true
           "copy_path": true,
           "ask_user": true
         },
+
         "enable_all_context_servers": false,
         "context_servers": {}
       }
     },
-    "default_profile": "full",
+
     "tool_permissions": {
       "default": "allow"
     },
+
+    "default_model": {
+      "provider": "openai-subscribed",
+      "model": "gpt-5.6-luna",
+      "enable_thinking": true,
+      "effort": "medium",
+      "speed": "fast"
+    },
+
     "show_turn_stats": true,
+
     "dock": "right",
     "expand_terminal_card": false,
+
     "enable_feedback": false,
-    "auto_compact": { "threshold": "90%" },
+
+    "auto_compact": {
+      "threshold": "90%"
+    },
+
     "thinking_display": "always_collapsed",
     "play_sound_when_agent_done": "always",
+
     "commit_message_instructions": "Use Conventional Commits format: <type>(<scope>): <description>. Keep the subject concise & use simplified chinese.",
-    "commit_message_include_project_rules": true,
-    "default_model": {
-      "speed": "fast",
-      "effort": "medium",
-      "enable_thinking": true,
-      "provider": "openai-subscribed",
-      "model": "gpt-5.6-luna"
-    },
+    "commit_message_include_project_rules": true
   },
 
   "agent_servers": {
     "codebuddy-code": {
       "type": "registry"
     },
+
     "Codebuddy": {
+      "type": "custom",
+      "command": "codebuddy",
+      "args": [
+        "--acp"
+      ],
+
       "default_config_options": {
         "multitask": false,
         "model": "deepseek-v4.1-flash"
       },
+
       "favorite_config_option_values": {
-        "model": ["deepseek-v4.1-flash"]
-      },
-      "type": "custom",
-      "command": "codebuddy",
-      "args": ["--acp"]
+        "model": [
+          "deepseek-v4.1-flash"
+        ]
+      }
     }
   },
 
-  "theme": {
-    "mode": "system",
-    "light": "One Light",
-    "dark": "Catppuccin Mocha"
-  },
-  "icon_theme": {
-    "mode": "system",
-    "light": "Catppuccin Latte",
-    "dark": "Catppuccin Mocha"
-  },
 
-  "autosave": "on_focus_change",
-  "show_edit_predictions": false,
-  "expand_excerpt_lines": 10,
-
-  "diff_view_style": "split",
-  "disable_ai": false,
-
-  "remove_trailing_whitespace_on_save": false,
-  "ensure_final_newline_on_save": false,
-
-  "base_keymap": "VSCode",
+  // ============================================================
+  // Terminal
+  // ============================================================
 
   "terminal": {
     "font_size": 13,
     "font_weight": 500.0,
+
     "copy_on_select": true,
     "button": false
   },
 
-  "enable_language_server": true,
-  "accessible_mode": false,
 
-  "vim_mode": true,
+  // ============================================================
+  // Vim
+  // ============================================================
 
-  "ui_font_size": 14.0,
-  "ui_font_family": "Maple Mono Normal NL NF CN",
-  "buffer_font_size": 13,
-  "buffer_font_family": "Maple Mono Normal NL NF CN",
+  "vim": {
+    "toggle_relative_line_numbers": false,
+    "use_system_clipboard": "never",
+    "use_smartcase_find": true
+  },
+
+
+  // ============================================================
+  // Languages
+  // ============================================================
 
   "languages": {
     "Markdown": {
@@ -251,59 +391,26 @@ comments: true
     }
   },
 
-  "cli_default_open_behavior": "new_window",
-  "default_open_behavior": "new_window",
-
-  "session": {
-    "trust_all_worktrees": true
+  "markdown_preview": {
+    "font_family": "Maple Mono Normal NF CN",
+    "code_font_family": "Maple Mono Normal NF CN"
   },
 
-  "cursor_blink": false,
 
-  "hover_popover_enabled": false,
+  // ============================================================
+  // Theme
+  // ============================================================
 
-  "gutter": {
-    "breakpoints": true,
-    "bookmarks": true,
-    "folds": false
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "Catppuccin Mocha"
   },
 
-  "vim": {
-    "toggle_relative_line_numbers": false,
-    "use_system_clipboard": "always",
-    "use_smartcase_find": true,
-  },
-
-  "indent_guides": {
-    "background_coloring": "disabled",
-    "coloring": "indent_aware",
-    "active_line_width": 2,
-    "line_width": 1,
-    "enabled": false
-  },
-
-  "use_smartcase_search": true,
-
-  "status_bar": {
-    "show_active_file": false,
-    "pending_keystrokes_indicator": true,
-    "cursor_position_button": false,
-    "line_endings_button": true,
-    "active_encoding_button": "enabled",
-    "active_language_button": false
-  },
-
-  "tab_bar": {
-    "show": true
-  },
-
-  "title_bar": {
-    "show_branch_name": true,
-    "show_worktree_name": true,
-    "show_project_items": true,
-    "show_onboarding_banner": false,
-    "show_sign_in": false,
-    "show_user_picture": false
+  "icon_theme": {
+    "mode": "system",
+    "light": "Catppuccin Latte",
+    "dark": "Catppuccin Mocha"
   },
 
   "experimental.theme_overrides": {
@@ -315,6 +422,15 @@ comments: true
       }
     ]
   },
+
+
+  // ============================================================
+  // Session
+  // ============================================================
+
+  "session": {
+    "trust_all_worktrees": true
+  }
 }
 ```
 
