@@ -39,6 +39,7 @@ comments: true
   "ui_font_size": 14.0,
   "ui_font_family": "Maple Mono Normal NF CN",
   "ui_font_weight": 500.0,
+  "ui_font_fallbacks": ["LXGW Bright"],
 
   "reduce_motion": "off",
 
@@ -73,6 +74,7 @@ comments: true
   "buffer_font_family": "Maple Mono Normal NF CN",
   "buffer_font_weight": 500.0,
   "buffer_line_height": "comfortable",
+  "buffer_font_fallbacks": ["LXGW Bright"],
 
   "current_line_highlight": "all",
   "show_wrap_guides": false,
