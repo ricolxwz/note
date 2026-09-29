@@ -351,3 +351,280 @@ asar pack app app.asar
     Write-Host "After checking pending tasks, reboot with:"
     Write-Host "shutdown /r /t 0"
     ```
+
+    GPT-6 Astra写个一个小脚本: 不依赖pendmoves.exe, 直接调用MoveFileExW API.
+
+    ```powershell
+    #Requires -RunAsAdministrator
+    <#
+    Run in 64-bit Windows PowerShell 5.1 (powershell.exe), as administrator.
+    Schedule: .\FontSwap-Safe.ps1
+    Verify after restart: .\FontSwap-Safe.ps1 -Mode Verify -RunDir 'C:\FontSwap\RUN'
+    
+    No automatic restart, deletion of original fonts, taking ownership, or editing
+    existing pending tasks. Backups are copied and verified before ANY scheduling.
+    Each font uses ONE MoveFileExW request with flags 0x5 (delayed replacement).
+    This is not a transaction across fonts; partial scheduling is reported.
+    Font headers are checked, not family names, glyph coverage or visual suitability.
+    Backups preserve file bytes; target DACL is saved and applied to staged files.
+    Original owner/SACL and Windows servicing metadata are NOT cloned.
+    #>
+    [CmdletBinding()]
+    param(
+        [ValidateSet('Schedule', 'Verify')]
+        [string]$Mode = 'Schedule',
+        [string]$BaseDir = 'C:\Users\610184\Downloads\pendmoves',
+        [string]$RunDir
+    )
+    
+    Set-StrictMode -Version Latest
+    $ErrorActionPreference = 'Stop'
+    if ($PSVersionTable.PSEdition -ne 'Desktop' -or -not [Environment]::Is64BitProcess) {
+        throw 'Use 64-bit Windows PowerShell 5.1 (powershell.exe), as administrator.'
+    }
+    $SystemFontDir = Join-Path $env:windir 'Fonts'
+    $FontPrefix = $SystemFontDir.TrimEnd('\') + '\'
+    
+    function Get-Sha256([string]$Path) {
+        (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash
+    }
+    
+    function Convert-PendingPath([string]$Path) {
+        $p = $Path.TrimStart('!')
+        if ($p.StartsWith('\??\')) { $p = $p.Substring(4) }
+        if ($p.StartsWith('\\?\')) { $p = $p.Substring(4) }
+        return $p
+    }
+    
+    function Get-PendingFontTasks {
+        $key = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey(
+            'SYSTEM\CurrentControlSet\Control\Session Manager')
+        if ($null -eq $key) { throw 'Cannot read Session Manager registry key.' }
+        try {
+            foreach ($valueName in @('PendingFileRenameOperations', 'PendingFileRenameOperations2')) {
+                $raw = $key.GetValue($valueName)
+                if ($null -eq $raw) { continue }
+                if ($raw -isnot [string[]] -or ($raw.Count % 2) -ne 0) {
+                    throw "Unexpected pending queue format: $valueName. Inspect it manually."
+                }
+                for ($i = 0; $i -lt $raw.Count; $i += 2) {
+                    $src = Convert-PendingPath $raw[$i]
+                    $dst = Convert-PendingPath $raw[$i + 1]
+                    if ($src.StartsWith($FontPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+                        $dst.StartsWith($FontPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+                        [pscustomobject]@{ Queue = $valueName; Source = $src; Target = $dst }
+                    }
+                }
+            }
+        } finally { $key.Dispose() }
+    }
+    
+    function Assert-NoPendingFonts {
+        $pending = @(Get-PendingFontTasks)
+        if ($pending.Count -gt 0) {
+            $pending | Format-List | Out-Host
+            throw 'Existing font tasks found. Nothing new was scheduled. Inspect old tasks first; do not blindly reboot if an old task only moves a font away.'
+        }
+    }
+    
+    function Assert-RegularLocalPath([string]$Path) {
+        $item = Get-Item -LiteralPath $Path -Force
+        while ($null -ne $item) {
+            if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+                throw "Reparse points are not supported: $($item.FullName)"
+            }
+            if ($item -is [IO.FileInfo]) { $item = $item.Directory }
+            else { $item = $item.Parent }
+        }
+    }
+    
+    function Assert-FontHeader([string]$Path) {
+        $stream = [IO.File]::OpenRead($Path)
+        try {
+            $bytes = New-Object byte[] 4
+            if ($stream.Length -lt 12 -or $stream.Read($bytes, 0, 4) -ne 4) {
+                throw "Font is too short: $Path"
+            }
+            $sig = [BitConverter]::ToString($bytes)
+            $ext = [IO.Path]::GetExtension($Path).ToLowerInvariant()
+            $allowed = @('00-01-00-00', '4F-54-54-4F', '74-72-75-65', '74-79-70-31')
+            if ($ext -in @('.ttc', '.otc')) { $allowed = @('74-74-63-66') }
+            if ($sig -notin $allowed) { throw "Unexpected font header: $Path ($sig)" }
+        } finally { $stream.Dispose() }
+    }
+    
+    function Save-Manifest {
+        $temp = $script:ManifestPath + '.tmp'
+        $script:Manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $temp -Encoding UTF8
+        Move-Item -LiteralPath $temp -Destination $script:ManifestPath -Force
+    }
+    
+    if ($Mode -eq 'Verify') {
+        if ([string]::IsNullOrWhiteSpace($RunDir)) { throw 'Verify requires -RunDir.' }
+        $manifest = Get-Content -LiteralPath (Join-Path $RunDir 'manifest.json') -Raw | ConvertFrom-Json
+        $pending = @(Get-PendingFontTasks)
+        $bad = 0
+        $report = foreach ($entry in $manifest.Fonts) {
+            $exists = Test-Path -LiteralPath $entry.Target -PathType Leaf
+            $actual = if ($exists) { Get-Sha256 $entry.Target } else { '' }
+            $backupOK = (Test-Path -LiteralPath $entry.Backup -PathType Leaf) -and
+                ((Get-Sha256 $entry.Backup) -eq $entry.OriginalHash)
+            $hasPending = @($pending | Where-Object {
+                $_.Source -eq $entry.Target -or $_.Target -eq $entry.Target
+            }).Count -gt 0
+            $result = if ($hasPending) { 'PENDING' }
+                elseif (-not $exists) { 'MISSING' }
+                elseif ($actual -eq $entry.NewHash) { 'MATCH' }
+                elseif ($actual -eq $entry.OriginalHash) { 'ORIGINAL' }
+                else { 'DIFFERENT' }
+            if ($result -ne 'MATCH' -or -not $backupOK) { $bad++ }
+            [pscustomobject]@{ Font = $entry.Name; Result = $result; BackupOK = $backupOK }
+        }
+        $report | Format-Table -AutoSize | Out-Host
+        if ($bad -gt 0) { throw 'Verification incomplete or failed. Keep backups and inspect the results.' }
+        Write-Host 'All target hashes match the replacements; all backups match the originals.' -ForegroundColor Green
+        Write-Host 'Also check font rendering in your applications. Hash verification does not validate appearance.'
+        return
+    }
+    
+    if ($RunDir) { throw '-RunDir is only used with -Mode Verify.' }
+    $mutex = New-Object Threading.Mutex($false, 'Global\FontSwapSafeScheduleV1')
+    $locked = $false
+    $submitted = 0
+    try {
+        try { $locked = $mutex.WaitOne(0) }
+        catch [Threading.AbandonedMutexException] { $locked = $true }
+        if (-not $locked) { throw 'Another FontSwap-Safe instance is running.' }
+        Assert-NoPendingFonts
+        $replaceDir = Join-Path $BaseDir 'replace'
+        if (-not (Test-Path -LiteralPath $replaceDir -PathType Container)) {
+            throw "Replace directory not found: $replaceDir"
+        }
+        $allFiles = @(Get-ChildItem -LiteralPath $replaceDir -File)
+        if (@($allFiles | Where-Object { $_.Extension.ToLowerInvariant() -in @('.fon', '.fnt') }).Count) {
+            throw 'Legacy .fon/.fnt fonts are not supported by this version. Remove them from replace.'
+        }
+        $fonts = @($allFiles | Where-Object {
+            $_.Extension.ToLowerInvariant() -in @('.ttf', '.ttc', '.otf', '.otc')
+        } | Sort-Object Name)
+        if (-not $fonts.Count) { throw "No supported fonts found in $replaceDir" }
+    
+        # Validate all targets BEFORE preparing or scheduling any replacement.
+        foreach ($font in $fonts) {
+            $target = Join-Path $SystemFontDir $font.Name
+            if (-not (Test-Path -LiteralPath $target -PathType Leaf)) {
+                throw "System font not found: $target. This script replaces existing files only."
+            }
+            Assert-RegularLocalPath $target
+            Assert-RegularLocalPath $font.FullName
+            Assert-FontHeader $font.FullName
+            $attributes = (Get-Item -LiteralPath $target -Force).Attributes
+            if (($attributes -band [IO.FileAttributes]::ReadOnly) -ne 0) {
+                throw "Read-only target: $target. Attributes will not be changed automatically."
+            }
+        }
+    
+        $workRoot = Join-Path ([IO.Path]::GetPathRoot($env:windir)) 'FontSwap'
+        New-Item -ItemType Directory -Path $workRoot -Force | Out-Null
+        Assert-RegularLocalPath $workRoot
+        $runName = (Get-Date -Format 'yyyy-MM-dd_HH-mm-ss-fff') + '_' + [guid]::NewGuid().ToString('N').Substring(0, 8)
+        $RunDir = Join-Path $workRoot $runName
+        New-Item -ItemType Directory -Path $RunDir | Out-Null
+        # Protect manifests/backups/staging from modification by ordinary users.
+        $dirAcl = New-Object Security.AccessControl.DirectorySecurity
+        $dirAcl.SetSecurityDescriptorSddlForm('O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)')
+        Set-Acl -LiteralPath $RunDir -AclObject $dirAcl
+        $backupDir = Join-Path $RunDir 'backup'
+        $stagingDir = Join-Path $RunDir 'staging'
+        New-Item -ItemType Directory -Path $backupDir, $stagingDir | Out-Null
+        $script:ManifestPath = Join-Path $RunDir 'manifest.json'
+        $entries = @()
+    
+        foreach ($font in $fonts) {
+            $target = Join-Path $SystemFontDir $font.Name
+            $backup = Join-Path $backupDir $font.Name
+            $staged = Join-Path $stagingDir $font.Name
+            $oldHash = Get-Sha256 $target
+            $newHash = Get-Sha256 $font.FullName
+            Copy-Item -LiteralPath $target -Destination $backup
+            Copy-Item -LiteralPath $font.FullName -Destination $staged
+            if ((Get-Sha256 $backup) -ne $oldHash -or (Get-Sha256 $target) -ne $oldHash) {
+                throw "Backup hash mismatch: $($font.Name)"
+            }
+            if ((Get-Sha256 $staged) -ne $newHash) { throw "Staging hash mismatch: $($font.Name)" }
+            [IO.File]::SetAttributes($staged, [IO.FileAttributes]::Normal)
+            $originalAcl = Get-Acl -LiteralPath $target
+            $dacl = $originalAcl.GetSecurityDescriptorSddlForm([Security.AccessControl.AccessControlSections]::Access)
+            $fileAcl = New-Object Security.AccessControl.FileSecurity
+            $fileAcl.SetSecurityDescriptorSddlForm($dacl, [Security.AccessControl.AccessControlSections]::Access)
+            $fileAcl.SetAccessRuleProtection($true, $true)
+            Set-Acl -LiteralPath $staged -AclObject $fileAcl
+            # Ensure the staged file remains readable after setting its access rules.
+            if ((Get-Sha256 $staged) -ne $newHash) { throw 'Staged font became unreadable or changed.' }
+            $entries += [pscustomobject]@{
+                Name = $font.Name; Target = $target; Backup = $backup; Staged = $staged
+                OriginalHash = $oldHash; NewHash = $newHash; OriginalDacl = $dacl
+                Status = 'Prepared'; Error = $null
+            }
+            Write-Host "Backed up and verified: $($font.Name)"
+        }
+        $script:Manifest = [pscustomobject]@{
+            Version = 1; Created = (Get-Date).ToString('o'); RunDir = $RunDir; Fonts = $entries
+        }
+        Save-Manifest
+    
+        if (-not ('FontSwapSafe.Native' -as [type])) {
+            Add-Type -TypeDefinition @'
+    using System;
+    using System.Runtime.InteropServices;
+    namespace FontSwapSafe {
+        public static class Native {
+            [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool MoveFileExW(string source, string destination, uint flags);
+        }
+    }
+    '@
+        }
+        Assert-NoPendingFonts
+        # Recheck the entire batch before its first queue operation.
+        foreach ($entry in $entries) {
+            if ((Get-Sha256 $entry.Target) -ne $entry.OriginalHash -or
+                (Get-Sha256 $entry.Backup) -ne $entry.OriginalHash -or
+                (Get-Sha256 $entry.Staged) -ne $entry.NewHash) {
+                throw "File changed during preparation: $($entry.Name)"
+            }
+        }
+        foreach ($entry in $entries) {
+            # Persist intent BEFORE the native call, so an interrupted run is visible.
+            $entry.Status = 'Submitting'
+            Save-Manifest
+            $ok = [FontSwapSafe.Native]::MoveFileExW($entry.Staged, $entry.Target, 5)
+            if (-not $ok) {
+                $code = [Runtime.InteropServices.Marshal]::GetLastWin32Error()
+                $entry.Status = 'SubmitFailed'
+                $entry.Error = "Win32 error $code"
+                Save-Manifest
+                throw "Could not schedule $($entry.Name): Win32 error $code"
+            }
+            $submitted++
+            $entry.Status = 'Scheduled'
+            Save-Manifest
+            Write-Host "Scheduled replacement: $($entry.Name)"
+        }
+        Write-Host "`nScheduled: $submitted. This is NOT proof of boot-time success."
+        Write-Host "Backups and manifest: $RunDir"
+        Get-PendingFontTasks | Format-List | Out-Host
+        Write-Host 'Keep this run directory intact until after verification.'
+        Write-Host 'When ready, restart Windows manually: shutdown /r /t 0'
+        Write-Host "After restart: .\FontSwap-Safe.ps1 -Mode Verify -RunDir '$RunDir'"
+    } catch {
+        Write-Warning "Stopped. Successfully submitted in this run: $submitted."
+        Write-Warning 'Previously submitted tasks remain queued; this script does not clear or roll back the system queue.'
+        if ($RunDir) { Write-Warning "Keep this directory: $RunDir" }
+        throw
+    } finally {
+        if ($locked) { $mutex.ReleaseMutex() }
+        $mutex.Dispose()
+    }
+    ```
