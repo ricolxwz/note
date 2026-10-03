@@ -330,7 +330,14 @@ comments: true
     "play_sound_when_agent_done": "always",
 
     "commit_message_instructions": "Use Conventional Commits format: <type>(<scope>): <description>. Keep the subject concise & use simplified chinese.",
-    "commit_message_include_project_rules": true
+    "commit_message_include_project_rules": true,
+
+    "commit_message_model": {
+      "provider": "openrouter",
+      "model": "z-ai/glm-5.3-flash",
+      "effort": "low",
+      "enable_thinking": true
+    }
   },
 
   "agent_servers": {
