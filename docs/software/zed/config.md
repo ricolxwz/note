@@ -242,7 +242,8 @@ comments: true
   },
 
   "debugger": {
-    "button": false
+    "dock": "left",
+    "button": true
   },
 
   "scrollbar": {
