@@ -86,7 +86,7 @@ comments: true
     "enabled": false
   },
 
-  "hover_popover_enabled": false,
+  "hover_popover_enabled": true,
 
   "show_edit_predictions": false,
 
