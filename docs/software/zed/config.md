@@ -335,9 +335,7 @@ comments: true
 
     "commit_message_model": {
       "provider": "openrouter",
-      "model": "z-ai/glm-5.3-flash",
-      "effort": "low",
-      "enable_thinking": true
+      "model": "deepseek/deepseek-v4.1-flash:nitro"
     }
   },
 
